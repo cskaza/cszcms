@@ -1,0 +1,136 @@
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-lg-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-globe"></span></i> <?= $this->lang->line('pages_addnew') ?>
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="h2 sub-header"><?= $this->lang->line('pages_addnew') ?>  <a role="button" href="<?= BASE_URL ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('pages_addnew') ?></a></div>
+        <?php echo form_open(BASE_URL . '/admin/pages/edited/'.$pages->pages_id); ?>
+
+        <div class="control-group">	
+            <?php echo form_error('page_name', '<div class="error">', '</div>'); ?>
+            <label class="control-label" for="page_name"><?php echo $this->lang->line('pages_name'); ?>*</label>
+            <?php
+            $data = array(
+                'name' => 'page_name',
+                'id' => 'page_name',
+                'required' => 'required',
+                'autofocus' => 'true',
+                'class' => 'form-control',
+                'value' => set_value('page_name', $pages->page_name)
+            );
+            echo form_input($data);
+            ?>			
+        </div> <!-- /control-group -->
+
+        <div class="control-group">	
+            <?php echo form_error('page_title', '<div class="error">', '</div>'); ?>									
+            <label class="control-label" for="page_title"><?php echo $this->lang->line('pages_title'); ?>*</label>
+            <?php
+            $data = array(
+                'name' => 'page_title',
+                'id' => 'page_title',
+                'required' => 'required',
+                'autofocus' => 'true',
+                'class' => 'form-control',
+                'value' => set_value('page_title', $pages->page_title)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+        
+        <div class="control-group">	
+            <?php echo form_error('page_keywords', '<div class="error">', '</div>'); ?>									
+            <label class="control-label" for="page_keywords"><?php echo $this->lang->line('pages_keywords'); ?>*</label>
+            <?php
+            $data = array(
+                'name' => 'page_keywords',
+                'id' => 'page_keywords',
+                'required' => 'required',
+                'autofocus' => 'true',
+                'class' => 'form-control',
+                'value' => set_value('page_keywords', $pages->page_keywords)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+
+        <div class="control-group">
+            <?php echo form_error('page_desc', '<div class="error">', '</div>'); ?>
+            <label class="control-label" for="page_desc"><?php echo $this->lang->line('pages_desc'); ?>*</label>
+            <?php
+            $data = array(
+                'name' => 'page_desc',
+                'id' => 'page_desc',
+                'required' => 'required',
+                'autofocus' => 'true',
+                'class' => 'form-control',
+                'value' => set_value('page_desc', $pages->page_desc)
+            );
+            echo form_input($data);
+            ?>			
+        </div> <!-- /control-group -->
+
+        <div class="control-group">	
+            <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>
+            <?php
+                $att = 'id="lang_iso" class="form-control"';
+                $data = array();
+                foreach ($lang as $lg) {
+                    $data[$lg->lang_iso] = $lg->lang_name;
+                }
+                echo form_dropdown('lang_iso', $data, $pages->lang_iso, $att);
+            ?>	
+        </div> <!-- /control-group -->
+        
+        <div class="control-group">	
+            <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
+            <?php
+            /*$data = array(
+                'name' => 'content',
+                'id' => 'content',
+                'class' => 'form-control body-tinymce',
+                'value' => set_value('content', $pages->content)
+            );
+            echo form_textarea($data);*/
+            ?>	
+            <textarea name="content" id="content" class="form-control body-tinymce"><?= $pages->content ?></textarea>
+        </div> <!-- /control-group -->
+        <br>
+        <div class="control-group">										
+            <label class="form-control-static" for="active">
+            <?php
+            $data = array(
+                'name' => 'active',
+                'id' => 'active',
+                'value' => '1'
+            );
+            if($pages->active) $data['checked'] = "checked";
+            echo form_checkbox($data);
+            ?> <?php echo $this->lang->line('lang_active'); ?></label>	
+        </div> <!-- /control-group -->
+        
+        <br><br>
+        <div class="form-actions">
+            <?php
+            $data = array(
+                'name' => 'submit',
+                'id' => 'submit',
+                'class' => 'btn btn-lg btn-primary',
+                'value' => $this->lang->line('btn_save'),
+            );
+            echo form_submit($data);
+            ?> 
+            <a class="btn btn-lg" href="<?php echo BASE_URL; ?>/admin/pages"><?php echo $this->lang->line('btn_cancel'); ?></a>
+        </div> <!-- /form-actions -->
+        <?php echo form_close(); ?>
+        <!-- /widget-content --> 
+    </div>
+</div>
