@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CSZ-CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
@@ -11,3 +12,9 @@ Server Recommend required:
 CSZ-CMS V.1.0.0-Beta (Rev.1)
 - We start developing this version now.
 - We finish beta version now.
+=======
+# csz-cms
+Content Management System (CMS) with Codeigniter and Bootstrap.
+
+Now, we start developed first version.
+>>>>>>> origin/master
