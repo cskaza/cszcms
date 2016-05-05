@@ -1,7 +1,7 @@
 <?php
 if (!file_exists('config.inc.php')) {
 	header("Location: ./install");
-	die();
+	exit();
 }
 /**
  * CodeIgniter
