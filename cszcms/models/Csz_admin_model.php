@@ -644,18 +644,19 @@ class Csz_admin_model extends CI_Model {
 
     public function insertPage() {
         // Create the new menu
-        if($this->input->post('page_name') == 'assets' || $this->input->post('page_name') == 'cszcms' ||
-           $this->input->post('page_name') == 'install' || $this->input->post('page_name') == 'photo' ||
-           $this->input->post('page_name') == 'system' || $this->input->post('page_name') == 'templates'){
-           $this->input->post('page_name') = 'pages_'.$this->input->post('page_name');
+        $page_name_input = $this->input->post('page_name');
+        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+           $page_name_input == 'install' || $page_name_input == 'photo' ||
+           $page_name_input == 'system' || $page_name_input == 'templates'){
+           $page_name_input = 'pages_'.$this->input->post('page_name');
         }
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        $page_url = $this->Csz_model->rw_link($this->input->post('page_name'));
+        $page_url = $this->Csz_model->rw_link($page_name_input);
         $content2 = $this->input->post('content');
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
         $data = array(
-            'page_name' => $this->input->post('page_name'),
+            'page_name' => $page_name_input,
             'page_url' => $page_url,
             'lang_iso' => $this->input->post('lang_iso'),
             'page_title' => $this->input->post('page_title'),
@@ -671,12 +672,18 @@ class Csz_admin_model extends CI_Model {
 
     public function updatePage($id) {
         // Create the new menu
+        $page_name_input = $this->input->post('page_name');
+        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+           $page_name_input == 'install' || $page_name_input == 'photo' ||
+           $page_name_input == 'system' || $page_name_input == 'templates'){
+           $page_name_input = 'pages_'.$this->input->post('page_name');
+        }
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        $page_url = $this->Csz_model->rw_link($this->input->post('page_name'));
+        $page_url = $this->Csz_model->rw_link($page_name_input);
         $content2 = $this->input->post('content');
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
-        $this->db->set('page_name', $this->input->post('page_name'), TRUE);
+        $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
         $this->db->set('lang_iso', $this->input->post('lang_iso'), TRUE);
         $this->db->set('page_title', $this->input->post('page_title'), TRUE);
