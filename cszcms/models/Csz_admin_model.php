@@ -644,6 +644,11 @@ class Csz_admin_model extends CI_Model {
 
     public function insertPage() {
         // Create the new menu
+        if($this->input->post('page_name') == 'assets' || $this->input->post('page_name') == 'cszcms' ||
+           $this->input->post('page_name') == 'install' || $this->input->post('page_name') == 'photo' ||
+           $this->input->post('page_name') == 'system' || $this->input->post('page_name') == 'templates'){
+           $this->input->post('page_name') = 'pages_'.$this->input->post('page_name');
+        }
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
         $page_url = $this->Csz_model->rw_link($this->input->post('page_name'));
         $content2 = $this->input->post('content');
