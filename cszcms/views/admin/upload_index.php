@@ -47,7 +47,8 @@
                 <thead>
                     <tr>
                         <th width="8%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?= $this->lang->line('btn_delete') ?></label></th>                           
-                        <th width="67%" style="vertical-align:middle;"><?= $this->lang->line('uploadfile_filename') ?></th>
+                        <th width="15%" class="text-center" style="vertical-align:middle;"><?= $this->lang->line('uploadfile_thumbnail') ?></th>
+                        <th width="52%" style="vertical-align:middle;"><?= $this->lang->line('uploadfile_filename') ?></th>
                         <th width="15%" class="text-center" style="vertical-align:middle;"><?= $this->lang->line('uploadfile_uploadtime') ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?= $this->lang->line('uploadfile_download') ?></th>
                     </tr>
@@ -55,13 +56,22 @@
                 <tbody>
                     <? if ($showfile === FALSE) { ?>
                         <tr>
-                            <td colspan="4" class="text-center"><span class="h6 error"><?= $this->lang->line('uploadfile_filenotfound') ?></span></td>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?= $this->lang->line('uploadfile_filenotfound') ?></span></td>
                         </tr>                           
                     <? } else { ?>
                         <? foreach ($showfile as $file) { ?>
                             <tr>
                                 <td class="text-center" style="vertical-align:middle;">
                                     <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?= $file["upload_file_id"] ?>">
+                                </td>
+                                <td class="text-center" style="vertical-align:middle;">
+                                    <? 
+                                    $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
+                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif'){ ?>
+                                    <img src="<?=BASE_URL.'/photo/upload/'.$file["file_upload"]?>" width="100">
+                                    <? }else{ ?>
+                                        <i class="glyphicon glyphicon-file"></i> <?=strtoupper($ext)?>
+                                    <? } ?>
                                 </td>
                                 <td style="vertical-align:middle;">
                                     <span class="h5"><b><?= $file["file_upload"] ?></b></span><br>

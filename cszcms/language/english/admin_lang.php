@@ -202,6 +202,7 @@ $lang['captcha_wrong']             = "The Security Check was not input correctly
 //Uploadfile Page
 $lang['uploadfile_header']                 = "File Upload";
 $lang['uploadfile_filenotfound']           = "File not found. Please use upload tools.";
+$lang['uploadfile_thumbnail']           = "Thumbnail";
 $lang['uploadfile_download']           = "Download";
 $lang['uploadfile_filename']           = "File Name";
 $lang['uploadfile_urlpath']           = "URL Path:";
