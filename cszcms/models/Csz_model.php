@@ -207,9 +207,10 @@ class Csz_model extends CI_Model {
     
     public function coreJs(){
         $core_js = '<script src="' . base_url() . 'assets/js/jquery-1.10.2.min.js"></script>';
-        $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
-        //$core_js.= '<script src="' . base_url() . 'assets/js/ie10-viewport-bug-workaround.js"></script>';
-        //$core_js.= '<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>';
+        $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';       
+        $core_js.= '<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>';
+        $core_js.= '<script src="' . base_url() . 'assets/js/validator.min.js"></script>';
+        $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
         return $core_js;
     }
     

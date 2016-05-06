@@ -88,10 +88,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <?=$core_js?>
-        <!-- jqBootstrapValidation -->
-        <script src="<?= base_url() ?>assets/js/validator.min.js"></script>
-        <script>
-            $('#validate-form').validator();  
-      </script>
     </body>
 </html>
