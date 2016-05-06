@@ -17,19 +17,3 @@
     </div>
 </div>
 <!-- /.row -->
-<br><br>
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i><span class="glyphicon glyphicon-file"></span></i> <?= $this->lang->line('dash_recent') ?></h3>
-            </div>
-            <div class="panel-body">
-                <div class="list-group">
-                    <center><?= $this->lang->line('dash_no_recent') ?></center>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /.row -->

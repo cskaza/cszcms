@@ -74,8 +74,13 @@
                                     <? } ?>
                                 </td>
                                 <td style="vertical-align:middle;">
-                                    <span class="h5"><b><?= $file["file_upload"] ?></b></span><br>
-                                    <span class="h6"><b><?= $this->lang->line('uploadfile_urlpath') ?></b> <em><?= BASE_URL ?>/photo/upload/<?= $file["file_upload"] ?></em></span>
+                                    <span class="h5"><b><?= $file["file_upload"] ?></b></span>
+                                    <div class="form-group has-warning">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><b><?= $this->lang->line('uploadfile_urlpath') ?></b></div>
+                                            <input type="text" readonly class="form-control" id="full_url" value="<?= BASE_URL ?>/photo/upload/<?= $file["file_upload"] ?>" onfocus="this.select();" onmouseup="return false;">
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
                                     <span class="h5"><b><?= $file["timestamp_create"] ?></b></span>

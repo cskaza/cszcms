@@ -202,6 +202,7 @@ class Csz_model extends CI_Model {
         $core_css = link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
+        $core_css.= link_tag('assets/css/full-slider.css');
         return $core_css;
     }
     

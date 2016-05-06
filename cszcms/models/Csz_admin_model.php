@@ -332,7 +332,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->update('settings', $data);
     }
 
-    public function file_upload($photo, $photo_name, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1280) {
+    public function file_upload($photo, $photo_name, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1900) {
         if ($yearR) {
             $year = $yearR . "/";
         } else {

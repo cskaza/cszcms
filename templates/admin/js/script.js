@@ -53,6 +53,7 @@ $(function () {
             baseUrl + '/templates/admin/css/dashboard.css',
             baseUrl + '/templates/admin/css/styles.css'
         ],
+        convert_urls : false,
         extended_valid_elements : "*[*]",
         valid_elements: "*[*]",
         plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels",

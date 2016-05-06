@@ -88,5 +88,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <?=$core_js?>
+        <script src="<?=base_url()?>/templates/cszdefault/js/classie.js"></script>
+        <script src="<?=base_url()?>/templates/cszdefault/js/cbpAnimatedHeader.js"></script>
+        <script type="text/javascript">
+        // Highlight the top nav as scrolling occurs
+        $('body').scrollspy({
+            target: '.navbar-fixed-top'
+        });
+        </script>
     </body>
 </html>
