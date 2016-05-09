@@ -81,7 +81,7 @@ class Csz_admin_model extends CI_Model {
         $this->pagination->initialize($config);
     }
 
-    public function getIndexData($table, $limit, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc') {
+    public function getIndexData($table, $limit = 0, $offset = 1, $orderby = 'timestamp_create', $sort = 'desc') {
         // Get a list of all user accounts
         $this->db->select('*');
         $this->db->order_by($orderby, $sort);
@@ -301,12 +301,15 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updateSettings() {
+        $add_js_clean = array('<script type="text/javascript">','<script>','</script>','[removed]');
+        $additional_js = str_replace($add_js_clean, '', $this->input->post('additional_js'));
         $data = array(
             'themes_config' => $this->input->post('siteTheme'),
             'admin_lang' => $this->input->post('siteLang'),
             'site_footer' => $this->input->post('siteFooter'),
             'default_email' => $this->input->post('siteEmail'),
-            'keywords' => $this->input->post('siteKeyword')
+            'keywords' => $this->input->post('siteKeyword'),
+            'additional_js' => $additional_js,
         );
 
         if ($this->input->post('del_file')) {

@@ -6,6 +6,7 @@ if (file_exists('../config.inc.php')) {
 
 if (!empty($_POST)) {
     /* Prepare Input Data */
+    $dbdsn = $_POST['dbdsn'];
     $baseurl = $_POST['baseurl'];
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
@@ -30,6 +31,8 @@ if (!empty($_POST)) {
     /* Prepare data for config.inc.php file */
     $config_file = '../config.inc.php';
     $config_txt = "<?php \n\n";
+    $config_txt .= "/* Database DSN */ \n";
+    $config_txt .= "define('DB_DSN', '".$dbdsn."'); \n\n";
     $config_txt .= "/* Database Host */ \n";
     $config_txt .= "define('DB_HOST', '".$dbhost."'); \n\n";
     $config_txt .= "/* Database Username */ \n";
@@ -130,6 +133,8 @@ if (!empty($_POST)) {
                                     <h3 class="panel-title"><b>Database Setup</b></h3>
                                 </div>
                                 <div class="panel-body">
+                                    <label for="dbdsn">Database DSN: </label>
+                                    <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">
                                     <label for="dbhost">Database Host*: </label>
                                     <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
                                     <label for="dbuser">Database Username*: </label>

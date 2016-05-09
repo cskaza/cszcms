@@ -13,7 +13,7 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?= $this->lang->line('dash_welcome') ?></div>
         <p><?= $this->lang->line('dash_message') ?></p>
-        <p><b>Current Date/Time: <em><?=date('d-m-Y H:i:s')?></em></b></p>
+        <p><b><?= $this->lang->line('dash_cur_time') ?> <em><?=date('d-m-Y H:i:s')?></em></b></p>
     </div>
 </div>
 <!-- /.row -->

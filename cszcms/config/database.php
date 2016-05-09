@@ -63,7 +63,7 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn'	=> DB_DSN,
 	'hostname' => DB_HOST,
 	'username' => DB_USERNAME,
 	'password' => DB_PASS,

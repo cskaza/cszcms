@@ -96,5 +96,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             target: '.navbar-fixed-top'
         });
         </script>
+        <?php if($additional_js){ ?>
+        <script type="text/javascript">
+            <?=$additional_js?>
+        </script>
+        <? } ?>
     </body>
 </html>

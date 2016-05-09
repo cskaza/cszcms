@@ -29,10 +29,10 @@ $lang['user_cur_pass']			= "Your Password";
 $lang['user_new_pass']			= "New Password";
 $lang['user_new_confirm']		= "Confirm Password";
 $lang['user_new_active']		= "Activate";
+$lang['user_new_deactive']		= "Deactivated";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";
-$lang['btn_jumbotron']          = "Jumbotron";
 $lang['btn_cancel']		= "Cancel";
 $lang['btn_delete']		= "Delete";
 $lang['btn_edit']		= "Edit";
@@ -52,7 +52,7 @@ $lang['login_email']		= "Email Address";
 $lang['login_password']		= "Password";
 $lang['login_signin']		= "Log in";
 $lang['login_forgetpwd']	= "Forgot Password";
-$lang['login_incorrect']	= "Username/Password is incorrect";
+$lang['login_incorrect']	= "Email address/Password is incorrect";
 
 //Forgot Password
 $lang['forgot_reset']		= "Password Reset";
@@ -65,12 +65,11 @@ $lang['forgot_check_email']	= "Please check your email inbox and click the link 
 
 //Dashboard
 $lang['dash_welcome']		= "Welcome to CSZ-CMS Backend";
-$lang['dash_recent']		= "Recently Updated Pages";
-$lang['dash_no_recent']		= "Don't have Recently Updated Pages!";
-$lang['dash_message']		= "This is your admin dashboard, Using the navigation above you can add or edit the users, pages or navigation menus on your website. This is built around the bootstrap framework, this should make your website fully responsive with ease.";
+$lang['dash_cur_time']		= "Current Date/Time:";
+$lang['dash_message']		= "This is a management system for administrators, to manage all content and settings on the site. Systems Web was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease.";
 
 // EMAILS FORGET PASSWORD
-$lang['email_reset_subject']    = "Reset your password";
+$lang['email_reset_subject']    = "Reset your password CSZ-CMS";
 $lang['email_reset_message']    = "Please click the link below within 30 minutes to reset your password.";
 
 // EMAIL TEXT DEFAULT
@@ -141,8 +140,10 @@ $lang['settings_name']			= "Site Name*";
 $lang['settings_email']			= "Default Email";
 $lang['settings_keyword']		= "Site Keyword";
 $lang['settings_footer']		= "Site Footer Message";
-$lang['settings_theme']			= "Site Theme:";
-$lang['settings_lang']			= "Backend Language:";
+$lang['settings_theme']			= "Site Theme";
+$lang['settings_lang']			= "Backend Language";
+$lang['settings_add_js']		= "Additional Javascript";
+$lang['settings_add_js_remark']		= "Javascript only for frontpage. Don't include <script></script> tag";
 $lang['settings_logo']			= "Site Logo";
 
 //Navigation Page
@@ -154,7 +155,7 @@ $lang['navpage_menulang']		= "Menu Language";
 $lang['navpage_menuname']		= "Menu Name";
 $lang['navpage_type']			= "Menu Type";
 $lang['navpage_pagelink']		= "Page Link";
-$lang['navpage_link']			= "Alternate Link";
+$lang['navpage_link']			= "Other Link";
 $lang['navpage_delete_btn']		= "Delete";
 $lang['navpage_edit_btn']                  = "Edit";
 $lang['delete_message']            = "Do you want to do this ?";

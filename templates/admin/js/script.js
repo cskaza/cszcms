@@ -60,15 +60,18 @@ $(function () {
         toolbar1: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage",
         toolbar2: "forecolor backcolor emoticons | glyphicons b_button jumbotron row_cols boots_panels",
         style_formats: [
-            {title: 'Bold text', inline: 'b'},
-            {title: 'Red text', inline: 'span', styles: {'color': '#ff0000'}},
+            {title: 'Muted text', inline: 'span', classes: 'text-muted'},
+            {title: 'Primary text', inline: 'span', classes: 'text-primary'},
+            {title: 'Success text', inline: 'span', classes: 'text-success'},
+            {title: 'Info text', inline: 'span', classes: 'text-info'},
+            {title: 'Warning text', inline: 'span', classes: 'text-warning'},
+            {title: 'Danger text', inline: 'span', classes: 'text-danger'},
             {title: 'H1 header', block: 'h1'},
             {title: 'H2 header', block: 'h2'},
             {title: 'H3 header', block: 'h3'},
             {title: 'H4 header', block: 'h4'},
             {title: 'H5 header', block: 'h5'},
-            {title: 'Table styles'},
-            {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+            {title: 'H5 header', block: 'h6'}
         ]
     });
 });

@@ -39,7 +39,8 @@ class Users extends CI_Controller {
         $base_url = BASE_URL . '/admin/users/';
 
         // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);       
+        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
+        $pagination = 1;
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;
 
         //Get users from database
@@ -54,7 +55,6 @@ class Users extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         //Load the view
-        //$this->template->load('admin/newuser', array('view' => 'data'));
         $this->template->loadSub('admin/users_add');
     }
 

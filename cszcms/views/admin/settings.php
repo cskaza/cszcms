@@ -26,7 +26,6 @@
                         'class' => 'form-control',
                         'value' => set_value('siteTitle', $settings->site_name, FALSE)
                     );
-
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
@@ -41,7 +40,6 @@
                         'class' => 'form-control',
                         'value' => set_value('siteFooter', $settings->site_footer, FALSE)
                     );
-
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
@@ -56,7 +54,6 @@
                         'class' => 'form-control',
                         'value' => set_value('siteEmail', $settings->default_email, FALSE)
                     );
-
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
@@ -71,7 +68,6 @@
                         'class' => 'form-control',
                         'value' => set_value('siteKeyword', $settings->keywords, FALSE)
                     );
-
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
@@ -112,7 +108,21 @@
                     echo form_dropdown('siteLang', $data, $settings->admin_lang, $att);
                     ?>
                 </div> <!-- /controls -->				
-            </div> <!-- /control-group -->           
+            </div> <!-- /control-group -->  
+            <div class="control-group">
+                <label class="control-label" for="additional_js"><?php echo $this->lang->line('settings_add_js'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'additional_js',
+                        'id' => 'additional_js',
+                        'class' => 'form-control'
+                    );
+                    echo form_textarea($data, $settings->additional_js);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_add_js_remark'); ?></em></span>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group --> 
             <hr />
             <div class="control-group">		
             <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									
