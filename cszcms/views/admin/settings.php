@@ -83,7 +83,7 @@
                             $t = str_replace("\\", "", $t);
                             $t = str_replace("/", "", $t);
                             if (($t != "index.html") && ($t != "admin")) {
-                                $data[$t] = str_replace("/", "", $t);
+                                $data[$t] = $t;
                             }
                         }
                     }
@@ -100,8 +100,9 @@
                     foreach ($langdir as $l) {
                         if (!is_dir($l)) {
                             $l = str_replace("\\", "", $l);
+                            $l = str_replace("/", "", $l);
                             if ($l != "index.html") {
-                                $data[$l] = str_replace("/", "", $l);
+                                $data[$l] = $l;
                             }
                         }
                     }

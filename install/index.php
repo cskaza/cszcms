@@ -15,6 +15,7 @@ if (!empty($_POST)) {
     $find_arr = parse_url($baseurl);
     $domain = $find_arr['host'];
     $email_domain = str_replace('www.', '', $domain);
+    $email = $_POST['email'];
     
     /* Database Connect */
     require './include/Database.php';
@@ -25,8 +26,10 @@ if (!empty($_POST)) {
     $filename = 'cszcms_app.sql';
     $db->mysqli_multi_query_file($mysqli, $filename);
     
-    $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$_POST['email']."', '".md5($_POST['password'])."', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
+    $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".md5($_POST['password'])."', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
     $mysqli->query($insert_user);
+    $update_sql = "UPDATE `settings` SET `default_email` = '".$email."' WHERE `settings_id` = 1";
+    $mysqli->query($update_sql);
     
     /* Prepare data for config.inc.php file */
     $config_file = '../config.inc.php';
@@ -133,8 +136,8 @@ if (!empty($_POST)) {
                                     <h3 class="panel-title"><b>Database Setup</b></h3>
                                 </div>
                                 <div class="panel-body">
-                                    <label for="dbdsn">Database DSN: </label>
-                                    <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">
+                                    <!--<label for="dbdsn">Database DSN: </label>
+                                    <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">-->
                                     <label for="dbhost">Database Host*: </label>
                                     <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
                                     <label for="dbuser">Database Username*: </label>

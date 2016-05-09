@@ -67,7 +67,11 @@ class Formsaction extends CI_Controller {
             # ---- set from, to, bcc --#
             $from_name = $email_from;
             $from_email = $email_from;
-            $to_email = $email_to;
+            if($email_from){
+                $to_email = $email_to;
+            }else{
+                $to_email = $webconfig->default_email;
+            }
             # ---- set header --#
             $headers = 'MIME-Version: 1.0' . "\r\n";
             $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";

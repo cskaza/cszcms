@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `form_main` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `sendmail`, `email`, `subject`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'contactus_en', '', 'post', 1, 'cskaza@gmail.com', 'Contact us from the CSZ-CMS website', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
+(1, 'contactus_en', '', 'post', 1, '', 'Contact us from the CSZ-CMS website', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
 
 CREATE TABLE IF NOT EXISTS `lang_iso` (
   `lang_iso_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Demo', '2016/1461303849_1-org.png', '&copy; 2016 CSZ-CMS Demo', 'cskaza@gmail.com', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '2016-05-09 11:07:43');
+(1, 'CSZ-CMS Demo', '2016/1461303849_1-org.png', '&copy; 2016 CSZ-CMS Demo', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '2016-05-09 11:07:43');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,

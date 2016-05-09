@@ -146,7 +146,7 @@ $lang['settings_footer']		= "Site Footer Message";
 $lang['settings_theme']			= "Site Theme";
 $lang['settings_lang']			= "Backend Language";
 $lang['settings_add_js']		= "Additional Javascript";
-$lang['settings_add_js_remark']		= "Javascript only for frontpage. Don't include <script></script> tag";
+$lang['settings_add_js_remark']		= "Javascript only for frontpage. Don't include &lt;script&gt;&lt;/script&gt; tag";
 $lang['settings_logo']			= "Site Logo";
 
 //Navigation Page

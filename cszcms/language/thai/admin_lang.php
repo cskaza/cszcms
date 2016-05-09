@@ -146,7 +146,7 @@ $lang['settings_footer']		= "ข้อความส่วนท้ายขอ
 $lang['settings_theme']			= "ธีมเว็บไซต์";
 $lang['settings_lang']			= "ภาษาของระบบเบื้องหลัง";
 $lang['settings_add_js']		= "Javascript เพิ่มเติม";
-$lang['settings_add_js_remark']		= "Javascript เท่านั้นสำหรับเว็บไซต์ด้านหน้า. ไม่รวม <script></script>";
+$lang['settings_add_js_remark']		= "Javascript เท่านั้นสำหรับเว็บไซต์ด้านหน้า. ไม่รวม &lt;script&gt;&lt;/script&gt;";
 $lang['settings_logo']			= "เว็บโลโก้";
 
 //Navigation Page
