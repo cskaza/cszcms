@@ -22,23 +22,23 @@ class Formsaction extends CI_Controller {
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {
                     $captcha = $this->session->userdata('captcha');
-                    if ($this->input->post('captcha') != $captcha) {
+                    if ($this->input->post('captcha', TRUE) != $captcha) {
                         //Return to last page: Captcha invalid
-                        redirect($this->input->post('cur_page') . '/2', 'refresh');
+                        redirect($this->input->post('cur_page', TRUE) . '/2', 'refresh');
                         exit;
                     }
                 }
                 $data = array();
                 foreach ($field_rs as $f_val) {
-                    if($f_val->field_required && !$this->input->post($f_val->field_name)){
+                    if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE)){
                          //Return to last page: Error
-                        redirect($this->input->post('cur_page') . '/3', 'refresh'); 
+                        redirect($this->input->post('cur_page', TRUE) . '/3', 'refresh'); 
                         exit;
                     }
                     if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit') {                        
-                        $data[$f_val->field_name] = $this->input->post($f_val->field_name);
+                        $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
                         if ($f_val->field_type == 'email') {
-                            $email_from = $this->input->post($f_val->field_name);
+                            $email_from = $this->input->post($f_val->field_name, TRUE);
                         }
                     }                    
                 }
@@ -83,9 +83,9 @@ class Formsaction extends CI_Controller {
                     if ($val->field_type != 'button' && $val->field_type != 'reset' && $val->field_type != 'submit') {
                         ($val->field_label)?$field_label = $val->field_label:$field_label = $val->field_name;
                         if($val->field_type == 'textarea'){
-                            $message_html.= '<b>' . $field_label . ':</b><br>' . $this->input->post($val->field_name) . '<br><br>';
+                            $message_html.= '<b>' . $field_label . ':</b><br>' . $this->input->post($val->field_name, TRUE) . '<br><br>';
                         }else{
-                            $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name) . '<br>';
+                            $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name, TRUE) . '<br>';
                         } 
                     }
                 }

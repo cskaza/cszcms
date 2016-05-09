@@ -122,14 +122,14 @@ class Csz_admin_model extends CI_Model {
     function createUser() {
         // Create the user account
         if ($this->input->post('active')) {
-            $active = $this->input->post('active');
+            $active = $this->input->post('active', TRUE);
         } else {
             $active = 0;
         }
         $data = array(
-            'name' => $this->input->post('name'),
-            'email' => $this->input->post('email'),
-            'password' => md5($this->input->post('password')),
+            'name' => $this->input->post('name', TRUE),
+            'email' => $this->input->post('email', TRUE),
+            'password' => md5($this->input->post('password', TRUE)),
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
         );
@@ -142,14 +142,14 @@ class Csz_admin_model extends CI_Model {
     function updateUser($id) {
         // update the user account
         if ($this->input->post('active')) {
-            $active = $this->input->post('active');
+            $active = $this->input->post('active', TRUE);
         } else {
             $active = 0;
         }
-        $this->db->set('name', $this->input->post("name"), TRUE);
-        $this->db->set('email', $this->input->post('email'), TRUE);
+        $this->db->set('name', $this->input->post("name", TRUE), TRUE);
+        $this->db->set('email', $this->input->post('email', TRUE), TRUE);
         if ($this->input->post('password') != '') {
-            $this->db->set('password', md5($this->input->post('password')), TRUE);
+            $this->db->set('password', md5($this->input->post('password', TRUE)), TRUE);
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
         }
@@ -205,7 +205,7 @@ class Csz_admin_model extends CI_Model {
 
     function login($email, $password) {
         $captcha = $this->session->userdata('captcha');
-        if ($this->input->post('captcha') != $captcha) {
+        if ($this->input->post('captcha', TRUE) != $captcha) {
             return 'CAPTCHA_WRONG';
         } else {
             $this->db->select("*");
@@ -285,9 +285,9 @@ class Csz_admin_model extends CI_Model {
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $rows) {
                 $data = array();
-                $data['social_url'] = $this->input->post($rows->social_name);
+                $data['social_url'] = $this->input->post($rows->social_name, TRUE);
                 if (isset($_POST['checkbox' . $rows->social_name])) {
-                    $data['active'] = $this->input->post('checkbox' . $rows->social_name);
+                    $data['active'] = $this->input->post('checkbox' . $rows->social_name, TRUE);
                 } else {
                     $data['active'] = 0;
                 }
@@ -302,32 +302,31 @@ class Csz_admin_model extends CI_Model {
         $add_js_clean = array('<script type="text/javascript">','<script>','</script>','[removed]');
         $additional_js = str_replace($add_js_clean, '', $this->input->post('additional_js'));
         $data = array(
-            'themes_config' => $this->input->post('siteTheme'),
-            'admin_lang' => $this->input->post('siteLang'),
-            'site_footer' => $this->input->post('siteFooter'),
-            'default_email' => $this->input->post('siteEmail'),
-            'keywords' => $this->input->post('siteKeyword'),
+            'themes_config' => $this->input->post('siteTheme', TRUE),
+            'admin_lang' => $this->input->post('siteLang', TRUE),
+            'site_footer' => $this->input->post('siteFooter', TRUE),
+            'default_email' => $this->input->post('siteEmail', TRUE),
+            'keywords' => $this->input->post('siteKeyword', TRUE),
             'additional_js' => $additional_js
         );
 
         if ($this->input->post('del_file')) {
             $upload_file = '';
-            unlink('photo/logo/' . $this->input->post('del_file'));
+            unlink('photo/logo/' . $this->input->post('del_file', TRUE));
         } else {
             $upload_file = $this->input->post('siteLogo');
             if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
-                //move_uploaded_file($_FILES[0]['tmp_name'], 'photo/logo/' .basename($_FILES[0]['name']));
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/logo/';
                 $file_f = $_FILES['file_upload']['tmp_name'];
                 $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('siteLogo'), $uploaddir, $photo_id, $paramiter);
+                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
             }
         }
         $data['site_logo'] = $upload_file;
         if ($this->input->post('siteTitle') != "")
-            $data['site_name'] = $this->input->post('siteTitle');
+            $data['site_name'] = $this->input->post('siteTitle', TRUE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
@@ -478,7 +477,7 @@ class Csz_admin_model extends CI_Model {
     public function sortNav() {
         $i = 0;
         $main_arrange = 1;
-        $menu_id = $this->input->post('menu_id');
+        $menu_id = $this->input->post('menu_id', TRUE);
         while ($i < count($menu_id)) {
             if ($menu_id[$i]) {
                 $this->db->set('arrange', $main_arrange, FALSE);
@@ -489,7 +488,7 @@ class Csz_admin_model extends CI_Model {
             }
             $i++;
         }
-        $menusub_id = $this->input->post('menusub_id');
+        $menusub_id = $this->input->post('menusub_id', TRUE);
         if (!empty($menusub_id)) {
             foreach (array_keys($menusub_id) as $key) {
                 $sub_arrange = 1;
@@ -555,15 +554,15 @@ class Csz_admin_model extends CI_Model {
 
     public function insertMenu() {
         // Create the new menu
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown') : $dropdown = 0;
-        ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu') : $dropMenu = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
+        ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
         $data = array(
-            'menu_name' => $this->input->post('name'),
-            'lang_iso' => $this->input->post('lang_iso'),
-            'pages_id' => $this->input->post('pageUrl'),
-            'other_link' => $this->input->post('url_link'),
+            'menu_name' => $this->input->post('name', TRUE),
+            'lang_iso' => $this->input->post('lang_iso', TRUE),
+            'pages_id' => $this->input->post('pageUrl', TRUE),
+            'other_link' => $this->input->post('url_link', TRUE),
             'drop_menu' => $dropdown,
             'drop_page_menu_id' => $dropMenu,
             'active' => $active,
@@ -576,13 +575,13 @@ class Csz_admin_model extends CI_Model {
 
     public function updateMenu($id) {
         // Update the menu
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown') : $dropdown = 0;
-        ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu') : $dropMenu = 0;
-        $this->db->set('menu_name', $this->input->post("name"), TRUE);
-        $this->db->set('lang_iso', $this->input->post("lang_iso"), TRUE);
-        $this->db->set('pages_id', $this->input->post('pageUrl'), TRUE);
-        $this->db->set('other_link', $this->input->post('url_link'), TRUE);
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
+        ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
+        $this->db->set('menu_name', $this->input->post("name", TRUE), TRUE);
+        $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
+        $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
+        $this->db->set('other_link', $this->input->post('url_link', TRUE), TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);
         $this->db->set('drop_page_menu_id', $dropMenu, TRUE);
         $this->db->set('active', $active, TRUE);
@@ -615,12 +614,12 @@ class Csz_admin_model extends CI_Model {
 
     public function insertLang() {
         // Create the new lang
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $data = array(
-            'lang_name' => $this->input->post('lang_name'),
-            'lang_iso' => $this->input->post('lang_iso'),
-            'country' => $this->input->post('country'),
-            'country_iso' => $this->input->post('country_iso'),
+            'lang_name' => $this->input->post('lang_name', TRUE),
+            'lang_iso' => $this->input->post('lang_iso', TRUE),
+            'country' => $this->input->post('country', TRUE),
+            'country_iso' => $this->input->post('country_iso', TRUE),
             'active' => $active,
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -630,11 +629,11 @@ class Csz_admin_model extends CI_Model {
 
     public function updateLang($id) {
         // Update the lang
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        $this->db->set('lang_name', $this->input->post("lang_name"), TRUE);
-        $this->db->set('lang_iso', $this->input->post("lang_iso"), TRUE);
-        $this->db->set('country', $this->input->post('country'), TRUE);
-        $this->db->set('country_iso', $this->input->post('country_iso'), TRUE);
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $this->db->set('lang_name', $this->input->post("lang_name", TRUE), TRUE);
+        $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
+        $this->db->set('country', $this->input->post('country', TRUE), TRUE);
+        $this->db->set('country_iso', $this->input->post('country_iso', TRUE), TRUE);
         if ($id != 1) {
             $this->db->set('active', $active, FALSE);
         }
@@ -645,24 +644,24 @@ class Csz_admin_model extends CI_Model {
 
     public function insertPage() {
         // Create the new page
-        $page_name_input = $this->input->post('page_name');
+        $page_name_input = $this->input->post('page_name', TRUE);
         if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
            $page_name_input == 'install' || $page_name_input == 'photo' ||
            $page_name_input == 'system' || $page_name_input == 'templates'){
-           $page_name_input = 'pages_'.$this->input->post('page_name');
+           $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
         }
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
-        $content2 = $this->input->post('content');
+        $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
         $data = array(
             'page_name' => $page_name_input,
             'page_url' => $page_url,
-            'lang_iso' => $this->input->post('lang_iso'),
-            'page_title' => $this->input->post('page_title'),
-            'page_keywords' => $this->input->post('page_keywords'),
-            'page_desc' => $this->input->post('page_desc'),
+            'lang_iso' => $this->input->post('lang_iso', TRUE),
+            'page_title' => $this->input->post('page_title', TRUE),
+            'page_keywords' => $this->input->post('page_keywords', TRUE),
+            'page_desc' => $this->input->post('page_desc', TRUE),
             'content' => $content,
             'active' => $active,
         );
@@ -673,23 +672,23 @@ class Csz_admin_model extends CI_Model {
 
     public function updatePage($id) {
         // Update the page
-        $page_name_input = $this->input->post('page_name');
+        $page_name_input = $this->input->post('page_name', TRUE);
         if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
            $page_name_input == 'install' || $page_name_input == 'photo' ||
            $page_name_input == 'system' || $page_name_input == 'templates'){
-           $page_name_input = 'pages_'.$this->input->post('page_name');
+           $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
         }
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
-        $content2 = $this->input->post('content');
+        $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
         $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
-        $this->db->set('lang_iso', $this->input->post('lang_iso'), TRUE);
-        $this->db->set('page_title', $this->input->post('page_title'), TRUE);
-        $this->db->set('page_keywords', $this->input->post('page_keywords'), TRUE);
-        $this->db->set('page_desc', $this->input->post('page_desc'), TRUE);
+        $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE), TRUE);
+        $this->db->set('page_title', $this->input->post('page_title', TRUE), TRUE);
+        $this->db->set('page_keywords', $this->input->post('page_keywords', TRUE), TRUE);
+        $this->db->set('page_desc', $this->input->post('page_desc', TRUE), TRUE);
         $this->db->set('content', $content, TRUE);
         if ($id != 1) {
             $this->db->set('active', $active, FALSE);
@@ -712,18 +711,18 @@ class Csz_admin_model extends CI_Model {
     public function insertForms() {
         $this->load->dbforge();
         // Create the new forms
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail') : $sendmail = 0;
-        ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha') : $captcha = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
+        ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         $str_arr = array(' ', '-');
-        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name')));
+        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
             'form_name' => $form_name,
-            'form_enctype' => $this->input->post('form_enctype'),
-            'form_method' => $this->input->post('form_method'),
+            'form_enctype' => $this->input->post('form_enctype', TRUE),
+            'form_method' => $this->input->post('form_method', TRUE),
             'sendmail' => $sendmail,
-            'email' => $this->input->post('email'),
-            'subject' => $this->input->post('subject'),
+            'email' => $this->input->post('email', TRUE),
+            'subject' => $this->input->post('subject', TRUE),
             'active' => $active,
             'captcha' => $captcha,
         );
@@ -732,15 +731,15 @@ class Csz_admin_model extends CI_Model {
         $this->db->insert('form_main', $data);
         $form_main_id = $this->db->insert_id();
 
-        $field_name = $this->input->post('field_name');
-        $field_type = $this->input->post('field_type');
-        $field_id = $this->input->post('field_id');
-        $field_class = $this->input->post('field_class');
-        $field_placeholder = $this->input->post('field_placeholder');
-        $field_value = $this->input->post('field_value');
-        $field_label = $this->input->post('field_label');
-        $sel_option_val = $this->input->post('sel_option_val');
-        $field_required = $this->input->post('field_required');
+        $field_name = $this->input->post('field_name', TRUE);
+        $field_type = $this->input->post('field_type', TRUE);
+        $field_id = $this->input->post('field_id', TRUE);
+        $field_class = $this->input->post('field_class', TRUE);
+        $field_placeholder = $this->input->post('field_placeholder', TRUE);
+        $field_value = $this->input->post('field_value', TRUE);
+        $field_label = $this->input->post('field_label', TRUE);
+        $sel_option_val = $this->input->post('sel_option_val', TRUE);
+        $field_required = $this->input->post('field_required', TRUE);
         $fields = array(
             'form_' . $form_name . '_id' => array(
                 'type' => 'INT',
@@ -789,18 +788,18 @@ class Csz_admin_model extends CI_Model {
 
     public function updateForms($id) {
         $this->load->dbforge();
-        ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
-        ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail') : $sendmail = 0;
-        ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha') : $captcha = 0;
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
+        ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         $str_arr = array(' ', '-');
-        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name')));
+        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
             'form_name' => $form_name,
-            'form_enctype' => $this->input->post('form_enctype'),
-            'form_method' => $this->input->post('form_method'),
+            'form_enctype' => $this->input->post('form_enctype', TRUE),
+            'form_method' => $this->input->post('form_method', TRUE),
             'sendmail' => $sendmail,
-            'email' => $this->input->post('email'),
-            'subject' => $this->input->post('subject'),
+            'email' => $this->input->post('email', TRUE),
+            'subject' => $this->input->post('subject', TRUE),
             'active' => $active,
             'captcha' => $captcha,
         );
@@ -808,17 +807,17 @@ class Csz_admin_model extends CI_Model {
         $this->db->where('form_main_id', $id);
         $this->db->update('form_main', $data);
         /* Rename Field */
-        $form_field_id = $this->input->post('form_field_id');
-        $field_name1 = $this->input->post('field_name1');
-        $field_oldname = $this->input->post('field_oldname');
-        $field_type1 = $this->input->post('field_type1');
-        $field_id1 = $this->input->post('field_id1');
-        $field_class1 = $this->input->post('field_class1');
-        $field_placeholder1 = $this->input->post('field_placeholder1');
-        $field_value1 = $this->input->post('field_value1');
-        $field_label1 = $this->input->post('field_label1');
-        $sel_option_val1 = $this->input->post('sel_option_val1');
-        $field_required1 = $this->input->post('field_required1');
+        $form_field_id = $this->input->post('form_field_id', TRUE);
+        $field_name1 = $this->input->post('field_name1', TRUE);
+        $field_oldname = $this->input->post('field_oldname', TRUE);
+        $field_type1 = $this->input->post('field_type1', TRUE);
+        $field_id1 = $this->input->post('field_id1', TRUE);
+        $field_class1 = $this->input->post('field_class1', TRUE);
+        $field_placeholder1 = $this->input->post('field_placeholder1', TRUE);
+        $field_value1 = $this->input->post('field_value1', TRUE);
+        $field_label1 = $this->input->post('field_label1', TRUE);
+        $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
+        $field_required1 = $this->input->post('field_required1', TRUE);
         if (count($field_oldname) > 0) {
             for ($i = 0; $i < count($field_oldname); $i++) {
                 if ($field_oldname[$i]) {
@@ -846,15 +845,15 @@ class Csz_admin_model extends CI_Model {
         }
 
         /* Add New Field */
-        $field_name = $this->input->post('field_name');
-        $field_type = $this->input->post('field_type');
-        $field_id = $this->input->post('field_id');
-        $field_class = $this->input->post('field_class');
-        $field_placeholder = $this->input->post('field_placeholder');
-        $field_value = $this->input->post('field_value');
-        $field_label = $this->input->post('field_label');
-        $sel_option_val = $this->input->post('sel_option_val');
-        $field_required = $this->input->post('field_required');
+        $field_name = $this->input->post('field_name', TRUE);
+        $field_type = $this->input->post('field_type', TRUE);
+        $field_id = $this->input->post('field_id', TRUE);
+        $field_class = $this->input->post('field_class', TRUE);
+        $field_placeholder = $this->input->post('field_placeholder', TRUE);
+        $field_value = $this->input->post('field_value', TRUE);
+        $field_label = $this->input->post('field_label', TRUE);
+        $sel_option_val = $this->input->post('sel_option_val', TRUE);
+        $field_required = $this->input->post('field_required', TRUE);
         if (count($field_name) > 0) {
             for ($i = 0; $i < count($field_name); $i++) {
                 if ($field_name[$i]) {

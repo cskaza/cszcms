@@ -4,9 +4,10 @@ if (file_exists('../config.inc.php')) {
   exit();
 }
 
+$success = 0;
 if (!empty($_POST)) {
     /* Prepare Input Data */
-    $dbdsn = $_POST['dbdsn'];
+    /*$dbdsn = $_POST['dbdsn'];*/
     $baseurl = $_POST['baseurl'];
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
@@ -34,8 +35,8 @@ if (!empty($_POST)) {
     /* Prepare data for config.inc.php file */
     $config_file = '../config.inc.php';
     $config_txt = "<?php \n\n";
-    $config_txt .= "/* Database DSN */ \n";
-    $config_txt .= "define('DB_DSN', '".$dbdsn."'); \n\n";
+    ///*$config_txt .= "/* Database DSN */ \n";*/
+    //$config_txt .= "define('DB_DSN', '".$dbdsn."'); \n\n";*/
     $config_txt .= "/* Database Host */ \n";
     $config_txt .= "define('DB_HOST', '".$dbhost."'); \n\n";
     $config_txt .= "/* Database Username */ \n";
