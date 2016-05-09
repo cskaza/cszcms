@@ -137,7 +137,7 @@ class Headfoot_html extends CI_Model {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="'.base_url().'admin">Backend System</a>
+                    <a class="navbar-brand" href="'.base_url().'admin">'.$this->lang->line('backend_system').'</a>
                 </div>            
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">

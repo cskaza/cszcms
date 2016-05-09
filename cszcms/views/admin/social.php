@@ -12,7 +12,8 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?= $this->lang->line('social_header') ?></div>
-        <?= $this->lang->line('social_message') ?>
+        <?= $this->lang->line('social_message') ?><br>
+        <?= $this->lang->line('social_enable') ?>
         <?php echo form_open(BASE_URL . '/admin/social/update'); ?>
         <table class="table table-striped table-bordered">
             <thead>

@@ -30,7 +30,7 @@ class Csz_model extends CI_Model {
         return $pageURL;
     }
 
-    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = '',  $orderby = '', $sort = ''){
+    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0,  $orderby = '', $sort = ''){
         $this->db->select($sel_field);
         if(is_array($where_field) && is_array($where_val)){
             for ($i = 0; $i < count($where_field); $i++) {

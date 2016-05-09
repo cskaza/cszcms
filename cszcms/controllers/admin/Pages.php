@@ -41,7 +41,6 @@ class Pages extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);    
-        $pagination = 1;
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;        
 
         //Get users from database

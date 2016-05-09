@@ -31,7 +31,7 @@ class Users extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
-
+        
         // Pages variable
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_admin');
@@ -40,8 +40,7 @@ class Users extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
-        $pagination = 1;
-        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;
+        ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 1;
 
         //Get users from database
         $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination-1, 'user_admin_id', 'asc'));

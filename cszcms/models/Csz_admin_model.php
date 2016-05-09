@@ -23,12 +23,9 @@ class Csz_admin_model extends CI_Model {
     }
 
     function getLang() {
-        $this->db->limit(1, 0);
-        $query = $this->db->get('settings');
-        if ($query->num_rows() > 0) {
-            $row = $query->row();
-            return $row->admin_lang;
-        }
+        /* Get Lang for Admin */
+        $row = $this->load_config();
+        return $row->admin_lang;
     }
 
     public function getCurPages() {
@@ -81,11 +78,11 @@ class Csz_admin_model extends CI_Model {
         $this->pagination->initialize($config);
     }
 
-    public function getIndexData($table, $limit = 0, $offset = 1, $orderby = 'timestamp_create', $sort = 'desc') {
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc') {
         // Get a list of all user accounts
         $this->db->select('*');
         $this->db->order_by($orderby, $sort);
-        $this->db->limit($limit, $offset);
+        if($limit) $this->db->limit($limit, $offset);
         $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
             $row = $query->result_array();
@@ -215,6 +212,7 @@ class Csz_admin_model extends CI_Model {
             $this->db->where("email", $email);
             $this->db->where("password", $password);
             $this->db->where("active", '1');
+            $this->db->limit(1, 0);
             $query = $this->db->get("user_admin");
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $rows) {
@@ -309,7 +307,7 @@ class Csz_admin_model extends CI_Model {
             'site_footer' => $this->input->post('siteFooter'),
             'default_email' => $this->input->post('siteEmail'),
             'keywords' => $this->input->post('siteKeyword'),
-            'additional_js' => $additional_js,
+            'additional_js' => $additional_js
         );
 
         if ($this->input->post('del_file')) {
@@ -511,7 +509,6 @@ class Csz_admin_model extends CI_Model {
 
     public function getPagesAll() {
         $this->db->select("*");
-        //$this->db->where();
         $query = $this->db->get('pages');
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -578,7 +575,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updateMenu($id) {
-        // Create the new menu
+        // Update the menu
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown') : $dropdown = 0;
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu') : $dropMenu = 0;
@@ -595,6 +592,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function findLangDataUpdate($lang_iso) {
+        /* When delete Lang, wiil update all page of lang to default */
         $query = $this->db->get_where($table = 'pages', 'lang_iso = \'' . $lang_iso . '\'');
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $rows) {
@@ -616,7 +614,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function insertLang() {
-        // Create the new menu
+        // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
         $data = array(
             'lang_name' => $this->input->post('lang_name'),
@@ -631,7 +629,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updateLang($id) {
-        // Create the new menu
+        // Update the lang
         ($this->input->post('active')) ? $active = $this->input->post('active') : $active = 0;
         $this->db->set('lang_name', $this->input->post("lang_name"), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso"), TRUE);
@@ -646,7 +644,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function insertPage() {
-        // Create the new menu
+        // Create the new page
         $page_name_input = $this->input->post('page_name');
         if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
            $page_name_input == 'install' || $page_name_input == 'photo' ||
@@ -674,7 +672,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updatePage($id) {
-        // Create the new menu
+        // Update the page
         $page_name_input = $this->input->post('page_name');
         if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
            $page_name_input == 'install' || $page_name_input == 'photo' ||

@@ -46,7 +46,7 @@ $config['index_page'] = '';
 |
 | WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
 */
-$config['uri_protocol']	= 'PATH_INFO';
+$config['uri_protocol']	= 'REQUEST_URI';
 
 /*
 |--------------------------------------------------------------------------
@@ -154,7 +154,7 @@ $config['composer_autoload'] = FALSE;
 |
 */
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-//$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-ก-ฮะาิีุูเะแำไใๆ่้๊๋ั็์ึื';
+/*$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-ก-ฮะาิีุูเะแำไใๆ่้๊๋ั็์ึื';*/
 
 
 /*
@@ -411,7 +411,7 @@ $config['standardize_newlines'] = FALSE;
 |          for backwards compatibility purposes!
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -454,7 +454,7 @@ $config['csrf_exclude_uris'] = array();
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = FALSE;
+$config['compress_output'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -507,4 +507,3 @@ $config['proxy_ips'] = '';
 |--------------------------------------------------------------------------
 */
 $config["useDatabaseConfig"] = true;
-$config['global_xss_filtering'] = true;

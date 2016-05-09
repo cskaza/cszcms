@@ -19,6 +19,8 @@ class Database {
         $this->_password = $dbpass;
         $this->_database = $dbname;
         $this->_connection = new mysqli($this->_host, $this->_username, $this->_password, $this->_database);
+        $this->_connection->set_charset('utf8');
+        $this->_connection->query("SET collation_connection = utf8_general_ci");
         // Error handling
         if (mysqli_connect_error()) {
             trigger_error("Failed to conencto to MySQL: " . mysqli_connect_error(), E_USER_ERROR);

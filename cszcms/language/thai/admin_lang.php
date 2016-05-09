@@ -1,4 +1,7 @@
 <?php
+//Backend System
+$lang['backend_system']		= "ระบบเบื้องหลัง";
+
 //Navigation Bar
 $lang['nav_dash']		= "แดชบอร์ด";
 $lang['nav_view_site']		= "ดูเว็บไซต์";

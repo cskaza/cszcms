@@ -1,4 +1,7 @@
 <?php
+//Backend System
+$lang['backend_system']		= "Backend System";
+
 //Navigation Bar
 $lang['nav_dash']		= "Dashboard";
 $lang['nav_view_site']		= "View Site";
