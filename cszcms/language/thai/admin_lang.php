@@ -180,6 +180,8 @@ $lang['lang_addnew']			= "เพิ่มภาษาใหม่";
 $lang['lang_new_header']		= "เพิ่มภาษาใหม่";
 $lang['lang_edit_header']		= "แก้ไขภาษา";
 $lang['lang_active']                    = "เปิดใช้งาน";
+$lang['lang_countryiso_remark']		= 'คุณสามารถดูรายการตัวย่อ ISO ของประเทศ (ความยาว 2 ตัวอักษร) ได้ที่ - <a href="http://www.nationsonline.org/oneworld/country_code_list.htm" target="_blank" rel="nofollow external">คลิกที่นี่</a>';
+$lang['lang_iso_remark']		= 'คุณสามารถดูรายการตัวย่อ ISO ของภาษา (ความยาว 2 ตัวอักษร) ได้ที่ - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank" rel="nofollow external">คลิกที่นี่</a>';
 
 //Pages - All Pages
 $lang['pages_header']			= "หน้าเนื้อหา";

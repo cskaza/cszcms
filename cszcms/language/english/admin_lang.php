@@ -180,6 +180,8 @@ $lang['lang_addnew']			= "New Language";
 $lang['lang_new_header']		= "New Language";
 $lang['lang_edit_header']		= "Edit Language";
 $lang['lang_active']                    = "Active";
+$lang['lang_countryiso_remark']		= 'You can see country ISO code list (2 letters long) at - <a href="http://www.nationsonline.org/oneworld/country_code_list.htm" target="_blank" rel="nofollow external">CLICK HERE</a>';
+$lang['lang_iso_remark']		= 'You can see language ISO code list (2 letters long) at - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank" rel="nofollow external">CLICK HERE</a>';
 
 //Pages - All Pages
 $lang['pages_header']			= "Pages Content";
