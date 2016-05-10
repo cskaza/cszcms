@@ -1,5 +1,4 @@
-CSZ-CMS
-
+#### CSZ-CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap. This is Open-Source for free.
 See more at http://www.cszcms.com
@@ -11,7 +10,6 @@ Server Recommend Requirements:
 - MySQL 5.0 or higher (Recommend for MySQLi Driver).
 - PHP Shorttag Enable.
 - PHP GD Enable.
-
 
 CSZ-CMS V.1.0.0-Beta (Rev.1)
 - Social Settings for icon link on frontpage.
