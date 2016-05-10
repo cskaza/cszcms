@@ -13,7 +13,7 @@ Server Recommend Requirements:
 
 
 CSZ-CMS V.1.0.0-Beta (Rev.1)
-- Social Settings.
+- Social Settings for icon link on frontpage.
 - Site Settings (Additional Javascript For Analytics etc.)
 - Add/Manage Language for frontpage.
 - Manage Navigation or Menu for frontpage.
