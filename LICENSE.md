@@ -1,4 +1,7 @@
 #### CSZ-CMS
+
+The MIT License (MIT)
+
 - by CSKAZA for [CSZ-CMS](http://www.cszcms.com)
 - Copyright (c) 2016 by CSKAZA
 
