@@ -44,7 +44,8 @@
                 'value' => set_value('lang_iso', $lang->lang_iso)
             );
             echo form_input($data);
-            ?>				
+            ?>			
+            <span class="remark"><em><?php echo $this->lang->line('lang_iso_remark'); ?></em></span>
         </div> <!-- /control-group -->
 
         <div class="control-group">
@@ -77,7 +78,8 @@
                 'value' => set_value('country_iso', $lang->country_iso)
             );
             echo form_input($data);
-            ?>				
+            ?>			
+            <span class="remark"><em><?php echo $this->lang->line('lang_countryiso_remark'); ?></em></span>
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
