@@ -147,6 +147,11 @@ $lang['settings_theme']			= "Site Theme";
 $lang['settings_lang']			= "Backend Language";
 $lang['settings_add_js']		= "Additional Javascript";
 $lang['settings_add_js_remark']		= "Javascript only for frontpage. Don't include &lt;script&gt;&lt;/script&gt; tag";
+$lang['settings_add_meta']		= "Additional Meta Tag";
+$lang['settings_add_meta_remark']	= "Meta tag only for frontpage.";
+$lang['settings_mincaptcha']		= "Min. Captcha Characters";
+$lang['settings_maxcaptcha']		= "Max. Captcha Characters";
+$lang['settings_charcaptcha']		= "Captcha Characters";
 $lang['settings_logo']			= "Site Logo";
 
 //Navigation Page

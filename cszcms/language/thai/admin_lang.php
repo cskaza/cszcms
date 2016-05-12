@@ -147,6 +147,11 @@ $lang['settings_theme']			= "ธีมเว็บไซต์";
 $lang['settings_lang']			= "ภาษาของระบบเบื้องหลัง";
 $lang['settings_add_js']		= "Javascript เพิ่มเติม";
 $lang['settings_add_js_remark']		= "Javascript เท่านั้นสำหรับเว็บไซต์ด้านหน้า. ไม่รวม &lt;script&gt;&lt;/script&gt;";
+$lang['settings_add_meta']		= "Meta Tag เพิ่มเติม";
+$lang['settings_add_meta_remark']	= "Meta เท่านั้นสำหรับเว็บไซต์ด้านหน้า.";
+$lang['settings_mincaptcha']		= "ค่าต่ำสุดของตัวอักษร Captcha";
+$lang['settings_maxcaptcha']		= "ค่าสูงสุดของตัวอักษร Captcha";
+$lang['settings_charcaptcha']		= "ตัวอักษร Characters";
 $lang['settings_logo']			= "เว็บโลโก้";
 
 //Navigation Page

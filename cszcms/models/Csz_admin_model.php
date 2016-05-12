@@ -232,7 +232,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function cszCopyright() {
-        $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.1.0.0-Beta (Rev.1)</span>';
+        $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.1.0.0</span>';
         return $csz_copyright;
     }
 
@@ -307,7 +307,11 @@ class Csz_admin_model extends CI_Model {
             'site_footer' => $this->input->post('siteFooter', TRUE),
             'default_email' => $this->input->post('siteEmail', TRUE),
             'keywords' => $this->input->post('siteKeyword', TRUE),
-            'additional_js' => $additional_js
+            'additional_js' => $additional_js,
+            'additional_metatag' => $this->input->post('additional_metatag'),
+            'min_captcha' => $this->input->post('min_captcha', TRUE),
+            'max_captcha' => $this->input->post('max_captcha', TRUE),
+            'captcha_char' => $this->input->post('captcha_char', TRUE)
         );
 
         if ($this->input->post('del_file')) {

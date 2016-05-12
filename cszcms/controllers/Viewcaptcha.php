@@ -11,22 +11,27 @@ class Viewcaptcha extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->CI = & get_instance();
+        $this->load->helper('url');
+        $this->load->database();
         $this->load->library('session');
+        $this->load->model('Csz_model');
     }
 
     function index() {
+        $row = $this->Csz_model->load_config();
         if (!function_exists('gd_info')) {
             throw new Exception('Required GD library is missing');
         }
-
+        
         $bg_path = FCPATH.'/assets/captcha/backgrounds/';
         $font_path = FCPATH.'/assets/captcha/fonts/';
 
         // Default values
         $captcha_config = array(
             'code' => '',
-            'min_length' => 6,
-            'max_length' => 6,
+            'min_length' => $row->min_captcha,
+            'max_length' => $row->max_captcha,
             'backgrounds' => array(
                 $bg_path . '45-degree-fabric.png',
                 $bg_path . 'cloth-alike.png',
@@ -40,7 +45,7 @@ class Viewcaptcha extends CI_Controller {
             'fonts' => array(
                 $font_path . 'times_new_yorker.ttf'
             ),
-            'characters' => 'abcdefghjkmnprstuvwxyz23456789',
+            'characters' => $row->captcha_char,
             'min_font_size' => 28,
             'max_font_size' => 28,
             'color' => '#666',

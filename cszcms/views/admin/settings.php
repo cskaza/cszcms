@@ -111,6 +111,20 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->  
             <div class="control-group">
+                <label class="control-label" for="additional_metatag"><?php echo $this->lang->line('settings_add_meta'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'additional_metatag',
+                        'id' => 'additional_metatag',
+                        'class' => 'form-control'
+                    );
+                    echo form_textarea($data, $settings->additional_metatag);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_add_meta_remark'); ?></em></span>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group --> 
+            <div class="control-group">
                 <label class="control-label" for="additional_js"><?php echo $this->lang->line('settings_add_js'); ?></label>
                 <div class="controls">
                     <?php
@@ -123,7 +137,49 @@
                     ?>
                     <span class="remark"><em><?php echo $this->lang->line('settings_add_js_remark'); ?></em></span>
                 </div> <!-- /controls -->				
-            </div> <!-- /control-group --> 
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="min_captcha"><?php echo $this->lang->line('settings_mincaptcha'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'min_captcha',
+                        'id' => 'min_captcha',
+                        'class' => 'form-control',
+                        'value' => set_value('min_captcha', $settings->min_captcha, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="max_captcha"><?php echo $this->lang->line('settings_maxcaptcha'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'max_captcha',
+                        'id' => 'max_captcha',
+                        'class' => 'form-control',
+                        'value' => set_value('max_cpatcha', $settings->max_captcha, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="captcha_char"><?php echo $this->lang->line('settings_charcaptcha'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'captcha_char',
+                        'id' => 'captcha_char',
+                        'class' => 'form-control',
+                        'value' => set_value('captcha_char', $settings->captcha_char, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
             <hr />
             <div class="control-group">		
             <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									
