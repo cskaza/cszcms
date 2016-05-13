@@ -24,7 +24,7 @@ class Formsaction extends CI_Controller {
                     $captcha = $this->session->userdata('captcha');
                     if ($this->input->post('captcha', TRUE) != $captcha) {
                         //Return to last page: Captcha invalid
-                        redirect($this->input->post('cur_page', TRUE) . '/2', 'refresh');
+                        redirect(urlencode($this->input->post('cur_page', TRUE)) . '/2', 'refresh');
                         exit;
                     }
                 }
@@ -32,7 +32,7 @@ class Formsaction extends CI_Controller {
                 foreach ($field_rs as $f_val) {
                     if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE)){
                          //Return to last page: Error
-                        redirect($this->input->post('cur_page', TRUE) . '/3', 'refresh'); 
+                        redirect(urlencode($this->input->post('cur_page', TRUE)) . '/3', 'refresh'); 
                         exit;
                     }
                     if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit') {                        
@@ -47,7 +47,7 @@ class Formsaction extends CI_Controller {
                 $this->db->insert('form_' . $frm_rs->form_name, $data);
                 $this->sendMail($frm_rs->sendmail, $frm_rs->email, $email_from, $frm_rs->subject, $field_rs);
                 //Return to last page: Success
-                redirect($this->input->post('cur_page') . '/1', 'refresh');
+                redirect(urlencode($this->input->post('cur_page', TRUE)) . '/1', 'refresh');
                 exit;
             } else {
                 //Return to home page
