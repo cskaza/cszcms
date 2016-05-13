@@ -54,7 +54,47 @@
             echo form_dropdown('form_method', $data, $form_rs->form_method, $att);
             ?>	
         </div> <!-- /control-group -->
-
+        
+        <div class="control-group">	
+            <?php echo form_error('success_txt', '<div class="error">', '</div>'); ?>									
+            <label class="control-label" for="success_txt"><?php echo $this->lang->line('forms_success_txt'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'success_txt',
+                'id' => 'success_txt',
+                'class' => 'form-control',
+                'value' => set_value('success_txt', $form_rs->success_txt, FALSE)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <?php echo form_error('captchaerror_txt', '<div class="error">', '</div>'); ?>									
+            <label class="control-label" for="captchaerror_txt"><?php echo $this->lang->line('forms_captchaerror_txt'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'captchaerror_txt',
+                'id' => 'captchaerror_txt',
+                'class' => 'form-control',
+                'value' => set_value('captchaerror_txt', $form_rs->captchaerror_txt, FALSE)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <?php echo form_error('error_txt', '<div class="error">', '</div>'); ?>									
+            <label class="control-label" for="error_txt"><?php echo $this->lang->line('forms_error_txt'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'error_txt',
+                'id' => 'error_txt',
+                'class' => 'form-control',
+                'value' => set_value('error_txt', $form_rs->error_txt, FALSE)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+        
         <br>
         <div class="panel panel-default">
             <div class="panel-heading">

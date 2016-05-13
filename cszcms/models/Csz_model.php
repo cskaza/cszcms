@@ -302,17 +302,18 @@ class Csz_model extends CI_Model {
     }
     
     public function addFrmToHtml($content, $frm_name, $cur_page = '', $status = '') {
+        $row_config = $this->load_config();
         $where_arr = array('form_name','active');
         $val_arr = array($frm_name,1);
         $form_data = $this->getValue('*', 'form_main', $where_arr, $val_arr, 1);
         if($form_data){
             $html_btn = '';
             if($status == 1){
-                $sts_msg = '<p class="text-center"><span class="success">Send Successfully!</span><br></p>';
+                $sts_msg = '<p class="text-center"><span class="success">'.$form_data->success_txt.'</span><br></p>';
             }else if($status == 2){
-                $sts_msg = '<p class="text-center"><span class="error">The Security Check was not input correctly. Please try again.</span><br></p>';
+                $sts_msg = '<p class="text-center"><span class="error">'.$form_data->captchaerror_txt.'</span><br></p>';
             }else if($status == 3){
-                $sts_msg = '<p class="text-center"><span class="error">Error! Please try again.</span><br></p>';
+                $sts_msg = '<p class="text-center"><span class="error">'.$form_data->error_txt.'</span><br></p>';
             }else{
                 $sts_msg = '';
             }
@@ -360,7 +361,7 @@ class Csz_model extends CI_Model {
             if($form_data->captcha){
                 $html.= '<br><img src="'.BASE_URL.'/viewcaptcha?'.mt_rand(1000000000, 9999999999).'+'.time().'" alt="CAPTCHA IMG" />';
                 $html.= '<div class="controls">
-                    <input type="text" name="captcha" id="captcha" class="form-control" required="required" autofocus="true" maxlength="6" placeholder="Security Check"/>
+                    <input type="text" name="captcha" id="captcha" class="form-control" required="required" autofocus="true" maxlength="'.$row_config->max_captcha.'" placeholder="Security Check"/>
                 </div>';
             }
             $html.= '<br><div class="form-actions">'.$html_btn.'</div>';

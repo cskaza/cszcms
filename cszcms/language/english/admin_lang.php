@@ -237,6 +237,9 @@ $lang['forms_email']			= "Send to Email";
 $lang['forms_subject']			= "Email Subject";
 $lang['forms_indexremark']		= "<i>Please use this tag for insert the forms into the content. Please see Forms Name<br><b>Tag:</b></i> [?]{=forms:<b>forms_name</b>}[?]";
 $lang['forms_view']			= "View Form Post";
+$lang['forms_success_txt']		= "Success Text";
+$lang['forms_captchaerror_txt']		= "Captcha Wrong Text";
+$lang['forms_error_txt']		= "Error Text";
 
 //Field Text
 $lang['field_header']                   = "Field Insert";

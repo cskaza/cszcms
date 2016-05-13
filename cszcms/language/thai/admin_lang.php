@@ -236,6 +236,9 @@ $lang['forms_email']			= "ที่อยู่อีเมล์ที่จะ
 $lang['forms_subject']			= "หัวข้ออีเมล์";
 $lang['forms_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่มแบบฟอร์มเข้าไปยังหน้าเนื้อหา. กรุณาดูที่ชื่อฟอร์ม<br><b>Tag:</b></i> [?]{=forms:<b>forms_name</b>}[?]";
 $lang['forms_view']			= "ดูแบบฟอร์มที่โพสต์";
+$lang['forms_success_txt']		= "ข้อความแสดงว่าสำเร็จ";
+$lang['forms_captchaerror_txt']		= "ข้อความแสดงว่า Captcha ผิด";
+$lang['forms_error_txt']		= "ข้อความแสดงข้อผิดพลาด";
 
 //Field Text
 $lang['field_header']                   = "เพิ่มฟิล";

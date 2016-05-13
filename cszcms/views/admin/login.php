@@ -1,3 +1,4 @@
+<? $row = $this->Csz_model->load_config(); ?>
 <div class="container">
     <div class="row">
         <div class="col-md-3"></div>
@@ -50,7 +51,7 @@
                     'class' => 'form-control',
                     'required' => 'required',
                     'autofocus' => 'true',
-                    'maxlength' => '6',
+                    'maxlength' => $row->max_captcha,
                     'value' => set_value('captcha'),
                     'placeholder' => $this->lang->line('captcha_text')
                 );
