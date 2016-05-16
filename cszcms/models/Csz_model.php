@@ -318,7 +318,7 @@ class Csz_model extends CI_Model {
                 $sts_msg = '';
             }
             $html = $sts_msg;
-            $html.= '<form action="'.BASE_URL.'/formsaction/'.$form_data->form_main_id.'" name="'.$frm_name.'" method="'.$form_data->form_method.'" id="validate-form" data-toggle="validator" role="form" enctype="'.$form_data->form_enctype.'" accept-charset="utf-8">';
+            $html.= '<form action="'.BASE_URL.'/formsaction/'.$form_data->form_main_id.'" name="'.$frm_name.'" method="'.$form_data->form_method.'" enctype="'.$form_data->form_enctype.'" accept-charset="utf-8">';
             $html.= '<input type="hidden" name="cur_page" id="cur_page" value="'.$cur_page.'">';
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
