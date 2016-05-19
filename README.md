@@ -11,12 +11,4 @@ Server Recommend Requirements:
 - PHP Shorttag Enable.
 - PHP GD Enable.
 
-CSZ-CMS V.1.0.0
-- Social Settings for icon link on frontpage.
-- Site Settings (Captcha Settings)
-- Site Settings (Additional Javascript For Analytics etc. and Additional Metatag)
-- Add/Manage Language for frontpage.
-- Manage Navigation or Menu for frontpage.
-- Manage page content for frontpage with TinyMCE Text Editor.
-- Upload/Download for use in content with Upload Tools
-- Forms Builder for add the form into content page with [?]{=forms:forms_name}[?] tag.
+Download Here! at http://www.cszcms.com/download
