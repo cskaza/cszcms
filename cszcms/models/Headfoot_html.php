@@ -158,6 +158,7 @@ class Headfoot_html extends CI_Model {
                                 <li><a href="'.base_url().'admin/lang"><i class="glyphicon glyphicon-globe"></i> '.$this->lang->line('lang_header').'</a></li>
                                 <li><a href="'.base_url().'admin/settings"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('settings_header').'</a></li>
                                 <li><a href="'.base_url().'admin/social"><i class="glyphicon glyphicon-share"></i> '.$this->lang->line('social_header').'</a></li>
+                                <li><a href="'.base_url().'admin/upgrade"><i class="glyphicon glyphicon-compressed"></i> '.$this->lang->line('upgrade_header').'</a></li>
                                 <li><a href="'.base_url().'admin/users"><i class="glyphicon glyphicon-user"></i> '.$this->lang->line('nav_admin_users').'</a></li>
                             </ul>
                         </li>
@@ -205,7 +206,7 @@ class Headfoot_html extends CI_Model {
         $html.= '</ul></ul><hr>';
         $html.= '<ul class="nav nav-sidebar">';
         $html.= '<li><a href="#" title="'.$this->lang->line('nav_gel_settings').'" onclick="ChkHideShow(\'gel_settings\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_gel_settings').'</a></li>';
-        if($cur_page == 'users' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang'){
+        if($cur_page == 'users' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade'){
             $gel_settings_display = "";
         }else{
             $gel_settings_display = "display: none;";
@@ -214,6 +215,7 @@ class Headfoot_html extends CI_Model {
         $html.= $this->admin_leftli($cur_page,'lang','admin/lang',$this->lang->line('lang_header'),'glyphicon-globe',TRUE);
         $html.= $this->admin_leftli($cur_page,'settings','admin/settings',$this->lang->line('settings_header'),'glyphicon-cog',TRUE);
         $html.= $this->admin_leftli($cur_page,'social','admin/social',$this->lang->line('social_header'),'glyphicon-share',TRUE);
+        $html.= $this->admin_leftli($cur_page,'upgrade','admin/upgrade',$this->lang->line('upgrade_header'),'glyphicon-compressed',TRUE);
         $html.= $this->admin_leftli($cur_page,'users','admin/users',$this->lang->line('nav_admin_users'),'glyphicon-user',TRUE);
         $html.= '</ul></ul><hr>';
         $html.= '<ul class="nav nav-sidebar">

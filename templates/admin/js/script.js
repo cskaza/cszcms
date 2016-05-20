@@ -37,21 +37,29 @@ $(function () {
         $(".selall-chkbox").prop('checked', $(this).prop("checked"));
     });
 });
-$(function () {
+function getPathLvl1(file_path){
     var baseUrl;
-    if (location.host === '192.168.1.246') {
-        baseUrl = location.protocol + "//" + location.host + '/MyCMS';
+    var curPath = location.pathname;
+    var pathLvl1 = curPath.replace(file_path, '');
+    var n = pathLvl1.search('/');
+    if (n >= 0) {
+        var pathArray = pathLvl1.split( '/' );
+        baseUrl = location.protocol + '//' + location.host + '/' + pathArray[1];
     } else {
-        baseUrl = location.protocol + "//" + location.host;
+        baseUrl = location.protocol + '//' + location.host;
     }
-
+    return baseUrl;
+}
+$(function () {
+    var baseUrl = getPathLvl1('templates/admin/js/script.js');
     tinymce.init({
         selector: '.body-tinymce',
         height: '500px',
         content_css: [
             baseUrl + '/assets/css/bootstrap.min.css',
             baseUrl + '/templates/admin/css/dashboard.css',
-            baseUrl + '/templates/admin/css/styles.css'
+            baseUrl + '/templates/admin/css/styles.css',
+            baseUrl + '/assets/font-awesome/css/font-awesome.min.css'
         ],
         convert_urls : false,
         extended_valid_elements : "*[*]",

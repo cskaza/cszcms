@@ -42,6 +42,10 @@ $row = $this->Csz_admin_model->load_config();
                         <?= $this->Headfoot_html->admin_leftmenu($cur_page) ?>
                     </div>
                     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                        <!-- Check upgrade version -->
+                        <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
+                        <a href="<?=BASE_URL?>/admin/upgrade" title="<?=$this->lang->line('btn_upgrade')?>"><div class="alert alert-info" role="alert"><?=$this->lang->line('upgrade_newlast_alert')?></div></a>
+                        <?php } ?>
                         <!-- Start For Content -->
                         <?php echo $content; ?>
                         <!-- End For Content -->

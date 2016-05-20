@@ -22,7 +22,48 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    function getLang() {
+    public function chkVerUpdate($cur_ver, $xml_url = '') {
+        if (!$xml_url)
+            $xml_url = 'http://www.cszcms.com/downloads/lastest_version.xml';
+        $ver_r = array();
+        $cur_r = array();
+        $xml = simplexml_load_file($xml_url) or die("Error: Cannot create object");
+        if ($xml->version) {
+            $cur_ver = str_replace(' ', '.', $cur_ver);
+            $cur_r = explode('.', $cur_ver);
+            $ver_r = explode('.', $xml->version);
+            if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
+                return $xml->version;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function findNextVersion($cur_ver, $last_ver) {
+        $ver_r = array();
+        $cur_r = array();
+        if ($last_ver) {
+            $cur_ver = str_replace(' ', '.', $cur_ver);
+            $cur_r = explode('.', $cur_ver);
+            $ver_r = explode('.', $last_ver);
+            if ($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) {
+                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+            } else if ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) {
+                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+            } else if ($ver_r[0] > $cur_r[0]) {
+                return ($cur_r[0] + 1) . '.0.0';
+            } else {
+                return $last_ver;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getLang() {
         /* Get Lang for Admin */
         $row = $this->load_config();
         return $row->admin_lang;
@@ -82,7 +123,8 @@ class Csz_admin_model extends CI_Model {
         // Get a list of all user accounts
         $this->db->select('*');
         $this->db->order_by($orderby, $sort);
-        if($limit) $this->db->limit($limit, $offset);
+        if ($limit)
+            $this->db->limit($limit, $offset);
         $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
             $row = $query->result_array();
@@ -232,7 +274,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function cszCopyright() {
-        $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.1.0.0</span>';
+        $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.' . $this->Csz_model->getVersion() . '</span>';
         return $csz_copyright;
     }
 
@@ -299,7 +341,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updateSettings() {
-        $add_js_clean = array('<script type="text/javascript">','<script>','</script>','[removed]');
+        $add_js_clean = array('<script type="text/javascript">', '<script>', '</script>', '[removed]');
         $additional_js = str_replace($add_js_clean, '', $this->input->post('additional_js'));
         $data = array(
             'themes_config' => $this->input->post('siteTheme', TRUE),
@@ -649,10 +691,10 @@ class Csz_admin_model extends CI_Model {
     public function insertPage() {
         // Create the new page
         $page_name_input = $this->input->post('page_name', TRUE);
-        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
-           $page_name_input == 'install' || $page_name_input == 'photo' ||
-           $page_name_input == 'system' || $page_name_input == 'templates'){
-           $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
+        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+                $page_name_input == 'install' || $page_name_input == 'photo' ||
+                $page_name_input == 'system' || $page_name_input == 'templates') {
+            $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
@@ -677,10 +719,10 @@ class Csz_admin_model extends CI_Model {
     public function updatePage($id) {
         // Update the page
         $page_name_input = $this->input->post('page_name', TRUE);
-        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
-           $page_name_input == 'install' || $page_name_input == 'photo' ||
-           $page_name_input == 'system' || $page_name_input == 'templates'){
-           $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
+        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+                $page_name_input == 'install' || $page_name_input == 'photo' ||
+                $page_name_input == 'system' || $page_name_input == 'templates') {
+            $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
@@ -846,7 +888,7 @@ class Csz_admin_model extends CI_Model {
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->where('form_field_id', $form_field_id[$i]);
                     $this->db->update('form_field', $data);
-                    if($field_oldname[$i] != $field_name1[$i]){
+                    if ($field_oldname[$i] != $field_name1[$i]) {
                         $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
                         $this->dbforge->modify_column('form_' . $form_name, $fields);
                     }
@@ -962,6 +1004,28 @@ class Csz_admin_model extends CI_Model {
                 break;
         }
         return $fields;
+    }
+
+    public function execSqlFile($sql_file) {
+        if (file_exists($sql_file)) {
+            $this->load->helper('file');
+            $backup = read_file($sql_file);
+            $sql_clean = '';
+            foreach (explode("\n", $backup) as $line) {
+
+                if (isset($line[0]) && $line[0] != "#") {
+                    $sql_clean .= $line . "\n";
+                }
+            }
+            foreach (explode(";\n", $sql_clean) as $sql) {
+                $sql = trim($sql);
+                if ($sql) {
+                    $this->db->query($sql);
+                }
+            }
+        }else{
+            return FALSE;
+        }
     }
 
 }

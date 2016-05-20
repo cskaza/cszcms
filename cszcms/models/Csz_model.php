@@ -11,8 +11,26 @@ class Csz_model extends CI_Model {
         $this->load->model('Csz_admin_model');
         $this->load->helper('url');
     }
+    public function getVersion($xml_url = '') {
+        if($xml_url){ 
+            $xml_file = $xml_url;           
+        }else{ 
+            $xml_file = base_url().'/version.xml';             
+        }
+        $xml = simplexml_load_file($xml_file) or die("Error: Cannot create object");
+        if($xml->version){
+            if($xml->release == 'beta'){
+                $beta = ' Beta';
+            }else{
+                $beta = '';
+            }           
+            return $xml->version.$beta;
+        }else{
+            return FALSE;
+        }
+    }
     
-    function countData($table,$where_field = '', $where_val = '') {
+    public function countData($table,$where_field = '', $where_val = '') {
         if($where_field){
             $this->db->where($where_field, $where_val);
         }

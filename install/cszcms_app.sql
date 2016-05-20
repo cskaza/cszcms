@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `min_captcha`, `max_captcha`, `captcha_char`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Demo', '', '&copy; 2016 CSZ-CMS Demo', 'itsupport@classactmedia.co.th', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 6, 6, 'abcdefghjkmnprstuvwxyz23456789', '2016-05-12 17:40:31');
+(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 5, 5, 'abcdefghjkmnprstuvwxyz23456789', '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,

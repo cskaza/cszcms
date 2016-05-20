@@ -126,17 +126,13 @@ class Admin extends CI_Controller {
 
     public function uploadIndexSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if (strpos($_SERVER['DOCUMENT_ROOT'], ":")) {
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/MyCMS/photo/upload/";
-        } else {
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/photo/upload/";
-        }
+        $path = FCPATH . "/photo/upload/";
         $filedel = $this->input->post('filedel');
         foreach ($filedel as $value) {
             if ($value) {
                 $filename = $this->Csz_model->getValue('file_upload', 'upload_file', 'upload_file_id', $value, 1);
                 if($filename->file_upload){
-                    unlink($path . $filename->file_upload);
+                    @unlink($path . $filename->file_upload);
                 }
                 $this->Csz_admin_model->removeData('upload_file', 'upload_file_id', $value);
             }
@@ -152,11 +148,7 @@ class Admin extends CI_Controller {
         } else {
             $year = date("Y");
         }
-        if (strpos($_SERVER['DOCUMENT_ROOT'], ":")) {
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/MyCMS/photo/upload/";
-        } else {
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/photo/upload/";
-        }
+        $path = FCPATH . "/photo/upload/";
         $files = $_FILES;
         $cpt = count($_FILES['files']['name']);
         for($i=0; $i<$cpt; $i++) {   

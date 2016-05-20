@@ -102,7 +102,7 @@
                     'id' => 'submit',
                     'class' => 'btn btn-primary',
                     'value' => $this->lang->line('btn_delete'),
-                    'onclick' => "return confirm('Are you sure you want to delete?');",
+                    'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
                 );
                 echo form_submit($data);
                 ?>

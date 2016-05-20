@@ -119,6 +119,9 @@ $route['admin/forms/view/delete'] = "admin/forms/deleteViewData";
 $route['admin/forms/view/(:any)/delete'] = "admin/forms/deleteViewData";
 $route['admin/forms/view/(:any)/delete/(:any)'] = "admin/forms/deleteViewData";
 $route['admin/forms/(:any)'] = "admin/forms";
+$route['admin/upgrade'] = "admin/upgrade";
+$route['admin/upgrade/download'] = "admin/upgrade/download";
+$route['admin/upgrade/(:any)'] = "admin/upgrade";
 
 $route['formsaction/(:any)'] = 'formsaction';
 $route['formsaction'] = 'formsaction';

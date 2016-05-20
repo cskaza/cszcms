@@ -44,6 +44,7 @@ $lang['btn_back']		= "Back";
 $lang['btn_add']		= "Add";
 $lang['btn_upload']		= "Upload";
 $lang['btn_view']		= "View";
+$lang['btn_refresh']			= "Refresh now";
 $lang['option_choose']		= "-- Please Choose --";
 $lang['option_yes']		= "Yes";
 $lang['option_no']		= "No";
@@ -260,3 +261,13 @@ $lang['field_addtxtinfo']               = '<span class="remark">Press <i class="
 $lang['formpost_notfound']                 = "Form post not found.";
 $lang['formpost_ipaddress']                 = "IP Address";
 
+//Upgrade
+$lang['upgrade_header']			= "Upgrade System";
+$lang['btn_upgrade']			= "Start Upgrade";
+$lang['upgrade_curver']			= "Current Version:";
+$lang['upgrade_lastver']		= "Lastest Version:";
+$lang['upgrade_newlast_alert']          = "CSZ-CMS have new upgrade version. Please upgrade now!";
+$lang['upgrade_lastver_alert']          = "Your CSZ-CMS is lastest version!";
+$lang['upgrade_success_alert']          = "Upgrade successfully!";
+$lang['upgrade_error_alert']            = "Upgrade Error!";
+$lang['upgrade_text']                   = "Important! Please, backup the database and your modified file before upgrade!";
