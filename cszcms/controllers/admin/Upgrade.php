@@ -52,7 +52,7 @@ class Upgrade extends CI_Controller {
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             // maximum execution time in seconds
-            set_time_limit(24 * 60 * 60);
+            set_time_limit(0);
             // folder to save downloaded files to. must end with slash
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-" . $this->cur_version . "-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version, $lastversion) . ".zip";
             $filename = basename($url);
@@ -60,11 +60,16 @@ class Upgrade extends CI_Controller {
             $content = file_get_contents($url);
             file_put_contents($newfname, $content);
             if (file_exists($newfname)) {
-                $this->unzip->extract($newfname);
-                $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                delete_files($newfname);
-                delete_files(FCPATH . 'upgrade_sql', TRUE);
-                rmdir(FCPATH . 'upgrade_sql');
+                @$this->unzip->extract($newfname);
+                if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
+                    $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                    delete_files(FCPATH . 'upgrade_sql', TRUE);
+                    rmdir(FCPATH . 'upgrade_sql');
+                }
+                chmod($newfname, 0777);
+                if(is_writable($newfname)){
+                    @delete_files($newfname);
+                }
             }
 
             /* When Success */
