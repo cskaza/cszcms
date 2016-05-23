@@ -51,6 +51,7 @@ class Users extends CI_Controller {
 
     public function addUser() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         //Load the form helper
         $this->load->helper('form');
         //Load the view
@@ -59,6 +60,7 @@ class Users extends CI_Controller {
 
     public function confirm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -116,6 +118,7 @@ class Users extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         if($this->uri->segment(4)){
             if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
                 //Delete the user account

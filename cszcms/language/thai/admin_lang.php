@@ -33,6 +33,7 @@ $lang['user_new_pass']			= "รหัสผ่านใหม่";
 $lang['user_new_confirm']		= "ยืนยันรหัสผ่าน";
 $lang['user_new_active']		= "เปิดใช้งาน";
 $lang['user_new_deactive']		= "ปิดการใช้งาน";
+$lang['user_new_type']                  = "ประเภทของการอนุญาต";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "บันทึก";

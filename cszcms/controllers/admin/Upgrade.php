@@ -39,7 +39,7 @@ class Upgrade extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
         $this->template->setSub('error', '');
@@ -49,6 +49,7 @@ class Upgrade extends CI_Controller {
 
     public function download() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             // maximum execution time in seconds

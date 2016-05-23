@@ -86,6 +86,7 @@ class Admin extends CI_Controller {
 
     public function settings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         //Load the form helper
         $this->load->helper('form');
         $this->load->helper('directory');
@@ -99,6 +100,7 @@ class Admin extends CI_Controller {
 
     public function updateSettings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_admin_model->updateSettings();
         redirect('/admin/settings', 'refresh');
     }

@@ -172,6 +172,7 @@ class Csz_admin_model extends CI_Model {
             'name' => $this->input->post('name', TRUE),
             'email' => $this->input->post('email', TRUE),
             'password' => md5($this->input->post('password', TRUE)),
+            'user_type' => $this->input->post('user_type', TRUE),
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
         );
@@ -195,6 +196,7 @@ class Csz_admin_model extends CI_Model {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
         }
+        $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
         if ($this->session->userdata('user_admin_id') != $id) {
             $this->db->set('active', $active, FALSE);
         }
@@ -262,6 +264,7 @@ class Csz_admin_model extends CI_Model {
                         'user_admin_id' => $rows->user_admin_id,
                         'admin_name' => $rows->name,
                         'admin_email' => $rows->email,
+                        'admin_type' => $rows->user_type,
                         'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);

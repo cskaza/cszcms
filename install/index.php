@@ -27,7 +27,7 @@ if (!empty($_POST)) {
     $filename = 'cszcms_app.sql';
     $db->mysqli_multi_query_file($mysqli, $filename);
     
-    $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".md5($_POST['password'])."', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
+    $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".md5($_POST['password'])."', 'admin', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
     $mysqli->query($insert_user);
     $update_sql = "UPDATE `settings` SET `default_email` = '".$email."' WHERE `settings_id` = 1";
     $mysqli->query($update_sql);
@@ -214,7 +214,7 @@ if (!empty($_POST)) {
                 <div class="row">
                     <div class="col-md-8 div-copyright">
                         <span class="copyright">&copy; <?php echo date('Y'); ?> CSZ-CMS Installer</span>
-                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.1.0.1</span></small>
+                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.1.0.2</span></small>
                     </div>
                 </div>
             </footer>            

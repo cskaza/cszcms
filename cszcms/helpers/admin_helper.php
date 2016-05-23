@@ -16,4 +16,12 @@ class Admin_helper{
             exit;	
         }
     }
+    
+    static function is_not_admin($user_type){
+        if($user_type != 'admin'){
+            $redirect= BASE_URL.'/admin';
+            header("Location: $redirect");	
+            exit;	
+        }
+    }
 } 

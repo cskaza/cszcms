@@ -33,6 +33,7 @@ $lang['user_new_pass']			= "New Password";
 $lang['user_new_confirm']		= "Confirm Password";
 $lang['user_new_active']		= "Activate";
 $lang['user_new_deactive']		= "Deactivated";
+$lang['user_new_type']                  = "Permission Type";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";

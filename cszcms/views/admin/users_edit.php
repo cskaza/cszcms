@@ -73,6 +73,16 @@
             echo form_password($data);
             ?>			
         </div> <!-- /control-group -->
+        <div class="control-group">										
+            <label class="control-label" for="user_type"><?php echo $this->lang->line('user_new_type'); ?></label>
+            <?php
+                $att = 'id="user_type" class="form-control"';
+                $data = array();
+                $data['admin'] = 'Admin';
+                $data['editor'] = 'Editor';
+                echo form_dropdown('user_type', $data, $users->user_type, $att);
+            ?>		
+        </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">
