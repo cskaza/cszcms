@@ -1013,16 +1013,11 @@ class Csz_admin_model extends CI_Model {
         if (file_exists($sql_file)) {
             $this->load->helper('file');
             $backup = read_file($sql_file);
-            $sql_clean = '';
-            foreach (explode("\n", $backup) as $line) {
-
-                if (isset($line[0]) && $line[0] != "#") {
-                    $sql_clean .= $line . "\n";
-                }
-            }
-            foreach (explode(";\n", $sql_clean) as $sql) {
-                $sql = trim($sql);
-                if ($sql) {
+            $backup = str_replace('\n', '', $backup);
+            $sql_r = explode(";", $backup);
+            for($i=0;$i < count($sql_r);$i++){
+                if ($sql_r[$i]) {
+                    $sql = trim($sql_r[$i]);
                     $this->db->query($sql);
                 }
             }

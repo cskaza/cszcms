@@ -214,7 +214,7 @@ if (!empty($_POST)) {
                 <div class="row">
                     <div class="col-md-8 div-copyright">
                         <span class="copyright">&copy; <?php echo date('Y'); ?> CSZ-CMS Installer</span>
-                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.1.0.2</span></small>
+                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.1.0.3</span></small>
                     </div>
                 </div>
             </footer>            
