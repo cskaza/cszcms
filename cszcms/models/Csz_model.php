@@ -166,9 +166,8 @@ class Csz_model extends CI_Model {
         }
     }
 
-        public function load_page($pageurl, $lang){
+        public function load_page($pageurl){
         $this->db->where("page_url", $pageurl);
-        $this->db->where("lang_iso", $lang);
         $this->db->where("active", 1);
 	$this->db->limit(1, 0);
         $query = $this->db->get('pages');

@@ -56,7 +56,7 @@ class Home extends CI_Controller {
         $row = $this->Csz_model->load_config();
         $pageURL = $this->Csz_model->getCurPages();	
         $this->page_url = $pageURL;
-        $this->page_rs = $this->Csz_model->load_page($pageURL, $this->session->userdata('fronlang_iso'));
+        $this->page_rs = $this->Csz_model->load_page($pageURL);
         $page_rs = $this->page_rs;
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
