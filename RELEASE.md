@@ -1,5 +1,10 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.2
+- Fix some bug.
+- Add default content when create new page.
+- Add permission for admin user (Admin, Editor).
+
 CSZ-CMS V.1.0.1
 - Upgrade tools with one click.
 - Auto check lastest version from server.
