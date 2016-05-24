@@ -196,7 +196,9 @@ class Csz_admin_model extends CI_Model {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
         }
-        $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
+        if($id != 1 && $this->session->userdata('admin_type') != 'editor'){
+            $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
+        }
         if ($this->session->userdata('user_admin_id') != $id) {
             $this->db->set('active', $active, FALSE);
         }

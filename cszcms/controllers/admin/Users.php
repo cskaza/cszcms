@@ -82,6 +82,9 @@ class Users extends CI_Controller {
 
     public function editUser() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+            redirect('/admin/users', 'refresh');
+        }
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
@@ -96,6 +99,9 @@ class Users extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+            redirect('/admin/users', 'refresh');
+        }       
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
