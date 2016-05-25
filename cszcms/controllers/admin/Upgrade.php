@@ -11,7 +11,8 @@ class Upgrade extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->helper('form');
-        $this->load->helper("file");
+        $this->load->helper('file');
+        $this->load->library('unzip');
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
         $this->template->set_template('admin');
@@ -64,7 +65,7 @@ class Upgrade extends CI_Controller {
                 }
             }
             if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
-                $this->download();
+                redirect('/admin/upgrade/download', 'refresh');
             }else{
                 /* When Success */
                 $this->template->setSub('cur_version', $this->cur_version);
