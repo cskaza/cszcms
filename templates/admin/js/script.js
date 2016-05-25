@@ -48,7 +48,7 @@ function getPathLvl1(file_path){
     } else {
         baseUrl = location.protocol + '//' + location.host;
     }
-    return baseUrl;
+    return baseUrl.replace('admin','');
 }
 $(function () {
     var baseUrl = getPathLvl1('templates/admin/js/script.js');
