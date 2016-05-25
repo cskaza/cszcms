@@ -31,10 +31,6 @@ class Home extends CI_Controller {
         parent::__construct();
         $this->CI = & get_instance();
         $this->load->database();
-        $this->load->library('session');
-        $this->load->helper('url');
-        $this->load->model('Headfoot_html');
-        $this->load->model('Csz_model');
         $row = $this->Csz_model->load_config();
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);

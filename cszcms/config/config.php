@@ -154,7 +154,6 @@ $config['composer_autoload'] = FALSE;
 |
 */
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-/*$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-ก-ฮะาิีุูเะแำไใๆ่้๊๋ั็์ึื';*/
 
 
 /*
@@ -454,7 +453,7 @@ $config['csrf_exclude_uris'] = array();
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = FALSE;
+$config['compress_output'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------

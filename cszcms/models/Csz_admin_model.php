@@ -6,9 +6,8 @@ class Csz_admin_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('Csz_model');
-        $this->load->helper('url');
+        $this->load->database();
     }
 
     public function load_config() {

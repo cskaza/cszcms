@@ -12,10 +12,6 @@ class Viewcaptcha extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->CI = & get_instance();
-        $this->load->helper('url');
-        $this->load->database();
-        $this->load->library('session');
-        $this->load->model('Csz_model');
     }
 
     function index() {

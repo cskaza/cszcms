@@ -10,7 +10,7 @@
 </div>
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6">
         <div class="h2 sub-header"><?= $this->lang->line('upgrade_header') ?></div>
         <div class="panel panel-default">
             <div class="panel-body">
@@ -43,5 +43,25 @@
             <br><br>
             <div class="alert alert-danger" role="alert"><?=$this->lang->line('upgrade_error_alert')?></div>
         <? } ?>       
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <div class="h2 sub-header"><?= $this->lang->line('database_maintain_header') ?></div>
+        <? if($error == 'opt_success'){ ?>
+            <div class="alert alert-success" role="alert"><?=$this->lang->line('optimize_success_alert')?></div>
+        <? }else if($error == 'opt_error'){  ?>
+            <div class="alert alert-danger" role="alert"><?=$this->lang->line('optimize_error_alert')?></div>
+        <? } ?> 
+        <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
+        <?
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-primary',
+            'value' => $this->lang->line('btn_optimize_db'),
+        );
+        echo form_submit($data);
+        ?>   
+        <?php echo form_close(); ?>
+        <br><a href="<?=BASE_URL . '/admin/upgrade/backup'?>" target="_blank" class="btn btn-primary"><?=$this->lang->line('btn_backup_db')?></a>
     </div>
 </div>

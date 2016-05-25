@@ -6,15 +6,9 @@ if (!defined('BASEPATH'))
 class Admin extends CI_Controller {
 
     function __construct() {
-        parent::__construct();
-        $this->load->helper('admin_helper');
-        $this->load->helper('url');
-        $this->load->library('session');
-        $this->load->model('Csz_admin_model');
-        $this->load->model('Csz_model');
+        parent::__construct();      
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
-        $this->load->model('Headfoot_html');
         $this->template->set_template('admin');
         $this->_init();
     }
@@ -90,7 +84,6 @@ class Admin extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         $this->load->helper('directory');
-        $this->load->helper('url');
         $this->template->setSub('themesdir', directory_map(APPPATH . '/views/templates/', 1));
         $this->template->setSub('langdir', directory_map(APPPATH . '/language/', 1));
 
@@ -109,7 +102,6 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
         $this->load->helper('form');
-        $this->load->helper('url');
         $this->load->library('pagination');
 
         // Pages variable
@@ -144,7 +136,6 @@ class Admin extends CI_Controller {
 
     public function htmlUpload() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->load->helper('url');
         if ($this->uri->segment(3)) {
             $year = $this->uri->segment(3);
         } else {

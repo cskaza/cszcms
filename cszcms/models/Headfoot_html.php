@@ -5,7 +5,6 @@ class Headfoot_html extends CI_Model {
     
     function __construct() {
             parent::__construct();
-            $this->load->model('Csz_model');
             $this->load->model('Csz_admin_model');
             $this->lang->load('admin', $this->Csz_admin_model->getLang());
     }

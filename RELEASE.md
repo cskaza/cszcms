@@ -1,5 +1,13 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.4
+- Fix critical bug, Permission for admin user.
+- Fix name of admin user on topmenu, Change after edit the name.
+- Fix performance for website (compress_output by Gzip)
+- Fix upgrade system one click.
+- Add optimize the database tools on upgrade page.
+- Add the database backup tools on upgrade page.
+
 CSZ-CMS V.1.0.3
 - Add default content when create new page.
 - Add permission for admin user (Admin, Editor).

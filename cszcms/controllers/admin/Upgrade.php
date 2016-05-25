@@ -10,17 +10,10 @@ class Upgrade extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->helper('admin_helper');
-        $this->load->helper('url');
-        $this->load->library('session');
-        $this->load->library('unzip');
-        $this->load->model('Csz_admin_model');
-        $this->load->model('Csz_model');
         $this->load->helper('form');
         $this->load->helper("file");
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
-        $this->load->model('Headfoot_html');
         $this->template->set_template('admin');
         $this->_init();
     }
@@ -70,13 +63,16 @@ class Upgrade extends CI_Controller {
                     delete_files($newfname);
                 }
             }
-
-            /* When Success */
-            $this->template->setSub('cur_version', $this->cur_version);
-            $this->template->setSub('last_version', $this->last_version);
-            $this->template->setSub('error', 'success');
-            //Load the view
-            $this->template->loadSub('admin/upgrade_index');
+            if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+                $this->download();
+            }else{
+                /* When Success */
+                $this->template->setSub('cur_version', $this->cur_version);
+                $this->template->setSub('last_version', $this->last_version);
+                $this->template->setSub('error', 'success');
+                //Load the view
+                $this->template->loadSub('admin/upgrade_index');
+            }
         } else {
             $this->template->setSub('cur_version', $this->cur_version);
             $this->template->setSub('last_version', $this->last_version);
@@ -84,6 +80,42 @@ class Upgrade extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/upgrade_index');
         }
+    }
+    
+    public function dbOptimize() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->load->dbutil();
+        $result = $this->dbutil->optimize_database();
+        if ($result !== FALSE){
+            $this->template->setSub('cur_version', $this->cur_version);
+            $this->template->setSub('last_version', $this->last_version);
+            $this->template->setSub('error', 'opt_success');
+            //Load the view
+            $this->template->loadSub('admin/upgrade_index');
+        }else{
+            $this->template->setSub('cur_version', $this->cur_version);
+            $this->template->setSub('last_version', $this->last_version);
+            $this->template->setSub('error', 'opt_error');
+            //Load the view
+            $this->template->loadSub('admin/upgrade_index');
+        }
+    }
+    
+    public function dbBackup() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->load->dbutil();
+        $prefs = array(
+                'format'      => 'txt',             // gzip, zip, txt
+                'filename'    => 'cszcmsbackup.sql',    // File name - NEEDED ONLY WITH ZIP FILES
+                'add_drop'    => TRUE,              // Whether to add DROP TABLE statements to backup file
+                'add_insert'  => TRUE,              // Whether to add INSERT data to backup file
+                'newline'     => "\n"               // Newline character used in backup file
+              );
+        $backup =& $this->dbutil->backup($prefs);
+        $this->load->helper('download');
+        force_download('cszcmsbackup_'.date('Ymd').'.sql', $backup);
     }
 
 }

@@ -7,13 +7,8 @@ class Users extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->helper('admin_helper');
-        $this->load->helper('url');
-        $this->load->library('session');
-        $this->load->model('Csz_admin_model');
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
-        $this->load->model('Headfoot_html');
         $this->template->set_template('admin');
         $this->_init();
     }
