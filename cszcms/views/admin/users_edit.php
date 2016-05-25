@@ -77,6 +77,9 @@
             <label class="control-label" for="user_type"><?php echo $this->lang->line('user_new_type'); ?></label>
             <?php
                 $att = 'id="user_type" class="form-control"';
+                if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor'){
+                    $att.= ' disabled="disabled"';
+                }
                 $data = array();
                 $data['admin'] = 'Admin';
                 $data['editor'] = 'Editor';

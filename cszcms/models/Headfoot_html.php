@@ -128,6 +128,7 @@ class Headfoot_html extends CI_Model {
     }
     
     public function admin_topmenu(){
+        $userdata = $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id'));
         $html = '<nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -142,7 +143,7 @@ class Headfoot_html extends CI_Model {
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="'.base_url().'" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> '.$this->lang->line('nav_view_site').'</a></li>                        
-                        <li><a href="'.base_url().'admin/users/edit/'.$this->session->userdata('user_admin_id').'"><span class="glyphicon glyphicon-user"></span> '.$this->session->userdata('admin_name').'</a></li>
+                        <li><a href="'.base_url().'admin/users/edit/'.$this->session->userdata('user_admin_id').'"><span class="glyphicon glyphicon-user"></span> '.$userdata->name.'</a></li>
                         <li class="dropdown">
                             <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('nav_content_menu').'</a>
                             <ul class="dropdown-menu">
