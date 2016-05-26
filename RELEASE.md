@@ -1,5 +1,9 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.5
+- Fix php short open tag.
+- Fix captcha not working.
+
 CSZ-CMS V.1.0.4
 - Fix critical bug, Permission for admin user.
 - Fix name of admin user on topmenu, Change after edit the name.
