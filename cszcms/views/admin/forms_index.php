@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-globe"></span></i> <?= $this->lang->line('forms_header') ?>
+                <i><span class="glyphicon glyphicon-globe"></span></i> <?php echo  $this->lang->line('forms_header') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('forms_header') ?>  <a role="button" href="<?=BASE_URL?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('forms_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_header') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -26,12 +26,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <? if ($forms === FALSE) { ?>
+                    <?php if ($forms === FALSE) { ?>
                         <tr>
-                            <td colspan="7" class="text-center"><span class="h6 error"><?= $this->lang->line('forms_notfound') ?></span></td>
+                            <td colspan="7" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('forms_notfound') ?></span></td>
                         </tr>                           
-                    <? } else { ?>
-                        <? foreach ($forms as $u) {
+                    <?php } else { ?>
+                        <?php foreach ($forms as $u) {
                             if(!$u['active']){
                                 $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
                             }else{
@@ -50,14 +50,14 @@
                             echo '<tr>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_main_id'] . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_name'] . '</td>'; ?>
-                            <td class="text-center"<?=$inactive?> style="vertical-align:middle;"><?=($u['form_enctype'])?$u['form_enctype']:'-'?></td>
-                            <? echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_method'] . '</td>';
+                            <td class="text-center"<?php echo $inactive?> style="vertical-align:middle;"><?php echo ($u['form_enctype'])?$u['form_enctype']:'-'?></td>
+                            <?php echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_method'] . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $sendmail . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $captcha . '</td>';
                             echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL.'/admin/forms/view/' . $u['form_main_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp;&nbsp; <a href="'.BASE_URL.'/admin/forms/edit/' . $u['form_main_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.BASE_URL.'/admin/forms/delete/'.$u['form_main_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         } ?>
-                    <? } ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>

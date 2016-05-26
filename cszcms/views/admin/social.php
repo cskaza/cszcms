@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-share"></span></i> <?= $this->lang->line('social_header') ?>
+                <i><span class="glyphicon glyphicon-share"></span></i> <?php echo  $this->lang->line('social_header') ?>
             </li>
         </ol>
     </div>
@@ -11,9 +11,9 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('social_header') ?></div>
-        <?= $this->lang->line('social_message') ?><br>
-        <?= $this->lang->line('social_enable') ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('social_header') ?></div>
+        <?php echo  $this->lang->line('social_message') ?><br>
+        <?php echo  $this->lang->line('social_enable') ?>
         <?php echo form_open(BASE_URL . '/admin/social/update'); ?>
         <table class="table table-striped table-bordered">
             <thead>

@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?= $this->lang->line('navpage_new_header') ?>
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('navpage_new_header') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?= BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('navpage_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/navigation/insert'); ?>
         <br>
         <div class="control-group" id="menu-type">	

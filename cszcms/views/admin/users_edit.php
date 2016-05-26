@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-user"></span></i> <?= $this->lang->line('user_edit_header') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_edit_header') ?>
             </li>
         </ol>
     </div>
@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('user_edit_header') ?>  <a role="button" href="<?= BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('user_addnew') ?></a></div>
-        <? echo form_open(BASE_URL.'/admin/users/edited/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('user_edit_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
+        <?php echo form_open(BASE_URL.'/admin/users/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">										
             <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>

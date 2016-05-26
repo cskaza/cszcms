@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-user"></span></i> <?= $this->lang->line('nav_admin_users') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('nav_admin_users') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('user_header') ?><? if($this->session->userdata('admin_type') == 'admin'){ ?> <a role="button" href="<?=BASE_URL?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('user_addnew') ?></a><? } ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('user_header') ?><?php if($this->session->userdata('admin_type') == 'admin'){ ?> <a role="button" href="<?php echo BASE_URL?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a><?php } ?></div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -21,9 +21,9 @@
                         <th width="20%"><?php echo $this->lang->line('user_name'); ?></th>
                         <th width="30%"><?php echo $this->lang->line('user_email'); ?></th>
                         <th width="12%" class="text-center"><?php echo $this->lang->line('user_new_type'); ?></th>
-                        <? if($this->session->userdata('admin_type') == 'admin'){ ?>
+                        <?php if($this->session->userdata('admin_type') == 'admin'){ ?>
                         <th width="20%"></th>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +59,6 @@
         <?php echo $this->pagination->create_links(); ?>
         <!-- /widget-content --> 
         <br>
-        <span class="warning"><i class="glyphicon glyphicon-lock"></i> <?= $this->lang->line('default_data_remark') ?></span>
+        <span class="warning"><i class="glyphicon glyphicon-lock"></i> <?php echo  $this->lang->line('default_data_remark') ?></span>
     </div>
 </div>

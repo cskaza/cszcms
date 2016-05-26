@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-cog"></span></i> <?= $this->lang->line('settings_header') ?>
+                <i><span class="glyphicon glyphicon-cog"></span></i> <?php echo  $this->lang->line('settings_header') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('settings_header') ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('settings_header') ?></div>
         <div class="control-group">	
             <?php
                 echo form_open_multipart(BASE_URL . '/admin/settings/update');
@@ -194,7 +194,7 @@
                         echo "style='display:none;'";
                     }
                     ?>></div>
-                    <? if ($settings->site_logo != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?=$settings->site_logo?>"> <span class="remark">Delete File</span></label><? } ?>
+                    <?php if ($settings->site_logo != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo?>"> <span class="remark">Delete File</span></label><?php } ?>
                     <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
                     <?php
                     $data = array(
@@ -204,7 +204,7 @@
                     );
                     echo form_upload($data);
                     ?>
-                    <input type="hidden" id="siteLogo" name="siteLogo" value="<?=$settings->site_logo?>"/>
+                    <input type="hidden" id="siteLogo" name="siteLogo" value="<?php echo $settings->site_logo?>"/>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <hr />

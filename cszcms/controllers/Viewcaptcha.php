@@ -7,6 +7,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //  
 //  Integrate Codeigniter with Simple PHP CAPTCHA by. CSKAZA
 //
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) {
+    ob_start('ob_gzhandler'); 
+    ob_start();
+    
+} else {
+    ob_start();
+}
+
 class Viewcaptcha extends CI_Controller {
 
     function __construct() {
@@ -165,3 +173,4 @@ class Viewcaptcha extends CI_Controller {
     }
 
 }
+ob_get_clean();

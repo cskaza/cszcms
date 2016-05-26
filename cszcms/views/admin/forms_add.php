@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-globe"></span></i> <?= $this->lang->line('forms_addnew') ?>
+                <i><span class="glyphicon glyphicon-globe"></span></i> <?php echo  $this->lang->line('forms_addnew') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('forms_addnew') ?>  <a role="button" href="<?= BASE_URL ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('forms_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
         <?php echo form_open_multipart(BASE_URL . '/admin/forms/insert'); ?>
 
         <div class="control-group">	
@@ -162,7 +162,7 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('forms_captcha'); ?></label>	
         </div> <!-- /control-group -->
-        <div class="h2 sub-header"><?= $this->lang->line('field_header') ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('field_header') ?></div>
         <div class="addfields">
             <div class="entry panel panel-default">
                 <div class="panel-body row">
@@ -230,7 +230,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-right"><?=$this->lang->line('field_addtxtinfo')?></div>
+        <div class="text-right"><?php echo $this->lang->line('field_addtxtinfo')?></div>
         <br><br>
         <div class="form-actions">
             <?php

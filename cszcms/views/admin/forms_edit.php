@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-globe"></span></i> <?= $this->lang->line('forms_edit') ?>
+                <i><span class="glyphicon glyphicon-globe"></span></i> <?php echo  $this->lang->line('forms_edit') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('forms_edit') ?>  <a role="button" href="<?= BASE_URL ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('forms_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_edit') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
         <?php echo form_open_multipart(BASE_URL . '/admin/forms/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
@@ -169,14 +169,14 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('forms_captcha'); ?></label>	
         </div> <!-- /control-group -->
-        <div class="h2 sub-header"><?= $this->lang->line('field_editheader') ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('field_editheader') ?></div>
         <div class="addfields">
-            <? if($field_rs){
+            <?php if($field_rs){
             foreach ($field_rs as $field_val) { ?>    
             <div class="panel panel-primary">
                 <div class="panel-body row">
                     <div class="col-md-6">
-                        <input type="hidden" name="form_field_id[]" id="form_field_id" value="<?=$field_val->form_field_id?>">
+                        <input type="hidden" name="form_field_id[]" id="form_field_id" value="<?php echo $field_val->form_field_id?>">
                         <div class="control-group">
                             <label class="control-label" for="field_type1"><?php echo $this->lang->line('field_type'); ?></label>
                             <?php
@@ -197,34 +197,34 @@
                         </div>            
                         <div class="control-group">	
                             <label class="control-label" for="field_name1"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name1[]" id="field_name1" class="form-control" value="<?=$field_val->field_name?>">
-                            <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?=$field_val->field_name?>">
+                            <input type="text" name="field_name1[]" id="field_name1" class="form-control" value="<?php echo $field_val->field_name?>">
+                            <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?php echo $field_val->field_name?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_id1"><?php echo $this->lang->line('field_id'); ?></label>
-                            <input type="text" name="field_id1[]" id="field_id1" class="form-control" value="<?=$field_val->field_id?>">
+                            <input type="text" name="field_id1[]" id="field_id1" class="form-control" value="<?php echo $field_val->field_id?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_class1"><?php echo $this->lang->line('field_class'); ?></label>
-                            <input type="text" name="field_class1[]" id="field_class1" class="form-control" value="<?=$field_val->field_class?>">
+                            <input type="text" name="field_class1[]" id="field_class1" class="form-control" value="<?php echo $field_val->field_class?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_placeholder1"><?php echo $this->lang->line('field_placeholder'); ?></label>
-                            <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" value="<?=$field_val->field_placeholder?>">
+                            <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" value="<?php echo $field_val->field_placeholder?>">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="control-group">	
                             <label class="control-label" for="field_value1"><?php echo $this->lang->line('field_value'); ?></label>
-                            <input type="text" name="field_value1[]" id="field_value1" class="form-control" value="<?=$field_val->field_value?>">
+                            <input type="text" name="field_value1[]" id="field_value1" class="form-control" value="<?php echo $field_val->field_value?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_label1"><?php echo $this->lang->line('field_label'); ?></label>
-                            <input type="text" name="field_label1[]" id="field_label1" class="form-control" value="<?=$field_val->field_label?>">
+                            <input type="text" name="field_label1[]" id="field_label1" class="form-control" value="<?php echo $field_val->field_label?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="sel_option_val1"><?php echo $this->lang->line('sel_option_val'); ?></label>
-                            <input type="text" name="sel_option_val1[]" id="sel_option_val1" class="form-control" value="<?=$field_val->sel_option_val?>">
+                            <input type="text" name="sel_option_val1[]" id="sel_option_val1" class="form-control" value="<?php echo $field_val->sel_option_val?>">
                             <span class="remark"><em><?php echo $this->lang->line('sel_option_val_info'); ?></em></span>
                         </div>
                         <div class="control-group">
@@ -240,7 +240,7 @@
                     </div>                   
                 </div>
             </div>
-            <? }} ?>
+            <?php }} ?>
             <div class="entry panel panel-default">
                 <div class="panel-body row">
                     <div class="col-md-6">
@@ -307,7 +307,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-right"><?=$this->lang->line('field_addtxtinfo')?></div>
+        <div class="text-right"><?php echo $this->lang->line('field_addtxtinfo')?></div>
         <br><br>
         <div class="form-actions">
             <?php

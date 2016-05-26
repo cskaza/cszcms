@@ -12,8 +12,8 @@ if ($page_rs !== FALSE) {
     <div class="jumbotron">
         <div class="container">
             <h1>Sorry, Page not Found!</h1>
-            <p>Sorry! Page not Found. ('<?= $page ?>' page) <br>Please back to home page.<p>
-                <a class="btn btn-primary btn-lg" href="<?=BASE_URL?>" role="button">back to home &raquo;</a>
+            <p>Sorry! Page not Found. ('<?php echo  $page ?>' page) <br>Please back to home page.<p>
+                <a class="btn btn-primary btn-lg" href="<?php echo BASE_URL?>" role="button">back to home &raquo;</a>
         </div>
     </div>
-<? } ?>
+<?php } ?>

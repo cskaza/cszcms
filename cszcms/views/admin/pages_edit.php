@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-globe"></span></i> <?= $this->lang->line('pages_addnew') ?>
+                <i><span class="glyphicon glyphicon-globe"></span></i> <?php echo  $this->lang->line('pages_addnew') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('pages_addnew') ?>  <a role="button" href="<?= BASE_URL ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('pages_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/pages/edited/'.$pages->pages_id); ?>
 
         <div class="control-group">	
@@ -101,7 +101,7 @@
             );
             echo form_textarea($data);*/
             ?>	
-            <textarea name="content" id="content" class="form-control body-tinymce"><?= $pages->content ?></textarea>
+            <textarea name="content" id="content" class="form-control body-tinymce"><?php echo  $pages->content ?></textarea>
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										

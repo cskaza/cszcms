@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?= $this->lang->line('navpage_new_header') ?>
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('navpage_new_header') ?>
             </li>
         </ol>
     </div>
@@ -11,10 +11,10 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?= $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?= BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?= $this->lang->line('navpage_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/navigation/update/'.$nav->page_menu_id); ?>
         <br>
-        <div class="control-group" id="menu-type"<?=($nav->drop_menu)?' style="display:none;"':''?>>	
+        <div class="control-group" id="menu-type"<?php echo ($nav->drop_menu)?' style="display:none;"':''?>>	
             <label class="control-label" for="menuType"><?php echo $this->lang->line('navpagesub_desc'); ?>: </label>
             <label class="form-control-static" for="menuType">
                 <?php
@@ -55,8 +55,8 @@
             ?>		
         </div> <!-- /control-group -->
         <hr>
-        <? if(!$nav->drop_menu){ ?>
-        <div id="main_menu"<?=($nav->drop_page_menu_id)?' style="display:none;"':''?>>           
+        <?php if(!$nav->drop_menu){ ?>
+        <div id="main_menu"<?php echo ($nav->drop_page_menu_id)?' style="display:none;"':''?>>           
             <div class="control-group">		
                 <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
                 <label class="form-control-static" for="dropdown">
@@ -72,13 +72,13 @@
                     ?> <?php echo $this->lang->line('option_yes'); ?></label>	
             </div> <!-- /control-group -->
         </div>
-        <? }else{ ?>
+        <?php }else{ ?>
             <div class="control-group">		
                 <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
                 <input type="hidden" name="dropdown" id="dropdown" value="1"><?php echo $this->lang->line('option_yes'); ?>
             </div> <!-- /control-group -->
-        <? } ?>
-        <div id="drop_menu"<?=($nav->drop_menu)?' style="display:none;"':''?>>
+        <?php } ?>
+        <div id="drop_menu"<?php echo ($nav->drop_menu)?' style="display:none;"':''?>>
             <div class="control-group">
                 <label class="control-label" for="pageUrl"><?php echo $this->lang->line('navpage_pagelink'); ?></label>
                 <div class="controls">
@@ -108,7 +108,7 @@
                 ?>			
             </div> <!-- /control-group -->
         </div>
-        <div id="sub_menu"<?=(!$nav->drop_page_menu_id)?' style="display:none;"':''?>>
+        <div id="sub_menu"<?php echo (!$nav->drop_page_menu_id)?' style="display:none;"':''?>>
             <br>
             <div class="control-group">
                 <label class="control-label" for="dropMenu"><?php echo $this->lang->line('navpage_dropmenu'); ?></label>

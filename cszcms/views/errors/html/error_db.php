@@ -60,7 +60,7 @@ p {
 	<div>
 		<h1><?php echo $heading; ?></h1>
 		<p><?php echo $message; ?><p>
-                <a href="<?=BASE_URL?>"><h2>back to home &raquo;</h2></a>
+                <a href="<?php echo BASE_URL?>"><h2>back to home &raquo;</h2></a>
 	</div>
     </div>
 </body>

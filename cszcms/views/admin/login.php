@@ -1,12 +1,12 @@
-<? $row = $this->Csz_model->load_config(); ?>
+<?php $row = $this->Csz_model->load_config(); ?>
 <div class="container">
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?=BASE_URL?>" target="_blank"><?= $this->Headfoot_html->getLogo(); ?></a></span></div>
+            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo BASE_URL?>" target="_blank"><?php echo  $this->Headfoot_html->getLogo(); ?></a></span></div>
             <div class="text-center" style="padding:30px;">
-                <h4 class="form-signin-heading"><?= $this->lang->line('login_heading') ?></h4>
-                <? if ($error){
+                <h4 class="form-signin-heading"><?php echo  $this->lang->line('login_heading') ?></h4>
+                <?php if ($error){
                     if($error == 'INVALID'){
                         echo "<span class=\"error\">" . $this->lang->line('login_incorrect') . "</span><br><br>";
                     }
@@ -14,8 +14,8 @@
                         echo "<span class=\"error\">" . $this->lang->line('captcha_wrong') . "</span><br><br>";
                     }
                 } ?>
-                <?= form_open(BASE_URL . '/admin/login/check') ?>
-                <label for="email" class="sr-only"><?= $this->lang->line('login_email') ?></label>
+                <?php echo  form_open(BASE_URL . '/admin/login/check') ?>
+                <label for="email" class="sr-only"><?php echo  $this->lang->line('login_email') ?></label>
                 <?php
                 $data = array(
                     'name' => 'email',
@@ -29,7 +29,7 @@
                 );
                 echo form_input($data);
                 ?>
-                <label for="password" class="sr-only"><?= $this->lang->line('login_password') ?>:</label>
+                <label for="password" class="sr-only"><?php echo  $this->lang->line('login_password') ?>:</label>
                 <?php
                 $data = array(
                     'name' => 'password',
@@ -42,8 +42,8 @@
                 echo form_password($data);
                 ?>
                 <br>
-                <img src="<?=BASE_URL.'/viewcaptcha?'.mt_rand(1000000000, 9999999999).'+'.time()?>" alt="CAPTCHA IMG" />
-                <label for="captcha" class="sr-only"><?= $this->lang->line('captcha_text') ?></label>
+                <img src="<?php echo BASE_URL.'/viewcaptcha?'.mt_rand(1000000000, 9999999999).'+'.time();?>" alt="CAPTCHA IMG" />
+                <label for="captcha" class="sr-only"><?php echo  $this->lang->line('captcha_text') ?></label>
                 <?php
                 $data = array(
                     'name' => 'captcha',
@@ -58,7 +58,7 @@
                 echo form_input($data);
                 ?><br>
                 <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->lang->line('login_signin'); ?></button>
-                <?= form_close() ?>
+                <?php echo  form_close() ?>
             </div>
         </div>
         <div class="col-md-3"></div>
