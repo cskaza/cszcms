@@ -334,6 +334,9 @@ html>body .ui-sortable li { height: 34px; }
   width: 108px !important;
 }
 
+.navbar-fixed-bottom, .navbar-fixed-top{
+    z-index:2 !important;
+}
 /* Fixes for IE < 8 */
 @media screen\9 {
   .fileinput-button input {

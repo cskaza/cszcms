@@ -39,7 +39,7 @@ body {
     top: 51px;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 2;
     display: block;
     padding: 20px;
     overflow-x: hidden;

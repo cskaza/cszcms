@@ -1,8 +1,10 @@
 #### RELEASE NOTES
 
 CSZ-CMS V.1.0.5
-- Fix php short open tag.
+- Fix for server isn't support short open tag.
 - Fix captcha not working.
+- Fix TinyMCE Fullscreen mode work on backend
+- Add insert form plugin in TinyMCE
 
 CSZ-CMS V.1.0.4
 - Fix critical bug, Permission for admin user.
