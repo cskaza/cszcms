@@ -32,7 +32,6 @@ $(function () {
         cursor: 'move',
         placeholder: "ui-state-highlight"
     });
-    /*$( ".ui-sortable" ).disableSelection();*/
     $("#sel-chkbox-all").change(function () {
         $(".selall-chkbox").prop('checked', $(this).prop("checked"));
     });
@@ -64,22 +63,48 @@ $(function () {
         convert_urls : false,
         extended_valid_elements : "*[*]",
         valid_elements: "*[*]",
-        plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels",
+        plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert",
         toolbar1: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage",
-        toolbar2: "forecolor backcolor emoticons | glyphicons b_button jumbotron row_cols boots_panels",
+        toolbar2: "forecolor backcolor emoticons | glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert",
         style_formats: [
-            {title: 'Muted text', inline: 'span', classes: 'text-muted'},
-            {title: 'Primary text', inline: 'span', classes: 'text-primary'},
-            {title: 'Success text', inline: 'span', classes: 'text-success'},
-            {title: 'Info text', inline: 'span', classes: 'text-info'},
-            {title: 'Warning text', inline: 'span', classes: 'text-warning'},
-            {title: 'Danger text', inline: 'span', classes: 'text-danger'},
-            {title: 'H1 header', block: 'h1'},
-            {title: 'H2 header', block: 'h2'},
-            {title: 'H3 header', block: 'h3'},
-            {title: 'H4 header', block: 'h4'},
-            {title: 'H5 header', block: 'h5'},
-            {title: 'H5 header', block: 'h6'}
+            { title: 'Text', items: [
+                {title: 'Muted text', inline: 'span', classes: 'text-muted'},
+                {title: 'Primary text', inline: 'span', classes: 'text-primary'},
+                {title: 'Success text', inline: 'span', classes: 'text-success'},
+                {title: 'Info text', inline: 'span', classes: 'text-info'},
+                {title: 'Warning text', inline: 'span', classes: 'text-warning'},
+                {title: 'Danger text', inline: 'span', classes: 'text-danger'},
+                {title: 'Badges', inline: 'span', classes: 'badge'}
+            ] },
+            { title: 'Label', items: [
+                {title: 'Default Label', inline: 'span', classes: 'label label-default'},
+                {title: 'Primary Label', inline: 'span', classes: 'label label-primary'},
+                {title: 'Success Label', inline: 'span', classes: 'label label-success'},
+                {title: 'Info Label', inline: 'span', classes: 'label label-info'},
+                {title: 'Warning Label', inline: 'span', classes: 'label label-warning'},
+                {title: 'Danger Label', inline: 'span', classes: 'label label-danger'}
+            ] },
+            { title: 'Headers', items: [
+                { title: 'h1', block: 'h1' },
+                { title: 'h2', block: 'h2' },
+                { title: 'h3', block: 'h3' },
+                { title: 'h4', block: 'h4' },
+                { title: 'h5', block: 'h5' },
+                { title: 'h6', block: 'h6' }
+            ] },
+            { title: 'Blocks', items: [
+                { title: 'p', block: 'p' },
+                { title: 'div', block: 'div' },
+                { title: 'pre', block: 'pre' }
+            ] },
+            { title: 'Containers', items: [
+                { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+                { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+                { title: 'blockquote', block: 'blockquote', wrapper: true },
+                { title: 'hgroup', block: 'hgroup', wrapper: true },
+                { title: 'aside', block: 'aside', wrapper: true },
+                { title: 'figure', block: 'figure', wrapper: true }
+            ] }
         ]
     });
 });
