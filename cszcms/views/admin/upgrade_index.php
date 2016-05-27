@@ -6,6 +6,19 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('upgrade_header') ?>
             </li>
         </ol>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('maintenance_header') ?></div>
+        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllCache'); ?>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-danger',
+            'value' => $this->lang->line('btn_clearallcache'),
+            'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
     </div>
 </div>
 <!-- /.row -->
@@ -20,7 +33,7 @@
         <span class="error"><b><?php echo $this->lang->line('upgrade_text'); ?></b></span>
         <br><br>
         <?php echo form_open(BASE_URL . '/admin/upgrade/download'); ?>
-        <?
+        <?php
         $data = array(
             'name' => 'submit',
             'id' => 'submit',
@@ -52,7 +65,7 @@
             <div class="alert alert-danger" role="alert"><?php echo $this->lang->line('optimize_error_alert')?></div>
         <?php } ?> 
         <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
-        <?
+        <?php
         $data = array(
             'name' => 'submit',
             'id' => 'submit',

@@ -7,6 +7,7 @@ CSZ-CMS V.1.0.5
 - Add more formats in TinyMCE.
 - Add Insert Form plugin in TinyMCE.
 - Add Bootstrap Alert plugin in TinyMCE.
+- Add page cache 30 min for performance.
 
 CSZ-CMS V.1.0.4
 - Fix critical bug, Permission for admin user.

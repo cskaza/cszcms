@@ -746,6 +746,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
+        $this->Csz_model->clear_all_cache();
     }
 
     public function insertFileUpload($year, $fileupload) {

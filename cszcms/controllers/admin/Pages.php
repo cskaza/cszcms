@@ -121,6 +121,7 @@ class Pages extends CI_Controller {
         if($this->uri->segment(4)){
             //Delete the languages
             if($this->uri->segment(4) != 1) {
+                $this->Csz_model->clear_all_cache();
                 $this->Csz_admin_model->removeData('pages', 'pages_id', $this->uri->segment(4));
             } else {
                 echo "<script>alert(\"" . $this->lang->line('pages_delete_default') . "\");</script>";

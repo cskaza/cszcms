@@ -92,15 +92,6 @@
         
         <div class="control-group">	
             <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
-            <?php
-            /*$data = array(
-                'name' => 'content',
-                'id' => 'content',
-                'class' => 'form-control body-tinymce',
-                'value' => set_value('content', $pages->content)
-            );
-            echo form_textarea($data);*/
-            ?>	
             <textarea name="content" id="content" class="form-control body-tinymce"><?php echo  $pages->content ?></textarea>
         </div> <!-- /control-group -->
         <br>

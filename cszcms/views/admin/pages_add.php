@@ -103,7 +103,7 @@
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">
-            <?
+            <?php
              $starter_html = '<br><br><div class="container">
                             <div class="row">
                             <div class="col-md-12">

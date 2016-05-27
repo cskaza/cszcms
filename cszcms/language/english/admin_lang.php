@@ -263,7 +263,7 @@ $lang['formpost_notfound']                 = "Form post not found.";
 $lang['formpost_ipaddress']                 = "IP Address";
 
 //Upgrade
-$lang['upgrade_header']			= "Upgrade System";
+$lang['upgrade_header']			= "System Upgrade";
 $lang['btn_upgrade']			= "Start Upgrade";
 $lang['upgrade_curver']			= "Current Version:";
 $lang['upgrade_lastver']		= "Lastest Version:";
@@ -274,6 +274,8 @@ $lang['upgrade_error_alert']            = "Upgrade Error!";
 $lang['upgrade_text']                   = "Important! Please, backup the database and your modified file before upgrade!";
 
 //Optimize Database
+$lang['maintenance_header']             = "Maintenance System";
+$lang['btn_clearallcache']              = "Clear All Pages Cache";
 $lang['database_maintain_header']	= "Database Maintenance";
 $lang['optimize_success_alert']         = "Optimize the database successfully!";
 $lang['optimize_error_alert']           = "Optimize the database has error!";

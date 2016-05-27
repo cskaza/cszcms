@@ -123,6 +123,7 @@ $route['admin/upgrade'] = "admin/upgrade";
 $route['admin/upgrade/download'] = "admin/upgrade/download";
 $route['admin/upgrade/optimize'] = "admin/upgrade/dbOptimize";
 $route['admin/upgrade/backup'] = "admin/upgrade/dbBackup";
+$route['admin/upgrade/clearAllCache'] = "admin/upgrade/clearAllCache";
 $route['admin/upgrade/(:any)'] = "admin/upgrade";
 
 $route['formsaction/(:any)'] = 'formsaction';

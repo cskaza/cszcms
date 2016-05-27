@@ -118,5 +118,12 @@ class Upgrade extends CI_Controller {
         $this->load->helper('download');
         force_download('cszcmsbackup_'.date('Ymd').'.sql', $backup);
     }
+    
+    public function clearAllCache() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->Csz_model->clear_all_cache();
+        redirect('admin/upgrade', 'refresh');
+    }
 
 }

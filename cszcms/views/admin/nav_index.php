@@ -63,7 +63,7 @@
                             <div class="panel-heading<?php echo (!$n->active)?' inactive-data':''?>"><?php echo $n->menu_name?> <span class="caret"></span></div>
                             <div class="panel-body">
                                 <ul class="ui-sortable">
-                                <?
+                                <?php
                                 if(!$this->uri->segment(3)){
                                     $lang = $this->Csz_model->getDefualtLang();
                                 }else{
