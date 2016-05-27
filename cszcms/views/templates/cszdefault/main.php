@@ -66,7 +66,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="container">
                     <hr>
                     <div class="row">
-                        <div class="col-md-8 div-copyright">
+                        <div class="col-md-8 div-copyright hidden-sm hidden-xs">
+                            <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
+                             * 2=Show flag and Language, 
+                             * 3=Show flag and Country,
+                             * Null or 0=Show Full detail)*/ ?>
+                            <?php echo $this->Headfoot_html->langMenu(2);?>
+                            <?php echo $this->Headfoot_html->footer();?>
+                        </div>
+                        <div class="col-md-8 visible-sm visible-xs text-center">
                             <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
                              * 2=Show flag and Language, 
                              * 3=Show flag and Country,

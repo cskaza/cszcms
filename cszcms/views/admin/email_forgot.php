@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><?php echo $this->Headfoot_html->getLogo();?></span></div>
+            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo BASE_URL?>" target="_blank"><?php echo  $this->Headfoot_html->getLogo(); ?></a></span></div>
             <div class="text-center" style="padding:30px;">
                 <h4 class="form-signin-heading"><?php echo  $this->lang->line('forgot_reset') ?></h4>
                 <?php if(!$chksts){ ?>
