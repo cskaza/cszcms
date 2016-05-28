@@ -71,8 +71,9 @@ class Home extends CI_Controller {
         //Get pages from database
         $this->template->setSub('page', $this->page_url);
         $this->template->setSub('page_rs', $this->page_rs);
-        
-        $this->output->cache(30);
+        if($this->uri->segment(1)){
+            $this->output->cache(30);
+        }
         //Load the view
         $this->template->loadSub('frontpage/getpage');
     }
