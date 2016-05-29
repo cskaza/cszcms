@@ -4,11 +4,13 @@
         <div class="col-md-3 hidden-sm hidden-xs"></div>
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo BASE_URL ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></div>
+            <br><br>
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
                     <h4 class="panel-title form-signin-heading"><?php echo $this->lang->line('login_heading') ?></h4>
                 </div>
                 <div class="panel-body text-left">
+                    <div class="text-center">
                     <?php
                     if ($error) {
                         if ($error == 'INVALID') {
@@ -19,6 +21,7 @@
                         }
                     }
                     ?>
+                    </div>
                     <?php echo form_open(BASE_URL . '/admin/login/check') ?>
                     <label for="email" class="sr-only"><?php echo $this->lang->line('login_email') ?></label>
                     <?php
