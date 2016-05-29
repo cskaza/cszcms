@@ -446,7 +446,7 @@ class Csz_model extends CI_Model {
         $config = $this->load_config();
         $html = '';
         if($config->googlecapt_active){
-            $html = '<div class="g-recaptcha" data-sitekey="'.$config->googlecapt_sitekey.'"></div>';
+            $html = '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="'.$config->googlecapt_sitekey.'"></div>';
         }
         return $html;
     }

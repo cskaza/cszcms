@@ -181,6 +181,7 @@
                     );
                     echo form_input($data);
                     ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_googlecapt_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <hr />

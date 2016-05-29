@@ -154,6 +154,7 @@ $lang['settings_add_meta_remark']	= "Meta เท่านั้นสำหร�
 $lang['settings_googlecapt_active']	= "เปิดใช้งาน reCaptcha";
 $lang['settings_googlecapt_sitekey']	= "reCaptcha Site Key";
 $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
+$lang['settings_googlecapt_remark']	= 'คุณสามารถรับคีย์ของ reCaptcha ได้ที่ <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "เว็บโลโก้";
 
 //Navigation Page
