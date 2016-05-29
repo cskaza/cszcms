@@ -17,8 +17,7 @@ class Formsaction extends CI_Controller {
             if ($frm_rs->active) {
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {
-                    $captcha = $this->session->userdata('captcha');
-                    if ($this->input->post('captcha', TRUE) != $captcha) {
+                    if ($this->Csz_model->chkCaptchaRes() == '') {
                         //Return to last page: Captcha invalid
                         redirect(urlencode($this->input->post('cur_page', TRUE)) . '/2', 'refresh');
                         exit;
@@ -88,7 +87,7 @@ class Formsaction extends CI_Controller {
             }
             $message_html.= '<br><br>Regards,<br>' . $webconfig->site_name;
             # ---- send mail --#
-            mail($to_email, $subject, $message_html, $headers);
+            @mail($to_email, $subject, $message_html, $headers);
         } else {
             return FALSE;
         }

@@ -1,8 +1,8 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
  
 class Admin_helper{
     static function is_logged_in($email){
-        if((!$email)){
+        if(!$email || !$_SESSION['admin_logged_in']){
             $redirect= BASE_URL.'/admin/login';
             header("Location: $redirect");	
             exit;	
@@ -10,7 +10,7 @@ class Admin_helper{
     }
     
     static function for_not_login($email_session){
-        if($email_session){
+        if($email_session && $_SESSION['admin_logged_in']){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;	

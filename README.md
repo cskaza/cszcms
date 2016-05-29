@@ -8,7 +8,7 @@ Server Recommend Requirements:
 - IIS/Apache Server.
 - PHP 5.3 or higher.
 - MySQL 5.0 or higher (Recommend for MySQLi Driver).
-- PHP Shorttag Enable.
-- PHP GD Enable.
+- PHP cURL Enabled.
+- gZip Compression Enabled.
 
 Download Here! at http://www.cszcms.com/download

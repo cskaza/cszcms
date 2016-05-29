@@ -249,8 +249,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     function login($email, $password) {
-        $captcha = $this->session->userdata('captcha');
-        if ($this->input->post('captcha', TRUE) != $captcha) {
+        if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
             $this->db->select("*");
@@ -296,6 +295,7 @@ class Csz_admin_model extends CI_Model {
         $core_js.= '<script src="' . base_url() . 'assets/js/jquery-ui.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/jquery.ui.touch-punch.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/tinymce/tinymce.min.js"></script>';
+        $core_js.= '<script src="https://www.google.com/recaptcha/api.js"></script>';
         return $core_js;
     }
 
@@ -355,9 +355,9 @@ class Csz_admin_model extends CI_Model {
             'keywords' => $this->input->post('siteKeyword', TRUE),
             'additional_js' => $additional_js,
             'additional_metatag' => $this->input->post('additional_metatag'),
-            'min_captcha' => $this->input->post('min_captcha', TRUE),
-            'max_captcha' => $this->input->post('max_captcha', TRUE),
-            'captcha_char' => $this->input->post('captcha_char', TRUE)
+            'googlecapt_active' => $this->input->post('googlecapt_active', TRUE),
+            'googlecapt_sitekey' => $this->input->post('googlecapt_sitekey', TRUE),
+            'googlecapt_secretkey' => $this->input->post('googlecapt_secretkey', TRUE)
         );
 
         if ($this->input->post('del_file')) {

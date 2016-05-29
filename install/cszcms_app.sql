@@ -158,15 +158,15 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `admin_lang` varchar(255) NOT NULL,
   `additional_js` text NOT NULL,
   `additional_metatag` text NOT NULL,
-  `min_captcha` int(11) NOT NULL,
-  `max_captcha` int(11) NOT NULL,
-  `captcha_char` varchar(255) NOT NULL,
+  `googlecapt_active` int(11) NOT NULL,
+  `googlecapt_sitekey` varchar(255) NOT NULL,
+  `googlecapt_secretkey` varchar(255) NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `min_captcha`, `max_captcha`, `captcha_char`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 5, 5, 'abcdefghjkmnprstuvwxyz23456789', '2016-05-19 15:08:31');
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `timestamp_update`) VALUES
+(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -189,4 +189,4 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`user_admin_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

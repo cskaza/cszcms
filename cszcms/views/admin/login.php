@@ -42,22 +42,8 @@
                 echo form_password($data);
                 ?>
                 <br>
-                <img src="<?php echo BASE_URL.'/viewcaptcha?'.mt_rand(1000000000, 9999999999).'+'.time();?>" alt="CAPTCHA IMG" />
-                <label for="captcha" class="sr-only"><?php echo  $this->lang->line('captcha_text') ?></label>
-                <?php
-                $data = array(
-                    'name' => 'captcha',
-                    'id' => 'captcha',
-                    'class' => 'form-control',
-                    'required' => 'required',
-                    'autofocus' => 'true',
-                    'maxlength' => $row->max_captcha,
-                    'value' => set_value('captcha'),
-                    'placeholder' => $this->lang->line('captcha_text')
-                );
-                echo form_input($data);
-                ?><br>
-                <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->lang->line('login_signin'); ?></button>
+                <?php echo $this->Csz_model->showCaptcha(); ?>
+                <br><button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->lang->line('login_signin'); ?></button>
                 <?php echo  form_close() ?>
             </div>
         </div>

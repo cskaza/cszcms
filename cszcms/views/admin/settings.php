@@ -138,43 +138,46 @@
                     <span class="remark"><em><?php echo $this->lang->line('settings_add_js_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="form-control-static" for="googlecapt_active">
+                <?php
+                if($settings->googlecapt_active){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'googlecapt_active',
+                    'id' => 'googlecapt_active',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_googlecapt_active'); ?></label>	
+            </div> <!-- /control-group -->
             <div class="control-group">	
-                <label class="control-label" for="min_captcha"><?php echo $this->lang->line('settings_mincaptcha'); ?></label>
+                <label class="control-label" for="googlecapt_sitekey"><?php echo $this->lang->line('settings_googlecapt_sitekey'); ?></label>
                 <div class="controls">
                     <?php
                     $data = array(
-                        'name' => 'min_captcha',
-                        'id' => 'min_captcha',
+                        'name' => 'googlecapt_sitekey',
+                        'id' => 'googlecapt_sitekey',
                         'class' => 'form-control',
-                        'value' => set_value('min_captcha', $settings->min_captcha, FALSE)
+                        'value' => set_value('googlecapt_sitekey', $settings->googlecapt_sitekey, FALSE)
                     );
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <div class="control-group">	
-                <label class="control-label" for="max_captcha"><?php echo $this->lang->line('settings_maxcaptcha'); ?></label>
+                <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_googlecapt_secretkey'); ?></label>
                 <div class="controls">
                     <?php
                     $data = array(
-                        'name' => 'max_captcha',
-                        'id' => 'max_captcha',
+                        'name' => 'googlecapt_secretkey',
+                        'id' => 'googlecapt_secretkey',
                         'class' => 'form-control',
-                        'value' => set_value('max_cpatcha', $settings->max_captcha, FALSE)
-                    );
-                    echo form_input($data);
-                    ?>
-                </div> <!-- /controls -->				
-            </div> <!-- /control-group -->
-            <div class="control-group">	
-                <label class="control-label" for="captcha_char"><?php echo $this->lang->line('settings_charcaptcha'); ?></label>
-                <div class="controls">
-                    <?php
-                    $data = array(
-                        'name' => 'captcha_char',
-                        'id' => 'captcha_char',
-                        'class' => 'form-control',
-                        'value' => set_value('captcha_char', $settings->captcha_char, FALSE)
+                        'value' => set_value('googlecapt_secretkey', $settings->googlecapt_secretkey, FALSE)
                     );
                     echo form_input($data);
                     ?>

@@ -59,7 +59,6 @@ class Upgrade extends CI_Controller {
                     delete_files(FCPATH . 'upgrade_sql', TRUE);
                     rmdir(FCPATH . 'upgrade_sql');
                 }
-                @chmod($newfname, 0777);
                 if(is_writable($newfname)){
                     delete_files($newfname);
                 }
@@ -67,8 +66,9 @@ class Upgrade extends CI_Controller {
             if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
                 redirect('/admin/upgrade/download', 'refresh');
             }else{
+                $this->Csz_model->clear_all_cache();
                 /* When Success */
-                $this->template->setSub('cur_version', $this->cur_version);
+                $this->template->setSub('cur_version', $this->Csz_model->getVersion());
                 $this->template->setSub('last_version', $this->last_version);
                 $this->template->setSub('error', 'success');
                 //Load the view

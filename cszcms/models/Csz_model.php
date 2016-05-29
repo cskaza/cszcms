@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {
@@ -233,6 +232,7 @@ class Csz_model extends CI_Model {
         $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
+        $core_js.= '<script src="https://www.google.com/recaptcha/api.js"></script>';
         return $core_js;
     }
 
@@ -380,10 +380,7 @@ class Csz_model extends CI_Model {
                 }
             }
             if ($form_data->captcha) {
-                $html.= '<br><img src="' . BASE_URL . '/viewcaptcha?' . mt_rand(1000000000, 9999999999) . '+' . time() . '" alt="CAPTCHA IMG" />';
-                $html.= '<div class="controls">
-                    <input type="text" name="captcha" id="captcha" class="form-control" required="required" autofocus="true" maxlength="' . $row_config->max_captcha . '" placeholder="Security Check"/>
-                </div>';
+                $html.= $this->showCaptcha();
             }
             $html.= '<br><div class="form-actions">' . $html_btn . '</div>';
             $html.= '</form>';
@@ -409,5 +406,48 @@ class Csz_model extends CI_Model {
         }
         closedir($handle);
     }
+    
+    public function getCurlreCaptData($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result = curl_exec($ch);
+        curl_close($ch);
 
+        $obj = json_decode($result);
+        return $obj->success;
+    }
+
+    public function chkCaptchaRes() {
+        $config = $this->load_config();
+        $respone = '';
+        if($config->googlecapt_active){
+            $recaptcha = $_POST['g-recaptcha-response'];
+            if (!empty($recaptcha)) {
+                $ip = $_SERVER['REMOTE_ADDR'];
+                $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $ip;
+                $res = $this->getCurlreCaptData($url);
+                if ($res) { 
+                    $respone = $res;
+                } else {
+                    $respone = '';
+                }
+            } else {
+                $respone = '';
+            }
+        }else{
+            $respone = 'NOT_ACTIVE';
+        }
+        return $respone;
+    }
+    
+    public function showCaptcha() {
+        $config = $this->load_config();
+        $html = '';
+        if($config->googlecapt_active){
+            $html = '<div class="g-recaptcha" data-sitekey="'.$config->googlecapt_sitekey.'"></div>';
+        }
+        return $html;
+    }
 }
