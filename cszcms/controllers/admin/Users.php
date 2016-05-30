@@ -136,16 +136,14 @@ class Users extends CI_Controller {
 
     public function forgot() {
         admin_helper::for_not_login($this->session->userdata('admin_email'));
-        $captcha = $this->session->userdata('captcha');
         $row = $this->Csz_model->load_config();
         $this->load->library('form_validation');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
-        $this->form_validation->set_rules('captcha', 'Captcha', 'required');
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 0);
             $this->template->loadSub('admin/email_forgot');
-        }else if($this->input->post('captcha') != $captcha){
+        }else if($this->Csz_model->chkCaptchaRes() == ''){
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 1);
             $this->template->loadSub('admin/email_forgot');
