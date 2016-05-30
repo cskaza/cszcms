@@ -21,24 +21,7 @@
                         'placeholder' => $this->lang->line('forgot_email')
                     ); echo form_input($data); ?>
                     <br>
-                    <img src="<?php echo BASE_URL.'/viewcaptcha?'.mt_rand(1000000000, 9999999999).'+'.time()?>" alt="CAPTCHA IMG" />
-                    <?php if($error_chk){ ?>
-                        <div class="error"><?php echo $this->lang->line('captcha_wrong'); ?></div>                    
-                    <?php } ?>
-                    <label for="captcha" class="sr-only"><?php echo  $this->lang->line('captcha_text') ?></label>
-                    <?php
-                    $data = array(
-                        'name' => 'captcha',
-                        'id' => 'captcha',
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'autofocus' => 'true',
-                        'maxlength' => '6',
-                        'value' => set_value('captcha'),
-                        'placeholder' => $this->lang->line('captcha_text')
-                    );
-                    echo form_input($data);
-                    ?>
+                    <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                     <br>
                     <button class="btn btn-lg btn-primary" type="submit" id="forget_submit"><?php echo $this->lang->line('forgot_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-lg" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo BASE_URL . '/admin'?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
                     <?php echo  form_close() ?>
