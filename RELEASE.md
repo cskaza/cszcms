@@ -1,5 +1,9 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.6
+- Add Plugins System.
+- Default Plugins (Member, Article, Webboard, Shopping Carts)
+
 CSZ-CMS V.1.0.5
 - Fix for some server isn't support short open tag.
 - Fix TinyMCE Fullscreen mode work on backend.

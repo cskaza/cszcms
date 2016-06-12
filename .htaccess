@@ -1,13 +1,15 @@
 RewriteOptions inherit
-<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
-	Header set Cache-Control "max-age=290304000, public"
-</FilesMatch>
-<FilesMatch "\.(xml|txt)$">
-	Header set Cache-Control "max-age=3600, public, must-revalidate"
-</FilesMatch>
-<FilesMatch "\.(html|htm)$">
-	Header set Cache-Control "max-age=3600, must-revalidate"
-</FilesMatch>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
+            Header set Cache-Control "max-age=290304000, public"
+    </FilesMatch>
+    <FilesMatch "\.(xml|txt)$">
+            Header set Cache-Control "max-age=3600, public, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.(html|htm)$">
+            Header set Cache-Control "max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>
 <ifModule mod_gzip.c>
 	mod_gzip_on Yes
 	mod_gzip_dechunk Yes
