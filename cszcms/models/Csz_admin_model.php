@@ -41,27 +41,6 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    public function findNextVersion($cur_ver, $last_ver) {
-        $ver_r = array();
-        $cur_r = array();
-        if ($last_ver) {
-            $cur_ver = str_replace(' ', '.', $cur_ver);
-            $cur_r = explode('.', $cur_ver);
-            $ver_r = explode('.', $last_ver);
-            if ($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) {
-                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
-            } else if ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) {
-                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
-            } else if ($ver_r[0] > $cur_r[0]) {
-                return ($cur_r[0] + 1) . '.0.0';
-            } else {
-                return $last_ver;
-            }
-        } else {
-            return FALSE;
-        }
-    }
-
     public function getLang() {
         /* Get Lang for Admin */
         $row = $this->load_config();

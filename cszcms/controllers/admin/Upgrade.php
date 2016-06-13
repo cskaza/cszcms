@@ -46,19 +46,20 @@ class Upgrade extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
-            $url = "http://www.cszcms.com/downloads/upgrade/upgrade-" . $this->cur_version . "-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version, $lastversion) . ".zip";
+            set_time_limit (24 * 60 * 60);
+            $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->last_version . ".zip";
             $filename = basename($url);
             $newfname = FCPATH . $filename;
             $this->Csz_model->downloadFile($url, $newfname);
             if (file_exists($newfname)) {
-                @$this->unzip->extract($newfname);
+                @$this->unzip->extract($newfname, FCPATH);
                 if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
                     $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
                     delete_files(FCPATH . 'upgrade_sql', TRUE);
                     rmdir(FCPATH . 'upgrade_sql');
                 }
                 if(is_writable($newfname)){
-                    delete_files($newfname);
+                    @unlink($newfname);
                 }
             }
             if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
