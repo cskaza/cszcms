@@ -676,7 +676,8 @@ class Csz_admin_model extends CI_Model {
         $page_name_input = $this->input->post('page_name', TRUE);
         if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
-                $page_name_input == 'system' || $page_name_input == 'templates') {
+                $page_name_input == 'system' || $page_name_input == 'templates' ||
+                $page_name_input == 'admin' || $page_name_input == 'ci_session') {
             $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
@@ -702,9 +703,10 @@ class Csz_admin_model extends CI_Model {
     public function updatePage($id) {
         // Update the page
         $page_name_input = $this->input->post('page_name', TRUE);
-        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+       if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
-                $page_name_input == 'system' || $page_name_input == 'templates') {
+                $page_name_input == 'system' || $page_name_input == 'templates' ||
+                $page_name_input == 'admin' || $page_name_input == 'ci_session') {
             $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
