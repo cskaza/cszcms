@@ -84,4 +84,24 @@ class Database {
             while ($mysqli->next_result()) {;}
         }
     }
+    
+}
+
+class Version{
+    public function getVersion($xml_url) {
+        if ($xml_url) {
+            $xml_file = $xml_url;
+        }
+        $xml = simplexml_load_file($xml_file) or die("Error: Cannot create object");
+        if ($xml->version) {
+            if ($xml->release == 'beta') {
+                $beta = ' Beta';
+            } else {
+                $beta = '';
+            }
+            return $xml->version . $beta;
+        } else {
+            return FALSE;
+        }
+    }
 }

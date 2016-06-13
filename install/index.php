@@ -3,9 +3,9 @@ if (file_exists('../config.inc.php')) {
   header("Location: ../");
   exit();
 }
-
+require './include/Database.php';
 $success = 0;
-if (!empty($_POST)) {
+if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbpass'] && $_POST['dbname']) {
     /* Prepare Input Data */
     /*$dbdsn = $_POST['dbdsn'];*/
     $baseurl = $_POST['baseurl'];
@@ -19,7 +19,6 @@ if (!empty($_POST)) {
     $email = $_POST['email'];
     
     /* Database Connect */
-    require './include/Database.php';
     $db = new Database($dbhost, $dbuser, $dbpass, $dbname);
     $mysqli = $db->connectDB();
     
@@ -110,7 +109,7 @@ if (!empty($_POST)) {
                     <div class="col-md-12">
                         <div class="panel panel-default text-center">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><b>Please login with your Email address and Password was setup.</b></h3>
+                                <h3 class="panel-title"><b>Please login to backend with your Email address and Password was setup.</b></h3>
                             </div>
                             <div class="panel-body">
                                 <a href="<?php echo $_POST['baseurl']; ?>/admin" class="btn btn-lg btn-success">Go to Backend login</a>
@@ -129,7 +128,7 @@ if (!empty($_POST)) {
                         </div>
                     </div>
                 </div>
-                <form action="./" method="post" accept-charset="utf-8" id="validate-form" data-toggle="validator" role="form">
+                <form action="./" method="post" accept-charset="utf-8">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="panel panel-default">
@@ -207,6 +206,9 @@ if (!empty($_POST)) {
 <?php } ?>
         </div>
         <!-- End For Content -->
+        <?php
+        $version = new Version;
+        ?>
         <br><br><br>
         <div class="container">
             <footer>
@@ -214,7 +216,7 @@ if (!empty($_POST)) {
                 <div class="row">
                     <div class="col-md-8 div-copyright">
                         <span class="copyright">&copy; <?php echo date('Y'); ?> CSZ-CMS Installer</span>
-                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.1.0.5</span></small>
+                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.<?php echo $version->getVersion('../version.xml'); ?></span></small>
                     </div>
                 </div>
             </footer>            
@@ -224,8 +226,6 @@ if (!empty($_POST)) {
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="../assets/js/jquery-1.10.2.min.js"></script>
         <script src="../assets/js/bootstrap.min.js"></script>
-        <script src="../assets/js/jquery-ui.min.js"></script>   
-        <script src="../assets/js/validator.min.js"></script> 
-        <script type="text/javascript">$('#validate-form').validator();</script>
+        <script src="../assets/js/jquery-ui.min.js"></script>
     </body>
 </html>
