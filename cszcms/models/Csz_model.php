@@ -27,6 +27,27 @@ class Csz_model extends CI_Model {
         }
     }
 
+    public function downloadFile($url, $path) {
+        /* maximum execution time in seconds */
+        set_time_limit (24 * 60 * 60);
+        $newfname = $path;
+        $file = fopen ($url, 'rb');
+        if ($file) {
+            $newf = fopen ($newfname, 'wb');
+            if ($newf) {
+                while(!feof($file)) {
+                    fwrite($newf, fread($file, 1024 * 1024 * 10), 1024 * 1024 * 10); /* 10MB */
+                }
+            }
+        }
+        if ($file) {
+            fclose($file);
+        }
+        if ($newf) {
+            fclose($newf);
+        }
+    }
+
     public function countData($table, $where_field = '', $where_val = '') {
         if ($where_field) {
             $this->db->where($where_field, $where_val);

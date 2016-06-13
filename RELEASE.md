@@ -1,7 +1,8 @@
 #### RELEASE NOTES
 
 CSZ-CMS V.1.0.6
-- Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500)
+- Fix critical bug, Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500).
+- Fix upgrade system.
 
 CSZ-CMS V.1.0.5
 - Fix for some server isn't support short open tag.

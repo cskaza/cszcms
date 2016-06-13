@@ -50,8 +50,9 @@ class Upgrade extends CI_Controller {
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-" . $this->cur_version . "-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version, $lastversion) . ".zip";
             $filename = basename($url);
             $newfname = FCPATH . $filename;
-            $content = file_get_contents($url);
-            file_put_contents($newfname, $content);
+            $this->Csz_model->downloadFile($url, $newfname);
+            /*$content = file_get_contents($url);
+            file_put_contents($newfname, $content);*/
             if (file_exists($newfname)) {
                 @$this->unzip->extract($newfname);
                 if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
@@ -68,7 +69,7 @@ class Upgrade extends CI_Controller {
             }else{
                 $this->Csz_model->clear_all_cache();
                 /* When Success */
-                $this->template->setSub('cur_version', $this->Csz_model->getVersion());
+                $this->template->setSub('cur_version', $this->last_version);
                 $this->template->setSub('last_version', $this->last_version);
                 $this->template->setSub('error', 'success');
                 //Load the view
