@@ -62,17 +62,13 @@ class Upgrade extends CI_Controller {
                     @unlink($newfname);
                 }
             }
-            if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
-                redirect('/admin/upgrade/download', 'refresh');
-            }else{
-                $this->Csz_model->clear_all_cache();
-                /* When Success */
-                $this->template->setSub('cur_version', $this->last_version);
-                $this->template->setSub('last_version', $this->last_version);
-                $this->template->setSub('error', 'success');
-                //Load the view
-                $this->template->loadSub('admin/upgrade_index');
-            }
+            $this->Csz_model->clear_all_cache();
+            /* When Success */
+            $this->template->setSub('cur_version', $this->last_version);
+            $this->template->setSub('last_version', $this->last_version);
+            $this->template->setSub('error', 'success');
+            //Load the view
+            $this->template->loadSub('admin/upgrade_index');
         } else {
             $this->template->setSub('cur_version', $this->cur_version);
             $this->template->setSub('last_version', $this->last_version);
