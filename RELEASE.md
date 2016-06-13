@@ -3,6 +3,7 @@
 CSZ-CMS V.1.0.6
 - Add Plugins System.
 - Default Plugins (Member, Article, Webboard, Shopping Carts)
+- Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500)
 
 CSZ-CMS V.1.0.5
 - Fix for some server isn't support short open tag.
