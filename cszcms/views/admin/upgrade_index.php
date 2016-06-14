@@ -44,26 +44,10 @@
         echo form_submit($data);
         ?>   
         <?php echo form_close(); ?>
-        
-        <?php if($error == 'lastver'){ ?>
-            <br><br>
-            <div class="alert alert-success" role="alert"><?php echo $this->lang->line('upgrade_lastver_alert')?></div>
-        <?php }else if($error == 'success'){ ?>
-            <br><br>
-            <div class="alert alert-success" role="alert"><?php echo $this->lang->line('upgrade_success_alert')?></div>
-            <a href="<?php echo BASE_URL?>/admin/upgrade" class="btn btn-success btn-lg"><?php echo $this->lang->line('btn_refresh')?></a>
-        <?php }else if($error == 'error'){  ?>
-            <br><br>
-            <div class="alert alert-danger" role="alert"><?php echo $this->lang->line('upgrade_error_alert')?></div>
-        <?php } ?>       
     </div>
     <div class="col-lg-6 col-md-6">
         <div class="h2 sub-header"><?php echo  $this->lang->line('database_maintain_header') ?></div>
-        <?php if($error == 'opt_success'){ ?>
-            <div class="alert alert-success" role="alert"><?php echo $this->lang->line('optimize_success_alert')?></div>
-        <?php }else if($error == 'opt_error'){  ?>
-            <div class="alert alert-danger" role="alert"><?php echo $this->lang->line('optimize_error_alert')?></div>
-        <?php } ?> 
+
         <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
         <?php
         $data = array(
@@ -78,3 +62,11 @@
         <br><a href="<?php echo BASE_URL . '/admin/upgrade/backup'?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db')?></a>
     </div>
 </div>
+<?php if($this->session->flashdata('error_message') != ''){ ?>
+<br><br>
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <?php echo $this->session->flashdata('error_message'); ?>
+    </div>
+</div>
+<?php } ?>

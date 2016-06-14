@@ -36,7 +36,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
-        $this->template->setSub('error', '');
         //Load the view
         $this->template->loadSub('admin/upgrade_index');
     }
@@ -64,17 +63,11 @@ class Upgrade extends CI_Controller {
             }
             $this->Csz_model->clear_all_cache();
             /* When Success */
-            $this->template->setSub('cur_version', $this->last_version);
-            $this->template->setSub('last_version', $this->last_version);
-            $this->template->setSub('error', 'success');
-            //Load the view
-            $this->template->loadSub('admin/upgrade_index');
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
+            redirect('admin/upgrade', 'refresh');
         } else {
-            $this->template->setSub('cur_version', $this->cur_version);
-            $this->template->setSub('last_version', $this->last_version);
-            $this->template->setSub('error', 'lastver');
-            //Load the view
-            $this->template->loadSub('admin/upgrade_index');
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
+            redirect('admin/upgrade', 'refresh');
         }
     }
     
@@ -84,17 +77,11 @@ class Upgrade extends CI_Controller {
         $this->load->dbutil();
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
-            $this->template->setSub('cur_version', $this->cur_version);
-            $this->template->setSub('last_version', $this->last_version);
-            $this->template->setSub('error', 'opt_success');
-            //Load the view
-            $this->template->loadSub('admin/upgrade_index');
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('optimize_success_alert').'</div>');
+            redirect('admin/upgrade', 'refresh');
         }else{
-            $this->template->setSub('cur_version', $this->cur_version);
-            $this->template->setSub('last_version', $this->last_version);
-            $this->template->setSub('error', 'opt_error');
-            //Load the view
-            $this->template->loadSub('admin/upgrade_index');
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('optimize_error_alert').'</div>');
+            redirect('admin/upgrade', 'refresh');
         }
     }
     
