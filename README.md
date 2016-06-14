@@ -9,6 +9,7 @@ Server Recommend Requirements:
 - PHP 5.3 or higher.
 - MySQL 5.0 or higher (Recommend for MySQLi Driver).
 - Apache MOD_REWRITE Enabled.
+- PHP cURL Enabled.
 - gZip Compression Enabled.
 
 Download Here! at http://www.cszcms.com/download
