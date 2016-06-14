@@ -4,6 +4,7 @@ CSZ-CMS V.1.0.7
 - Fix .htaccess file for performance.
 - Fix upgrade system for performance.
 - Fix Timezone not working.
+- Change last version alert on backend to warning color.
 
 CSZ-CMS V.1.0.6
 - Fix critical bug, Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500).

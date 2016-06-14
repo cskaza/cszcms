@@ -47,8 +47,7 @@ class Upgrade extends CI_Controller {
         if ($lastversion !== FALSE) {
             set_time_limit (24 * 60 * 60);
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->last_version . ".zip";
-            $filename = basename($url);
-            $newfname = FCPATH . $filename;
+            $newfname = FCPATH . basename($url);
             $this->Csz_model->downloadFile($url, $newfname);
             if (file_exists($newfname)) {
                 @$this->unzip->extract($newfname, FCPATH);
@@ -66,7 +65,7 @@ class Upgrade extends CI_Controller {
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
             redirect('admin/upgrade', 'refresh');
         } else {
-            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
+            $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
             redirect('admin/upgrade', 'refresh');
         }
     }
