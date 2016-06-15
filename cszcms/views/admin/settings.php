@@ -184,6 +184,23 @@
                     <span class="remark"><em><?php echo $this->lang->line('settings_googlecapt_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="form-control-static" for="link_statistic_active">
+                <?php
+                if($settings->link_statistic_active){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'link_statistic_active',
+                    'id' => 'link_statistic_active',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_link_statistic_active'); ?></label>	
+            </div> <!-- /control-group -->
             <hr />
             <div class="control-group">		
             <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									

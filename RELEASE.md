@@ -1,10 +1,16 @@
 #### RELEASE NOTES
 
 CSZ-CMS V.1.0.7
+- Change last version alert on backend to warning color.
+- Add statistic for link when click the link in content (Can enable on "Site Settings").
+- Add statistic for link view on backend.
+- Add important remark on form builder (Can use one form per page only!).
+- Add "Clear All Pages Cache" menu inside "General Menu" on top menu.
 - Fix .htaccess file for performance.
 - Fix upgrade system for performance.
 - Fix Timezone not working.
-- Change last version alert on backend to warning color.
+- Fix bug for submit the forms with get method in content.
+- Fix clear cache when update page.
 
 CSZ-CMS V.1.0.6
 - Fix critical bug, Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500).

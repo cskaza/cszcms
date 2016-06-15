@@ -15,34 +15,55 @@ class Formsaction extends CI_Controller {
             //Get form data
             $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
             if ($frm_rs->active) {
+                if($frm_rs->form_method == 'post'){
+                    $cur_page = $this->input->post('cur_page', TRUE);
+                }elseif($frm_rs->form_method == 'get'){
+                    $cur_page = $this->input->get('cur_page', TRUE);
+                }
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {
                     if ($this->Csz_model->chkCaptchaRes() == '') {
                         //Return to last page: Captcha invalid
-                        redirect(urlencode($this->input->post('cur_page', TRUE)) . '/2', 'refresh');
+                        redirect(urlencode($cur_page) . '/2', 'refresh');
                         exit;
                     }
                 }
                 $data = array();
                 foreach ($field_rs as $f_val) {
-                    if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE)){
-                         //Return to last page: Error
-                        redirect(urlencode($this->input->post('cur_page', TRUE)) . '/3', 'refresh'); 
-                        exit;
+                    if($frm_rs->form_method == 'post'){
+                            if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE)){
+                                //Return to last page: Error
+                               redirect(urlencode($cur_page) . '/3', 'refresh'); 
+                               exit;
+                            }
+                    }elseif($frm_rs->form_method == 'get'){
+                            if($f_val->field_required && !$this->input->get($f_val->field_name, TRUE)){
+                                //Return to last page: Error
+                               redirect(urlencode($cur_page) . '/3', 'refresh'); 
+                               exit;
+                            }
                     }
-                    if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit') {                        
-                        $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
+                    if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit') {      
+                        if($frm_rs->form_method == 'post'){
+                            $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
+                        }elseif($frm_rs->form_method == 'get'){
+                            $data[$f_val->field_name] = $this->input->get($f_val->field_name, TRUE);
+                        }
                         if ($f_val->field_type == 'email') {
-                            $email_from = $this->input->post($f_val->field_name, TRUE);
+                            if($frm_rs->form_method == 'post'){
+                                $email_from = $this->input->post($f_val->field_name, TRUE);
+                            }elseif($frm_rs->form_method == 'get'){
+                                $email_from = $this->input->get($f_val->field_name, TRUE);
+                            }
                         }
                     }                    
                 }
                 $this->db->set('ip_address', $this->input->ip_address(), TRUE);
                 $this->db->set('timestamp_create', 'NOW()', FALSE);
                 $this->db->insert('form_' . $frm_rs->form_name, $data);
-                $this->sendMail($frm_rs->sendmail, $frm_rs->email, $email_from, $frm_rs->subject, $field_rs);
+                $this->sendMail($frm_rs->sendmail, $frm_rs->email, $email_from, $frm_rs->subject, $field_rs, $frm_rs->form_method);
                 //Return to last page: Success
-                redirect(urlencode($this->input->post('cur_page', TRUE)) . '/1', 'refresh');
+                redirect(urlencode($cur_page) . '/1', 'refresh');
                 exit;
             } else {
                 //Return to home page
@@ -56,7 +77,7 @@ class Formsaction extends CI_Controller {
         }
     }
 
-    private function sendMail($active = '', $email_to = '', $email_from = '', $subject = '', $field_val = '') {
+    private function sendMail($active = '', $email_to = '', $email_from = '', $subject = '', $field_val = '', $form_method) {
         if ($active) {
             $webconfig = $this->Csz_admin_model->load_config();
             # ---- set from, to, bcc --#
@@ -78,9 +99,17 @@ class Formsaction extends CI_Controller {
                     if ($val->field_type != 'button' && $val->field_type != 'reset' && $val->field_type != 'submit') {
                         ($val->field_label)?$field_label = $val->field_label:$field_label = $val->field_name;
                         if($val->field_type == 'textarea'){
-                            $message_html.= '<b>' . $field_label . ':</b><br>' . $this->input->post($val->field_name, TRUE) . '<br><br>';
+                            if($form_method == 'post'){
+                                $message_html.= '<b>' . $field_label . ':</b><br>' . $this->input->post($val->field_name, TRUE) . '<br><br>';
+                            }elseif($form_method == 'get'){
+                                $message_html.= '<b>' . $field_label . ':</b><br>' . $this->input->get($val->field_name, TRUE) . '<br><br>';
+                            }
                         }else{
-                            $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name, TRUE) . '<br>';
+                            if($form_method == 'post'){
+                                $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name, TRUE) . '<br>';
+                            }elseif($form_method == 'get'){
+                                $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->get($val->field_name, TRUE) . '<br>';
+                            }                           
                         } 
                     }
                 }

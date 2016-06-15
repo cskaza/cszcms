@@ -128,6 +128,9 @@ $route['admin/upgrade/(:any)'] = "admin/upgrade";
 
 $route['formsaction/(:any)'] = 'formsaction';
 $route['formsaction'] = 'formsaction';
+$route['linkstats/(:any)/(:any)'] = 'linkstats';
+$route['linkstats/(:any)'] = 'linkstats';
+$route['linkstats'] = 'linkstats';
 $route['lang/(:any)'] = "home/setLang";
 $route['default_controller'] = 'home';
 $route['(.+)'] = 'home';

@@ -104,6 +104,7 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_model->clear_all_cache();
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
     }
 

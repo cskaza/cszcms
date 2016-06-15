@@ -249,11 +249,16 @@ class Csz_model extends CI_Model {
     }
 
     public function coreJs() {
+        if($this->session->userdata('fronlang_iso')){
+            $hl = '?hl='.$this->session->userdata('fronlang_iso');
+        }else{
+            $hl = '';
+        }
         $core_js = '<script src="' . base_url() . 'assets/js/jquery-1.10.2.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
-        $core_js.= '<script src="https://www.google.com/recaptcha/api.js"></script>';
+        $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
         return $core_js;
     }
 
@@ -264,7 +269,7 @@ class Csz_model extends CI_Model {
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
             array('name' => 'author', 'content' => $this->load_config()->site_name),
-            array('name' => 'designer', 'content' => 'Web-Design and Development by CSKAZA'),
+            array('name' => 'designer', 'content' => 'Powered by CSZ-CMS'),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
         );
@@ -327,23 +332,55 @@ class Csz_model extends CI_Model {
             }
         }
     }
+    
+    public function getHtmlContent($ori_content, $page, $url_segment) { /* Calculate the HTML code */
+        $config = $this->load_config();
+        if($config->link_statistic_active){
+            $ori_content = $this->linkFromHtml($ori_content);
+        }
+        $ori_content = $this->frmNameInHtml($ori_content, $page, $url_segment);
+        return $ori_content;
+    }
+    
+    public function linkFromHtml($content) { /* Find and replace a tag in content */
+        if (strpos($content, ' href="') !== false) {
+            $txt_nonline = str_replace(PHP_EOL, '', $content);
+            $array = explode("<a ", $txt_nonline);
+            foreach ($array as $key => $value) {
+                $link[] = $array[$key];
+            }
+            foreach ($link as $val) {
+                if(preg_match('/href=/', $val)) {
+                    list($Gone,$Keep) = explode("href=\"", trim($val));
+                    list($Keep,$Gone) = explode("\"", $Keep);
+                    $content = strtr($content, array( "$Keep" => BASE_URL."/linkstats?url=$Keep", ));
+                }
+            }
+        }
+        return $content;
+    }
 
-    public function frmNameInHtml($content) {
+    public function frmNameInHtml($content, $page, $url_segment) { /* Find the form in content */
         $txt_nonhtml = strip_tags($content);
         if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
             $array = explode("[?]", $txt_nonline);
-            $searchword = '{=forms:';
-            $key = $this->customFindArr($searchword, $array);
-            $rep_arr = array('{=forms:', '}');
-            $form_name = str_replace($rep_arr, '', $array[$key]);
-            return $form_name;
-        } else {
-            return FALSE;
+            foreach ($array as $key => $value) {
+                $form_name[] = $array[$key];
+            }            
+            foreach ($form_name as $val) {
+                if (strpos($val, '{=forms:') !== false) {
+                    $rep_arr = array('{=forms:', '}');
+                    $frm_name = str_replace($rep_arr, '', $val);
+                    $content = $this->addFrmToHtml($content, $frm_name, $page, $url_segment);
+                    break;
+                }  
+            }
         }
+        return $content;
     }
 
-    public function addFrmToHtml($content, $frm_name, $cur_page = '', $status = '') {
+    public function addFrmToHtml($content, $frm_name, $cur_page = '', $status = '') { /* Add the form in content */
         $row_config = $this->load_config();
         $where_arr = array('form_name', 'active');
         $val_arr = array($frm_name, 1);
@@ -428,6 +465,13 @@ class Csz_model extends CI_Model {
         closedir($handle);
     }
     
+    public function clear_uri_cache($uri) {
+        $CI = & get_instance();
+        $path = $CI->config->item('cache_path');
+        $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
+        @unlink($cache_path . '/' . md5($uri));
+    }
+    
     public function getCurlreCaptData($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -470,5 +514,12 @@ class Csz_model extends CI_Model {
             $html = '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="'.$config->googlecapt_sitekey.'"></div>';
         }
         return $html;
+    }
+    
+    public function saveLinkStats($link) {
+        $this->db->set('link', $link, TRUE);
+        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->insert('link_statistic');
     }
 }

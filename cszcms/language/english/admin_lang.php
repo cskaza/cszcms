@@ -156,6 +156,7 @@ $lang['settings_googlecapt_sitekey']	= "reCaptcha Site Key";
 $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'You can get key of reCaptcha at <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Site Logo";
+$lang['settings_link_statistic_active']	= "Statistic for link Enable (In page content)";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
@@ -238,7 +239,7 @@ $lang['forms_sendmail']			= "Sendmail Enable";
 $lang['forms_captcha']			= "Captcha Enable";
 $lang['forms_email']			= "Send to Email";
 $lang['forms_subject']			= "Email Subject";
-$lang['forms_indexremark']		= "<i>Please use this tag for insert the forms into the content. Please see Forms Name<br><b>Tag:</b></i> [?]{=forms:<b>forms_name</b>}[?]";
+$lang['forms_indexremark']		= "<i>Please use this tag for insert the forms into the content. Please see Forms Name<br><b>Tag:</b></i> [?]{=forms:<b>forms_name</b>}[?]<br><b>Important Remark: Can use one form per page only!</b>";
 $lang['forms_view']			= "View Form Post";
 $lang['forms_success_txt']		= "Success Text";
 $lang['forms_captchaerror_txt']		= "Captcha Wrong Text";
@@ -282,3 +283,4 @@ $lang['optimize_success_alert']         = "Optimize the database successfully!";
 $lang['optimize_error_alert']           = "Optimize the database has error!";
 $lang['btn_optimize_db']		= "Optimize the database";
 $lang['btn_backup_db']			= "Backup the database";
+$lang['clearallcache_success_alert']    = "Clear all pages cached successfully!";

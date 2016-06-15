@@ -160,6 +160,7 @@ class Headfoot_html extends CI_Model {
                         $html.= '<li><a href="'.base_url().'admin/social"><i class="glyphicon glyphicon-share"></i> '.$this->lang->line('social_header').'</a></li>';
                         if($this->session->userdata('admin_type') == 'admin'){ $html.= '<li><a href="'.base_url().'admin/upgrade"><i class="glyphicon glyphicon-compressed"></i> '.$this->lang->line('maintenance_header').'</a></li>'; }
                         $html.= '<li><a href="'.base_url().'admin/users"><i class="glyphicon glyphicon-user"></i> '.$this->lang->line('nav_admin_users').'</a></li>
+                                 <hr><li><a href="'.BASE_URL.'/admin/upgrade/clearAllCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearallcache').'</a></li>
                             </ul>
                         </li>
                         <li><a href="'.base_url().'admin/logout"><i class="glyphicon glyphicon-log-out"></i> '.$this->lang->line('nav_logout').'</a></li>

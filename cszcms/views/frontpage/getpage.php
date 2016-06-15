@@ -1,12 +1,6 @@
 <?php
 if ($page_rs !== FALSE) {
-    $frm_name = $this->Csz_model->frmNameInHtml($page_rs->content);
-    if($frm_name === FALSE){
-        echo $page_rs->content;
-    }else{       
-        echo $this->Csz_model->addFrmToHtml($page_rs->content, $frm_name, $page, $this->uri->segment(2));
-    }
-    
+    echo $content = $this->Csz_model->getHtmlContent($page_rs->content, $page, $this->uri->segment(2));
 } else {
     ?>
     <div class="jumbotron">
