@@ -10,7 +10,8 @@ CSZ-CMS V.1.0.7
 - Fix upgrade system for performance.
 - Fix Timezone not working.
 - Fix bug for submit the forms with get method in content.
-- Fix clear cache when update page.
+- Fix clear cache when edit page.
+- Fix pagination working.
 
 CSZ-CMS V.1.0.6
 - Fix critical bug, Fix .htaccess file for mod_headers.c Cache-Control (Server Error code 500).

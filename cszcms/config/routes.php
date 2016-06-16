@@ -125,6 +125,14 @@ $route['admin/upgrade/optimize'] = "admin/upgrade/dbOptimize";
 $route['admin/upgrade/backup'] = "admin/upgrade/dbBackup";
 $route['admin/upgrade/clearAllCache'] = "admin/upgrade/clearAllCache";
 $route['admin/upgrade/(:any)'] = "admin/upgrade";
+$route['admin/linkstats'] = "admin/linkstats";
+$route['admin/linkstats/view/(:any)'] = "admin/linkstats/view";
+$route['admin/linkstats/view/(:any)/(:any)'] = "admin/linkstats/view";
+$route['admin/linkstats/deleteurl/(:any)'] = "admin/linkstats/deleteByURL";
+$route['admin/linkstats/deleteurl'] = "admin/linkstats/deleteByURL";
+$route['admin/linkstats/deleteid/(:any)'] = "admin/linkstats/deleteByID";
+$route['admin/linkstats/deleteid'] = "admin/linkstats/deleteByID";
+$route['admin/linkstats/(:any)'] = "admin/linkstats";
 
 $route['formsaction/(:any)'] = 'formsaction';
 $route['formsaction'] = 'formsaction';

@@ -48,11 +48,23 @@ class Csz_model extends CI_Model {
         }
     }
 
-    public function countData($table, $where_field = '', $where_val = '') {
-        if ($where_field) {
-            $this->db->where($where_field, $where_val);
+    public function countData($table, $search_sql = '', $groupby = '', $orderby = 'timestamp_create', $sort = 'desc') {
+        $this->db->select('*');
+        if($search_sql){
+            if(is_array($search_sql)){
+                /* $search = array('field'=>'value') */
+                foreach ($search_sql as $key => $value) {
+                    $this->db->where($key, $value);
+                }
+            }else{
+                /* $search = "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%'")*/
+                $this->db->where($search_sql);
+            }
         }
-        return $this->db->count_all($table);
+        if($groupby) $this->db->group_by($groupby);
+        $this->db->order_by($orderby, $sort);
+        $query = $this->db->get($table);
+        return $query->num_rows();
     }
 
     public function getCurPages() {

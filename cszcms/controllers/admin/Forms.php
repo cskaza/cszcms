@@ -35,10 +35,10 @@ class Forms extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);  
-        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;        
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;        
 
         //Get users from database
-        $this->template->setSub('forms', $this->Csz_admin_model->getIndexData('form_main', $result_per_page, $pagination-1, 'form_main_id', 'asc'));
+        $this->template->setSub('forms', $this->Csz_admin_model->getIndexData('form_main', $result_per_page, $pagination, 'form_main_id', 'asc'));
 
         //Load the view
         $this->template->loadSub('admin/forms_index');
@@ -133,11 +133,11 @@ class Forms extends CI_Controller {
             $base_url = BASE_URL . '/admin/forms/view/'.$this->uri->segment(4).'/';
             // Pageination config
             $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);       
-            ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 1;     
+            ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
             //Get users from database   
             $this->template->setSub('form_name', $frm_rs->form_name);
             $this->template->setSub('field_rs', $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
-            $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination-1));
+            $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
             //Load the view
             $this->template->loadSub('admin/forms_view');
         }else{

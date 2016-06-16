@@ -35,10 +35,10 @@ class Languages extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
-        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('lang', $this->Csz_admin_model->getIndexData('lang_iso', $result_per_page, $pagination-1, 'lang_iso_id', 'ASC'));
+        $this->template->setSub('lang', $this->Csz_admin_model->getIndexData('lang_iso', $result_per_page, $pagination, 'lang_iso_id', 'ASC'));
 
         //Load the view
         $this->template->loadSub('admin/lang_index');

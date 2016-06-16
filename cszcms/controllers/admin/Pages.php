@@ -35,10 +35,10 @@ class Pages extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);    
-        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 1;        
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;        
 
         //Get users from database
-        $this->template->setSub('pages', $this->Csz_admin_model->getIndexData('pages', $result_per_page, $pagination-1, 'pages_id', 'asc'));
+        $this->template->setSub('pages', $this->Csz_admin_model->getIndexData('pages', $result_per_page, $pagination, 'pages_id', 'asc'));
 
         //Load the view
         $this->template->loadSub('admin/pages_index');

@@ -112,9 +112,9 @@ class Admin extends CI_Controller {
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
-        ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 1;
+        ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 0;
 
-        $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination-1));
+        $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination));
         $this->template->loadSub('admin/upload_index');
     }
 

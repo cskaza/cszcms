@@ -97,12 +97,23 @@ class Csz_admin_model extends CI_Model {
         $this->pagination->initialize($config);
     }
 
-    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc') {
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc', $search_sql = '', $groupby = '') {
         // Get a list of all user accounts
         $this->db->select('*');
+        if($search_sql){
+            if(is_array($search_sql)){
+                /* $search = array('field'=>'value') */
+                foreach ($search_sql as $key => $value) {
+                    $this->db->where($key, $value);
+                }
+            }else{
+                /* $search = "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%'"*/
+                $this->db->where($search_sql);
+            }
+        }
+        if ($groupby) $this->db->group_by($groupby);
         $this->db->order_by($orderby, $sort);
-        if ($limit)
-            $this->db->limit($limit, $offset);
+        if ($limit) $this->db->limit($limit, $offset);
         $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
             $row = $query->result_array();

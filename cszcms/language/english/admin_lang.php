@@ -208,7 +208,6 @@ $lang['pages_active']                    = "Active";
 $lang['pages_keywords']                    = "Pages Keywords";
 $lang['pages_desc']                    = "Pages Description";
 $lang['pages_content']                    = "Pages Content";
-$lang['pages_savemore_btn']             = "Save & Add more";
 
 //Captcha
 $lang['captcha_text']             = "Security Check (Please enter the character shown in the image)";
@@ -284,3 +283,17 @@ $lang['optimize_error_alert']           = "Optimize the database has error!";
 $lang['btn_optimize_db']		= "Optimize the database";
 $lang['btn_backup_db']			= "Backup the database";
 $lang['clearallcache_success_alert']    = "Clear all pages cached successfully!";
+
+//Link Statistic
+$lang['linkstats_header']             = "Statistic for link";
+$lang['linkstats_url']                 = "URL";
+$lang['linkstats_dateime']              = "Date/Time";
+$lang['linkstats_count']                = "Link Count";
+$lang['ipaddress']                      = "IP Address";
+$lang['data_notfound']                 = "Data not found.";
+$lang['startdate_field']                = "Start Date";
+$lang['enddate_field']                = "End Date";
+$lang['search']                         = "Search";
+$lang['total']                         = "Total:";
+$lang['records']                         = "Records";
+
