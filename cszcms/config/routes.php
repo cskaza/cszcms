@@ -126,6 +126,7 @@ $route['admin/upgrade/backup'] = "admin/upgrade/dbBackup";
 $route['admin/upgrade/clearAllCache'] = "admin/upgrade/clearAllCache";
 $route['admin/upgrade/(:any)'] = "admin/upgrade";
 $route['admin/linkstats'] = "admin/linkstats";
+$route['admin/linkstats/view'] = "admin/linkstats/view";
 $route['admin/linkstats/view/(:any)'] = "admin/linkstats/view";
 $route['admin/linkstats/view/(:any)/(:any)'] = "admin/linkstats/view";
 $route['admin/linkstats/deleteurl/(:any)'] = "admin/linkstats/deleteByURL";

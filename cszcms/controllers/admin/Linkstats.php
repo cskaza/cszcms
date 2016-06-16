@@ -59,12 +59,13 @@ class Linkstats extends CI_Controller {
     
     public function view() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if($this->input->get('url')){
-            $this->load->library('pagination');       
-            $search_arr = "link = '".$this->input->get('url', TRUE)."' ";
+        if($this->uri->segment(4)){
+            $this->load->library('pagination');   
+            $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
+            $search_arr = "link = '".$getLink->link."' ";
             if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
                 if($this->input->get('search')){
-                    $search_arr.= " AND link LIKE '%".$this->input->get('search', TRUE)."%' OR ip_address LIKE '%".$this->input->get('search', TRUE)."%'";
+                    $search_arr.= " AND ip_address LIKE '%".$this->input->get('search', TRUE)."%'";
                 }
                 if($this->input->get('start_date') && !$this->input->get('end_date')){
                     $search_arr.= " AND timestamp_create >= '".$this->input->get('start_date',true)." 00:00:00'";
@@ -78,15 +79,16 @@ class Linkstats extends CI_Controller {
             $result_per_page = 20;
             $total_row = $this->Csz_model->countData('link_statistic', $search_arr);
             $num_link = 10;
-            $base_url = BASE_URL . '/admin/linkstats/';
+            $base_url = BASE_URL . '/admin/linkstats/view/'.$this->uri->segment(4).'/';
 
             // Pageination config
             $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
-            ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
+            ($this->uri->segment(5))? $pagination = $this->uri->segment(5) : $pagination = 0;
 
             //Get users from database
             $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_statistic', $result_per_page, $pagination, 'link_statistic_id', 'desc', $search_arr));
             $this->template->setSub('total_row',$total_row);
+            $this->template->setSub('url_link',$getLink->link);
             //Load the view
             $this->template->loadSub('admin/linkstats_view');
         }else{
@@ -107,7 +109,8 @@ class Linkstats extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         if($this->uri->segment(4)){
-            $this->Csz_admin_model->removeData('link_statistic', 'link', $this->uri->segment(4));   
+            $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
+            $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);   
         }
         redirect('admin/linkstats', 'refresh');
     }
