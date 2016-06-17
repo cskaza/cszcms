@@ -6,7 +6,6 @@ CSZ-CMS V.1.0.7
 - Add statistic for link view on backend.
 - Add important remark on form builder (Can use one form per page only!).
 - Add "Clear All Pages Cache" menu inside "General Menu" on top menu.
-- Fix .htaccess file for performance.
 - Fix upgrade system for performance.
 - Fix Timezone not working.
 - Fix bug for submit the forms with get method in content.
