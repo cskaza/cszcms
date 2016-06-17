@@ -48,6 +48,14 @@ $row = $this->Csz_admin_model->load_config();
                         <?php } ?>
                         <!-- Start For Content -->
                         <?php echo $content; ?>
+                        <?php if($this->session->flashdata('error_message') != ''){ ?>
+                        <br><br>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <?php echo $this->session->flashdata('error_message'); ?>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <!-- End For Content -->
                         <br><br><br>
                         <?php echo  $this->Headfoot_html->admin_footer() ?>

@@ -62,11 +62,3 @@
         <br><a href="<?php echo BASE_URL . '/admin/upgrade/backup'?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db')?></a>
     </div>
 </div>
-<?php if($this->session->flashdata('error_message') != ''){ ?>
-<br><br>
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <?php echo $this->session->flashdata('error_message'); ?>
-    </div>
-</div>
-<?php } ?>
