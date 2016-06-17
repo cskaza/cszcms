@@ -28,7 +28,7 @@ class Upgrade extends CI_Controller {
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
         $this->cur_version = $this->Csz_model->getVersion();
-        $this->last_version = $this->Csz_model->getVersion('http://www.cszcms.com/downloads/lastest_version.xml');
+        $this->last_version = $this->Csz_admin_model->getLatestVersion()->version;
     }
 
     public function index() {
@@ -46,7 +46,7 @@ class Upgrade extends CI_Controller {
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             set_time_limit (24 * 60 * 60);
-            $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->last_version . ".zip";
+            $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
             $newfname = FCPATH . basename($url);
             $this->Csz_model->downloadFile($url, $newfname);
             if (file_exists($newfname)) {
@@ -60,10 +60,14 @@ class Upgrade extends CI_Controller {
                     @unlink($newfname);
                 }
             }
-            $this->Csz_model->clear_all_cache();
-            /* When Success */
-            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+                redirect('/admin/upgrade/download', 'refresh');
+            }else{
+                $this->Csz_model->clear_all_cache();
+                // When Success 
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
+                redirect('admin/upgrade', 'refresh');
+            }
         } else {
             $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
             redirect('admin/upgrade', 'refresh');

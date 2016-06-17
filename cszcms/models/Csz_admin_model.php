@@ -20,13 +20,18 @@ class Csz_admin_model extends CI_Model {
             return FALSE;
         }
     }
-
-    public function chkVerUpdate($cur_ver, $xml_url = '') {
+    
+    public function getLatestVersion($xml_url = '') {
         if (!$xml_url)
             $xml_url = 'http://www.cszcms.com/downloads/lastest_version.xml';
+        $xml = simplexml_load_file($xml_url) or die("Error: Cannot create object");
+        return $xml;
+    }
+
+    public function chkVerUpdate($cur_ver, $xml_url = '') {
         $ver_r = array();
         $cur_r = array();
-        $xml = simplexml_load_file($xml_url) or die("Error: Cannot create object");
+        $xml = $this->getLatestVersion($xml_url);
         if ($xml->version) {
             $cur_ver = str_replace(' ', '.', $cur_ver);
             $cur_r = explode('.', $cur_ver);
@@ -35,6 +40,30 @@ class Csz_admin_model extends CI_Model {
                 return $xml->version;
             } else {
                 return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    
+    public function findNextVersion($cur_ver) {
+        $cur_r = array();
+        $pre_r = array();
+        $xml = $this->getLatestVersion();
+        $last_ver = $xml->version;
+        $pre_ver = $xml->previous;
+        if ($cur_ver && $last_ver && $pre_ver) {
+            $cur_ver = str_replace(' ', '.', $cur_ver);
+            $cur_r = explode('.', $cur_ver);
+            $pre_r = explode('.', $pre_ver);
+            if($cur_ver == $pre_ver){
+                return $last_ver;
+            }else if($pre_r[0] > $cur_r[0]){
+                return ($cur_r[0] + 1) . '.0.0';
+            }else if($pre_r[0] == $cur_r[0] && $pre_r[1] > $cur_r[1]){
+                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+            }else if ($pre_r[0] == $cur_r[0] && $pre_r[1] == $cur_r[1] && $pre_r[2] > $cur_r[2]) {
+                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
             }
         } else {
             return FALSE;
