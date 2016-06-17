@@ -32,20 +32,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($linkstats as $u) {
-                        echo '<tr>';
-                        echo '<td>' . $u['link'] . '</td>';
-                        $where_arr = array('link'=>$u['link']);
-                        echo '<td class="text-center">' . number_format($this->Csz_model->countData('link_statistic', $where_arr)) . '</td>';
-                        echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
-                        echo '<td class="text-center"><a href="'.BASE_URL.'/admin/linkstats/view/' . $u['link_statistic_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a>';
-                        if($this->session->userdata('admin_type') == 'admin'){
-                            echo ' &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteurl/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
+                    <?php if ($linkstats === FALSE) { ?>
+                        <tr>
+                            <td colspan="4" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($linkstats as $u) {
+                            echo '<tr>';
+                            echo '<td>' . $u['link'] . '</td>';
+                            $where_arr = array('link'=>$u['link']);
+                            echo '<td class="text-center">' . number_format($this->Csz_model->countData('link_statistic', $where_arr)) . '</td>';
+                            echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
+                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/linkstats/view/' . $u['link_statistic_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a>';
+                            if($this->session->userdata('admin_type') == 'admin'){
+                                echo ' &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteurl/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
+                            }
+                            echo '</td></tr>';
                         }
-                        echo '</td></tr>';
-                    }
-                    ?>
+                        ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>

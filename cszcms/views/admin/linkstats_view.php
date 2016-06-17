@@ -31,20 +31,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($linkstats as $u) {
-                        echo '<tr>';
-                        echo '<td class="text-center">' . $u['ip_address'] . '</td>';
-                        echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
-                        echo '<td class="text-center">';
-                        if($this->session->userdata('admin_type') == 'admin'){
-                            echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteid/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
-                        }else{
-                            echo '&nbsp;-&nbsp;';
+                    <?php if ($linkstats === FALSE) { ?>
+                        <tr>
+                            <td colspan="3" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($linkstats as $u) {
+                            echo '<tr>';
+                            echo '<td class="text-center">' . $u['ip_address'] . '</td>';
+                            echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
+                            echo '<td class="text-center">';
+                            if($this->session->userdata('admin_type') == 'admin'){
+                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteid/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
+                            }else{
+                                echo '&nbsp;-&nbsp;';
+                            }
+                            echo '</td></tr>';
                         }
-                        echo '</td></tr>';
-                    }
-                    ?>
+                        ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
