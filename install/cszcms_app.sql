@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `page_menu` (
 INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `other_link`, `drop_menu`, `drop_page_menu_id`, `active`, `arrange`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Home', 'en', 1, '', 0, 0, 1, 1, '2016-03-25 13:00:08', '2016-04-30 16:58:07'),
 (2, 'About Us', 'en', 2, '', 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
-(3, 'Contact Us', 'en', 3, '', 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07');
+(3, 'Contact Us', 'en', 3, '', 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07'),
 (4, 'Drop Menu', 'en', 0, '', 1, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
 (5, 'CSZ-CMS Website', 'en', 0, 'http://www.cszcms.com', 0, 2, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07'),
 
