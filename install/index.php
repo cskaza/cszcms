@@ -153,7 +153,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                         <option value="ibase">ibase</option>
                                         <option value="mssql">mssql</option>-->
                                         <option value="mysql">MySQL</option>
-                                        <option value="mysqli">MySQLi *</option>
+                                        <option value="mysqli" selected>MySQLi *</option>
                                         <!--<option value="oci8">oci8</option>
                                         <option value="odbc">odbc</option>-->
                                         <option value="pdo">PDO</option>

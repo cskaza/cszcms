@@ -120,9 +120,7 @@ class Headfoot_html extends CI_Model {
     }
 
     public function footer(){
-        $row = $this->Csz_model->load_config();
-        $html = '<span class="copyright">'.$row->site_footer.'</span>
-                <small style="color:gray;">'.$this->Csz_model->cszCopyright().'</small>';
+        $html = $this->Csz_model->cszCopyright();
         return $html;
     }
     
@@ -228,13 +226,11 @@ class Headfoot_html extends CI_Model {
     }
 
     public function admin_footer(){
-        $row = $this->Csz_admin_model->load_config();
         $html = '<footer>
                     <hr>
                     <div class="row">
                         <div class="col-md-8 div-copyright">
-                            <span class="copyright">'.$row->site_footer.'</span>
-                            <small style="color:gray;">'.$this->Csz_model->cszCopyright().'</small>
+                            '.$this->Csz_model->cszCopyright().'
                         </div>
                     </div>
             </footer>';

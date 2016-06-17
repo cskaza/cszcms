@@ -248,8 +248,10 @@ class Csz_model extends CI_Model {
     }
 
     public function cszCopyright() {
-        $csz_copyright = $this->Csz_admin_model->cszCopyright();
-        return $csz_copyright;
+        $row = $this->Csz_model->load_config();
+        $html = '<span class="copyright">'.$row->site_footer.'</span>
+                <small style="color:gray;">'.$this->Csz_admin_model->cszCopyright().'</small>';
+        return $html;
     }
 
     public function coreCss() {
