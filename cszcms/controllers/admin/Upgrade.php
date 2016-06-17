@@ -45,7 +45,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
-            set_time_limit (24 * 60 * 60);
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
             $newfname = FCPATH . basename($url);
             $this->Csz_model->downloadFile($url, $newfname);

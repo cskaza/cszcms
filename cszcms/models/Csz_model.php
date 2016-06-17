@@ -28,8 +28,6 @@ class Csz_model extends CI_Model {
     }
 
     public function downloadFile($url, $path) {
-        /* maximum execution time in seconds */
-        set_time_limit (24 * 60 * 60);
         $newfname = $path;
         $file = fopen ($url, 'rb');
         if ($file) {
