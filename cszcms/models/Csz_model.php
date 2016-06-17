@@ -362,7 +362,7 @@ class Csz_model extends CI_Model {
                 $link[] = $array[$key];
             }
             foreach ($link as $val) {
-                if(preg_match('/href=/', $val)) {
+                if(preg_match('/href=/', $val) && preg_match('/href="#/', $val) === FALSE) {
                     list($Gone,$Keep) = explode("href=\"", trim($val));
                     list($Keep,$Gone) = explode("\"", $Keep);
                     $content = strtr($content, array( "$Keep" => BASE_URL."/linkstats?url=$Keep", ));
