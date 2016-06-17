@@ -272,7 +272,7 @@ $lang['upgrade_newlast_alert']          = "CSZ-CMS have new upgrade version. Ple
 $lang['upgrade_lastver_alert']          = "Your CSZ-CMS is latest version!";
 $lang['upgrade_success_alert']          = "Upgrade successfully!";
 $lang['upgrade_error_alert']            = "Upgrade Error!";
-$lang['upgrade_text']                   = "Important! Please, backup the database and your modified file before upgrade!";
+$lang['upgrade_text']                   = "<b>Important!</b> Please, backup the database and your modified file before upgrade!<br>Please immediately upgrade. If your system outdated please use advanced upgrade only. (Must not use this system)";
 
 //Optimize Database
 $lang['maintenance_header']             = "Maintenance System";

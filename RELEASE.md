@@ -1,7 +1,7 @@
 #### RELEASE NOTES
 
 CSZ-CMS V.1.0.7
-- Change last version alert on backend to warning color.
+- Last version alert change the color to warning alert (Show on backend and frontend).
 - Add statistic for link when click the link in content (Can enable on "Site Settings").
 - Add statistic for link view on backend.
 - Add important remark on form builder (Can use one form per page only!).

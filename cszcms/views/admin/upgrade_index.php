@@ -30,7 +30,7 @@
                 <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo  $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo  $last_version ?></i></b>
             </div>
         </div>
-        <span class="error"><b><?php echo $this->lang->line('upgrade_text'); ?></b></span>
+        <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>
         <br><br>
         <?php echo form_open(BASE_URL . '/admin/upgrade/download'); ?>
         <?php

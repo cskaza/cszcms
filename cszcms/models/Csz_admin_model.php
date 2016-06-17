@@ -46,10 +46,10 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
-    public function findNextVersion($cur_ver) {
+    public function findNextVersion($cur_ver, $xml_url = '') {
         $cur_r = array();
         $pre_r = array();
-        $xml = $this->getLatestVersion();
+        $xml = $this->getLatestVersion($xml_url);
         $last_ver = $xml->version;
         $pre_ver = $xml->previous;
         if ($cur_ver && $last_ver && $pre_ver) {
