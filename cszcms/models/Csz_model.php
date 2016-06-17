@@ -12,7 +12,7 @@ class Csz_model extends CI_Model {
         if ($xml_url) {
             $xml_file = $xml_url;
         } else {
-            $xml_file = base_url() . '/version.xml';
+            $xml_file = BASE_URL . '/version.xml';
         }
         $xml = simplexml_load_file($xml_file) or die("Error: Cannot create object");
         if ($xml->version) {
