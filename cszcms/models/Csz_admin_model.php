@@ -47,23 +47,26 @@ class Csz_admin_model extends CI_Model {
     }
     
     public function findNextVersion($cur_ver, $xml_url = '') {
+        /* sub version is limit x.9.9 */
         $cur_r = array();
         $pre_r = array();
         $xml = $this->getLatestVersion($xml_url);
         $last_ver = $xml->version;
-        $pre_ver = $xml->previous;
-        if ($cur_ver && $last_ver && $pre_ver) {
+        if ($cur_ver && $last_ver) {
             $cur_ver = str_replace(' ', '.', $cur_ver);
             $cur_r = explode('.', $cur_ver);
-            $pre_r = explode('.', $pre_ver);
-            if($cur_ver == $pre_ver){
+            if($cur_ver == $last_ver){
                 return $last_ver;
-            }else if($pre_r[0] > $cur_r[0]){
-                return ($cur_r[0] + 1) . '.0.0';
-            }else if($pre_r[0] == $cur_r[0] && $pre_r[1] > $cur_r[1]){
-                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
-            }else if ($pre_r[0] == $cur_r[0] && $pre_r[1] == $cur_r[1] && $pre_r[2] > $cur_r[2]) {
-                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+            }else{
+                if($cur_r[1] <= 9 && $cur_r[2] < 9){
+                    return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+                }else if($cur_r[1] < 9 && $cur_r[2] == 9){
+                    return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+                }else if($cur_r[1] == 9 && $cur_r[2] == 9){
+                    return ($cur_r[0] + 1) . '.0.0';
+                }else{
+                    return FALSE;
+                }
             }
         } else {
             return FALSE;

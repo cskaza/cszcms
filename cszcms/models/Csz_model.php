@@ -9,9 +9,7 @@ class Csz_model extends CI_Model {
     }
 
     public function getVersion($xml_url = '') {
-        if ($xml_url) {
-            $xml_file = $xml_url;
-        } else {
+        if (!$xml_url) { 
             $xml_file = BASE_URL . '/version.xml';
         }
         $xml = simplexml_load_file($xml_file) or die("Error: Cannot create object");
@@ -335,14 +333,6 @@ class Csz_model extends CI_Model {
         $val = str_replace('--', '-', $val);
         $val = str_replace('--', '-', $val);
         return $val;
-    }
-
-    public function customFindArr($keyword, $arrayToSearch) {
-        foreach ($arrayToSearch as $key => $arrayItem) {
-            if (stristr($arrayItem, $keyword)) {
-                return $key;
-            }
-        }
     }
     
     public function getHtmlContent($ori_content, $page, $url_segment) { /* Calculate the HTML code */
