@@ -49,7 +49,6 @@ class Upgrade extends CI_Controller {
             $newfname = FCPATH . basename($url);
             $this->Csz_model->downloadFile($url, $newfname);
             if (file_exists($newfname)) {
-                echo $url;
                 @$this->unzip->extract($newfname, FCPATH);
                 if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
                     $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
