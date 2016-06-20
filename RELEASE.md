@@ -1,5 +1,11 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.8
+- Fix statistic for link menu is show when don't enable statistic for link.
+- Fix some wrong word for backend.
+- Fix some bug.
+- Fix upgrade system for performance.
+
 CSZ-CMS V.1.0.7
 - Last version alert change the color to warning alert (Show on backend and frontend).
 - Add statistic for link when click the link in content (Can enable on "Site Settings").
