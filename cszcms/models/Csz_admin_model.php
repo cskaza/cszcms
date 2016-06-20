@@ -297,6 +297,13 @@ class Csz_admin_model extends CI_Model {
             }
         }
     }
+    
+    public function getLangISO($lang_name) {
+        /* Get Language ISO from language config file (for backend system) */
+        $this->config->load('language');
+        $lang_config = $this->config->item('admin_language_iso');
+        return $lang_config[$lang_name];
+    }
 
     public function cszCopyright() {
         $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.' . $this->Csz_model->getVersion() . '</span>';
@@ -313,11 +320,7 @@ class Csz_admin_model extends CI_Model {
 
     public function coreJs() {
         if(LANG){
-            if(LANG == 'thai'){
-                $hl = '?hl=th';
-            }else{
-                $hl = '?hl=en';
-            }  
+            $hl = '?hl='.$this->getLangISO(LANG);
         }else{
             $hl = '';
         }
