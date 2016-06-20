@@ -309,12 +309,21 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function coreJs() {
+        if(LANG){
+            if(LANG == 'thai'){
+                $hl = '?hl=th';
+            }else{
+                $hl = '?hl=en';
+            }  
+        }else{
+            $hl = '';
+        }
         $core_js = '<script src="' . base_url() . 'assets/js/jquery-1.10.2.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/jquery-ui.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/jquery.ui.touch-punch.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/tinymce/tinymce.min.js"></script>';
-        $core_js.= '<script src="https://www.google.com/recaptcha/api.js"></script>';
+        $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
         return $core_js;
     }
 

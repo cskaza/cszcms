@@ -125,6 +125,7 @@ class Headfoot_html extends CI_Model {
     }
     
     public function admin_topmenu(){
+        $config = $this->Csz_admin_model->load_config();
         $userdata = $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id'));
         $html = '<nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
@@ -147,9 +148,9 @@ class Headfoot_html extends CI_Model {
                                 <li><a href="'.base_url().'admin/forms"><i class="glyphicon glyphicon-modal-window"></i> '.$this->lang->line('forms_header').'</a></li>
                                 <li><a href="'.base_url().'admin/uploadindex"><i class="glyphicon glyphicon-picture"></i> '.$this->lang->line('uploadfile_header').'</a></li>
                                 <li><a href="'.base_url().'admin/pages"><i class="glyphicon glyphicon-file"></i> '.$this->lang->line('pages_header').'</a></li> 
-                                <li><a href="'.base_url().'admin/navigation"><i class="glyphicon glyphicon-object-align-top"></i> '.$this->lang->line('nav_nav_header').'</a></li>                               
-                                <li><a href="'.base_url().'admin/linkstats"><i class="glyphicon glyphicon-stats"></i> '.$this->lang->line('linkstats_header').'</a></li>
-                            </ul>
+                                <li><a href="'.base_url().'admin/navigation"><i class="glyphicon glyphicon-object-align-top"></i> '.$this->lang->line('nav_nav_header').'</a></li>';                             
+                                if($config->link_statistic_active) $html.= '<li><a href="'.base_url().'admin/linkstats"><i class="glyphicon glyphicon-stats"></i> '.$this->lang->line('linkstats_header').'</a></li>';
+                            $html.= '</ul>
                         </li>
                         <li class="dropdown">
                             <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('nav_general_menu').'</a>
@@ -188,6 +189,7 @@ class Headfoot_html extends CI_Model {
     }
 
     public function admin_leftmenu($cur_page){
+        $config = $this->Csz_admin_model->load_config();
         $html = '<ul class="nav nav-sidebar">';
         $html.= $this->admin_leftli($cur_page,'admin','admin',$this->lang->line('nav_dash'),'glyphicon-dashboard');
         $html.= '</ul><hr>';
@@ -202,8 +204,8 @@ class Headfoot_html extends CI_Model {
         $html.= $this->admin_leftli($cur_page,'forms','admin/forms',$this->lang->line('forms_header'),'glyphicon-modal-window',TRUE);
         $html.= $this->admin_leftli($cur_page,'uploadindex','admin/uploadindex',$this->lang->line('uploadfile_header'),'glyphicon-picture',TRUE);
         $html.= $this->admin_leftli($cur_page,'pages','admin/pages',$this->lang->line('pages_header'),'glyphicon-file',TRUE);
-        $html.= $this->admin_leftli($cur_page,'navigation','admin/navigation',$this->lang->line('nav_nav_header'),'glyphicon-object-align-top',TRUE);   
-        $html.= $this->admin_leftli($cur_page,'linkstats','admin/linkstats',$this->lang->line('linkstats_header'),'glyphicon-stats',TRUE);
+        $html.= $this->admin_leftli($cur_page,'navigation','admin/navigation',$this->lang->line('nav_nav_header'),'glyphicon-object-align-top',TRUE);       
+        if($config->link_statistic_active) $html.= $this->admin_leftli($cur_page,'linkstats','admin/linkstats',$this->lang->line('linkstats_header'),'glyphicon-stats',TRUE);
         $html.= '</ul></ul><hr>';
         $html.= '<ul class="nav nav-sidebar">';
         $html.= '<li><a href="#" title="'.$this->lang->line('nav_gel_settings').'" onclick="ChkHideShow(\'gel_settings\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_gel_settings').'</a></li>';
