@@ -3,7 +3,7 @@
 CSZ-CMS V.1.0.8
 - Fix statistic for link menu is show when don't enable statistic for link.
 - Fix some wrong word for backend.
-- Fix some bug.
+- Fix reCaptcha language when change the backend language in the settings.
 - Fix upgrade system for performance.
 
 CSZ-CMS V.1.0.7
