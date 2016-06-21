@@ -310,7 +310,12 @@ class Csz_admin_model extends CI_Model {
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
         $key = array_search($lang_iso, $lang_config);
-        return $key;
+        if($key){
+            return $key;
+        }else{
+            return 'english';
+        }
+        
     }
 
     public function cszCopyright() {
