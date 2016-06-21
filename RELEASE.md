@@ -5,6 +5,7 @@ CSZ-CMS V.1.0.8
 - Fix some wrong word for backend.
 - Fix reCaptcha language when change the backend language in the settings.
 - Fix upgrade system for performance.
+- Fix some bug for statistic for link.
 
 CSZ-CMS V.1.0.7
 - Last version alert change the color to warning alert (Show on backend and frontend).
