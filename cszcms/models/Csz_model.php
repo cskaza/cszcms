@@ -355,7 +355,7 @@ class Csz_model extends CI_Model {
                 if(preg_match('/href=/', $val) && !preg_match('/href="#/', $val)) {
                     list($Gone,$Keep) = explode("href=\"", trim($val));
                     list($Keep,$Gone) = explode("\"", $Keep);
-                    $content = strtr($content, array( "$Keep" => BASE_URL."/linkstats?url=$Keep", ));
+                    $content = strtr($content, array("$Keep" => BASE_URL."/linkstats?url=$Keep"));
                 }
             }
         }
@@ -519,6 +519,7 @@ class Csz_model extends CI_Model {
     }
     
     public function saveLinkStats($link) {
+        $link = str_replace(BASE_URL.'/linkstats?url=', '', $link);
         $this->db->set('link', $link, TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
