@@ -238,5 +238,20 @@ class Headfoot_html extends CI_Model {
             </footer>';
         return $html;
     }
+    
+    public function getLastVerAlert() {
+        if(!$this->session->userdata('fronlang_iso')) {
+            $lang_iso = 'en';
+        }else{
+            $lang_iso = $this->session->userdata('fronlang_iso');
+        }
+        $lang_name = $this->Csz_admin_model->getLangNamefromISO($lang_iso);
+        $this->lang->load('admin', $lang_name);
+        $html = '';
+        if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+            $html = '<div class="alert alert-warning text-center" role="alert">'.$this->lang->line('upgrade_newlast_alert').'</div>';
+        }
+        return $html;
+    }
 }
 

@@ -298,11 +298,19 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
-    public function getLangISO($lang_name) {
+    public function getLangISOfromName($lang_name) {
         /* Get Language ISO from language config file (for backend system) */
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
         return $lang_config[$lang_name];
+    }
+    
+    public function getLangNamefromISO($lang_iso) {
+        /* Get Language ISO from language config file (for backend system) */
+        $this->config->load('language');
+        $lang_config = $this->config->item('admin_language_iso');
+        $key = array_search($lang_iso, $lang_config);
+        return $key;
     }
 
     public function cszCopyright() {
@@ -320,7 +328,7 @@ class Csz_admin_model extends CI_Model {
 
     public function coreJs() {
         if(LANG){
-            $hl = '?hl='.$this->getLangISO(LANG);
+            $hl = '?hl='.$this->getLangISOfromName(LANG);
         }else{
             $hl = '';
         }

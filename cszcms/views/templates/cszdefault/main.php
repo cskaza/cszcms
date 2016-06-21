@@ -64,9 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="container">
             <footer>
                 <div class="container">
-                    <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
-                    <div class="alert alert-warning text-center" role="alert"><?php echo $this->lang->line('upgrade_newlast_alert')?></div>
-                    <?php } ?>
+                    <?php echo $this->Headfoot_html->getLastVerAlert();?>
                     <hr>
                     <div class="row">
                         <div class="col-md-8 div-copyright hidden-sm hidden-xs">
