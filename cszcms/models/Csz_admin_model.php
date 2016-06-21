@@ -143,8 +143,8 @@ class Csz_admin_model extends CI_Model {
                 $this->db->where($search_sql);
             }
         }
-        if ($groupby) $this->db->group_by($groupby);
         $this->db->order_by($orderby, $sort);
+        if ($groupby) $this->db->group_by($groupby);
         if ($limit) $this->db->limit($limit, $offset);
         $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
