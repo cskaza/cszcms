@@ -1,5 +1,8 @@
 #### RELEASE NOTES
 
+CSZ-CMS V.1.0.9
+- Add statistic for link can delete with checkbox.
+
 CSZ-CMS V.1.0.8
 - Fix statistic for link menu is show when don't enable statistic for link.
 - Fix some wrong word for backend.

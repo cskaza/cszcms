@@ -133,6 +133,8 @@ $route['admin/linkstats/deleteurl/(:any)'] = "admin/linkstats/deleteByURL";
 $route['admin/linkstats/deleteurl'] = "admin/linkstats/deleteByURL";
 $route['admin/linkstats/deleteid/(:any)'] = "admin/linkstats/deleteByID";
 $route['admin/linkstats/deleteid'] = "admin/linkstats/deleteByID";
+$route['admin/linkstats/deleteindexurl'] = "admin/linkstats/deleteIndexByURL";
+$route['admin/linkstats/deleteviewid'] = "admin/linkstats/deleteViewByID";
 $route['admin/linkstats/(:any)'] = "admin/linkstats";
 
 $route['formsaction/(:any)'] = 'formsaction';

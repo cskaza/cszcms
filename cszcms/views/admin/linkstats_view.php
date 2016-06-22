@@ -21,11 +21,13 @@
             </div>
         </form>
         <br><br>
+        <?php echo  form_open(BASE_URL . '/admin/linkstats/deleteviewid'); ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="45%" class="text-center"><?php echo $this->lang->line('ip_address'); ?></th>
+                        <th width="8%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?php echo  $this->lang->line('btn_delete') ?></label></th>
+                        <th width="37%" class="text-center"><?php echo $this->lang->line('ip_address'); ?></th>
                         <th width="45%" class="text-center"><?php echo $this->lang->line('linkstats_dateime'); ?></th>
                         <th width="10%"></th>
                     </tr>
@@ -39,6 +41,9 @@
                         <?php
                         foreach ($linkstats as $u) {
                             echo '<tr>';
+                            echo '<td class="text-center" style="vertical-align:middle;">
+                                    <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['link_statistic_id'].'">
+                                </td>';
                             echo '<td class="text-center">' . $u['ip_address'] . '</td>';
                             echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
                             echo '<td class="text-center">';
@@ -54,6 +59,21 @@
                 </tbody>
             </table>
         </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-primary',
+                    'value' => $this->lang->line('btn_delete'),
+                    'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
+                );
+                echo form_submit($data);
+                ?>
+            </div>
+        </div>
+        <?php echo  form_close(); ?><br>
         <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
         <!-- /widget-content -->
     </div>

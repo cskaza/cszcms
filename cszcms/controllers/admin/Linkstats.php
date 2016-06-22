@@ -25,6 +25,7 @@ class Linkstats extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->load->helper('form');
         $this->load->library('pagination');       
         $search_arr = '';
         if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
@@ -60,6 +61,7 @@ class Linkstats extends CI_Controller {
     public function view() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4)){
+            $this->load->helper('form');
             $this->load->library('pagination');   
             $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
             $search_arr = "link = '".$getLink->link."' ";
@@ -94,6 +96,31 @@ class Linkstats extends CI_Controller {
         }else{
             redirect('admin/linkstats', 'refresh');
         }
+    }
+    
+    public function deleteViewByID() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $delR = $this->input->post('delR');
+        foreach ($delR as $value) {
+            if ($value) {
+                $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $value);
+            }
+        }
+        redirect('admin/linkstats', 'refresh');
+    }
+    
+    public function deleteIndexByURL() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $delR = $this->input->post('delR');
+        foreach ($delR as $value) {
+            if ($value) {
+                $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $value, 1);
+                $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);
+            }
+        }
+        redirect('admin/linkstats', 'refresh');
     }
 
     public function deleteByID() {
