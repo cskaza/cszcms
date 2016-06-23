@@ -202,8 +202,17 @@ CREATE TABLE IF NOT EXISTS `link_statistic` (
 CREATE TABLE IF NOT EXISTS `general_label` (
   `general_label_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `remark` text NOT NULL,
   `lang_en` text NOT NULL,
-  `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
+(1, 'login_heading', 'For member login Header text', 'Member Login', '2016-06-23 11:10:40'),
+(2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-06-23 11:10:40'),
+(3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-06-23 11:10:40'),
+(4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 11:10:40'),
+(5, 'login_password', 'For password label', 'Password', '2016-06-23 11:10:40'),
+(6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 11:45:49'),
+(7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 11:45:49');
