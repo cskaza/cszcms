@@ -146,7 +146,8 @@ class Csz_admin_model extends CI_Model {
         $this->db->order_by($orderby, $sort);
         if ($groupby) $this->db->group_by($groupby);
         if ($limit){
-            $start = (($offset+1) * $limit) - $limit;
+            if(!$offset) $offset = 1;
+            $start = (($offset) * $limit) - $limit;
             $this->db->limit($limit, $start);
         }
         
