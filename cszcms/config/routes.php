@@ -140,6 +140,7 @@ $route['admin/genlabel'] = "admin/General_label";
 $route['admin/genlabel/edit/(:any)'] = "admin/General_label/edit";
 $route['admin/genlabel/edit'] = "admin/General_label/edit";
 $route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
+$route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/(:any)'] = "admin/General_label";
 
 $route['formsaction/(:any)'] = 'formsaction';

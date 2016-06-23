@@ -296,3 +296,13 @@ $lang['enddate_field']                = "สิ้นสุดวันที่
 $lang['search']                         = "ค้นหา";
 $lang['total']                         = "ทั้งหมด:";
 $lang['records']                         = "รายการ";
+
+//General Label
+$lang['genlabel_header']             = "ฉลากทั่วไป";
+$lang['genlabel_name']			= "ชื่อฉลาก";
+$lang['genlabel_lang']			= "ภาษาฉลาก";
+$lang['genlabel_synclang_success']	= "ภาษาฉลากตรงกันเรียบร้อยแล้ว!";
+$lang['btn_label_synclang']             = "ปรับภาษาให้ตรงกัน";
+
+//Langs - New Lang/Edit Lang
+$lang['genlabel_edit_header']		= "แก้ไขฉลากทั่วไป";

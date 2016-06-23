@@ -39,7 +39,7 @@ class General_label extends CI_Controller {
         
         //Get users from database
         $this->template->setSub('genlab', $this->Csz_admin_model->getIndexData('general_label', $result_per_page, $pagination, 'general_label_id', 'ASC'));
-        $lang = $this->Csz_model->getValueArray('lang_name', 'lang_iso', "active", '1');
+        $lang = $this->Csz_model->getValueArray('lang_name', 'lang_iso', "lang_name != ''", '');
         foreach ($lang as $l) { 
             if($l['lang_name']) $lang_arr[] = $l['lang_name'];
         }
@@ -57,7 +57,7 @@ class General_label extends CI_Controller {
         if($this->uri->segment(4)){
             //Get user details from database
             $this->template->setSub('genlab', $this->Csz_model->getValue('*', 'general_label', 'general_label_id', $this->uri->segment(4), 1));
-            $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', "active", '1'));
+            $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', "lang_iso != ''", ''));
             //Load the view
             $this->template->loadSub('admin/genlabel_edit');
         }else{
@@ -68,25 +68,17 @@ class General_label extends CI_Controller {
     public function updated() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        //Load the form validation library
-        $this->load->library('form_validation');
-        //Set validation rules
-        $this->form_validation->set_rules('lang_name', 'Language Name', 'required');
-        $this->form_validation->set_rules('lang_iso', 'Language ISO Code', 'trim|required|min_length[2]|max_length[2]');
-        $this->form_validation->set_rules('country', 'Country Name', 'required');
-        $this->form_validation->set_rules('country_iso', 'Country ISO Code', 'trim|required|min_length[2]|max_length[2]');
 
-
-        if ($this->form_validation->run() == FALSE) {
-            //Validation failed
-            $this->editLang();
-        } else {
-            //Validation passed
-            //Update the user
-            $this->Csz_admin_model->updateLang($this->uri->segment(4));
-            //Return to user list
-            redirect('/admin/genlabel', 'refresh');
-        }
+        $this->Csz_admin_model->updateLabel($this->uri->segment(4));
+        redirect('/admin/genlabel', 'refresh');
+    }
+    
+    public function syncLang() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->Csz_admin_model->syncLabelLang();
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('genlabel_synclang_success').'</div>');
+        redirect('/admin/genlabel', 'refresh');
     }
     
 }

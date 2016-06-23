@@ -713,6 +713,8 @@ class Csz_admin_model extends CI_Model {
                 $this->db->update('page_menu');
             }
         }
+        $this->load->dbforge();
+        $this->dbforge->drop_column('general_label', 'lang_'.$lang_iso);
     }
 
     public function insertLang() {
@@ -728,10 +730,28 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('lang_iso', $data);
+        if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label')){
+            $this->load->dbforge();
+            $fields = array('lang_'.$this->input->post('lang_iso', TRUE) => array('type' => 'TEXT', 'null' => FALSE));
+            $this->dbforge->add_column('general_label', $fields);
+        }
     }
 
     public function updateLang($id) {
         // Update the lang
+        $old_lang = $this->Csz_model->getValue('lang_iso', 'lang_iso', 'lang_iso_id', $id, 1);
+        if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label') && $old_lang->lang_iso != $this->input->post("lang_iso", TRUE)){
+            $this->load->dbforge();
+            $fields = array(
+                'lang_'.$old_lang->lang_iso => array(
+                        'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
+                        'type' => 'TEXT',
+                ),
+            );
+            $this->dbforge->modify_column('general_label', $fields);
+        }
+        
+        
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $this->db->set('lang_name', $this->input->post("lang_name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
@@ -743,6 +763,28 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('lang_iso_id', $id);
         $this->db->update('lang_iso');
+    }
+    
+    public function syncLabelLang() {
+        /* For synchronize with language */
+        $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
+        foreach ($lang as $value) {
+            if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
+                $this->load->dbforge();
+                $fields = array('lang_'.$value['lang_iso'] => array('type' => 'TEXT', 'null' => FALSE));
+                $this->dbforge->add_column('general_label', $fields);
+            }
+        }
+    }
+    
+    public function updateLabel($id) {
+        $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
+        foreach ($lang as $value) {
+            $this->db->set('lang_'.$value['lang_iso'], $this->input->post("lang_".$value['lang_iso'], TRUE), TRUE);
+        }
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('general_label_id', $id);
+        $this->db->update('general_label');
     }
 
     public function insertPage() {
