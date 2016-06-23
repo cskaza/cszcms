@@ -15,91 +15,25 @@
         <?php echo form_open(BASE_URL . '/admin/genlabel/updated/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
-            <?php echo form_error('name', '<div class="error">', '</div>'); ?>
-            <label class="control-label" for="name"><?php echo $this->lang->line('lang_name'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'name',
-                'id' => 'name',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'class' => 'form-control',
-                'value' => set_value('lang_name', $lang->lang_name)
-            );
-            echo form_input($data);
-            ?>			
+            <label class="control-label"><?php echo $this->lang->line('genlabel_name'); ?> <span class="remark"><em>(<?php echo $genlab->remark;?>)</em></span></label>
+            <div class="well well-sm"><b><?php echo $genlab->name;?></b></div>
         </div> <!-- /control-group -->
-
-        <div class="control-group">	
-            <?php echo form_error('lang_iso', '<div class="error">', '</div>'); ?>									
-            <label class="control-label" for="lang_iso"><?php echo $this->lang->line('lang_iso'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'lang_iso',
-                'id' => 'lang_iso',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'maxlength' => '2',
-                'class' => 'form-control',
-                'value' => set_value('lang_iso', $lang->lang_iso)
-            );
-            echo form_input($data);
-            ?>			
-            <span class="remark"><em><?php echo $this->lang->line('lang_iso_remark'); ?></em></span>
-        </div> <!-- /control-group -->
-
-        <div class="control-group">
-            <?php echo form_error('country', '<div class="error">', '</div>'); ?>
-            <label class="control-label" for="country"><?php echo $this->lang->line('lang_country'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'country',
-                'id' => 'country',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'class' => 'form-control',
-                'value' => set_value('country', $lang->country)
-            );
-            echo form_input($data);
-            ?>			
-        </div> <!-- /control-group -->
-
-        <div class="control-group">	
-            <?php echo form_error('country_iso', '<div class="error">', '</div>'); ?>
-            <label class="control-label" for="country_iso"><?php echo $this->lang->line('lang_country_iso'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'country_iso',
-                'id' => 'country_iso',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'maxlength' => '2',
-                'class' => 'form-control',
-                'value' => set_value('country_iso', $lang->country_iso)
-            );
-            echo form_input($data);
-            ?>			
-            <span class="remark"><em><?php echo $this->lang->line('lang_countryiso_remark'); ?></em></span>
-        </div> <!-- /control-group -->
-        <br>
-        <div class="control-group">										
-            <label class="form-control-static" for="active">
-            <?php
-            if($lang->active){
-                $checked = 'checked';
-            }else{
-                $checked = '';
-            }
-            $data = array(
-                'name' => 'active',
-                'id' => 'active',
-                'value' => '1',
-                'checked' => $checked
-            );
-            echo form_checkbox($data);
-            ?> <?php echo $this->lang->line('lang_active'); ?></label>	
-        </div> <!-- /control-group -->
-        
+        <?php foreach ($lang as $l) { ?>
+            <div class="control-group">	
+                <?php echo form_error('lang_'.$l['lang_iso'], '<div class="error">', '</div>'); ?>									
+                <label class="control-label" for="lang_<?php echo $l['lang_iso'];?>"><?php echo $l['lang_name']; ?></label>
+                <?php
+                $obj_key = 'lang_'.$l['lang_iso'];
+                $data = array(
+                    'name' => 'lang_'.$l['lang_iso'],
+                    'id' => 'lang_'.$l['lang_iso'],
+                    'class' => 'form-control',
+                    'value' => set_value('lang_'.$l['lang_iso'], $genlab->$obj_key)
+                );
+                echo form_input($data);
+                ?>
+            </div> <!-- /control-group -->
+        <?php } ?>
         <br><br>
         <div class="form-actions">
             <?php
@@ -111,7 +45,7 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo BASE_URL; ?>/admin/lang"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo BASE_URL; ?>/admin/genlabel"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
         <!-- /widget-content --> 

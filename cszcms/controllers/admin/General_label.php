@@ -57,7 +57,7 @@ class General_label extends CI_Controller {
         if($this->uri->segment(4)){
             //Get user details from database
             $this->template->setSub('genlab', $this->Csz_model->getValue('*', 'general_label', 'general_label_id', $this->uri->segment(4), 1));
-            $this->template->setSub('lang', $this->Csz_model->getValueArray('lang_name', 'lang_iso', "active", '1'));
+            $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', "active", '1'));
             //Load the view
             $this->template->loadSub('admin/genlabel_edit');
         }else{
