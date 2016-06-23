@@ -297,3 +297,10 @@ $lang['search']                         = "Search";
 $lang['total']                         = "Total:";
 $lang['records']                         = "Records";
 
+//General Label
+$lang['genlabel_header']             = "General Label";
+$lang['genlabel_name']			= "Label Name";
+$lang['genlabel_lang']			= "Label Language";
+
+//Langs - New Lang/Edit Lang
+$lang['genlabel_edit_header']		= "Edit General Label";

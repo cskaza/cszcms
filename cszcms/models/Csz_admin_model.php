@@ -96,7 +96,7 @@ class Csz_admin_model extends CI_Model {
         return $pageURL;
     }
 
-    function countTable($table) {
+    public function countTable($table) {
         return $this->db->count_all($table);
     }
 
@@ -145,7 +145,11 @@ class Csz_admin_model extends CI_Model {
         }
         $this->db->order_by($orderby, $sort);
         if ($groupby) $this->db->group_by($groupby);
-        if ($limit) $this->db->limit($limit, $offset);
+        if ($limit){
+            $start = (($offset+1) * $limit) - $limit;
+            $this->db->limit($limit, $start);
+        }
+        
         $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
             $row = $query->result_array();
@@ -228,7 +232,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->update('user_admin');
     }
 
-    function removeUser($id) {
+    public function removeUser($id) {
         // Delete a user account
         if ($id != 1) {
             $this->db->delete('user_admin', array('user_admin_id' => $id));
@@ -270,7 +274,7 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    function login($email, $password) {
+    public function login($email, $password) {
         if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
@@ -746,7 +750,7 @@ class Csz_admin_model extends CI_Model {
         if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
                 $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session') {
+                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member') {
             $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
@@ -775,7 +779,7 @@ class Csz_admin_model extends CI_Model {
        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
                 $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session') {
+                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member') {
             $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;

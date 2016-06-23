@@ -103,6 +103,29 @@ class Csz_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '') {
+        $this->db->select($sel_field);
+        if (is_array($where_field) && is_array($where_val)) {
+            for ($i = 0; $i < count($where_field); $i++) {
+                $this->db->where($where_field[$i], $where_val[$i]);
+            }
+        } else {
+            $this->db->where($where_field, $where_val);
+        }
+        if ($orderby && $sort) {
+            $this->db->order_by($orderby, $sort);
+        }
+        if ($limit) {
+            $this->db->limit($limit, 0);
+        }
+        $query = $this->db->get($table);
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return FALSE;
+        }
+    }
 
     public function load_config() {
         $this->db->limit(1, 0);
@@ -524,5 +547,32 @@ class Csz_model extends CI_Model {
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->insert('link_statistic');
+    }
+    
+    public function memberLogin($email, $password) {
+        if ($this->Csz_model->chkCaptchaRes() == '') {
+            return 'CAPTCHA_WRONG';
+        } else {
+            $this->db->select("*");
+            $this->db->where("email", $email);
+            $this->db->where("password", $password);
+            $this->db->where("active", '1');
+            $this->db->limit(1, 0);
+            $query = $this->db->get("user_member");
+            if ($query->num_rows() > 0) {
+                foreach ($query->result() as $rows) {
+                    $data = array(
+                        'user_member_id' => $rows->user_member_id,
+                        'member_name' => $rows->name,
+                        'member_email' => $rows->email,
+                        'member_logged_in' => TRUE,
+                    );
+                    $this->session->set_userdata($data);
+                    return 'SUCCESS';
+                }
+            } else {
+                return 'INVALID';
+            }
+        }
     }
 }

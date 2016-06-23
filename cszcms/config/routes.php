@@ -136,6 +136,11 @@ $route['admin/linkstats/deleteid'] = "admin/linkstats/deleteByID";
 $route['admin/linkstats/deleteindexurl'] = "admin/linkstats/deleteIndexByURL";
 $route['admin/linkstats/deleteviewid'] = "admin/linkstats/deleteViewByID";
 $route['admin/linkstats/(:any)'] = "admin/linkstats";
+$route['admin/genlabel'] = "admin/General_label";
+$route['admin/genlabel/edit/(:any)'] = "admin/General_label/edit";
+$route['admin/genlabel/edit'] = "admin/General_label/edit";
+$route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
+$route['admin/genlabel/(:any)'] = "admin/General_label";
 
 $route['formsaction/(:any)'] = 'formsaction';
 $route['formsaction'] = 'formsaction';
