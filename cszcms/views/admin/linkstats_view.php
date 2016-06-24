@@ -35,7 +35,7 @@
                 <tbody>
                     <?php if ($linkstats === FALSE) { ?>
                         <tr>
-                            <td colspan="3" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="4" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
