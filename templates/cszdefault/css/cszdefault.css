@@ -336,3 +336,12 @@ section h3.section-subheading{
 .success{
     color:green;
 }
+
+.panel-primary {
+    border-color: #000;
+}
+.panel-primary > .panel-heading {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+}

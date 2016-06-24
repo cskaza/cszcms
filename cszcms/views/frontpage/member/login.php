@@ -1,26 +1,30 @@
 <div class="container">
     <div class="row">
+        <div class="col-md-12"><br><br><br></div>
+    </div>
+    <div class="row">
         <div class="col-md-3 hidden-sm hidden-xs"></div>
         <div class="col-md-6 col-sm-12 col-xs-12">
+            <br><br><br>
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
-                    <h4 class="panel-title form-signin-heading"><?php echo $this->lang->line('login_heading') ?></h4>
+                    <h4 class="panel-title form-signin-heading"><?php echo $this->Csz_model->getLabelLang('login_heading') ?></h4>
                 </div>
                 <div class="panel-body text-left">
                     <div class="text-center">
                     <?php
                     if ($error) {
                         if ($error == 'INVALID') {
-                            echo "<span class=\"error\">" . $this->lang->line('login_incorrect') . "</span><br><br>";
+                            echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('login_incorrect') . "</span><br><br>";
                         }
                         if ($error == 'CAPTCHA_WRONG') {
-                            echo "<span class=\"error\">" . $this->lang->line('captcha_wrong') . "</span><br><br>";
+                            echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('captcha_wrong') . "</span><br><br>";
                         }
                     }
                     ?>
                     </div>
-                    <?php echo form_open(BASE_URL . '/admin/login/check') ?>
-                    <label for="email" class="sr-only"><?php echo $this->lang->line('login_email') ?></label>
+                    <?php echo form_open(BASE_URL . '/member/login/check') ?>
+                    <label for="email" class="sr-only"><?php echo $this->Csz_model->getLabelLang('login_email') ?></label>
                     <?php
                     $data = array(
                         'name' => 'email',
@@ -30,11 +34,11 @@
                         'required' => 'required',
                         'autofocus' => 'true',
                         'value' => set_value('email'),
-                        'placeholder' => $this->lang->line('login_email')
+                        'placeholder' => $this->Csz_model->getLabelLang('login_email')
                     );
                     echo form_input($data);
                     ?>
-                    <label for="password" class="sr-only"><?php echo $this->lang->line('login_password') ?>:</label>
+                    <label for="password" class="sr-only"><?php echo $this->Csz_model->getLabelLang('login_password') ?>:</label>
                     <?php
                     $data = array(
                         'name' => 'password',
@@ -42,17 +46,17 @@
                         'class' => 'form-control',
                         'required' => 'required',
                         'value' => set_value('password'),
-                        'placeholder' => $this->lang->line('login_password')
+                        'placeholder' => $this->Csz_model->getLabelLang('login_password')
                     );
                     echo form_password($data);
                     ?>
                     <br>
                     <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                     <br>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->lang->line('login_signin'); ?></button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->Csz_model->getLabelLang('login_signin'); ?></button>
                     <?php echo form_close() ?>
                 </div>
-                <div class="panel-footer text-center"><a href="<?php echo BASE_URL; ?>/member/forgot"><?php echo $this->lang->line('login_forgetpwd'); ?></a></div>
+                <div class="panel-footer text-center"><a href="<?php echo BASE_URL; ?>/member/register"><?php echo $this->Csz_model->getLabelLang('login_register'); ?></a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="<?php echo BASE_URL; ?>/member/forgot"><?php echo $this->Csz_model->getLabelLang('login_forgetpwd'); ?></a></div>
             </div>
         </div>
         <div class="col-md-3 hidden-sm hidden-xs"></div>

@@ -30,19 +30,11 @@ class Member extends CI_Controller {
         $row = $this->Csz_model->load_config();
         $pageURL = $this->Csz_model->getCurPages();	
         $this->page_url = $pageURL;
-        $this->page_rs = $this->Csz_model->load_page($pageURL);
-        $page_rs = $this->page_rs;
         $this->template->set('additional_js', $row->additional_js);
-        $this->template->set('additional_metatag', $row->additional_metatag);
-        if ($page_rs !== FALSE) {
-            $this->template->set('title', $page_rs->page_title . ' | ' . $row->site_name);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc,$page_rs->page_keywords));
-            $this->template->set('cur_page', $page_rs->page_url);
-        } else {        
-            $this->template->set('title', '404 Page not Found | ' . $row->site_name);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags('404 Page not Found',$row->keywords));
-            $this->template->set('cur_page', $pageURL);
-        }
+        $this->template->set('additional_metatag', $row->additional_metatag);  
+        $this->template->set('title', 'Member | ' . $row->site_name);
+        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Member',$row->keywords));
+        $this->template->set('cur_page', $pageURL);
     }
 
     public function index() {

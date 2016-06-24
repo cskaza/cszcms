@@ -143,6 +143,18 @@ $route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
 $route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/(:any)'] = "admin/General_label";
 
+$route['member'] = 'Member';
+$route['member/login'] = 'Member/login';
+$route['member/login/check'] = 'Member/loginCheck';
+$route['member/logout'] = 'Member/logout';
+$route['member/register'] = 'Member/registMember';
+$route['member/register/save'] = 'Member/saveMember';
+$route['member/edit'] = 'Member/editMember';
+$route['member/edit/save'] = 'Member/saveEditMember';
+$route['member/forgot'] = 'Member/forgot';
+$route['member/reset/(:any)'] = 'Member/getPassword';
+$route['member/(:any)'] = 'Member';
+
 $route['formsaction/(:any)'] = 'formsaction';
 $route['formsaction'] = 'formsaction';
 $route['linkstats/(:any)'] = 'linkstats';

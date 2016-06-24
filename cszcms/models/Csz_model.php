@@ -575,4 +575,22 @@ class Csz_model extends CI_Model {
             }
         }
     }
+    
+    public function getLabelLang($name) {
+        if(!$this->session->userdata('fronlang_iso')){
+            $this->setSiteLang();
+        }
+        $lang = $this->session->userdata('fronlang_iso');
+        if($lang){
+            $sel_name = 'lang_'.$lang;
+            $this->db->select($sel_name);
+            $this->db->where("name", $name);
+            $this->db->limit(1, 0);
+            $query = $this->db->get("general_label");
+            if ($query->num_rows() > 0) {
+                return $query->row()->$sel_name;
+            }
+        }   
+    }
+    
 }
