@@ -749,9 +749,7 @@ class Csz_admin_model extends CI_Model {
                 ),
             );
             $this->dbforge->modify_column('general_label', $fields);
-        }
-        
-        
+        }       
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $this->db->set('lang_name', $this->input->post("lang_name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);

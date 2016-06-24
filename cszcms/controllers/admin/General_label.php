@@ -78,7 +78,7 @@ class General_label extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_admin_model->syncLabelLang();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('genlabel_synclang_success').'</div>');
-        redirect('/admin/genlabel', 'refresh');
+        redirect('/admin/genlabel', 'refresh'); 
     }
     
 }

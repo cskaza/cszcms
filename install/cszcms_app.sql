@@ -215,4 +215,4 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 11:10:40'),
 (5, 'login_password', 'For password label', 'Password', '2016-06-23 11:10:40'),
 (6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 11:45:49'),
-(7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 11:45:49');
+(7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 11:45:50');
