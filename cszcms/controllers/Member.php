@@ -90,7 +90,7 @@ class Member extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email]');
+        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_member.email]');
         $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|required|matches[password]');
 
@@ -108,8 +108,8 @@ class Member extends CI_Controller {
 
     public function editMember() {
         Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
-            redirect('/admin/users', 'refresh');
+        if($this->session->userdata('user_member_id') != $this->uri->segment(4)){
+            redirect('member', 'refresh');
         }
         //Load the form helper
         $this->load->helper('form');
@@ -117,21 +117,21 @@ class Member extends CI_Controller {
             //Get user details from database
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
             //Load the view
-            $this->template->loadSub('admin/users_edit');
+            $this->template->loadSub('frontpage/member/edit');
         }else{
-            redirect('/admin/users', 'refresh');
+            redirect('member', 'refresh');
         }
     }
 
     public function saveEditMember() {
         Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
-            redirect('/admin/users', 'refresh');
+        if($this->session->userdata('user_member_id') != $this->uri->segment(4)){
+            redirect('member', 'refresh');
         }       
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
+        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_member.email.user_member_id.' . $this->uri->segment(4) . ']');
         $this->form_validation->set_rules('password', 'new password', 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|matches[password]');
 
@@ -144,7 +144,7 @@ class Member extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateUser($this->uri->segment(4));
             //Return to user list
-            redirect('/admin/users', 'refresh');
+            redirect('member', 'refresh');
         }
     }
 
@@ -158,19 +158,19 @@ class Member extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 0);
-            $this->template->loadSub('admin/email_forgot');
+            $this->template->loadSub('frontpage/member/email_forgot');
         }else if($this->Csz_model->chkCaptchaRes() == ''){
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 1);
-            $this->template->loadSub('admin/email_forgot');
+            $this->template->loadSub('frontpage/member/email_forgot');
         } else {
             $email = $this->input->post('email');
             $this->db->set('md5_hash', md5(time()+mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
-            $this->db->update('user_admin');
+            $this->db->update('user_member');
             $this->load->helper('string');
-            $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
+            $user_rs = $this->Csz_model->getValue('md5_hash', 'user_member', 'email', $email, 1);
             $md5_hash = $user_rs->md5_hash;
 
             //now we will send an email
@@ -190,7 +190,7 @@ class Member extends CI_Controller {
 
             $this->template->setSub('error_chk', 0);
             $this->template->setSub('chksts', 1);
-            $this->template->loadSub('admin/email_forgot');
+            $this->template->loadSub('frontpage/member/email_forgot');
         }
     }
 
