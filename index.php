@@ -38,14 +38,6 @@ if (!file_exists('config.inc.php')) {
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
- */
-
-
-/** Config **/
-include('config.inc.php');
-date_default_timezone_set(TIME_ZONE);
-
-/*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
@@ -321,4 +313,8 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+/** Config **/
+include FCPATH.'config.inc.php';
+date_default_timezone_set(TIME_ZONE);
+include FCPATH.'proxy.inc.php';
 require_once BASEPATH.'core/CodeIgniter.php';

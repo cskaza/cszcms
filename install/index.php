@@ -33,7 +33,8 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     
     /* Prepare data for config.inc.php file */
     $config_file = '../config.inc.php';
-    $config_txt = "<?php \n\n";
+    $config_txt = "<?php \n";
+    $config_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
     $config_txt .= "/* Database DSN */ \n";
     $config_txt .= "define('DB_DSN', ''); \n\n";
     $config_txt .= "/* Database Host */ \n";

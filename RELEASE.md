@@ -4,7 +4,8 @@ CSZ-CMS V.1.0.9
 - Add statistic for link can delete with checkbox.
 - Add label language for plugin.
 - Add member system.
-- add plugin for article.
+- Add plugin for article.
+- Add proxy config file.
 - Fix pagination working.
 
 CSZ-CMS V.1.0.8
