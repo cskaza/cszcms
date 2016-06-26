@@ -82,6 +82,7 @@ class Member extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         //Load the view
+        $this->template->setSub('chksts', 0);
         $this->template->loadSub('frontpage/member/regist');
     }
 
@@ -93,10 +94,13 @@ class Member extends CI_Controller {
         $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_member.email]');
         $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|required|matches[password]');
-
         if ($this->form_validation->run() == FALSE) {
-            //Validation failed
-            $this->addUser();
+            $this->template->setSub('chksts', 0);
+            $this->form_validation->set_message('email', $this->Csz_model->getLabelLang('email_already'));
+            $this->template->loadSub('frontpage/member/regist');
+        }else if($this->Csz_model->chkCaptchaRes() == ''){
+            $this->template->setSub('chksts', 0);
+            $this->template->loadSub('frontpage/member/regist');
         } else {
             //Validation passed
             //Add the user
@@ -138,7 +142,7 @@ class Member extends CI_Controller {
 
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
-            $this->editUser();
+            $this->editMember();
         } else {
             //Validation passed
             //Update the user
