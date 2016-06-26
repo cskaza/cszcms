@@ -590,7 +590,9 @@ class Csz_model extends CI_Model {
             if ($query->num_rows() > 0) {
                 return $query->row()->$sel_name;
             }
-        }   
+        }else{
+            return FALSE;
+        }  
     }
     
 }

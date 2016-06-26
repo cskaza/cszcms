@@ -175,7 +175,7 @@ class Member extends CI_Controller {
 
             //now we will send an email
             # ---- set subject --#
-            $subject = $this->lang->line('email_reset_subject');
+            $subject = $this->Csz_model->getLabelLang('email_reset_subject');
             # ---- set from, to, bcc --#
             $from_name = $row->site_name;
             $from_email = 'no-reply@'.EMAIL_DOMAIN;
@@ -184,9 +184,9 @@ class Member extends CI_Controller {
             $headers = 'MIME-Version: 1.0' . "\r\n";
             $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";
             $headers.= 'From: ' . $from_name . ' <' . $from_email . '>' . "\r\n";           
-            $message_html = $this->lang->line('email_dear').$email.',<br><br>'.$this->lang->line('email_reset_message').'<br><a href="'.BASE_URL.'/admin/reset/'.$md5_hash.'" target="_blank"><b>'.BASE_URL.'/admin/reset/'.$md5_hash.'</b></a><br><br>'.$this->lang->line('email_footer').'<a href="'.BASE_URL.'" target="_blank"><b>'.$row->site_name.'</b></a>';
+            $message_html = $this->Csz_model->getLabelLang('email_dear').$email.',<br><br>'.$this->Csz_model->getLabelLang('email_reset_message').'<br><a href="'.BASE_URL.'/admin/reset/'.$md5_hash.'" target="_blank"><b>'.BASE_URL.'/admin/reset/'.$md5_hash.'</b></a><br><br>'.$this->Csz_model->getLabelLang('email_footer').'<a href="'.BASE_URL.'" target="_blank"><b>'.$row->site_name.'</b></a>';
             # ---- send mail --#
-            mail($to_email, $subject, $message_html, $headers);
+            @mail($to_email, $subject, $message_html, $headers);
 
             $this->template->setSub('error_chk', 0);
             $this->template->setSub('chksts', 1);
@@ -196,11 +196,11 @@ class Member extends CI_Controller {
 
     public function email_check($str) {
         Member_helper::login_already($this->session->userdata('member_email'));
-        $query = $this->db->get_where('user_admin', array('email' => $str), 1);
+        $query = $this->db->get_where('user_member', array('email' => $str), 1);
         if ($query->num_rows() == 1) {
             return true;
         } else {
-            $this->form_validation->set_message('email_check', $this->lang->line('email_check'));
+            $this->form_validation->set_message('email_check', $this->Csz_model->getLabelLang('email_check'));
             return false;
         }
     }
@@ -209,7 +209,7 @@ class Member extends CI_Controller {
         Member_helper::login_already($this->session->userdata('member_email'));
         $md5_hash = $this->uri->segment(3);
         $this->Csz_admin_model->chkMd5Time($md5_hash);
-        $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
+        $user_rs = $this->Csz_model->getValue('*', 'user_member', 'md5_hash', $md5_hash, 1);
         if (!$user_rs){
             redirect('admin/user/forgot', 'refresh');
         } else {
@@ -222,7 +222,7 @@ class Member extends CI_Controller {
             if ($this->form_validation->run() == FALSE) {
                 $this->template->setSub('success_chk', 0);                
                 echo form_open();
-                $this->template->loadSub('admin/resetform');
+                $this->template->loadSub('frontpage/member/resetform');
             } else {
                 if (!$user_rs->email) {
                     show_error('Sorry!!! Invalid Request!');
@@ -233,10 +233,10 @@ class Member extends CI_Controller {
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
-                    $this->db->update('user_admin', $data);
+                    $this->db->update('user_user', $data);
                     
                     $this->template->setSub('success_chk', 1);
-                    $this->template->loadSub('admin/resetform');
+                    $this->template->loadSub('frontpage/member/resetform');
                 }
             }
         }
