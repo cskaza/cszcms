@@ -14,12 +14,12 @@ class Member extends CI_Controller {
             $this->template->set_template($row->themes_config);
             define('THEME', $row->themes_config);
         }
-        if(!$this->session->userdata('fronlang_iso')){ 
+        if (!$this->session->userdata('fronlang_iso')) {
             $this->Csz_model->setSiteLang();
         }
-        if($this->Csz_model->chkLangAlive($this->session->userdata('fronlang_iso')) == 0){ 
+        if ($this->Csz_model->chkLangAlive($this->session->userdata('fronlang_iso')) == 0) {
             $this->session->unset_userdata('fronlang_iso');
-            $this->Csz_model->setSiteLang(); 
+            $this->Csz_model->setSiteLang();
         }
         $this->_init();
     }
@@ -28,20 +28,20 @@ class Member extends CI_Controller {
         $this->template->set('core_css', $this->Csz_model->coreCss());
         $this->template->set('core_js', $this->Csz_model->coreJs());
         $row = $this->Csz_model->load_config();
-        $pageURL = $this->Csz_model->getCurPages();	
+        $pageURL = $this->Csz_model->getCurPages();
         $this->page_url = $pageURL;
         $this->template->set('additional_js', $row->additional_js);
-        $this->template->set('additional_metatag', $row->additional_metatag);  
+        $this->template->set('additional_metatag', $row->additional_metatag);
         $this->template->set('title', 'Member | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Member',$row->keywords));
+        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Member', $row->keywords));
         $this->template->set('cur_page', $pageURL);
     }
 
     public function index() {
         Member_helper::is_logged_in($this->session->userdata('member_email'));
-        $this->template->loadSub('frontpage/member/home');      
+        $this->template->loadSub('frontpage/member/home');
     }
-    
+
     public function login() {
         Member_helper::login_already($this->session->userdata('member_email'));
         //Load the form helper
@@ -88,6 +88,7 @@ class Member extends CI_Controller {
 
     public function saveMember() {
         Member_helper::login_already($this->session->userdata('member_email'));
+        $row = $this->Csz_model->load_config();
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -98,40 +99,72 @@ class Member extends CI_Controller {
             $this->template->setSub('chksts', 0);
             $this->form_validation->set_message('email', $this->Csz_model->getLabelLang('email_already'));
             $this->template->loadSub('frontpage/member/regist');
-        }else if($this->Csz_model->chkCaptchaRes() == ''){
+        } else if ($this->Csz_model->chkCaptchaRes() == '') {
             $this->template->setSub('chksts', 0);
             $this->template->loadSub('frontpage/member/regist');
         } else {
-            //Validation passed
-            //Add the user
-            $this->Csz_admin_model->createUser();
-            //Return to user list
+            $email = $this->input->post('email', TRUE);
+            $md5_hash = $this->Csz_model->createMember();
+            //now we will send an email
+            # ---- set subject --#
+            $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
+            # ---- set from, to, bcc --#
+            $from_name = $row->site_name;
+            $from_email = 'no-reply@' . EMAIL_DOMAIN;
+            $to_email = $email;
+            # ---- set header --#
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";
+            $headers.= 'From: ' . $from_name . ' <' . $from_email . '>' . "\r\n";
+            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
+            # ---- send mail --#
+            mail($to_email, $subject, $message_html, $headers);
+            $this->template->setSub('chksts', 1);
+            $this->template->loadSub('frontpage/member/regist');
+        }
+    }
+
+    public function confirmedMember() {
+        Member_helper::login_already($this->session->userdata('member_email'));
+        $md5_hash = $this->uri->segment(3);
+        $user_rs = $this->Csz_model->getValue('*', 'user_member', 'md5_hash', $md5_hash, 1);
+        if (!$user_rs) {
+            show_error('Sorry!!! Invalid Request!');
+        } else {
+            $data = array(
+                'active' => 1,
+                'md5_hash' => md5(time() + mt_rand(1, 99999999)),
+            );
+            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->where('md5_hash', $md5_hash);
+            $this->db->where('user_member_id', $user_rs->user_member_id);
+            $this->db->update('user_member', $data);
             redirect('member', 'refresh');
         }
     }
 
     public function editMember() {
         Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if($this->session->userdata('user_member_id') != $this->uri->segment(4)){
+        if ($this->session->userdata('user_member_id') != $this->uri->segment(4)) {
             redirect('member', 'refresh');
         }
         //Load the form helper
         $this->load->helper('form');
-        if($this->uri->segment(4)){
+        if ($this->uri->segment(4)) {
             //Get user details from database
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
             //Load the view
             $this->template->loadSub('frontpage/member/edit');
-        }else{
+        } else {
             redirect('member', 'refresh');
         }
     }
 
     public function saveEditMember() {
         Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if($this->session->userdata('user_member_id') != $this->uri->segment(4)){
+        if ($this->session->userdata('user_member_id') != $this->uri->segment(4)) {
             redirect('member', 'refresh');
-        }       
+        }
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -163,13 +196,13 @@ class Member extends CI_Controller {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 0);
             $this->template->loadSub('frontpage/member/email_forgot');
-        }else if($this->Csz_model->chkCaptchaRes() == ''){
+        } else if ($this->Csz_model->chkCaptchaRes() == '') {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 1);
             $this->template->loadSub('frontpage/member/email_forgot');
         } else {
             $email = $this->input->post('email');
-            $this->db->set('md5_hash', md5(time()+mt_rand(1, 99999999)), TRUE);
+            $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
             $this->db->update('user_member');
@@ -182,16 +215,15 @@ class Member extends CI_Controller {
             $subject = $this->Csz_model->getLabelLang('email_reset_subject');
             # ---- set from, to, bcc --#
             $from_name = $row->site_name;
-            $from_email = 'no-reply@'.EMAIL_DOMAIN;
+            $from_email = 'no-reply@' . EMAIL_DOMAIN;
             $to_email = $email;
             # ---- set header --#
             $headers = 'MIME-Version: 1.0' . "\r\n";
             $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";
-            $headers.= 'From: ' . $from_name . ' <' . $from_email . '>' . "\r\n";           
-            $message_html = $this->Csz_model->getLabelLang('email_dear').$email.',<br><br>'.$this->Csz_model->getLabelLang('email_reset_message').'<br><a href="'.BASE_URL.'/admin/reset/'.$md5_hash.'" target="_blank"><b>'.BASE_URL.'/admin/reset/'.$md5_hash.'</b></a><br><br>'.$this->Csz_model->getLabelLang('email_footer').'<a href="'.BASE_URL.'" target="_blank"><b>'.$row->site_name.'</b></a>';
+            $headers.= 'From: ' . $from_name . ' <' . $from_email . '>' . "\r\n";
+            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_reset_message') . '<br><a href="' . BASE_URL . '/member/reset/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/reset/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
             # ---- send mail --#
-            @mail($to_email, $subject, $message_html, $headers);
-
+            mail($to_email, $subject, $message_html, $headers);
             $this->template->setSub('error_chk', 0);
             $this->template->setSub('chksts', 1);
             $this->template->loadSub('frontpage/member/email_forgot');
@@ -212,20 +244,18 @@ class Member extends CI_Controller {
     public function getPassword() {
         Member_helper::login_already($this->session->userdata('member_email'));
         $md5_hash = $this->uri->segment(3);
-        $this->Csz_admin_model->chkMd5Time($md5_hash);
+        $this->Csz_admin_model->chkMd5Time($md5_hash, 'user_member');
         $user_rs = $this->Csz_model->getValue('*', 'user_member', 'md5_hash', $md5_hash, 1);
-        if (!$user_rs){
-            redirect('admin/user/forgot', 'refresh');
+        if (!$user_rs) {
+            redirect('member/forgot', 'refresh');
         } else {
             $this->template->setSub('email', $user_rs->email);
-            $this->load->database();
-            $this->load->helper(array('form', 'url'));
+            $this->load->helper('form');
             $this->load->library('form_validation');
             $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[20]|matches[con_password]');
             $this->form_validation->set_rules('con_password', 'Password Confirmation', 'trim|required');
             if ($this->form_validation->run() == FALSE) {
-                $this->template->setSub('success_chk', 0);                
-                echo form_open();
+                $this->template->setSub('success_chk', 0);
                 $this->template->loadSub('frontpage/member/resetform');
             } else {
                 if (!$user_rs->email) {
@@ -233,12 +263,12 @@ class Member extends CI_Controller {
                 } else {
                     $data = array(
                         'password' => md5($this->input->post('password')),
-                        'md5_hash' => md5(time()+mt_rand(1, 99999999)),
+                        'md5_hash' => md5(time() + mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
-                    $this->db->update('user_user', $data);
-                    
+                    $this->db->update('user_member', $data);
+
                     $this->template->setSub('success_chk', 1);
                     $this->template->loadSub('frontpage/member/resetform');
                 }

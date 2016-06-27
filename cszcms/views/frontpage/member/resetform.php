@@ -10,11 +10,10 @@
                 <div class="panel-heading text-center">
                     <h4 class="panel-title form-signin-heading"><?php echo $this->Csz_model->getLabelLang('login_forgetpwd') ?></h4>
                 </div>
-                <div class="panel-body text-center">
+                <div class="panel-body text-left">
                     <?php if(!$success_chk){ ?>
-                    <div class="control-group">
-                        <label class="control-label" for="email"><?php $this->Csz_model->getLabelLang('login_email'); ?>: <?php echo $email?></label>
-                    </div>
+                    <b><?php echo $this->Csz_model->getLabelLang('login_email'); ?>: <?php echo $email?></b>
+                    <?php echo form_open() ?>
                     <div class="control-group">		
                         <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
                         <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('login_password'); ?>*</label>
@@ -47,7 +46,7 @@
                         ?>			
                     </div> <!-- /control-group -->
                     <br>
-                    <button class="btn btn-primary" type="submit" id="forget_submit"><?php echo $this->Csz_model->getLabelLang('member_reset_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-default" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo BASE_URL . '/member' ?>"><?php echo $this->Csz_model->getLabelLang('btn_cancel'); ?></a>
+                    <center><button class="btn btn-primary" type="submit" id="forget_submit"><?php echo $this->Csz_model->getLabelLang('member_reset_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-default" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo BASE_URL . '/member' ?>"><?php echo $this->Csz_model->getLabelLang('btn_cancel'); ?></a></center>
                     <?php echo  form_close() ?>
                     <?php }if($success_chk){ ?>
                         <center>

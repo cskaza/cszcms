@@ -6,6 +6,7 @@
             <div class="text-left" style="padding:30px;">
                 <center><h3 class="form-signin-heading"><?php echo  $this->lang->line('forgot_reset') ?></h3></center><br><br>
                 <?php if(!$success_chk){ ?>
+                <?php echo form_open() ?>
                 <div class="control-group">
                     <label class="control-label" for="email"><?php echo $this->lang->line('forgot_email'); ?>: <?php echo $email?></label>
                 </div>

@@ -595,4 +595,20 @@ class Csz_model extends CI_Model {
         }  
     }
     
+    function createMember() {
+        // Create the user account
+        $md5_hash = md5(time() + mt_rand(1, 99999999));
+        $data = array(
+            'email' => $this->input->post('email', TRUE),
+            'password' => md5($this->input->post('password', TRUE)),
+            'active' => 0,
+            'md5_hash' => $md5_hash,
+        );
+        $this->db->set('md5_lasttime', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('user_member', $data);
+        return $md5_hash;
+    }
+    
 }

@@ -258,17 +258,18 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    public function chkMd5Time($md5) {
+    public function chkMd5Time($md5, $table = '') {
+        if(!$table) $table = 'user_admin';
         $this->db->select("*");
         $this->db->where("md5_hash", $md5);
         $this->db->where("md5_lasttime < DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
         $this->db->limit(1, 0);
-        $query = $this->db->get("user_admin");
+        $query = $this->db->get($table);
         if ($query->num_rows() > 0) {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('md5_hash', $md5);
-            $this->db->update('user_admin');
+            $this->db->update($table);
             return TRUE;
         } else {
             return FALSE;

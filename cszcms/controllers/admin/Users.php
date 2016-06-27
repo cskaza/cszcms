@@ -198,14 +198,12 @@ class Users extends CI_Controller {
             redirect('admin/user/forgot', 'refresh');
         } else {
             $this->template->setSub('email', $user_rs->email);
-            $this->load->database();
-            $this->load->helper(array('form', 'url'));
+            $this->load->helper('form');
             $this->load->library('form_validation');
             $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[20]|matches[con_password]');
             $this->form_validation->set_rules('con_password', 'Password Confirmation', 'trim|required');
             if ($this->form_validation->run() == FALSE) {
-                $this->template->setSub('success_chk', 0);                
-                echo form_open();
+                $this->template->setSub('success_chk', 0);
                 $this->template->loadSub('admin/resetform');
             } else {
                 if (!$user_rs->email) {

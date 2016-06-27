@@ -149,6 +149,7 @@ $route['member/login/check'] = 'Member/loginCheck';
 $route['member/logout'] = 'Member/logout';
 $route['member/register'] = 'Member/registMember';
 $route['member/register/save'] = 'Member/saveMember';
+$route['member/confirm/(:any)'] = 'Member/confirmedMember';
 $route['member/edit'] = 'Member/editMember';
 $route['member/edit/save'] = 'Member/saveEditMember';
 $route['member/forgot'] = 'Member/forgot';
