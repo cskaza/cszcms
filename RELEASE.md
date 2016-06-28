@@ -10,6 +10,7 @@ CSZ-CMS V.1.0.9
 - Fix something about navigation.
 - Fix pagination working.
 - Fix redirect page when save.
+- Fix thai language on backend (some word).
 
 CSZ-CMS V.1.0.8
 - Fix statistic for link menu is show when don't enable statistic for link.
