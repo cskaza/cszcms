@@ -47,6 +47,7 @@ $lang['btn_upload']		= "Upload";
 $lang['btn_view']		= "View";
 $lang['btn_refresh']			= "Refresh now";
 $lang['option_choose']		= "-- Please Choose --";
+$lang['option_all']		= "-- All --";
 $lang['option_yes']		= "Yes";
 $lang['option_no']		= "No";
 $lang['id_col_table']		= "ID#";

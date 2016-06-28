@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <form id="lang_sel">
-                    <select onchange="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/navigation/'+this.options[this.selectedIndex].value);" onblur="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/navigation/'+this.options[this.selectedIndex].value);">
+                    <?php echo  $this->lang->line('lang_header') ?>: <select onchange="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/navigation/'+this.options[this.selectedIndex].value);" onblur="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/navigation/'+this.options[this.selectedIndex].value);">
                         <?php foreach ($lang as $lg) { ?>
                             <option value="<?php echo $lg->lang_iso?>"<?php echo ($this->uri->segment(3) == $lg->lang_iso)?' selected="selected"':''?>><?php echo $lg->lang_name?></option>
                         <?php } ?>

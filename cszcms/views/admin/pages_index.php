@@ -12,6 +12,19 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('pages_header') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form id="lang_sel">
+                    <?php echo  $this->lang->line('lang_header') ?>: <select onchange="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/pages/?lang='+this.options[this.selectedIndex].value);" onblur="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/pages/?lang='+this.options[this.selectedIndex].value);">
+                        <option value="all"><?php echo  $this->lang->line('option_all') ?></option>
+                        <?php foreach ($lang as $lg) { ?>
+                            <option value="<?php echo $lg->lang_iso?>"<?php echo ($this->input->get('lang') == $lg->lang_iso)?' selected="selected"':''?>><?php echo $lg->lang_name?></option>
+                        <?php } ?>
+                    </select>
+                </form>
+                <hr>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>

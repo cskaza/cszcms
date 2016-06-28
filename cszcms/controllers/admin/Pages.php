@@ -27,20 +27,24 @@ class Pages extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
         $this->csz_referrer->setIndex();
-
         // Pages variable
+        $search_arr = '';
+        if($this->input->get('lang') && $this->input->get('lang') != 'all'){
+            $search_arr.= ' 1=1 ';
+            if($this->input->get('lang')){
+                $search_arr.= " AND lang_iso LIKE '%".$this->input->get('lang', TRUE)."%'";
+            }
+        }
         $result_per_page = 20;
-        $total_row = $this->Csz_admin_model->countTable('pages');
+        $total_row = $this->Csz_admin_model->countTable('pages', $search_arr);
         $num_link = 10;
         $base_url = BASE_URL . '/admin/pages/';
-
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);    
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;        
-
         //Get users from database
-        $this->template->setSub('pages', $this->Csz_admin_model->getIndexData('pages', $result_per_page, $pagination, 'pages_id', 'asc'));
-
+        $this->template->setSub('pages', $this->Csz_admin_model->getIndexData('pages', $result_per_page, $pagination, 'pages_id', 'asc', $search_arr));
+        $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
         $this->template->loadSub('admin/pages_index');
     }

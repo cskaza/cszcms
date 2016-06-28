@@ -47,6 +47,7 @@ $lang['btn_upload']		= "อัพโหลด";
 $lang['btn_view']		= "ดู";
 $lang['btn_refresh']		= "รีเฟรชเดี๋ยวนี้";
 $lang['option_choose']		= "-- กรุณาเลือก --";
+$lang['option_all']		= "-- ทั้งหมด --";
 $lang['option_yes']		= "ใช่";
 $lang['option_no']		= "ไม่ใช่";
 $lang['id_col_table']		= "ไอดี#";
