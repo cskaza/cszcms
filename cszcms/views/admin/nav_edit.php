@@ -13,22 +13,29 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/navigation/update/'.$nav->page_menu_id); ?>
-        <br>
-        <div class="control-group" id="menu-type"<?php echo ($nav->drop_menu)?' style="display:none;"':''?>>	
-            <label class="control-label" for="menuType"><?php echo $this->lang->line('navpagesub_desc'); ?>: </label>
-            <label class="form-control-static" for="menuType">
-                <?php
-                $data = array(
-                    'name' => 'menuType',
-                    'id' => 'menuType',
-                    'onclick' => "ChkHideShow('sub_menu');ChkHideShow('main_menu');",
-                    'value' => '1'
-                );
-                if($nav->drop_page_menu_id) $data['checked'] = "checked";
-                echo form_checkbox($data);
-                ?> <?php echo $this->lang->line('option_yes'); ?></label>	
-        </div> <!-- /control-group -->
-
+        <?php if(!$nav->drop_menu){ ?>
+        <div id="main_menu"<?php echo ($nav->drop_page_menu_id)?' style="display:none;"':''?>>           
+            <div class="control-group">		
+                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
+                <label class="form-control-static" for="dropdown">
+                    <?php
+                    $data = array(
+                        'name' => 'dropdown',
+                        'id' => 'dropdown',
+                        'onclick' => "ChkHideShow('drop_menu');ChkHideShow('menu-type');",
+                        'value' => '1'
+                    );
+                    if($nav->drop_menu) $data['checked'] = "checked";
+                    echo form_checkbox($data);
+                    ?> <?php echo $this->lang->line('option_yes'); ?></label>	
+            </div> <!-- /control-group -->
+        </div>
+        <?php }else{ ?>
+            <div class="control-group">		
+                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
+                <input type="hidden" name="dropdown" id="dropdown" value="1"><?php echo $this->lang->line('option_yes'); ?>
+            </div> <!-- /control-group -->
+        <?php } ?>
         <div class="control-group">										
             <label class="control-label" for="name"><?php echo $this->lang->line('navpage_menuname'); ?>*</label>
             <?php
@@ -55,29 +62,21 @@
             ?>		
         </div> <!-- /control-group -->
         <hr>
-        <?php if(!$nav->drop_menu){ ?>
-        <div id="main_menu"<?php echo ($nav->drop_page_menu_id)?' style="display:none;"':''?>>           
-            <div class="control-group">		
-                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
-                <label class="form-control-static" for="dropdown">
-                    <?php
-                    $data = array(
-                        'name' => 'dropdown',
-                        'id' => 'dropdown',
-                        'onclick' => "ChkHideShow('drop_menu');ChkHideShow('menu-type');",
-                        'value' => '1'
-                    );
-                    if($nav->drop_menu) $data['checked'] = "checked";
-                    echo form_checkbox($data);
-                    ?> <?php echo $this->lang->line('option_yes'); ?></label>	
-            </div> <!-- /control-group -->
-        </div>
-        <?php }else{ ?>
-            <div class="control-group">		
-                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
-                <input type="hidden" name="dropdown" id="dropdown" value="1"><?php echo $this->lang->line('option_yes'); ?>
-            </div> <!-- /control-group -->
-        <?php } ?>
+        <div class="control-group" id="menu-type"<?php echo ($nav->drop_menu)?' style="display:none;"':''?>>	
+            <label class="control-label" for="menuType"><?php echo $this->lang->line('navpagesub_desc'); ?>: </label>
+            <label class="form-control-static" for="menuType">
+                <?php
+                $data = array(
+                    'name' => 'menuType',
+                    'id' => 'menuType',
+                    'onclick' => "ChkHideShow('sub_menu');ChkHideShow('main_menu');",
+                    'value' => '1'
+                );
+                if($nav->drop_page_menu_id) $data['checked'] = "checked";
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('option_yes'); ?></label>	
+        </div> <!-- /control-group -->
+        
         <div id="drop_menu"<?php echo ($nav->drop_menu)?' style="display:none;"':''?>>
             <div class="control-group">
                 <label class="control-label" for="pageUrl"><?php echo $this->lang->line('navpage_pagelink'); ?></label>
@@ -118,7 +117,7 @@
                     $data = array();
                     $data[0] = $this->lang->line('option_choose');
                     foreach ($dropmenu as $d) {
-                        $data[$d['page_menu_id']] = $d['menu_name'];
+                        $data[$d['page_menu_id']] = $d['menu_name'].' ('.$d['lang_iso'].')';
                     }
                     echo form_dropdown('dropMenu', $data, $nav->drop_page_menu_id, $att);
                     ?>

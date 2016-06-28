@@ -6,6 +6,7 @@ CSZ-CMS V.1.0.9
 - Add member system.
 - Add plugin for article.
 - Add proxy config file.
+- Fix something about navigation.
 - Fix pagination working.
 - Fix redirect page when save.
 

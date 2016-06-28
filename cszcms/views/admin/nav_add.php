@@ -13,21 +13,21 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/navigation/insert'); ?>
-        <br>
-        <div class="control-group" id="menu-type">	
-            <label class="control-label" for="menuType"><?php echo $this->lang->line('navpagesub_desc'); ?>: </label>
-            <label class="form-control-static" for="menuType">
-                <?php
-                $data = array(
-                    'name' => 'menuType',
-                    'id' => 'menuType',
-                    'onclick' => "ChkHideShow('sub_menu');ChkHideShow('main_menu');",
-                    'value' => '1'
-                );
-                echo form_checkbox($data);
-                ?> <?php echo $this->lang->line('option_yes'); ?></label>	
-        </div> <!-- /control-group -->
-
+        <div id="main_menu">           
+            <div class="control-group">		
+                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
+                <label class="form-control-static" for="dropdown">
+                    <?php
+                    $data = array(
+                        'name' => 'dropdown',
+                        'id' => 'dropdown',
+                        'onclick' => "ChkHideShow('drop_menu');ChkHideShow('menu-type');",
+                        'value' => '1'
+                    );
+                    echo form_checkbox($data);
+                    ?> <?php echo $this->lang->line('option_yes'); ?></label>	
+            </div> <!-- /control-group -->
+        </div>
         <div class="control-group">										
             <label class="control-label" for="name"><?php echo $this->lang->line('navpage_menuname'); ?>*</label>
             <?php
@@ -54,21 +54,20 @@
             ?>		
         </div> <!-- /control-group -->
         <hr>
-        <div id="main_menu">           
-            <div class="control-group">		
-                <label class="control-label" for="dropdown"><?php echo $this->lang->line('navpage_dropmenu'); ?>: </label>
-                <label class="form-control-static" for="dropdown">
-                    <?php
-                    $data = array(
-                        'name' => 'dropdown',
-                        'id' => 'dropdown',
-                        'onclick' => "ChkHideShow('drop_menu');ChkHideShow('menu-type');",
-                        'value' => '1'
-                    );
-                    echo form_checkbox($data);
-                    ?> <?php echo $this->lang->line('option_yes'); ?></label>	
-            </div> <!-- /control-group -->
-        </div>
+        <div class="control-group" id="menu-type">	
+            <label class="control-label" for="menuType"><?php echo $this->lang->line('navpagesub_desc'); ?>: </label>
+            <label class="form-control-static" for="menuType">
+                <?php
+                $data = array(
+                    'name' => 'menuType',
+                    'id' => 'menuType',
+                    'onclick' => "ChkHideShow('sub_menu');ChkHideShow('main_menu');",
+                    'value' => '1'
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('option_yes'); ?></label>	
+        </div> <!-- /control-group -->
+        
         <div id="drop_menu">
             <div class="control-group">
                 <label class="control-label" for="pageUrl"><?php echo $this->lang->line('navpage_pagelink'); ?></label>
