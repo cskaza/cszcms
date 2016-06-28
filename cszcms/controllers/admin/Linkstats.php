@@ -53,7 +53,7 @@ class Linkstats extends CI_Controller {
         ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_statistic', $result_per_page, $pagination, 'link_statistic_id', 'desc', $search_arr, 'link'));
+        $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_statistic', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr, 'link'));
         $this->template->setSub('total_row',$total_row);
         //Load the view
         $this->template->loadSub('admin/linkstats_index');
