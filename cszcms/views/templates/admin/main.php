@@ -46,16 +46,15 @@ $row = $this->Csz_admin_model->load_config();
                         <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
                         <a href="<?php echo BASE_URL?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade')?>"><div class="alert alert-warning text-center" role="alert"><?php echo $this->lang->line('upgrade_newlast_alert')?></div></a>
                         <?php } ?>
-                        <!-- Start For Content -->
-                        <?php echo $content; ?>
                         <?php if($this->session->flashdata('error_message') != ''){ ?>
-                        <br><br>
                         <div class="row">
                             <div class="col-lg-12 col-md-12">
                                 <?php echo $this->session->flashdata('error_message'); ?>
                             </div>
                         </div>
                         <?php } ?>
+                        <!-- Start For Content -->
+                        <?php echo $content; ?>                       
                         <!-- End For Content -->
                         <br><br><br>
                         <?php echo  $this->Headfoot_html->admin_footer() ?>

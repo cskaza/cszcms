@@ -7,6 +7,7 @@ CSZ-CMS V.1.0.9
 - Add plugin for article.
 - Add proxy config file.
 - Fix pagination working.
+- Fix redirect page when save.
 
 CSZ-CMS V.1.0.8
 - Fix statistic for link menu is show when don't enable statistic for link.

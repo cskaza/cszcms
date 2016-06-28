@@ -26,6 +26,7 @@ class Forms extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
+        $this->csz_referrer->setIndex();
 
         // Pages variable
         $result_per_page = 20;
@@ -67,7 +68,7 @@ class Forms extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertForms();
             //Return to user list
-            redirect('/admin/forms', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -83,7 +84,7 @@ class Forms extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/forms_edit');
         }else{
-            redirect('/admin/forms', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -102,7 +103,7 @@ class Forms extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateForms($this->uri->segment(4));
             //Return to user list
-            redirect('/admin/forms', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -117,12 +118,13 @@ class Forms extends CI_Controller {
         }
         
         //Return to languages list
-        redirect('admin/forms', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function viewForm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4)){
+            $this->csz_referrer->setIndex();
             $this->load->library('pagination');
             // Get form name
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -141,7 +143,7 @@ class Forms extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/forms_view');
         }else{
-            redirect('admin/forms', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -154,6 +156,6 @@ class Forms extends CI_Controller {
         }
         
         //Return to languages list
-        redirect('admin/forms/view/'.$this->uri->segment(4), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 }

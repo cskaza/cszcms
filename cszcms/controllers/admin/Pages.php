@@ -26,6 +26,7 @@ class Pages extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
+        $this->csz_referrer->setIndex();
 
         // Pages variable
         $result_per_page = 20;
@@ -74,7 +75,7 @@ class Pages extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertPage();
             //Return to user list
-            redirect('/admin/pages', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -90,7 +91,7 @@ class Pages extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/pages_edit');
         }else{
-            redirect('/admin/pages', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -112,7 +113,7 @@ class Pages extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updatePage($this->uri->segment(4));
             //Return to user list
-            redirect('/admin/pages', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -128,6 +129,6 @@ class Pages extends CI_Controller {
             }
         }
         //Return to languages list
-        redirect('admin/pages', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 }

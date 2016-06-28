@@ -26,7 +26,7 @@ class Users extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
-        
+        $this->csz_referrer->setIndex();
         // Pages variable
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_admin');
@@ -71,7 +71,7 @@ class Users extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->createUser();
             //Return to user list
-            redirect('/admin/users', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -88,7 +88,7 @@ class Users extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/users_edit');
         }else{
-            redirect('/admin/users', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -113,7 +113,7 @@ class Users extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateUser($this->uri->segment(4));
             //Return to user list
-            redirect('/admin/users', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -129,7 +129,7 @@ class Users extends CI_Controller {
             }
         }
         //Return to user list
-        redirect('admin/users', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     /*     * ************ Forgotten Password Resets ************* */

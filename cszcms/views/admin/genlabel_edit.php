@@ -15,7 +15,7 @@
         <?php echo form_open(BASE_URL . '/admin/genlabel/updated/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
-            <label class="control-label"><?php echo $this->lang->line('genlabel_name'); ?> <span class="remark"><em>(<?php echo $genlab->remark;?>)</em></span></label>
+            <label class="control-label"><?php echo $this->lang->line('genlabel_name'); ?> <?php if($genlab->remark){ ?><span class="remark"><em>(<?php echo $genlab->remark;?>)</em></span></label><?php } ?>
             <div class="well well-sm"><b><?php echo $genlab->name;?></b></div>
         </div> <!-- /control-group -->
         <?php foreach ($lang as $l) { ?>
@@ -45,7 +45,7 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo BASE_URL; ?>/admin/genlabel"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
         <!-- /widget-content --> 

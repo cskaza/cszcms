@@ -26,7 +26,8 @@ class Linkstats extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->helper('form');
-        $this->load->library('pagination');       
+        $this->load->library('pagination');   
+        $this->csz_referrer->setIndex();
         $search_arr = '';
         if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
             $search_arr.= ' 1=1 ';
@@ -61,6 +62,7 @@ class Linkstats extends CI_Controller {
     public function view() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4)){
+            $this->csz_referrer->setIndex('view');
             $this->load->helper('form');
             $this->load->library('pagination');   
             $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
@@ -94,7 +96,7 @@ class Linkstats extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/linkstats_view');
         }else{
-            redirect('admin/linkstats', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -107,7 +109,7 @@ class Linkstats extends CI_Controller {
                 $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $value);
             }
         }
-        redirect('admin/linkstats', 'refresh');
+        redirect($this->csz_referrer->getIndex('view'), 'refresh');
     }
     
     public function deleteIndexByURL() {
@@ -120,7 +122,7 @@ class Linkstats extends CI_Controller {
                 $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);
             }
         }
-        redirect('admin/linkstats', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function deleteByID() {
@@ -129,7 +131,7 @@ class Linkstats extends CI_Controller {
         if($this->uri->segment(4)){
             $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $this->uri->segment(4));   
         }
-        redirect('admin/linkstats', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function deleteByURL() {
@@ -139,7 +141,7 @@ class Linkstats extends CI_Controller {
             $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
             $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);   
         }
-        redirect('admin/linkstats', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
 }

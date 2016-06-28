@@ -34,6 +34,7 @@ class Upgrade extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->csz_referrer->setIndex();
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
         //Load the view
@@ -65,11 +66,11 @@ class Upgrade extends CI_Controller {
                 $this->Csz_model->clear_all_cache();
                 // When Success 
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
-                redirect('admin/upgrade', 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
             }
         } else {
             $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -80,10 +81,10 @@ class Upgrade extends CI_Controller {
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('optimize_success_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }else{
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('optimize_error_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -108,7 +109,7 @@ class Upgrade extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_model->clear_all_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
-        redirect('admin/upgrade', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
 }

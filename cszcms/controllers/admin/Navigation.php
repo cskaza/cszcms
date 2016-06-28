@@ -22,9 +22,9 @@ class Navigation extends CI_Controller {
             $this->template->set('cur_page', $pageURL);
         }
 	
-	public function index()
-	{
+	public function index(){
 		admin_helper::is_logged_in($this->session->userdata('admin_email'));
+                $this->csz_referrer->setIndex();
                 $this->template->set('cur_page', $this->uri->segment(2));
                 if(!$this->uri->segment(3)){
                     $lang = $this->Csz_model->getDefualtLang();
@@ -42,12 +42,11 @@ class Navigation extends CI_Controller {
         public function saveNav(){
                 admin_helper::is_logged_in($this->session->userdata('admin_email'));
                 $this->Csz_admin_model->sortNav();
-                redirect('admin/navigation', 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
         }
 
 
-        public function newNav()
-	{
+        public function newNav(){
 		admin_helper::is_logged_in($this->session->userdata('admin_email'));
 		//Get pages from database
                 $this->template->setSub('pages', $this->Csz_admin_model->getPagesAll());
@@ -73,7 +72,7 @@ class Navigation extends CI_Controller {
 			//Validation passed
 			$this->Csz_admin_model->insertMenu();
 			//Return to navigation list
-			redirect('admin/navigation', 'refresh');
+			redirect($this->csz_referrer->getIndex(), 'refresh');
 	  	}
 		
 	}	
@@ -92,7 +91,7 @@ class Navigation extends CI_Controller {
                     //Load the view
                     $this->template->loadSub('admin/nav_edit');
                 }else{
-                    redirect('admin/navigation', 'refresh');
+                    redirect($this->csz_referrer->getIndex(), 'refresh');
                 }
 	}
 	
@@ -111,7 +110,7 @@ class Navigation extends CI_Controller {
 			//Validation passed
 			$this->Csz_admin_model->updateMenu($this->uri->segment(4));
 			//Return to navigation list
-			redirect('/admin/navigation', 'refresh');
+			redirect($this->csz_referrer->getIndex(), 'refresh');
 	  	}
 	}
 	
@@ -123,6 +122,6 @@ class Navigation extends CI_Controller {
                 $this->Csz_admin_model->removeData('page_menu','drop_page_menu_id',$this->uri->segment(4));
             }
             //Return to user list
-            redirect('admin/navigation', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
 }

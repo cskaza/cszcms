@@ -66,6 +66,7 @@ class Admin extends CI_Controller {
     public function social() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
+        $this->csz_referrer->setIndex();
         $this->load->helper('form');
 
         $this->template->setSub('social', $this->Csz_admin_model->getSocial());
@@ -75,13 +76,15 @@ class Admin extends CI_Controller {
     public function updateSocial() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->Csz_admin_model->updateSocial();
-        redirect('admin/social', 'refresh');
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function settings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         //Load the form helper
+        $this->csz_referrer->setIndex();
         $this->load->helper('form');
         $this->load->helper('directory');
         $this->template->setSub('themesdir', directory_map(APPPATH . '/views/templates/', 1));
@@ -95,12 +98,14 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_admin_model->updateSettings();
-        redirect('/admin/settings', 'refresh');
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function uploadIndex() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
+        $this->csz_referrer->setIndex();
         $this->load->helper('form');
         $this->load->library('pagination');
 
@@ -131,7 +136,8 @@ class Admin extends CI_Controller {
                 $this->Csz_admin_model->removeData('upload_file', 'upload_file_id', $value);
             }
         }
-        redirect('/admin/uploadindex', 'refresh');
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function htmlUpload() {
@@ -154,8 +160,9 @@ class Admin extends CI_Controller {
                     $this->Csz_admin_model->insertFileUpload($year, $file_id1);
                 }
             }
-        }        
-        redirect('/admin/uploadindex', 'refresh');
+        }  
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
 }

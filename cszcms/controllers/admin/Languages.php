@@ -26,6 +26,7 @@ class Languages extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
+        $this->csz_referrer->setIndex();
 
         // Pages variable
         $result_per_page = 20;
@@ -70,7 +71,7 @@ class Languages extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertLang();
             //Return to user list
-            redirect('/admin/lang', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -84,7 +85,7 @@ class Languages extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/lang_edit');
         }else{
-            redirect('/admin/lang', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -107,7 +108,7 @@ class Languages extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateLang($this->uri->segment(4));
             //Return to user list
-            redirect('/admin/lang', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -124,6 +125,6 @@ class Languages extends CI_Controller {
             }
         }
         //Return to languages list
-        redirect('admin/lang', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 }

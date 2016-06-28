@@ -26,6 +26,7 @@ class General_label extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->csz_referrer->setIndex();
         $this->load->library('pagination');
         // Pages variable
         $result_per_page = 20;
@@ -61,7 +62,7 @@ class General_label extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/genlabel_edit');
         }else{
-            redirect('/admin/genlabel', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -70,7 +71,7 @@ class General_label extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
 
         $this->Csz_admin_model->updateLabel($this->uri->segment(4));
-        redirect('/admin/genlabel', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function syncLang() {
@@ -78,7 +79,7 @@ class General_label extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->Csz_admin_model->syncLabelLang();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('genlabel_synclang_success').'</div>');
-        redirect('/admin/genlabel', 'refresh'); 
+        redirect($this->csz_referrer->getIndex(), 'refresh'); 
     }
     
 }
