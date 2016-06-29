@@ -84,6 +84,7 @@
                 $data = array();
                 $data['admin'] = 'Admin';
                 $data['editor'] = 'Editor';
+                $data['member'] = 'Member';
                 echo form_dropdown('user_type', $data, '', $att);
             ?>		
         </div> <!-- /control-group -->

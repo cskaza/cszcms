@@ -12,7 +12,7 @@
                     <?php if(!$chksts){ ?>
                         <?php echo  form_open(BASE_URL . '/admin/user/forgot') ?>
                         <?php echo form_error('email', '<div class="error">', '</div>'); ?>	
-                        <label for="email" class="sr-only"><?php echo  $this->lang->line('forgot_email') ?></label>
+                        <label for="email" class="control-label"><?php echo  $this->lang->line('forgot_email') ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'email',

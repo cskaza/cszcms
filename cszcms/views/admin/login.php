@@ -23,7 +23,8 @@
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/admin/login/check') ?>
-                    <label for="email" class="sr-only"><?php echo $this->lang->line('login_email') ?></label>
+                    <?php echo form_error('email', '<div class="error">', '</div>'); ?>
+                    <label for="email" class="control-label"><?php echo $this->lang->line('login_email') ?>*</label>
                     <?php
                     $data = array(
                         'name' => 'email',
@@ -37,7 +38,8 @@
                     );
                     echo form_input($data);
                     ?>
-                    <label for="password" class="sr-only"><?php echo $this->lang->line('login_password') ?>:</label>
+                    <?php echo form_error('password', '<div class="error">', '</div>'); ?>
+                    <label for="password" class="control-label"><?php echo $this->lang->line('login_password') ?>*</label>
                     <?php
                     $data = array(
                         'name' => 'password',

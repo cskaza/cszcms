@@ -29,7 +29,7 @@ class Admin extends CI_Controller {
     }
 
     public function login() {
-        admin_helper::for_not_login($this->session->userdata('admin_email'));
+        admin_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
 
         $this->template->setSub('error', '');
@@ -38,17 +38,29 @@ class Admin extends CI_Controller {
     }
 
     public function loginCheck() {
-        admin_helper::for_not_login($this->session->userdata('admin_email'));
-        $email = $this->input->post('email');
-        $password = md5($this->input->post('password'));
-        $result = $this->Csz_admin_model->login($email, $password);
-        if ($result == 'SUCCESS') {
-            redirect('admin', 'refresh');
-        } else {
-            $this->template->setSub('error', $result);
-            $this->load->helper('form');
-            $this->template->loadSub('admin/login');
-        }
+        admin_helper::login_already($this->session->userdata('admin_email'));
+        //Load the form validation library
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('email', $this->lang->line('login_email'), 'trim|required|valid_email');
+        $this->form_validation->set_rules('password', $this->lang->line('login_password'), 'trim|required|min_length[4]|max_length[32]');
+        $this->form_validation->set_message('valid_email', $this->lang->line('valid_email'));
+        $this->form_validation->set_message('required', $this->lang->line('required'));
+        $this->form_validation->set_message('min_length', $this->lang->line('min_length'));
+        $this->form_validation->set_message('max_length', $this->lang->line('max_length'));
+        if ($this->form_validation->run() == FALSE) {
+            $this->login();
+        }else{
+            $email = $this->input->post('email', TRUE);
+            $password = md5($this->input->post('password', TRUE));
+            $result = $this->Csz_admin_model->login($email, $password);
+            if ($result == 'SUCCESS') {
+                redirect('admin', 'refresh');
+            } else {
+                $this->template->setSub('error', $result);
+                $this->load->helper('form');
+                $this->template->loadSub('admin/login');
+            }
+        } 
     }
 
     public function logout() {
@@ -56,6 +68,7 @@ class Admin extends CI_Controller {
             'user_admin_id' => '',
             'admin_name' => '',
             'admin_email' => '',
+            'admin_type' => '',
             'admin_logged_in' => FALSE,
         );
         $this->session->unset_userdata($data);

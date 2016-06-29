@@ -24,7 +24,7 @@
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/member/login/check') ?>
-                    <label for="email" class="sr-only"><?php echo $this->Csz_model->getLabelLang('login_email') ?></label>
+                    <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                     <?php
                     $data = array(
                         'name' => 'email',
@@ -38,7 +38,7 @@
                     );
                     echo form_input($data);
                     ?>
-                    <label for="password" class="sr-only"><?php echo $this->Csz_model->getLabelLang('login_password') ?>:</label>
+                    <label for="password" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_password') ?>*</label>
                     <?php
                     $data = array(
                         'name' => 'password',

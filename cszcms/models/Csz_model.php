@@ -558,14 +558,15 @@ class Csz_model extends CI_Model {
             $this->db->where("password", $password);
             $this->db->where("active", '1');
             $this->db->limit(1, 0);
-            $query = $this->db->get("user_member");
+            $query = $this->db->get("user_admin");
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $rows) {
                     $data = array(
-                        'user_member_id' => $rows->user_member_id,
-                        'member_name' => $rows->name,
-                        'member_email' => $rows->email,
-                        'member_logged_in' => TRUE,
+                        'user_admin_id' => $rows->user_admin_id,
+                        'admin_name' => $rows->name,
+                        'admin_email' => $rows->email,
+                        'admin_type' => $rows->user_type,
+                        'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);
                     return 'SUCCESS';
@@ -599,15 +600,17 @@ class Csz_model extends CI_Model {
         // Create the user account
         $md5_hash = md5(time() + mt_rand(1, 99999999));
         $data = array(
+            'email' => 'Member User',
             'email' => $this->input->post('email', TRUE),
             'password' => md5($this->input->post('password', TRUE)),
+            'user_type' => 'member',
             'active' => 0,
             'md5_hash' => $md5_hash,
         );
         $this->db->set('md5_lasttime', 'NOW()', FALSE);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
-        $this->db->insert('user_member', $data);
+        $this->db->insert('user_admin', $data);
         return $md5_hash;
     }
     

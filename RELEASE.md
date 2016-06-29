@@ -3,7 +3,6 @@
 CSZ-CMS V.1.0.9
 - Add statistic for link can delete with checkbox.
 - Add label language for plugin.
-- Add member system.
 - Add plugin for article.
 - Add proxy config file.
 - Fix backend forget password template.

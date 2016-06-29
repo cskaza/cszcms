@@ -7,7 +7,7 @@ $lang['nav_dash']		= "Dashboard";
 $lang['nav_view_site']		= "View Site";
 $lang['nav_general_menu']       = "General Menu";
 $lang['nav_content_menu']       = "Content Menu";
-$lang['nav_admin_users']	= "Admin Users";
+$lang['nav_admin_users']	= "Users";
 $lang['nav_nav_header']         = "Navigation";
 $lang['nav_logout']		= "Logout";
 $lang['nav_gel_settings']	= "General Menu";
@@ -15,18 +15,18 @@ $lang['nav_gel_settings']	= "General Menu";
 //Users - All Users
 $lang['user_header']			= "All Users";
 $lang['user_status']			= "Status";
-$lang['user_name']			= "Name";
+$lang['user_name']			= "Display Name";
 $lang['user_email']			= "Email Address";
 $lang['user_delete_btn']		= "Delete";
 $lang['user_edit_btn']                  = "Edit";
 $lang['user_delete_message']            = "Do you want to do this ? Make sure this is not your only user account.";
 $lang['user_delete_myacc']              = "Don't delete! This is your user account.";
-$lang['user_addnew']			= "New Admin User";
+$lang['user_addnew']			= "New User";
 
 //Users - New User/Edit User
-$lang['user_new_header']		= "New Admin User";
-$lang['user_edit_header']		= "Edit Admin User";
-$lang['user_new_name']                  = "Name";
+$lang['user_new_header']		= "New User";
+$lang['user_edit_header']		= "Edit User";
+$lang['user_new_name']                  = "Display Name";
 $lang['user_new_email']			= "Email Address";
 $lang['user_cur_pass']			= "Your Password";
 $lang['user_new_pass']			= "New Password";

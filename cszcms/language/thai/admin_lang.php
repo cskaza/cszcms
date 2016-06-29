@@ -7,26 +7,26 @@ $lang['nav_dash']		= "แดชบอร์ด";
 $lang['nav_view_site']		= "ดูเว็บไซต์";
 $lang['nav_general_menu']       = "เมนูทั่วไป";
 $lang['nav_content_menu']       = "เมนูเนื้อหา";
-$lang['nav_admin_users']	= "ชื่อผู้ดูแลระบบ";
+$lang['nav_admin_users']	= "ชื่อผู้ใช้งาน";
 $lang['nav_nav_header']         = "แถบเมนู";
 $lang['nav_logout']		= "ออกจากระบบ";
 $lang['nav_gel_settings']	= "เมนูทั่วไป";
 
 //Users - All Users
-$lang['user_header']			= "ผู้ดูแลระบบทั้งหมด";
+$lang['user_header']			= "ผู้ใช้งานทั้งหมด";
 $lang['user_status']			= "สถานะ";
-$lang['user_name']			= "ชื่อ";
+$lang['user_name']			= "ชื่อหน้าจอ";
 $lang['user_email']			= "ที่อยู่อีเมล์";
 $lang['user_delete_btn']		= "ลบ";
 $lang['user_edit_btn']                  = "แก้ไข";
-$lang['user_delete_message']            = "คุณแน่ใจที่จะดำเนินการสิ่งนี้? แน่ใจว่าชื่อผู้ดูแลระบบนี้ไม่ใช่ของคุณ.";
-$lang['user_delete_myacc']              = "ไม่สามารถลบได้! ชื่อผู้ดูแลระบบนี้เป็นของคุณ.";
-$lang['user_addnew']			= "เพิ่มชื่อผู้ดูแลระบบ";
+$lang['user_delete_message']            = "คุณแน่ใจที่จะดำเนินการสิ่งนี้? แน่ใจว่าชื่อผู้ใช้งานนี้ไม่ใช่ของคุณ.";
+$lang['user_delete_myacc']              = "ไม่สามารถลบได้! ชื่อผู้ใช้งานนี้เป็นของคุณ.";
+$lang['user_addnew']			= "เพิ่มชื่อผู้ใช้งาน";
 
 //Users - New User/Edit User
-$lang['user_new_header']		= "เพิ่มชื่อผู้ดูแลระบบ";
-$lang['user_edit_header']		= "แก้ไขชื่อผู้ดูแลระบบ";
-$lang['user_new_name']                  = "ชื่อ";
+$lang['user_new_header']		= "เพิ่มชื่อผู้ใช้งาน";
+$lang['user_edit_header']		= "แก้ไขชื่อผู้ใช้งาน";
+$lang['user_new_name']                  = "ชื่อหน้าจอ";
 $lang['user_new_email']			= "ที่อยู่อีเมล์";
 $lang['user_cur_pass']			= "รหัสผ่านปัจจุบัน";
 $lang['user_new_pass']			= "รหัสผ่านใหม่";

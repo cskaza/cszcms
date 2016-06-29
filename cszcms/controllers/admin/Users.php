@@ -59,9 +59,15 @@ class Users extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email]');
-        $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('con_password', 'confirm password', 'trim|required|matches[password]');
+        $this->form_validation->set_rules('email', $this->lang->line('user_new_email'), 'trim|required|valid_email|is_unique[user_admin.email]');
+        $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|required|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|required|matches[password]');
+        $this->form_validation->set_message('is_unique', $this->lang->line('is_unique'));
+        $this->form_validation->set_message('valid_email', $this->lang->line('valid_email'));
+        $this->form_validation->set_message('matches', $this->lang->line('matches'));
+        $this->form_validation->set_message('required', $this->lang->line('required'));
+        $this->form_validation->set_message('min_length', $this->lang->line('min_length'));
+        $this->form_validation->set_message('max_length', $this->lang->line('max_length'));
 
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
@@ -100,10 +106,15 @@ class Users extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
-        $this->form_validation->set_rules('password', 'new password', 'trim|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('con_password', 'confirm password', 'trim|matches[password]');
-
+        $this->form_validation->set_rules('email', $this->lang->line('user_new_email'), 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
+        $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|matches[password]');
+        $this->form_validation->set_message('is_unique', $this->lang->line('is_unique'));
+        $this->form_validation->set_message('valid_email', $this->lang->line('valid_email'));
+        $this->form_validation->set_message('matches', $this->lang->line('matches'));
+        $this->form_validation->set_message('required', $this->lang->line('required'));
+        $this->form_validation->set_message('min_length', $this->lang->line('min_length'));
+        $this->form_validation->set_message('max_length', $this->lang->line('max_length'));
 
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
@@ -135,10 +146,12 @@ class Users extends CI_Controller {
     /*     * ************ Forgotten Password Resets ************* */
 
     public function forgot() {
-        admin_helper::for_not_login($this->session->userdata('admin_email'));
+        admin_helper::login_already($this->session->userdata('admin_email'));
         $row = $this->Csz_model->load_config();
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
+        $this->form_validation->set_rules('email', $this->lang->line('forgot_email'), 'trim|required|valid_email|callback_email_check');
+        $this->form_validation->set_message('valid_email', $this->lang->line('valid_email'));
+        $this->form_validation->set_message('required', $this->lang->line('required'));
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 0);
@@ -152,6 +165,7 @@ class Users extends CI_Controller {
             $this->db->set('md5_hash', md5(time()+mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
+            $this->db->where("user_type != 'member'");
             $this->db->update('user_admin');
             $this->load->helper('string');
             $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
@@ -179,8 +193,11 @@ class Users extends CI_Controller {
     }
 
     public function email_check($str) {
-        admin_helper::for_not_login($this->session->userdata('admin_email'));
-        $query = $this->db->get_where('user_admin', array('email' => $str), 1);
+        admin_helper::login_already($this->session->userdata('admin_email'));
+        $this->db->where('email', $str);
+        $this->db->where("user_type != 'member'");
+        $this->db->limit(1, 0);
+        $query = $this->db->get('user_admin');
         if ($query->num_rows() == 1) {
             return true;
         } else {
@@ -190,7 +207,7 @@ class Users extends CI_Controller {
     }
 
     public function getPassword() {
-        admin_helper::for_not_login($this->session->userdata('admin_email'));
+        admin_helper::login_already($this->session->userdata('admin_email'));
         $md5_hash = $this->uri->segment(3);
         $this->Csz_admin_model->chkMd5Time($md5_hash);
         $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
@@ -200,8 +217,12 @@ class Users extends CI_Controller {
             $this->template->setSub('email', $user_rs->email);
             $this->load->helper('form');
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[20]|matches[con_password]');
-            $this->form_validation->set_rules('con_password', 'Password Confirmation', 'trim|required');
+            $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|required|min_length[4]|max_length[32]|matches[con_password]');
+            $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|required');
+            $this->form_validation->set_message('matches', $this->lang->line('matches'));
+            $this->form_validation->set_message('required', $this->lang->line('required'));
+            $this->form_validation->set_message('min_length', $this->lang->line('min_length'));
+            $this->form_validation->set_message('max_length', $this->lang->line('max_length'));
             if ($this->form_validation->run() == FALSE) {
                 $this->template->setSub('success_chk', 0);
                 $this->template->loadSub('admin/resetform');

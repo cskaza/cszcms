@@ -12,9 +12,9 @@
                 </div>
                 <div class="panel-body text-center">
                     <?php if(!$chksts){ ?>
-                        <?php echo  form_open(BASE_URL . '/member/forgot') ?>
+                        <?php echo form_open(BASE_URL . '/member/forgot') ?>
                         <?php echo form_error('email', '<div class="error">', '</div>'); ?>	
-                        <label for="email" class="sr-only"><?php echo $this->Csz_model->getLabelLang('login_email') ?></label>
+                        <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'email',

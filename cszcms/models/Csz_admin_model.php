@@ -222,7 +222,7 @@ class Csz_admin_model extends CI_Model {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
         }
-        if($id != 1 && $this->session->userdata('admin_type') != 'editor'){
+        if($id != 1 && $this->session->userdata('admin_type') == 'admin'){
             $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
         }
         if ($this->session->userdata('user_admin_id') != $id) {
@@ -283,6 +283,7 @@ class Csz_admin_model extends CI_Model {
             $this->db->select("*");
             $this->db->where("email", $email);
             $this->db->where("password", $password);
+            $this->db->where("user_type != 'member'");
             $this->db->where("active", '1');
             $this->db->limit(1, 0);
             $query = $this->db->get("user_admin");

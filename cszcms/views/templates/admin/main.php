@@ -34,7 +34,7 @@ $row = $this->Csz_admin_model->load_config();
         <![endif]-->
     </head>
     <body>
-        <?php if ($this->session->userdata('user_admin_id') && $this->session->userdata('admin_email')) { ?>
+        <?php if ($this->session->userdata('user_admin_id') && $this->session->userdata('admin_email') && $this->session->userdata('admin_type') != 'member') { ?>
             <?php echo  $this->Headfoot_html->admin_topmenu() ?>
             <div class="container-fluid">
                 <div class="row">

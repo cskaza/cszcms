@@ -2,15 +2,15 @@
  
 class Admin_helper{
     static function is_logged_in($email){
-        if(!$email || !$_SESSION['admin_logged_in']){
+        if(!$email || !$_SESSION['admin_logged_in'] || !$_SESSION['admin_type'] || $_SESSION['admin_type'] == 'member'){
             $redirect= BASE_URL.'/admin/login';
             header("Location: $redirect");	
             exit;	
         }
     }
     
-    static function for_not_login($email_session){
-        if($email_session && $_SESSION['admin_logged_in']){
+    static function login_already($email_session){
+        if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['admin_type'] != 'member'){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;	
@@ -22,6 +22,14 @@ class Admin_helper{
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;	
+        }
+    }
+    
+    static function is_a_member($user_type){
+        if($user_type == 'member'){
+            return TRUE;	
+        }else{
+            return FALSE;
         }
     }
 } 

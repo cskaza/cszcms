@@ -38,12 +38,12 @@ class Member extends CI_Controller {
     }
 
     public function index() {
-        Member_helper::is_logged_in($this->session->userdata('member_email'));
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->template->loadSub('frontpage/member/home');
     }
 
     public function login() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
 
         $this->template->setSub('error', '');
@@ -52,7 +52,7 @@ class Member extends CI_Controller {
     }
 
     public function loginCheck() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         $email = $this->input->post('email');
         $password = md5($this->input->post('password'));
         $result = $this->Csz_model->memberLogin($email, $password);
@@ -67,10 +67,11 @@ class Member extends CI_Controller {
 
     public function logout() {
         $data = array(
-            'user_member_id' => '',
-            'member_name' => '',
-            'member_email' => '',
-            'member_logged_in' => FALSE,
+            'user_admin_id' => '',
+            'admin_name' => '',
+            'admin_email' => '',
+            'admin_type' => '',
+            'admin_logged_in' => FALSE,
         );
         $this->session->unset_userdata($data);
         $this->session->sess_destroy();
@@ -78,7 +79,7 @@ class Member extends CI_Controller {
     }
 
     public function registMember() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
         $this->load->helper('form');
         //Load the view
@@ -87,12 +88,12 @@ class Member extends CI_Controller {
     }
 
     public function saveMember() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         $row = $this->Csz_model->load_config();
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_member.email]');
+        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email]');
         $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|required|matches[password]');
         if ($this->form_validation->run() == FALSE) {
@@ -125,9 +126,9 @@ class Member extends CI_Controller {
     }
 
     public function confirmedMember() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         $md5_hash = $this->uri->segment(3);
-        $user_rs = $this->Csz_model->getValue('*', 'user_member', 'md5_hash', $md5_hash, 1);
+        $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
         if (!$user_rs) {
             show_error('Sorry!!! Invalid Request!');
         } else {
@@ -137,15 +138,15 @@ class Member extends CI_Controller {
             );
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('md5_hash', $md5_hash);
-            $this->db->where('user_member_id', $user_rs->user_member_id);
-            $this->db->update('user_member', $data);
+            $this->db->where('user_admin_id', $user_rs->user_admin_id);
+            $this->db->update('user_admin', $data);
             redirect('member', 'refresh');
         }
     }
 
     public function editMember() {
-        Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if ($this->session->userdata('user_member_id') != $this->uri->segment(4)) {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
             redirect('member', 'refresh');
         }
         //Load the form helper
@@ -161,14 +162,14 @@ class Member extends CI_Controller {
     }
 
     public function saveEditMember() {
-        Member_helper::is_logged_in($this->session->userdata('member_email'));
-        if ($this->session->userdata('user_member_id') != $this->uri->segment(4)) {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
             redirect('member', 'refresh');
         }
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_member.email.user_member_id.' . $this->uri->segment(4) . ']');
+        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
         $this->form_validation->set_rules('password', 'new password', 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|matches[password]');
 
@@ -179,7 +180,7 @@ class Member extends CI_Controller {
         } else {
             //Validation passed
             //Update the user
-            $this->Csz_admin_model->updateUser($this->uri->segment(4));
+            $this->Csz_model->updateMember($this->uri->segment(4));
             //Return to user list
             redirect('member', 'refresh');
         }
@@ -188,7 +189,7 @@ class Member extends CI_Controller {
     /*     * ************ Forgotten Password Resets ************* */
 
     public function forgot() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         $row = $this->Csz_model->load_config();
         $this->load->library('form_validation');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
@@ -205,9 +206,9 @@ class Member extends CI_Controller {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
-            $this->db->update('user_member');
+            $this->db->update('user_admin');
             $this->load->helper('string');
-            $user_rs = $this->Csz_model->getValue('md5_hash', 'user_member', 'email', $email, 1);
+            $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
             $md5_hash = $user_rs->md5_hash;
 
             //now we will send an email
@@ -231,8 +232,10 @@ class Member extends CI_Controller {
     }
 
     public function email_check($str) {
-        Member_helper::login_already($this->session->userdata('member_email'));
-        $query = $this->db->get_where('user_member', array('email' => $str), 1);
+        Member_helper::login_already($this->session->userdata('admin_email'));
+        $this->db->where('email', $str);
+        $this->db->limit(1, 0);
+        $query = $this->db->get('user_admin');
         if ($query->num_rows() == 1) {
             return true;
         } else {
@@ -242,17 +245,17 @@ class Member extends CI_Controller {
     }
 
     public function getPassword() {
-        Member_helper::login_already($this->session->userdata('member_email'));
+        Member_helper::login_already($this->session->userdata('admin_email'));
         $md5_hash = $this->uri->segment(3);
-        $this->Csz_admin_model->chkMd5Time($md5_hash, 'user_member');
-        $user_rs = $this->Csz_model->getValue('*', 'user_member', 'md5_hash', $md5_hash, 1);
+        $this->Csz_admin_model->chkMd5Time($md5_hash);
+        $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
         if (!$user_rs) {
             redirect('member/forgot', 'refresh');
         } else {
             $this->template->setSub('email', $user_rs->email);
             $this->load->helper('form');
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[20]|matches[con_password]');
+            $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]|matches[con_password]');
             $this->form_validation->set_rules('con_password', 'Password Confirmation', 'trim|required');
             if ($this->form_validation->run() == FALSE) {
                 $this->template->setSub('success_chk', 0);
@@ -267,7 +270,7 @@ class Member extends CI_Controller {
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
-                    $this->db->update('user_member', $data);
+                    $this->db->update('user_admin', $data);
 
                     $this->template->setSub('success_chk', 1);
                     $this->template->loadSub('frontpage/member/resetform');
