@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `page_menu` (
   `lang_iso` varchar(10) NOT NULL,
   `pages_id` int(11) NOT NULL,
   `other_link` varchar(512) NOT NULL,
+  `plugin_menu` varchar(255) NOT NULL,
   `drop_menu` int(11) NOT NULL,
   `drop_page_menu_id` int(11) NOT NULL,
   `active` int(11) NOT NULL,
@@ -139,12 +140,12 @@ CREATE TABLE IF NOT EXISTS `page_menu` (
   PRIMARY KEY (`page_menu_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
-INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `other_link`, `drop_menu`, `drop_page_menu_id`, `active`, `arrange`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Home', 'en', 1, '', 0, 0, 1, 1, '2016-03-25 13:00:08', '2016-04-30 16:58:07'),
-(2, 'About Us', 'en', 2, '', 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
-(3, 'Contact Us', 'en', 3, '', 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07'),
-(4, 'Drop Menu', 'en', 0, '', 1, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
-(5, 'CSZ-CMS Website', 'en', 0, 'http://www.cszcms.com', 0, 4, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
+INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `other_link`, `plugin_menu`, `drop_menu`, `drop_page_menu_id`, `active`, `arrange`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'Home', 'en', 1, '', '', 0, 0, 1, 1, '2016-03-25 13:00:08', '2016-04-30 16:58:07'),
+(2, 'About Us', 'en', 2, '', '', 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
+(3, 'Contact Us', 'en', 3, '', '', 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07'),
+(4, 'Drop Menu', 'en', 0, '', '', 1, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
+(5, 'CSZ-CMS Website', 'en', 0, 'http://www.cszcms.com', '', 0, 4, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
 
 CREATE TABLE IF NOT EXISTS `settings` (
   `settings_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -183,6 +184,12 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_type` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `birthday` date NOT NULL,
+  `gender` varchar(10) NOT NULL,
+  `address` text NOT NULL,
+  `picture` varchar(255) NOT NULL,
   `active` int(11) NOT NULL,
   `md5_hash` varchar(255) NOT NULL,
   `md5_lasttime` datetime NOT NULL,
@@ -206,13 +213,31 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
-(1, 'login_heading', 'For member login Header text', 'Member Login', '2016-06-23 11:10:40'),
-(2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-06-23 11:10:40'),
-(3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-06-23 11:10:40'),
-(4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 11:10:40'),
-(5, 'login_password', 'For password label', 'Password', '2016-06-23 11:10:40'),
-(6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 11:45:49'),
-(7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 11:45:50');
+(1, 'login_heading', 'For member login Header text', 'Member Login', '2016-06-23 23:28:41'),
+(2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-06-23 23:33:55'),
+(3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-06-23 23:34:16'),
+(4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 23:34:45'),
+(5, 'login_password', 'For password label', 'Password', '2016-06-23 23:35:22'),
+(6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 23:35:53'),
+(7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 23:37:02'),
+(8, 'login_register', 'For member register label', 'Register', '2016-06-24 16:41:07'),
+(9, 'mamber_firstname', 'For member firstname label', 'First Name', '2016-06-24 16:58:09'),
+(10, 'member_lastname', 'For member lastname label', 'Last Name', '2016-06-24 16:58:09'),
+(11, 'member_address', 'For member address label', 'Address', '2016-06-24 16:58:09'),
+(12, 'login_confirmpassword', 'For confirm password label', 'Confirm Password', '2016-06-24 16:58:09'),
+(13, 'member_forgot_complete', 'For forget password is successfully', 'Successfully! Your password has been reset', '2016-06-24 16:58:09'),
+(14, 'member_reset_btn', 'For reset button', 'Reset', '2016-06-24 17:48:32'),
+(15, 'member_forget_chkmail', 'For reset text email to inbox', 'Please check your email inbox and click the link to reset your password.', '2016-06-24 17:48:32'),
+(16, 'email_reset_subject', 'For email subject when member forget password', 'Reset your member password', '2016-06-26 15:43:39'),
+(17, 'email_reset_message', 'For email message when member forget password', 'Please click the link below within 30 minutes to reset your password.', '2016-06-26 15:43:39'),
+(18, 'email_dear', 'For email header', 'Dear ', '2016-06-26 15:43:39'),
+(19, 'email_footer', 'For email footer', 'Regards,<br>', '2016-06-26 15:43:39'),
+(20, 'email_check', 'For email does not exist text', 'This email address does not exist', '2016-06-26 15:47:01'),
+(21, 'btn_cancel', 'For cancel button', 'Cancel', '2016-06-26 15:52:28'),
+(22, 'btn_back', 'For back button', 'Back', '2016-06-26 15:53:59'),
+(23, 'email_already', 'For email has already', 'This email address has already', '2016-06-26 21:31:20'),
+(24, 'email_confirm_subject', '', 'Confirm your mamber register', '2016-06-27 18:00:10'),
+(25, 'email_confirm_message', '', 'Please click the link below within 30 minutes to confirm your member.', '2016-06-28 10:28:20');

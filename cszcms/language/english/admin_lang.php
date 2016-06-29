@@ -168,6 +168,7 @@ $lang['navpage_menulang']		= "Menu Language";
 $lang['navpage_menuname']		= "Menu Name";
 $lang['navpage_type']			= "Menu Type";
 $lang['navpage_pagelink']		= "Page Link";
+$lang['navpage_pluginmenu']		= "Plugin Menu";
 $lang['navpage_link']			= "Other Link";
 $lang['navpage_delete_btn']		= "Delete";
 $lang['navpage_edit_btn']                  = "Edit";

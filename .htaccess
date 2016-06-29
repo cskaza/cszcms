@@ -1,4 +1,17 @@
 RewriteOptions inherit
+<IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 day"
+        ExpiresByType image/jpg "access plus 5 days"
+        ExpiresByType image/jpeg "access plus 5 days"
+        ExpiresByType image/gif "access plus 5 days"
+        ExpiresByType image/png "access plus 5 days"
+        ExpiresByType text/css "access plus 1 month"
+        ExpiresByType application/pdf "access plus 1 month"
+        ExpiresByType text/x-javascript "access plus 1 month"
+        ExpiresByType application/x-shockwave-flash "access plus 1 month"
+        ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
 <IfModule mod_headers.c>
     <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
             Header set Cache-Control "max-age=290304000, public"
@@ -6,7 +19,7 @@ RewriteOptions inherit
     <FilesMatch "\.(xml|txt)$">
             Header set Cache-Control "max-age=3600, public, must-revalidate"
     </FilesMatch>
-    <FilesMatch "\.(html|htm)$">
+    <FilesMatch "\.(html|htm|php)$">
             Header set Cache-Control "max-age=3600, must-revalidate"
     </FilesMatch>
 </IfModule>

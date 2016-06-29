@@ -24,12 +24,15 @@ class Headfoot_html extends CI_Model {
         $menu_list = '';
         foreach ($this->Csz_model->main_menu('', $this->session->userdata('fronlang_iso')) as $rs){
             $page_url_rs = $this->Csz_model->getPageUrlFromID($rs->pages_id);
-            if($page_url_rs && !$rs->other_link){
+            if($page_url_rs && !$rs->other_link && !$rs->plugin_menu){
                 $page_link = base_url().$page_url_rs;
                 $target = '';
-            }else if($rs->other_link){
+            }else if($rs->other_link && !$page_url_rs && !$rs->plugin_menu){
                 $page_link = $rs->other_link;
                 $target = ' target="_blank"';
+            }else if(!$rs->other_link && !$page_url_rs && $rs->plugin_menu){
+                $page_link = base_url().$rs->plugin_menu;
+                $target = '';
             }else{
                 $page_link = '#';
                 $target = '';
@@ -58,12 +61,15 @@ class Headfoot_html extends CI_Model {
                 if(is_array($drop_menu)){
                     foreach ($drop_menu as $rs_sub){
                         $page_url_rs_sub = $this->Csz_model->getPageUrlFromID($rs_sub->pages_id);
-                        if($page_url_rs_sub && !$rs_sub->other_link){
+                        if($page_url_rs_sub && !$rs_sub->other_link && !$rs_sub->plugin_menu){
                             $page_link_sub = base_url().$page_url_rs_sub;
                             $target_sub = '';      
-                        }else if($rs_sub->other_link){
+                        }else if($rs_sub->other_link && !$page_url_rs_sub  && !$rs_sub->plugin_menu){
                             $page_link_sub = $rs_sub->other_link;
-                            $target_sub = ' target="_blank"';                      
+                            $target_sub = ' target="_blank"';       
+                        }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
+                            $page_link_sub = base_url().$rs_sub->plugin_menu;
+                            $target_sub = '';
                         }else{
                             $page_link_sub = '#';
                             $target_sub = '';

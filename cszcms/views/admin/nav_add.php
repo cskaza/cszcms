@@ -75,11 +75,24 @@
                     <?php
                     $att = 'id="pageUrl" class="form-control"';
                     $data = array();
-                    $data[''] = $this->lang->line('navpage_link');
+                    $data[''] = $this->lang->line('option_choose');
                     foreach ($pages as $p) {
                         $data[$p['pages_id']] = $p['page_name'].' ('.$p['lang_iso'].')';
                     }
                     echo form_dropdown('pageUrl', $data, '', $att);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <br>
+            <div class="control-group">
+                <label class="control-label" for="pluginmenu"><?php echo $this->lang->line('navpage_pluginmenu'); ?></label>
+                <div class="controls">
+                    <?php
+                    $att = 'id="pluginmenu" class="form-control"';
+                    $data = array();
+                    $data[''] = $this->lang->line('option_choose');
+                    $data['member'] = 'Member';
+                    echo form_dropdown('pluginmenu', $data, '', $att);
                     ?>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->

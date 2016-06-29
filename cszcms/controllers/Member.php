@@ -137,6 +137,7 @@ class Member extends CI_Controller {
                 'md5_hash' => md5(time() + mt_rand(1, 99999999)),
             );
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->where('user_type', 'member');
             $this->db->where('md5_hash', $md5_hash);
             $this->db->where('user_admin_id', $user_rs->user_admin_id);
             $this->db->update('user_admin', $data);

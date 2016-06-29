@@ -153,11 +153,11 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                         <!--<option value="cubrid">cubrid</option>
                                         <option value="ibase">ibase</option>
                                         <option value="mssql">mssql</option>-->
-                                        <option value="mysql">MySQL</option>
+                                        <!--<option value="mysql">MySQL</option>-->
                                         <option value="mysqli" selected>MySQLi *</option>
                                         <!--<option value="oci8">oci8</option>
                                         <option value="odbc">odbc</option>-->
-                                        <option value="pdo">PDO</option>
+                                        <!--<option value="pdo">PDO</option>-->
                                         <!--<option value="postgre">postgre</option>
                                         <option value="sqlite">sqlite</option>
                                         <option value="sqlite3">sqlite3</option>
@@ -165,8 +165,8 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     </select>
                                     <br><span class="remark">
                                         <b>Your PHP Version: <?php echo phpversion(); ?></b><br>
-                                        <em>MySQL <b>< PHP5.3</b> | MySQLi = <b>PHP5.3 or higher</b> | PDO = <b>PHP5.1 or higher</b></em><br>
-                                        <b>Recommend is MySQLi</b>
+                                        <em>MySQLi = <b>PHP5.3 or higher</b></em><br>
+                                        <b>Required for MySQLi Only!</b>
                                     </span>
                                 </div>
                             </div>

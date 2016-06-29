@@ -168,6 +168,7 @@ $lang['navpage_menulang']		= "ภาษาของเมนู";
 $lang['navpage_menuname']		= "ชื่อเมนู";
 $lang['navpage_type']			= "ประเภทเมนู";
 $lang['navpage_pagelink']		= "ลิงค์หน้า";
+$lang['navpage_pluginmenu']		= "เมนูปลั๊กอิน";
 $lang['navpage_link']			= "ลิงค์อื่น ๆ";
 $lang['navpage_delete_btn']		= "ลบ";
 $lang['navpage_edit_btn']                  = "แก้ไข";

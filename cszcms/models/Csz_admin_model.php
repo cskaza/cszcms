@@ -668,6 +668,7 @@ class Csz_admin_model extends CI_Model {
             'lang_iso' => $this->input->post('lang_iso', TRUE),
             'pages_id' => $this->input->post('pageUrl', TRUE),
             'other_link' => $this->input->post('url_link', TRUE),
+            'plugin_menu' => $this->input->post('pluginmenu', TRUE),
             'drop_menu' => $dropdown,
             'drop_page_menu_id' => $dropMenu,
             'active' => $active,
@@ -687,6 +688,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
         $this->db->set('other_link', $this->input->post('url_link', TRUE), TRUE);
+        $this->db->set('plugin_menu', $this->input->post('pluginmenu', TRUE), TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);
         $this->db->set('drop_page_menu_id', $dropMenu, TRUE);
         $this->db->set('active', $active, TRUE);
@@ -1113,14 +1115,23 @@ class Csz_admin_model extends CI_Model {
         if (file_exists($sql_file)) {
             $this->load->helper('file');
             $backup = read_file($sql_file);
-            $backup = str_replace('\n', '', $backup);
+            $sql1 = preg_replace('#/\*.*?\*/#s', '', $backup);
+            $sql2 = preg_replace('/^-- .*[\r\n]*/m', '', $sql1);
+            $sqls = explode(';', $sql2);
+            array_pop($sqls);
+
+            foreach($sqls as $statement){
+                    $sql = $statement . ";";
+                    $this->db->query($sql);	
+            }
+            /*$backup = str_replace('\n', '', $backup);
             $sql_r = explode(";", $backup);
             for($i=0;$i < count($sql_r);$i++){
                 if ($sql_r[$i]) {
                     $sql = trim($sql_r[$i]);
                     $this->db->query($sql);
                 }
-            }
+            }*/
         }else{
             return FALSE;
         }
