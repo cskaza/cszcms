@@ -22,21 +22,21 @@
                                 <?php if($users->picture){ ?>
                                 <img src="<?php echo BASE_URL . '/photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php }else{ ?>
-                                <img src="http://placehold.it/120x120&text=No%20Image" class="img-circle" alt="Profile Photo" width="120" height="120">
+                                <img src="<?php echo BASE_URL . '/photo/profile/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php } ?>
                                 <br><br>
                             </div>
                             <div class="col-lg-5 col-md-5">
-                                <p><b><?php echo $this->lang->line('user_new_name') ?>:</b> <?php echo $users->name; ?></p>
-                                <p><b><?php echo $this->lang->line('user_new_email') ?>:</b> <?php echo $users->email; ?></p>
+                                <p><b><?php echo $this->lang->line('user_new_name') ?>:</b> <?php echo ($users->name)?$users->name:'-'; ?></p>
+                                <p><b><?php echo $this->lang->line('user_new_email') ?>:</b> <?php echo ($users->email)?$users->email:'-'; ?></p>
                                 <p><b><?php echo $this->lang->line('user_new_type') ?>:</b> <?php echo ucfirst($users->user_type); ?></p>
-                                <p><b><?php echo $this->lang->line('user_first_name') ?> - <?php echo $this->lang->line('user_last_name') ?>:</b> <?php echo $users->first_name; ?> <?php echo $users->last_name; ?></p>
+                                <p><b><?php echo $this->lang->line('user_first_name') ?> - <?php echo $this->lang->line('user_last_name') ?>:</b> <?php echo ($users->first_name)?$users->first_name:'-'; ?> <?php echo ($users->last_name)?$users->last_name:'-'; ?></p>
                             </div>
                             <div class="col-lg-5 col-md-5">
-                                <p><b><?php echo $this->lang->line('user_birthday') ?>:</b> <?php echo date('d F Y',strtotime($users->birthday)); ?></p>
-                                <p><b><?php echo $this->lang->line('user_gender') ?>:</b> <?php echo $users->gender; ?></p>
-                                <p><b><?php echo $this->lang->line('user_phone') ?>:</b> <?php echo ucfirst($users->phone); ?></p>
-                                <p><b><?php echo $this->lang->line('user_address') ?>:</b> <?php echo ucfirst($users->address); ?></p>
+                                <p><b><?php echo $this->lang->line('user_birthday') ?>:</b> <?php echo ($users->birthday && $users->birthday != '0000-00-00')?date('d F Y',strtotime($users->birthday)):'-'; ?></p>
+                                <p><b><?php echo $this->lang->line('user_gender') ?>:</b> <?php echo ($users->gender)?$users->gender:'-'; ?></p>
+                                <p><b><?php echo $this->lang->line('user_phone') ?>:</b> <?php echo ($users->phone)?$users->phone:'-'; ?></p>
+                                <p><b><?php echo $this->lang->line('user_address') ?>:</b> <?php echo($users->address)?$users->address:'-'; ?></p>
                             </div>
                         </div> 
                     </div>
