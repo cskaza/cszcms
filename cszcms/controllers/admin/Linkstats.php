@@ -66,7 +66,7 @@ class Linkstats extends CI_Controller {
             $this->load->helper('form');
             $this->load->library('pagination');   
             $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
-            $search_arr = "link = '".$getLink->link."' ";
+            $search_arr = "link = '".str_replace("'", "\'", $getLink->link)."' ";
             if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
                 if($this->input->get('search')){
                     $search_arr.= " AND ip_address LIKE '%".$this->input->get('search', TRUE)."%'";

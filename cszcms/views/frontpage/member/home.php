@@ -16,7 +16,10 @@
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="h2 sub-header">Welcome to Member dashboard!</div>
-            <p><b><a href="http://www.cszcms.com" target="_blank">The official of CSZ-CMS website</a></b></p>
+            <br><br>
+            <?php if($this->session->userdata('admin_type') != 'member'){ ?>
+            <p><a href="<?php echo BASE_URL;?>/admin"><span class="glyphicon glyphicon-briefcase"></span> Backend System</a></p>
+            <?php } ?>
             <p><a href="<?php echo BASE_URL;?>/member/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></p>
         </div>
     </div>

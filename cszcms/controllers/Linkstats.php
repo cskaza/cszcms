@@ -10,7 +10,7 @@ class Linkstats extends CI_Controller {
     }
 
     public function index() {
-        $link = $this->input->get('url',TRUE);
+        $link = str_replace("'", "\'", $this->input->get('url',TRUE));
         $link = str_replace(BASE_URL.'/linkstats?url=', '', $link);
         if ($link) {
             $this->Csz_model->saveLinkStats($link);

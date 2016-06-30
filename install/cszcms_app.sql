@@ -189,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `birthday` date NOT NULL,
   `gender` varchar(10) NOT NULL,
   `address` text NOT NULL,
+  `phone` varchar(100) NOT NULL,
   `picture` varchar(255) NOT NULL,
   `active` int(11) NOT NULL,
   `md5_hash` varchar(255) NOT NULL,

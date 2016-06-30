@@ -194,11 +194,30 @@ class Csz_admin_model extends CI_Model {
         } else {
             $active = 0;
         }
+        if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
+            $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
+        }
+        $upload_file = '';
+        if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                $paramiter = '_1';
+                $photo_id = time();
+                $uploaddir = 'photo/profile/';
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+        }
         $data = array(
             'name' => $this->input->post('name', TRUE),
             'email' => $this->input->post('email', TRUE),
             'password' => md5($this->input->post('password', TRUE)),
             'user_type' => $this->input->post('user_type', TRUE),
+            'first_name' => $this->input->post('first_name', TRUE),
+            'last_name' => $this->input->post('last_name', TRUE),
+            'birthday' => $birthday,
+            'gender' => $this->input->post('gender', TRUE),
+            'address' => $this->input->post('address', TRUE),
+            'phone' => $this->input->post('phone', TRUE),
+            'picture' => $upload_file,
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
         );
@@ -215,6 +234,23 @@ class Csz_admin_model extends CI_Model {
         } else {
             $active = 0;
         }
+        if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
+            $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
+        }
+        if ($this->input->post('del_file')) {
+            $upload_file = '';
+            unlink('photo/profile/' . $this->input->post('del_file', TRUE));
+        } else {
+            $upload_file = $this->input->post('picture');
+            if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                $paramiter = '_1';
+                $photo_id = time();
+                $uploaddir = 'photo/profile/';
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+            }
+        }
         $this->db->set('name', $this->input->post("name", TRUE), TRUE);
         $this->db->set('email', $this->input->post('email', TRUE), TRUE);
         if ($this->input->post('password') != '') {
@@ -225,6 +261,13 @@ class Csz_admin_model extends CI_Model {
         if($id != 1 && $this->session->userdata('admin_type') == 'admin'){
             $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
         }
+        $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
+        $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
+        $this->db->set('birthday', $birthday, TRUE);
+        $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
+        $this->db->set('address', $this->input->post("address", TRUE), TRUE);
+        $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
+        $this->db->set('picture', $upload_file, TRUE);
         if ($this->session->userdata('user_admin_id') != $id) {
             $this->db->set('active', $active, FALSE);
         }

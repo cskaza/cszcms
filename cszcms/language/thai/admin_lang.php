@@ -7,7 +7,7 @@ $lang['nav_dash']		= "แดชบอร์ด";
 $lang['nav_view_site']		= "ดูเว็บไซต์";
 $lang['nav_general_menu']       = "เมนูทั่วไป";
 $lang['nav_content_menu']       = "เมนูเนื้อหา";
-$lang['nav_admin_users']	= "ชื่อผู้ใช้งาน";
+$lang['nav_admin_users']	= "ผู้ใช้งาน";
 $lang['nav_nav_header']         = "แถบเมนู";
 $lang['nav_logout']		= "ออกจากระบบ";
 $lang['nav_gel_settings']	= "เมนูทั่วไป";
@@ -21,11 +21,11 @@ $lang['user_delete_btn']		= "ลบ";
 $lang['user_edit_btn']                  = "แก้ไข";
 $lang['user_delete_message']            = "คุณแน่ใจที่จะดำเนินการสิ่งนี้? แน่ใจว่าชื่อผู้ใช้งานนี้ไม่ใช่ของคุณ.";
 $lang['user_delete_myacc']              = "ไม่สามารถลบได้! ชื่อผู้ใช้งานนี้เป็นของคุณ.";
-$lang['user_addnew']			= "เพิ่มชื่อผู้ใช้งาน";
+$lang['user_addnew']			= "เพิ่มผู้ใช้งาน";
 
 //Users - New User/Edit User
-$lang['user_new_header']		= "เพิ่มชื่อผู้ใช้งาน";
-$lang['user_edit_header']		= "แก้ไขชื่อผู้ใช้งาน";
+$lang['user_new_header']		= "เพิ่มผู้ใช้งาน";
+$lang['user_edit_header']		= "แก้ไขผู้ใช้งาน";
 $lang['user_new_name']                  = "ชื่อหน้าจอ";
 $lang['user_new_email']			= "ที่อยู่อีเมล์";
 $lang['user_cur_pass']			= "รหัสผ่านปัจจุบัน";
@@ -34,6 +34,13 @@ $lang['user_new_confirm']		= "ยืนยันรหัสผ่าน";
 $lang['user_new_active']		= "เปิดใช้งาน";
 $lang['user_new_deactive']		= "ปิดการใช้งาน";
 $lang['user_new_type']                  = "ประเภทของการอนุญาต";
+$lang['user_first_name']                = "ชื่อจริง";
+$lang['user_last_name']                 = "นามสกุล";
+$lang['user_birthday']                  = "วันเกิด";
+$lang['user_gender']                    = "เพศ";
+$lang['user_address']                   = "ที่อยู่";
+$lang['user_phone']                     = "โทรศัพท์";
+$lang['user_picture']                   = "รูปภาพ";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "บันทึก";
@@ -51,6 +58,9 @@ $lang['option_all']		= "-- ทั้งหมด --";
 $lang['option_yes']		= "ใช่";
 $lang['option_no']		= "ไม่ใช่";
 $lang['id_col_table']		= "ไอดี#";
+$lang['year_txt']		= "ปี";
+$lang['month_txt']		= "เดือน";
+$lang['day_txt']		= "วัน";
 
 //Login Page
 $lang['login_heading']		= "เข้าสู่ระบบเบื้องหลัง";

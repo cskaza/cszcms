@@ -34,6 +34,13 @@ $lang['user_new_confirm']		= "Confirm Password";
 $lang['user_new_active']		= "Activate";
 $lang['user_new_deactive']		= "Deactivated";
 $lang['user_new_type']                  = "Permission Type";
+$lang['user_first_name']                = "First Name";
+$lang['user_last_name']                 = "Last Name";
+$lang['user_birthday']                  = "Birth Day";
+$lang['user_gender']                    = "Gender";
+$lang['user_address']                   = "Address";
+$lang['user_phone']                     = "Phone";
+$lang['user_picture']                   = "Picture";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";
@@ -51,6 +58,9 @@ $lang['option_all']		= "-- All --";
 $lang['option_yes']		= "Yes";
 $lang['option_no']		= "No";
 $lang['id_col_table']		= "ID#";
+$lang['year_txt']		= "Year";
+$lang['month_txt']		= "Month";
+$lang['day_txt']		= "Day";
 
 //Login Page
 $lang['login_heading']		= "Backend System Login";

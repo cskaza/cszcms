@@ -27,19 +27,27 @@ class Users extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->library('pagination');
         $this->csz_referrer->setIndex();
+        $search_arr = '';
+        if($this->input->get('search') || $this->input->get('user_type')){
+            $search_arr.= ' 1=1 ';
+            if($this->input->get('search')){
+                $search_arr.= " AND name LIKE '%".$this->input->get('search', TRUE)."%' OR email LIKE '%".$this->input->get('search', TRUE)."%'";
+            }
+            if($this->input->get('user_type')){
+                $search_arr.= " AND user_type = '".$this->input->get('user_type', TRUE)."'";
+            }
+        }
         // Pages variable
         $result_per_page = 20;
-        $total_row = $this->Csz_admin_model->countTable('user_admin');
+        $total_row = $this->Csz_model->countData('user_admin', $search_arr);
         $num_link = 10;
         $base_url = BASE_URL . '/admin/users/';
-
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
         ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
-
         //Get users from database
-        $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_admin_id', 'asc'));
-
+        $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_type', 'asc', $search_arr));
+        $this->template->setSub('total_row',$total_row);       
         //Load the view
         $this->template->loadSub('admin/users_index');
     }
@@ -83,7 +91,7 @@ class Users extends CI_Controller {
 
     public function editUser() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+        if($this->session->userdata('admin_type') != 'admin' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
             redirect('/admin/users', 'refresh');
         }
         //Load the form helper
@@ -100,7 +108,7 @@ class Users extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if($this->session->userdata('admin_type') == 'editor' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+        if($this->session->userdata('admin_type') != 'admin' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
             redirect('/admin/users', 'refresh');
         }       
         //Load the form validation library
