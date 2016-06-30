@@ -135,6 +135,18 @@ class Users extends CI_Controller {
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
+    
+    public function viewUsers() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->uri->segment(4)){             
+            //Get users from database   
+            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
+            //Load the view
+            $this->template->loadSub('admin/users_view');
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
