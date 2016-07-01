@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+/* Fix by CSKAZA */
 class MY_URI Extends CI_URI {
 
 	// --------------------------------------------------------------------
@@ -14,7 +14,6 @@ class MY_URI Extends CI_URI {
 	{
 		// Filter out control characters and trim slashes
 		$this->uri_string = trim(remove_invisible_characters($str, FALSE), '/');
-
 		if ($this->uri_string !== '')
 		{
 			// Remove the URL suffix, if present
@@ -27,7 +26,6 @@ class MY_URI Extends CI_URI {
 					$this->uri_string = substr($this->uri_string, 0, -$slen);
 				}
 			}
-
 			$this->segments[0] = NULL;
 			// Populate the segments array
 			foreach (explode('/', trim($this->uri_string, '/')) as $val)
@@ -41,7 +39,6 @@ class MY_URI Extends CI_URI {
 					$this->segments[] = urldecode($val);
 				}
 			}
-
 			unset($this->segments[0]);
 		}
 	}

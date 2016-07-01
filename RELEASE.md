@@ -8,6 +8,7 @@ CSZ-CMS V.1.0.9
 - Add proxy config file.
 - Add member user and login page on frontpage.
 - Add page cache time control in site settings.
+- Fix page show on frontend bug.
 - Fix backend forget password template.
 - Fix something about navigation.
 - Fix pagination working.
