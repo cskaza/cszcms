@@ -201,6 +201,30 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_link_statistic_active'); ?></label>	
             </div> <!-- /control-group -->
+            <div class="control-group">
+                <label class="control-label" for="pagecache_time"><?php echo $this->lang->line('settings_pagecache_time'); ?></label>
+                <div class="controls">
+                    <?php
+                    $att = 'id="pagecache_time" class="form-control"';
+                    $data = array();
+                    $data['0'] = $this->lang->line('settings_pagecache_time_off');
+                    $data['1'] = '1 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['2'] = '2 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['5'] = '5 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['10'] = '10 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['15'] = '15 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['20'] = '20 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['30'] = '30 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['45'] = '45 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['60'] = '60 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['90'] = '90 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['120'] = '120 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['180'] = '180 '.$this->lang->line('settings_pagecache_time_min');
+                    echo form_dropdown('pagecache_time', $data, $settings->pagecache_time, $att);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_pagecache_time_remark'); ?></em></span>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
             <hr />
             <div class="control-group">		
             <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									

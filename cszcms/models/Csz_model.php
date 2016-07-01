@@ -71,7 +71,12 @@ class Csz_model extends CI_Model {
             $pageURL = $this->uri->segment($totSegments - 1);
         }
         if ($pageURL == "") {
-            $pageURL = $this->getDefualtPage($this->session->userdata('fronlang_iso'));
+            $defaultpage = $this->getDefualtPage($this->session->userdata('fronlang_iso'));
+            if($defaultpage !== FALSE){
+                $pageURL = $defaultpage;
+            }else{
+                $pageURL = $this->getDefualtPage($this->getDefualtLang());
+            }
         }
         return $pageURL;
     }
@@ -175,6 +180,8 @@ class Csz_model extends CI_Model {
         if ($query->num_rows() > 0) {
             $row = $query->row();
             return $row->page_url;
+        }else{
+            return FALSE;
         }
     }
 

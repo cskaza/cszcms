@@ -168,6 +168,10 @@ $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'You can get key of reCaptcha at <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Site Logo";
 $lang['settings_link_statistic_active']	= "Statistic for link Enable (In page content)";
+$lang['settings_pagecache_time']	= "Pages cache time control";
+$lang['settings_pagecache_time_min']	= "Minutes";
+$lang['settings_pagecache_time_off']	= "Off";
+$lang['settings_pagecache_time_remark']	= "Less time for websites change frequently.<br>If more than for website change not frequently and want to page load performance.";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";

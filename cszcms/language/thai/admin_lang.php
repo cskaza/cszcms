@@ -168,6 +168,10 @@ $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'คุณสามารถรับคีย์ของ reCaptcha ได้ที่ <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "เว็บโลโก้";
 $lang['settings_link_statistic_active']	= "เปิดการใช้งานสถิติสำหรับลิงค์ (ในหน้าเนื้อหา)";
+$lang['settings_pagecache_time']	= "ควบคุมเวลาหน้าแคช";
+$lang['settings_pagecache_time_min']	= "นาที";
+$lang['settings_pagecache_time_off']	= "ปิด";
+$lang['settings_pagecache_time_remark']	= "ใช้ค่าน้อย สำหรับเว็บไซต์ที่มีการเปลี่ยนแปลงบ่อย<br>หากใช้ค่ามาก สำหรับการเปลี่ยนแปลงเว็บไซต์ไม่บ่อยนักและต้องการประสิทธิภาพในการโหลดหน้าเว็บ";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

@@ -455,7 +455,8 @@ class Csz_admin_model extends CI_Model {
             'googlecapt_active' => $this->input->post('googlecapt_active', TRUE),
             'googlecapt_sitekey' => $this->input->post('googlecapt_sitekey', TRUE),
             'googlecapt_secretkey' => $this->input->post('googlecapt_secretkey', TRUE),
-            'link_statistic_active' => $this->input->post('link_statistic_active', TRUE)
+            'link_statistic_active' => $this->input->post('link_statistic_active', TRUE),
+            'pagecache_time' => $this->input->post('pagecache_time', TRUE)
         );
 
         if ($this->input->post('del_file')) {
@@ -888,7 +889,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
-        $this->Csz_model->clear_uri_cache($this->config->item('base_url').$page_url);
+        $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode($page_url));
     }
 
     public function insertFileUpload($year, $fileupload) {

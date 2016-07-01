@@ -162,12 +162,13 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `googlecapt_sitekey` varchar(255) NOT NULL,
   `googlecapt_secretkey` varchar(255) NOT NULL,
   `link_statistic_active` int(11) NOT NULL,
+  `pagecache_time` int(3) NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '2016-05-19 15:08:31');
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `timestamp_update`) VALUES
+(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 30, '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,
