@@ -36,7 +36,7 @@ class MY_URI Extends CI_URI {
 
 				if ($val !== '')
 				{
-					$this->segments[] = urldecode($val);
+					$this->segments[] = urldecode($val); /* Fix here */
 				}
 			}
 			unset($this->segments[0]);
