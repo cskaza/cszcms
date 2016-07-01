@@ -13,10 +13,10 @@
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> <?php echo $this->Csz_model->getLabelLang('member_menu') ?></b></div>
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member"><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('your_profile') ?></a></li>
                         <?php if ($this->session->userdata('admin_type') != 'member') { ?>
                             <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/admin" target="_blank"><i class="glyphicon glyphicon-briefcase"></i> <?php echo $this->Csz_model->getLabelLang('backend_system') ?></a></li>
                         <?php } ?>
+                        <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member"><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('your_profile') ?></a></li>
                         <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member/edit"><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></a></li>
                         <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member/logout"><i class="glyphicon glyphicon-log-out"></i> <?php echo $this->Csz_model->getLabelLang('log_out') ?></a></li>
                     </ul>
