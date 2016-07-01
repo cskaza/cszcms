@@ -1,6 +1,7 @@
 body{
     overflow-x:hidden;
     font-family:"Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding-top:60px;
 }
 .text-muted{
     color:#777;

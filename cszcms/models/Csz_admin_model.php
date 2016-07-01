@@ -160,7 +160,7 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    function getUser($id) {
+    public function getUser($id) {
         // Get the user details
         $this->db->select("*");
         $this->db->where("user_admin_id", $id);
@@ -174,7 +174,7 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    function getUserEmail($id) {
+    public function getUserEmail($id) {
         // Get the user email address
         $this->db->select("email");
         $this->db->where("user_admin_id", $id);
@@ -187,7 +187,7 @@ class Csz_admin_model extends CI_Model {
         }
     }
 
-    function createUser() {
+    public function createUser() {
         // Create the user account
         if ($this->input->post('active')) {
             $active = $this->input->post('active', TRUE);
@@ -227,7 +227,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->insert('user_admin', $data);
     }
 
-    function updateUser($id) {
+    public function updateUser($id) {
         // update the user account
         if ($this->input->post('active')) {
             $active = $this->input->post('active', TRUE);
@@ -236,6 +236,8 @@ class Csz_admin_model extends CI_Model {
         }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
             $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
+        }else{
+            $birthday = '';
         }
         if ($this->input->post('del_file')) {
             $upload_file = '';
@@ -794,6 +796,7 @@ class Csz_admin_model extends CI_Model {
                 'lang_'.$old_lang->lang_iso => array(
                         'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
                         'type' => 'TEXT',
+                        'null' => FALSE,
                 ),
             );
             $this->dbforge->modify_column('general_label', $fields);
@@ -813,12 +816,24 @@ class Csz_admin_model extends CI_Model {
     
     public function syncLabelLang() {
         /* For synchronize with language */
+        $this->load->dbforge();
         $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
+        $count_lang = $this->countTable('lang_iso');
         foreach ($lang as $value) {
-            if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
-                $this->load->dbforge();
-                $fields = array('lang_'.$value['lang_iso'] => array('type' => 'TEXT', 'null' => FALSE));
-                $this->dbforge->add_column('general_label', $fields);
+            if($count_lang > 1){
+                if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
+                    $fields = array('lang_'.$value['lang_iso'] => array('type' => 'TEXT', 'null' => FALSE));
+                    $this->dbforge->add_column('general_label', $fields);
+                }
+            }else{
+                if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
+                    $fields = array(
+                        'lang_en' => array(
+                                'name' => 'lang_'.$value['lang_iso'],'type' => 'TEXT','null' => FALSE,
+                        ),
+                    );
+                    $this->dbforge->modify_column('general_label', $fields);
+                }
             }
         }
     }

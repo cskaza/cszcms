@@ -13,7 +13,6 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('user_edit_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
         <?php echo form_open_multipart(BASE_URL.'/admin/users/edited/'.$this->uri->segment(4)); ?>
-
         <div class="control-group">										
             <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>
             <?php

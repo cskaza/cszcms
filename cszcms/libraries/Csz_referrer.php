@@ -8,19 +8,27 @@ class Csz_referrer {
      */
     
     public function setIndex($index = '') {
-        if(!$index) $index = 'index';
+        if(!$index){
+            $key = 'referred_index';
+        }else{
+            $key = 'referred_'.$index;
+        }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
         if(strpos($paramiter_url, '?') !== false){
             $param = $paramiter_url;
         }else{
             $param = '';
         }
-        $_SESSION['referred_'.$index] = current_url().$param;
+        $_SESSION[$key] = current_url().$param;
     }
     
     public function getIndex($index = '') {
-        if(!$index) $index = 'index';
-        $referred_from = $_SESSION['referred_'.$index];
+        if(!$index){
+            $key = 'referred_index';
+        }else{
+            $key = 'referred_'.$index;
+        }
+        $referred_from = $_SESSION[$key];
         return $referred_from;
     }
     

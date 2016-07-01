@@ -603,11 +603,11 @@ class Csz_model extends CI_Model {
         }  
     }
     
-    function createMember() {
+    public function createMember() {
         // Create the user account
         $md5_hash = md5(time() + mt_rand(1, 99999999));
         $data = array(
-            'email' => 'Member User',
+            'name' => 'Member User',
             'email' => $this->input->post('email', TRUE),
             'password' => md5($this->input->post('password', TRUE)),
             'user_type' => 'member',
@@ -619,6 +619,46 @@ class Csz_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('user_admin', $data);
         return $md5_hash;
+    }
+    
+    public function updateMember($id) {
+        // update the user account
+        if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
+            $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
+        }else{
+            $birthday = '';
+        }
+        if ($this->input->post('del_file')) {
+            $upload_file = '';
+            unlink('photo/profile/' . $this->input->post('del_file', TRUE));
+        } else {
+            $upload_file = $this->input->post('picture');
+            if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                $paramiter = '_1';
+                $photo_id = time();
+                $uploaddir = 'photo/profile/';
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->CSz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+            }
+        }
+        $this->db->set('name', $this->input->post("name", TRUE), TRUE);
+        $this->db->set('email', $this->input->post('email', TRUE), TRUE);
+        if ($this->input->post('password') != '') {
+            $this->db->set('password', md5($this->input->post('password', TRUE)), TRUE);
+            $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
+            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+        }
+        $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
+        $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
+        $this->db->set('birthday', $birthday, TRUE);
+        $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
+        $this->db->set('address', $this->input->post("address", TRUE), TRUE);
+        $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
+        $this->db->set('picture', $upload_file, TRUE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('user_admin_id', $id);
+        $this->db->update('user_admin');
     }
     
 }

@@ -39,6 +39,8 @@ class Member extends CI_Controller {
 
     public function index() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->csz_referrer->setIndex();
+        $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
         $this->template->loadSub('frontpage/member/home');
     }
 
@@ -147,41 +149,31 @@ class Member extends CI_Controller {
 
     public function editMember() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
-        if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
-            redirect('member', 'refresh');
-        }
         //Load the form helper
         $this->load->helper('form');
-        if ($this->uri->segment(4)) {
+        if ($this->session->userdata('user_admin_id')) {
             //Get user details from database
-            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
+            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
             //Load the view
             $this->template->loadSub('frontpage/member/edit');
-        } else {
-            redirect('member', 'refresh');
         }
     }
 
     public function saveEditMember() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
-        if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
-            redirect('member', 'refresh');
-        }
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
+        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
         $this->form_validation->set_rules('password', 'new password', 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'confirm password', 'trim|matches[password]');
-
-
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
             $this->editMember();
         } else {
             //Validation passed
             //Update the user
-            $this->Csz_model->updateMember($this->uri->segment(4));
+            $this->Csz_model->updateMember($this->session->userdata('user_admin_id'));
             //Return to user list
             redirect('member', 'refresh');
         }
