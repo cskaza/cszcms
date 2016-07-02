@@ -9,27 +9,15 @@
     <!-- /.row -->
     <div class="row">
         <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> <?php echo $this->Csz_model->getLabelLang('member_menu') ?></b></div>
-                <div class="panel-body">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member"><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('your_profile') ?></a></li>
-                        <?php if ($this->session->userdata('admin_type') != 'member') { ?>
-                            <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/admin" target="_blank"><i class="glyphicon glyphicon-briefcase"></i> <?php echo $this->Csz_model->getLabelLang('backend_system') ?></a></li>
-                        <?php } ?>
-                        <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member/edit"><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></a></li>
-                        <li role="presentation" class="text-left"><a href="<?php echo BASE_URL; ?>/member/logout"><i class="glyphicon glyphicon-log-out"></i> <?php echo $this->Csz_model->getLabelLang('log_out') ?></a></li>
-                    </ul>
-                </div>
-            </div>
+            <?php echo $this->Headfoot_html->memberleftMenu(); ?>
         </div>
         <div class="col-md-8">         
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></b></div>
                 <div class="panel-body text-left">
-                    <?php echo form_open_multipart(BASE_URL.'/member/edit/save/'.$this->uri->segment(4)); ?>
+                    <?php echo form_open_multipart(BASE_URL.'/member/edit/save'); ?>
                     <div class="control-group">										
-                        <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>
+                        <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('display_name'); ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'name',
@@ -45,7 +33,7 @@
 
                     <div class="control-group">		
                         <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="email"><?php echo $this->lang->line('user_new_email'); ?>*</label>
+                        <label class="control-label" for="email"><?php echo $this->Csz_model->getLabelLang('email_address'); ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'email',
@@ -59,37 +47,42 @@
                         echo form_input($data);
                         ?>				
                     </div> <!-- /control-group -->
+                    <br>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" onclick="ChkHideShow('newpassword');"><a href="#"><b><?php echo $this->Csz_model->getLabelLang('change_password'); ?></b></a></div>
+                        <div class="panel-body" id="newpassword" style="display:none;">
+                            <div class="control-group">		
+                                <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
+                                <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('new_password'); ?></label>
+                                <?php
+                                $data = array(
+                                    'name' => 'password',
+                                    'id' => 'password',
+                                    'class' => 'form-control',
+                                    'value' => set_value('password')
+                                );
+                                echo form_password($data);
+                                ?>			
+                            </div> <!-- /control-group -->
 
-                    <div class="control-group">		
-                        <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="password"><?php echo $this->lang->line('user_new_pass'); ?></label>
-                        <?php
-                        $data = array(
-                            'name' => 'password',
-                            'id' => 'password',
-                            'class' => 'form-control',
-                            'value' => set_value('password')
-                        );
-                        echo form_password($data);
-                        ?>			
-                    </div> <!-- /control-group -->
-
-                    <div class="control-group">	
-                        <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="con_password"><?php echo $this->lang->line('user_new_confirm'); ?></label>
-                        <?php
-                        $data = array(
-                            'name' => 'con_password',
-                            'id' => 'con_password',
-                            'class' => 'form-control',
-                            'value' => set_value('con_password')
-                        );
-                        echo form_password($data);
-                        ?>			
-                    </div> <!-- /control-group -->
+                            <div class="control-group">	
+                                <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
+                                <label class="control-label" for="con_password"><?php echo $this->Csz_model->getLabelLang('confirm_password'); ?></label>
+                                <?php
+                                $data = array(
+                                    'name' => 'con_password',
+                                    'id' => 'con_password',
+                                    'class' => 'form-control',
+                                    'value' => set_value('con_password')
+                                );
+                                echo form_password($data);
+                                ?>			
+                            </div> <!-- /control-group -->
+                        </div>
+                    </div>
                     <hr>
                     <div class="control-group">										
-                        <label class="control-label" for="first_name"><?php echo $this->lang->line('user_first_name'); ?></label>
+                        <label class="control-label" for="first_name"><?php echo $this->Csz_model->getLabelLang('first_name'); ?></label>
                         <?php
                         $data = array(
                             'name' => 'first_name',
@@ -101,7 +94,7 @@
                         ?>			
                     </div> <!-- /control-group -->
                     <div class="control-group">										
-                        <label class="control-label" for="last_name"><?php echo $this->lang->line('user_last_name'); ?></label>
+                        <label class="control-label" for="last_name"><?php echo $this->Csz_model->getLabelLang('last_name'); ?></label>
                         <?php
                         $data = array(
                             'name' => 'last_name',
@@ -113,12 +106,12 @@
                         ?>			
                     </div> <!-- /control-group -->
                     <div class="control-group">										
-                        <label class="control-label" for="birthday"><?php echo $this->lang->line('user_birthday'); ?></label><br>
+                        <label class="control-label" for="birthday"><?php echo $this->Csz_model->getLabelLang('birthday'); ?></label><br>
                         <?php
                             list($year,$month,$day) = explode('-', $users->birthday);
                             $att = 'id="year" class="form-control-static" ';
                             $data = array();
-                            $data[''] = $this->lang->line('year_txt');
+                            $data[''] = 'Year';
                             for($i=(date('Y')-90);$i<=(date('Y')-12);$i++) {
                                 $data[$i] = $i;
                             }
@@ -127,7 +120,7 @@
                         <?php
                             $att = 'id="month" class="form-control-static" ';
                             $data = array();
-                            $data[''] = $this->lang->line('month_txt');
+                            $data[''] = 'Month';
                             for($i=1;$i<=12;$i++) {
                                 $i = str_pad($i, 2, '0', STR_PAD_LEFT);
                                 $data[$i] = $i;
@@ -137,7 +130,7 @@
                         <?php
                             $att = 'id="day" class="form-control-static" ';
                             $data = array();
-                            $data[''] = $this->lang->line('day_txt');
+                            $data[''] = 'Day';
                             for($i=1;$i<=31;$i++) {
                                 $i = str_pad($i, 2, '0', STR_PAD_LEFT);
                                 $data[$i] = $i;
@@ -146,22 +139,22 @@
                         ?>
                     </div> <!-- /control-group -->
                     <div class="control-group">										
-                        <label class="control-label" for="gender"><?php echo $this->lang->line('user_gender'); ?></label>
+                        <label class="control-label" for="gender"><?php echo $this->Csz_model->getLabelLang('gender'); ?></label>
                         <?php
                             $att = 'id="gender" class="form-control" ';
                             $data = array();
-                            $data[''] = $this->lang->line('option_choose');
+                            $data[''] = '-- Please Choose --';
                             $data['male'] = 'Male';
                             $data['female'] = 'Female';
                             echo form_dropdown('gender', $data, $users->gender, $att);
                         ?>	
                     </div> <!-- /control-group -->
                     <div class="control-group">
-                        <label class="control-label" for="address"><?php echo $this->lang->line('user_address'); ?></label>
+                        <label class="control-label" for="address"><?php echo $this->Csz_model->getLabelLang('address'); ?></label>
                         <textarea name="address" id="address" class="form-control"><?php echo $users->address; ?></textarea>
                     </div> <!-- /control-group -->
                     <div class="control-group">										
-                        <label class="control-label" for="phone"><?php echo $this->lang->line('user_phone'); ?></label>
+                        <label class="control-label" for="phone"><?php echo $this->Csz_model->getLabelLang('phone'); ?></label>
                         <?php
                         $data = array(
                             'name' => 'phone',
@@ -175,7 +168,7 @@
                     </div> <!-- /control-group -->
                     <br>
                     <div class="control-group">											
-                        <label class="control-label" for="picture"><?php echo $this->lang->line('user_picture'); ?></label>
+                        <label class="control-label" for="picture"><?php echo $this->Csz_model->getLabelLang('picture'); ?></label>
                         <div class="controls">
                             <div><img src="<?php
                                           if ($users->picture != "") {
@@ -206,11 +199,11 @@
                             'name' => 'submit',
                             'id' => 'submit',
                             'class' => 'btn btn-lg btn-primary',
-                            'value' => $this->lang->line('btn_save'),
+                            'value' => $this->Csz_model->getLabelLang('save_btn'),
                         );
                         echo form_submit($data);
                         ?> 
-                        <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+                        <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->Csz_model->getLabelLang('cancel_btn'); ?></a>
                     </div> <!-- /form-actions -->
                     <?php echo form_close(); ?>
                     <!-- /widget-content --> 

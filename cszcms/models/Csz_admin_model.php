@@ -24,7 +24,7 @@ class Csz_admin_model extends CI_Model {
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url)
             $xml_url = 'http://www.cszcms.com/downloads/lastest_version.xml';
-        $xml = simplexml_load_file($xml_url) or die("Error: Cannot create object");
+        $xml = @simplexml_load_file($xml_url) or die("Error!: Cannot connect xml file.");
         return $xml;
     }
 

@@ -13,7 +13,7 @@
                     <?php echo form_open() ?>
                     <div class="control-group">		
                         <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('login_password'); ?>*</label>
+                        <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('new_password'); ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'password',
@@ -29,7 +29,7 @@
 
                     <div class="control-group">	
                         <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="con_password"><?php echo $this->Csz_model->getLabelLang('login_confirmpassword'); ?>*</label>
+                        <label class="control-label" for="con_password"><?php echo $this->Csz_model->getLabelLang('confirm_password'); ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'con_password',

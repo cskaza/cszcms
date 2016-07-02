@@ -164,9 +164,9 @@ class Member extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
-        $this->form_validation->set_rules('password', 'new password', 'trim|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('con_password', 'confirm password', 'trim|matches[password]');
+        $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
+        $this->form_validation->set_rules('password', 'New Password', 'trim|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('con_password', 'Confirm Password', 'trim|matches[password]');
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
             $this->editMember();

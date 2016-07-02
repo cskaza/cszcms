@@ -269,5 +269,22 @@ class Headfoot_html extends CI_Model {
         }
         return $html;
     }
+    
+    public function memberleftMenu() {
+        $html = '<div class="panel panel-primary">
+                <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('member_menu').'</b></div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">';
+                        if ($this->session->userdata('admin_type') != 'member') {
+                            $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/admin" target="_blank"><i class="glyphicon glyphicon-briefcase"></i> '.$this->Csz_model->getLabelLang('backend_system').'</a></li>';
+                        }
+                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/member"><i class="glyphicon glyphicon-user"></i> '.$this->Csz_model->getLabelLang('your_profile').'</a></li>
+                        <li role="presentation" class="text-left"><a href="'.BASE_URL.'/member/edit"><i class="glyphicon glyphicon-edit"></i> '.$this->Csz_model->getLabelLang('edit_profile').'</a></li>
+                        <li role="presentation" class="text-left"><a href="'.BASE_URL.'/member/logout"><i class="glyphicon glyphicon-log-out"></i> '.$this->Csz_model->getLabelLang('log_out').'</a></li>
+                    </ul>
+                </div>
+            </div>';
+        return $html;
+    }
 }
 

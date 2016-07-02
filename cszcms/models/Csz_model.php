@@ -639,7 +639,7 @@ class Csz_model extends CI_Model {
                 $uploaddir = 'photo/profile/';
                 $file_f = $_FILES['file_upload']['tmp_name'];
                 $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->CSz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+                $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
             }
         }
         $this->db->set('name', $this->input->post("name", TRUE), TRUE);
