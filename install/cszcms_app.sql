@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-06-23 23:28:41'),
@@ -229,7 +229,7 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (9, 'mamber_firstname', 'For member firstname label', 'First Name', '2016-06-24 16:58:09'),
 (10, 'member_lastname', 'For member lastname label', 'Last Name', '2016-06-24 16:58:09'),
 (11, 'member_address', 'For member address label', 'Address', '2016-06-24 16:58:09'),
-(12, 'login_confirmpassword', 'For confirm password label', 'Confirm Password', '2016-06-24 16:58:09'),
+(12, 'confirm_password', 'For confirm password label', 'Confirm Password', '2016-06-24 16:58:09'),
 (13, 'member_forgot_complete', 'For forget password is successfully', 'Successfully! Your password has been reset', '2016-06-24 16:58:09'),
 (14, 'member_reset_btn', 'For reset button', 'Reset', '2016-06-24 17:48:32'),
 (15, 'member_forget_chkmail', 'For reset text email to inbox', 'Please check your email inbox and click the link to reset your password.', '2016-06-24 17:48:32'),
@@ -241,5 +241,25 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (21, 'btn_cancel', 'For cancel button', 'Cancel', '2016-06-26 15:52:28'),
 (22, 'btn_back', 'For back button', 'Back', '2016-06-26 15:53:59'),
 (23, 'email_already', 'For email has already', 'This email address has already', '2016-06-26 21:31:20'),
-(24, 'email_confirm_subject', '', 'Confirm your mamber register', '2016-06-27 18:00:10'),
-(25, 'email_confirm_message', '', 'Please click the link below within 30 minutes to confirm your member.', '2016-06-28 10:28:20');
+(24, 'email_confirm_subject', 'For email confirm subject text', 'Confirm your mamber register', '2016-06-27 18:00:10'),
+(25, 'email_confirm_message', 'For email confirm message', 'Please click the link below within 30 minutes to confirm your member.', '2016-06-28 10:28:20'),
+(26, 'log_out', 'For log out text', 'Log out', '2016-07-01 16:25:24'),
+(27, 'backend_system', 'For back-end system text', 'Admin System', '2016-07-01 16:25:24'),
+(28, 'edit_profile', 'For edit profile text', 'Edit Profile', '2016-07-01 16:25:24'),
+(29, 'member_dashboard_text', 'For member dashboard text', 'Welcome to Member Dashboard!', '2016-07-01 16:25:24'),
+(30, 'your_profile', 'For your profile text', 'Your Profile', '2016-07-01 16:29:30'),
+(31, 'member_menu', 'For member menu text', 'Member Menu', '2016-07-01 16:37:37'),
+(32, 'display_name', 'For display name text', 'Display Name', '2016-07-01 16:45:41'),
+(33, 'email_address', 'For email address text', 'Email Address', '2016-07-01 16:45:41'),
+(34, 'user_type', 'For permission type text', 'Permission Type', '2016-07-01 16:45:41'),
+(35, 'first_name', 'For first name text', 'First Name', '2016-07-01 16:45:41'),
+(36, 'last_name', 'For last name text', 'Last Name', '2016-07-01 16:45:41'),
+(37, 'birthday', 'For birthday text', 'Birth Day', '2016-07-01 16:45:41'),
+(38, 'gender', 'For gender text', 'Gender', '2016-07-01 16:45:41'),
+(39, 'phone', 'For phone text', 'Phone', '2016-07-01 16:45:41'),
+(40, 'address', 'For address text', 'Address', '2016-07-01 16:45:41'),
+(41, 'new_password', 'For new password text', 'New Password', '2016-07-02 18:01:57'),
+(42, 'change_password', 'For change password text', 'Change Password', '2016-07-02 18:04:49'),
+(43, 'picture', 'For picture text', 'You Picture', '2016-07-02 18:18:58'),
+(44, 'save_btn', 'For save button text', 'Save', '2016-07-02 18:35:11'),
+(45, 'cancel_btn', 'For cancel button text', 'Cancel', '2016-07-02 18:35:11');

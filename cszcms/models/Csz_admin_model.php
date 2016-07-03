@@ -1178,19 +1178,10 @@ class Csz_admin_model extends CI_Model {
             $sql2 = preg_replace('/^-- .*[\r\n]*/m', '', $sql1);
             $sqls = explode(';', $sql2);
             array_pop($sqls);
-
             foreach($sqls as $statement){
-                    $sql = $statement . ";";
-                    $this->db->query($sql);	
+                $sql = $statement . ";";
+                $this->db->query($sql);
             }
-            /*$backup = str_replace('\n', '', $backup);
-            $sql_r = explode(";", $backup);
-            for($i=0;$i < count($sql_r);$i++){
-                if ($sql_r[$i]) {
-                    $sql = trim($sql_r[$i]);
-                    $this->db->query($sql);
-                }
-            }*/
         }else{
             return FALSE;
         }

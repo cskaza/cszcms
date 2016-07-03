@@ -5,6 +5,7 @@ CSZ-CMS V.1.0.9
 - Add label language for plugin.
 - Add plugin manager.
 - Add article plugin.
+- Add gallery plugin.
 - Add proxy config file.
 - Add member user and login page on frontpage.
 - Add page cache time control in site settings.
