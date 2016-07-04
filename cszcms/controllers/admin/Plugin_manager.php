@@ -35,7 +35,23 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->csz_referrer->setIndex();
-        
+
+        $this->load->helper('form');
+        $this->load->library('pagination');
+        // Pages variable
+        $result_per_page = 20;
+        $total_row = $this->Csz_model->countData('plugin_manager');
+        $num_link = 10;
+        $base_url = BASE_URL . '/admin/plugin_manager/';
+
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
+        ($this->uri->segment(3)) ? $pagination = $this->uri->segment(3) : $pagination = 0;
+
+        //Get users from database
+        $this->template->setSub('plugin_mgr', $this->Csz_admin_model->getIndexData('plugin_manager', $result_per_page, $pagination, 'timestamp_create', 'desc'));
+        $this->template->setSub('total_row', $total_row);
+
         //Load the view
         $this->template->loadSub('admin/plugin_mgr_index');
     }
@@ -44,6 +60,16 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         /* upload zip file */
+        $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
+        if (in_array($_FILES['file_upload']['type'], $zip_ext)) {
+            $paramiter = '_1';
+            $photo_id = time();
+            $uploaddir = 'photo/plugin/';
+            $file_f = $_FILES['file_upload']['tmp_name'];
+            $file_name = $_FILES['file_upload']['name'];
+            $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+            $newfname = FCPATH.$uploaddir.$upload_file;
+        }
         if (file_exists($newfname)) {
             @$this->unzip->extract($newfname, FCPATH);
             if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
@@ -54,9 +80,11 @@ class Plugin_manager extends CI_Controller {
             if (is_writable($newfname)) {
                 @unlink($newfname);
             }
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
         }
         // When Success 
-        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('upgrade_success_alert') . '</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
