@@ -322,6 +322,7 @@ $lang['btn_label_synclang']             = "Language Sync";
 
 //Langs - New Lang/Edit Lang
 $lang['genlabel_edit_header']		= "Edit General Label";
+$lang['genlabel_plssync_alert']             = "Please click 'Language Sync' now!";
 
 // Messages Alert
 $lang['success_message_alert']		= "Successfully!";

@@ -595,8 +595,11 @@ class Csz_model extends CI_Model {
             $this->db->where("name", $name);
             $this->db->limit(1, 0);
             $query = $this->db->get("general_label");
-            if ($query->num_rows() > 0) {
-                return $query->row()->$sel_name;
+            if ($query && $query->num_rows() > 0) {
+                if($query->row()->$sel_name) return $query->row()->$sel_name; 
+                else return "This label is untranslated!";         
+            }else{
+                return "This language isn't sync! (lang_".$lang.")";
             }
         }else{
             return FALSE;

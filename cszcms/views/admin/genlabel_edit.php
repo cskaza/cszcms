@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('genlabel_edit_header') ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('genlabel_edit_header') ?> <a href="<?php echo BASE_URL . '/admin/genlabel/synclang'?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message');?>')"><i class="glyphicon glyphicon-refresh"></i> <?php echo $this->lang->line('btn_label_synclang')?></a></div>
         <?php echo form_open(BASE_URL . '/admin/genlabel/updated/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
@@ -20,18 +20,21 @@
         </div> <!-- /control-group -->
         <?php foreach ($lang as $l) { ?>
             <div class="control-group">	
-                <?php echo form_error('lang_'.$l['lang_iso'], '<div class="error">', '</div>'); ?>									
                 <label class="control-label" for="lang_<?php echo $l['lang_iso'];?>"><?php echo $l['lang_name']; ?></label>
                 <?php
-                $obj_key = 'lang_'.$l['lang_iso'];
-                $data = array(
-                    'name' => 'lang_'.$l['lang_iso'],
-                    'id' => 'lang_'.$l['lang_iso'],
-                    'class' => 'form-control',
-                    'value' => set_value('lang_'.$l['lang_iso'], $genlab->$obj_key)
-                );
-                echo form_input($data);
-                ?>
+                if(!$this->db->field_exists('lang_'.$l['lang_iso'], 'general_label')){
+                    echo '<br><span class="remark"><em><b>'.$this->lang->line('genlabel_plssync_alert').'</b></em></span>';
+                }else{ ?>									
+                    <?php
+                    $obj_key = 'lang_'.$l['lang_iso'];
+                    $data = array(
+                        'name' => 'lang_'.$l['lang_iso'],
+                        'id' => 'lang_'.$l['lang_iso'],
+                        'class' => 'form-control',
+                        'value' => set_value('lang_'.$l['lang_iso'], $genlab->$obj_key)
+                    );
+                    echo form_input($data);
+                } ?>
             </div> <!-- /control-group -->
         <?php } ?>
         <br><br>

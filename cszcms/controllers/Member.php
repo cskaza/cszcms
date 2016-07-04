@@ -39,7 +39,7 @@ class Member extends CI_Controller {
 
     public function index() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->csz_referrer->setIndex();
+        $this->csz_referrer->setIndex('member');
         $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
         $this->template->loadSub('frontpage/member/home');
     }
