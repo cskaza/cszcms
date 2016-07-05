@@ -144,6 +144,8 @@ $route['admin/genlabel/edit'] = "admin/General_label/edit";
 $route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
 $route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/(:any)'] = "admin/General_label";
+$route['admin/plugin/(:any)'] = "admin/Plugin_manager/$1";
+$route['admin/plugin'] = "admin/Plugin_manager";
 
 $route['member'] = 'Member';
 $route['member/login'] = 'Member/login';

@@ -42,7 +42,7 @@ class Plugin_manager extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('plugin_manager');
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin_manager/';
+        $base_url = BASE_URL . '/admin/plugin/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
@@ -67,7 +67,7 @@ class Plugin_manager extends CI_Controller {
             $uploaddir = 'photo/plugin/';
             $file_f = $_FILES['file_upload']['tmp_name'];
             $file_name = $_FILES['file_upload']['name'];
-            $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+            $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
             $newfname = FCPATH.$uploaddir.$upload_file;
         }
         if (file_exists($newfname)) {

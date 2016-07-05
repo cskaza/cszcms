@@ -327,3 +327,16 @@ $lang['genlabel_plssync_alert']             = "Please click 'Language Sync' now!
 // Messages Alert
 $lang['success_message_alert']		= "Successfully!";
 $lang['error_message_alert']		= "Error! Please try again.";
+
+// Plugin Manager
+$lang['pluginmgr_header']               = "Plugin Manager";
+$lang['pluginmgr_name']                 = "Plugin Name";
+$lang['pluginmgr_version']                 = "Plugin Version";
+$lang['pluginmgr_owner']                 = "Plugin Owner";
+$lang['pluginmgr_install']              = "Plugin Install";
+$lang['btn_install']                    = "Install";
+$lang['pluginmgr_zip_remark']              = "Only files (zip) are allowed.";
+$lang['pluginmgr_status']              = "Plugin Status";
+$lang['pluginmgr_enable']               = "Enable";
+$lang['pluginmgr_disable']               = "Disable";
+$lang['pluginmgr_config']               = "Config";
