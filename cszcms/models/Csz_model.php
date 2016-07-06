@@ -186,10 +186,10 @@ class Csz_model extends CI_Model {
     }
 
     public function getDefualtLang() {
+        $this->db->where('lang_iso_id', 1);
         $this->db->limit(1, 0);
-        $this->db->where("lang_iso_id", 1);
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() == 1) {
+        if ($query->num_rows() > 0) {
             $row = $query->row();
             return $row->lang_iso;
         }
@@ -256,21 +256,7 @@ class Csz_model extends CI_Model {
             $row = $query->result();
             return $row;
         } else {
-            if ($drop_page_menu_id) {
-                $this->db->where("drop_page_menu_id", $drop_page_menu_id);
-            } else {
-                $this->db->where("drop_page_menu_id", 0);
-            }
-            $this->db->where("lang_iso", $this->getDefualtLang());
-            $this->db->where("active", 1);
-            $this->db->order_by("arrange", "asc");
-            $query = $this->db->get('page_menu');
-            if ($query->num_rows() > 0) {
-                $row = $query->result();
-                return $row;
-            } else {
-                return FALSE;
-            }
+            return FALSE;
         }
     }
 

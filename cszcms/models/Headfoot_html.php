@@ -22,7 +22,11 @@ class Headfoot_html extends CI_Model {
 
     public function topmenu($cur_page){
         $menu_list = '';
-        foreach ($this->Csz_model->main_menu('', $this->session->userdata('fronlang_iso')) as $rs){
+        $get_mainmenu = $this->Csz_model->main_menu('', $this->session->userdata('fronlang_iso'));
+        if($get_mainmenu === FALSE){
+            $get_mainmenu = $this->Csz_model->main_menu('', $this->Csz_model->getDefualtLang());
+        }
+        foreach ($get_mainmenu as $rs){
             $page_url_rs = $this->Csz_model->getPageUrlFromID($rs->pages_id);
             if($page_url_rs && !$rs->other_link && !$rs->plugin_menu){
                 $page_link = base_url().$page_url_rs;
