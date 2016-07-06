@@ -315,6 +315,6 @@ switch (ENVIRONMENT)
  */
 /** Config **/
 include FCPATH.'config.inc.php';
-date_default_timezone_set(TIME_ZONE);
+@date_default_timezone_set(TIME_ZONE);
 include FCPATH.'proxy.inc.php';
 require_once BASEPATH.'core/CodeIgniter.php';
