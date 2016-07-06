@@ -21,6 +21,7 @@
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/member/login/check') ?>
+                    <input type="hidden" id="url_return" name="url_return" value="<?php echo $this->input->get('url_return', TRUE)?>"/>
                     <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                     <?php
                     $data = array(

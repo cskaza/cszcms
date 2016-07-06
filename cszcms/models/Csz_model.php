@@ -481,6 +481,19 @@ class Csz_model extends CI_Model {
         }
     }
 
+    public function clear_all_error_log() {
+        $logs_path = APPPATH . 'logs/';
+
+        $handle = opendir($logs_path);
+        while (($file = readdir($handle)) !== FALSE) {
+            //Leave the directory protection alone
+            if ($file != '.htaccess' && $file != 'index.html') {
+                @unlink($logs_path . '/' . $file);
+            }
+        }
+        closedir($handle);
+    }
+    
     public function clear_all_cache() {
         $CI = & get_instance();
         $path = $CI->config->item('cache_path');
@@ -573,6 +586,7 @@ class Csz_model extends CI_Model {
                         'admin_name' => $rows->name,
                         'admin_email' => $rows->email,
                         'admin_type' => $rows->user_type,
+                        'admin_hash' => $rows->md5_hash,
                         'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);

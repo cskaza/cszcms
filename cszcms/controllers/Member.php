@@ -59,7 +59,12 @@ class Member extends CI_Controller {
         $password = md5($this->input->post('password'));
         $result = $this->Csz_model->memberLogin($email, $password);
         if ($result == 'SUCCESS') {
-            redirect('member', 'refresh');
+            $url_return = $this->input->post('url_return', TRUE);
+            if($url_return){
+                redirect($url_return, 'refresh');
+            }else{
+                redirect('member', 'refresh');
+            }
         } else {
             $this->template->setSub('error', $result);
             $this->load->helper('form');

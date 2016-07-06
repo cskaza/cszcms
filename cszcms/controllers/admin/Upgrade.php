@@ -112,4 +112,11 @@ class Upgrade extends CI_Controller {
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
+    public function clearAllErrLog() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $this->Csz_model->clear_all_error_log();
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
 }

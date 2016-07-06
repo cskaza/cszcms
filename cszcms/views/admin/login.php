@@ -23,6 +23,7 @@
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/admin/login/check') ?>
+                    <input type="hidden" id="url_return" name="url_return" value="<?php echo $this->input->get('url_return', TRUE)?>"/>
                     <?php echo form_error('email', '<div class="error">', '</div>'); ?>
                     <label for="email" class="control-label"><?php echo $this->lang->line('login_email') ?>*</label>
                     <?php

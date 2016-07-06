@@ -54,7 +54,12 @@ class Admin extends CI_Controller {
             $password = md5($this->input->post('password', TRUE));
             $result = $this->Csz_admin_model->login($email, $password);
             if ($result == 'SUCCESS') {
-                redirect('admin', 'refresh');
+                $url_return = $this->input->post('url_return', TRUE);
+                if($url_return){
+                    redirect($url_return, 'refresh');
+                }else{
+                    redirect('admin', 'refresh');
+                }
             } else {
                 $this->template->setSub('error', $result);
                 $this->load->helper('form');
