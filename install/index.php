@@ -179,7 +179,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 <div class="panel-body">
                                     <label for="baseurl">Base URL*: </label>
                                     <input id="baseurl" name="baseurl" type="text" class="form-control" placeholder="http://www.ex.com or http://www.ex.com/subdir" required>
-                                    <span class="remark"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b></em></span><br>
+                                    <span class="remark"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b> or <b>http://localhost/subdir</b> on localhost.</em></span><br>
                                     <label for="timezone">Time Zone*: </label>
                                     <input id="timezone" name="timezone" type="text" class="form-control" placeholder="Asia/Bangkok" required>
                                     <span class="remark"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span>

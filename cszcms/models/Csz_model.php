@@ -532,7 +532,7 @@ class Csz_model extends CI_Model {
     public function chkCaptchaRes() {
         $config = $this->load_config();
         $respone = '';
-        if($config->googlecapt_active){
+        if($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey){
             $recaptcha = $_POST['g-recaptcha-response'];
             if (!empty($recaptcha)) {
                 $ip = $_SERVER['REMOTE_ADDR'];
@@ -555,7 +555,7 @@ class Csz_model extends CI_Model {
     public function showCaptcha() {
         $config = $this->load_config();
         $html = '';
-        if($config->googlecapt_active){
+        if($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey){
             $html = '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="'.$config->googlecapt_sitekey.'"></div>';
         }
         return $html;
