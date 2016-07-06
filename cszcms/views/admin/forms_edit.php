@@ -112,7 +112,7 @@
                     ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo $this->lang->line('forms_sendmail'); ?></b>
                 </label>
             </div>
-            <div class="panel-body" id="chk-sendmail"<?if(!$form_rs->sendmail){?> style="display: none;"<?}?>>
+            <div class="panel-body" id="chk-sendmail"<?php if(!$form_rs->sendmail){ ?> style="display: none;"<?php } ?>>
                 <div class="control-group">	
                     <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
                     <label class="control-label" for="email"><?php echo $this->lang->line('forms_email'); ?></label>
