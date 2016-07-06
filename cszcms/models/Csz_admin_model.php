@@ -100,13 +100,16 @@ class Csz_admin_model extends CI_Model {
         return $this->db->count_all($table);
     }
 
-    public function pageSetting($base_url, $total_row, $result_per_page, $num_link) {
+    public function pageSetting($base_url, $total_row, $result_per_page, $num_link, $uri_segment = '') {
+        if(!$uri_segment) $uri_segment = 3;
         $this->load->library('pagination');
         $config = array();
         $config["base_url"] = $base_url;
         $config["total_rows"] = $total_row;
         $config["per_page"] = $result_per_page;
         $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = FALSE;
+        $config['reuse_query_string'] = TRUE;
         $config['num_links'] = $num_link;
         $config['full_tag_open'] = '<nav><ul class="pagination">';
         $config['full_tag_close'] = '</ul></nav>';
@@ -126,6 +129,7 @@ class Csz_admin_model extends CI_Model {
         $config['cur_tag_close'] = '</a></li>';
         $config['num_tag_open'] = '<li class="page">';
         $config['num_tag_close'] = '</li>';
+        $config["uri_segment"] = $uri_segment;
         $this->pagination->initialize($config);
     }
 

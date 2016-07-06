@@ -134,7 +134,7 @@ class Forms extends CI_Controller {
             $num_link = 10;
             $base_url = BASE_URL . '/admin/forms/view/'.$this->uri->segment(4).'/';
             // Pageination config
-            $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);       
+            $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link,5);       
             ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
             //Get users from database   
             $this->template->setSub('form_name', $frm_rs->form_name);

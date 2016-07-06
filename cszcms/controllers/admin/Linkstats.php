@@ -86,7 +86,7 @@ class Linkstats extends CI_Controller {
             $base_url = BASE_URL . '/admin/linkstats/view/'.$this->uri->segment(4).'/';
 
             // Pageination config
-            $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
+            $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link,5);     
             ($this->uri->segment(5))? $pagination = $this->uri->segment(5) : $pagination = 0;
 
             //Get users from database

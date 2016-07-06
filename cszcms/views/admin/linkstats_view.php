@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h4 sub-header"><b><?php echo  $this->lang->line('btn_view') ?>:</b> <?php echo $url_link; ?>  <a role="button" href="<?php echo $this->csz_referrer->getIndex()?>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-arrow-left"></i> <?php echo  $this->lang->line('btn_back') ?></a></div>
-        <form action="<?php echo BASE_URL . '/admin/linkstats/view/'.$this->uri->segment(4).'/'; ?>" method="get">
+        <form action="<?php echo BASE_URL . '/admin/linkstats/view/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/'; ?>" method="get">
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('ip_address'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label>
                 <label class="control-label" for="start_date"><?php echo $this->lang->line('startdate_field'); ?>: <input type="text" name="start_date" id="start_date" class="form-control-static form-datepicker" value="<?php echo $this->input->get('start_date');?>"></label>
