@@ -32,11 +32,11 @@ tinymce.PluginManager.add('boot_alert', function (editor) {
             newTable += '<div class="alert alert-'+type+'" role="alert">';
             newTable += value;
             newTable += '</div>';
-            newTable += '</div>';
+            newTable += '</div>\n<p></p>';
         } else {
             newTable = '<div class="alert alert-'+type+'" role="alert">';
             newTable += value;
-            newTable += '</div>';
+            newTable += '</div>\n<p></p>';
         }
         return newTable;
     }

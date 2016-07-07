@@ -110,7 +110,7 @@
                             <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
                             </div>
                             </div>
-                            </div>';
+                            </div><p></p>';
             ?>
             <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
             <textarea name="content" id="content" class="form-control body-tinymce"><?php echo $starter_html?></textarea>

@@ -40,14 +40,14 @@ tinymce.PluginManager.add('boots_panels', function (editor) {
             newTable += '<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>';
             newTable += '</div>';
             newTable += '</div>';
-            newTable += '</div>';
+            newTable += '</div>\n<p></p>';
         } else {
             newTable = '<div class="panel panel-'+type+'">';
             newTable += '<div class="panel-heading">Panel heading</div>';
             newTable += '<div class="panel-body">';
             newTable += '<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>';
             newTable += '</div>';
-            newTable += '</div>';
+            newTable += '</div>\n<p></p>';
         }
         return newTable;
     }
