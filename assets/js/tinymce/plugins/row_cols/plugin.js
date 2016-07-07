@@ -45,7 +45,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-12">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '6-6') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-6">\n';
@@ -54,7 +54,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-6">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '3-9') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-3">\n';
@@ -63,7 +63,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-9">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '9-3') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-9">\n';
@@ -72,7 +72,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-3">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '4-4-4') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-4">\n';
@@ -84,7 +84,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-4">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '3-3-3-3') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-3">\n';
@@ -99,7 +99,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-3">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }else if (cols == '2-2-2-2-2-2') {
             newTable = cont_div_start + '<div class="row">\n';
             newTable += '<div class="col-md-2">\n';
@@ -120,7 +120,7 @@ tinymce.PluginManager.add('row_cols', function (editor) {
             newTable += '<div class="col-md-2">\n';
             newTable += '<h2>Heading</h2><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>';
             newTable += '\n</div>';
-            newTable += '\n</div>\n<p></p>' + cont_div_end;
+            newTable += '\n</div><br><br>' + cont_div_end;
         }
         return newTable;
     }
