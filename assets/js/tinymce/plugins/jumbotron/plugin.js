@@ -11,11 +11,11 @@ tinymce.PluginManager.add('jumbotron', function (editor) {
             newTable += '<div class="container">';
             newTable += '<h1>Hello, world!</h1><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>';
             newTable += '</div>';
-            newTable += '</div><p></p>';
+            newTable += '</div>\n<p></p>\n<p></p>';
         } else {
             newTable = '<div class="jumbotron">';
             newTable += '<h1>Hello, world!</h1><p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p><p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>';
-            newTable += '</div><p></p>';
+            newTable += '</div>\n<p></p>\n<p></p>';
         }
         return newTable;
     }
