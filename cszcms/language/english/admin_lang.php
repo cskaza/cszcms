@@ -339,4 +339,4 @@ $lang['pluginmgr_zip_remark']              = "Only files (zip) are allowed.";
 $lang['pluginmgr_status']              = "Plugin Status";
 $lang['pluginmgr_enable']               = "Enable";
 $lang['pluginmgr_disable']               = "Disable";
-$lang['pluginmgr_config']               = "Config";
+$lang['pluginmgr_manage']               = "Manage";

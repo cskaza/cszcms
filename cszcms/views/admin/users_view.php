@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-stats"></span></i> <?php echo  $this->lang->line('nav_admin_users') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('nav_admin_users') ?>
             </li>
         </ol>
     </div>
@@ -11,11 +11,10 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h4 sub-header"><?php echo $this->lang->line('nav_admin_users') ?> <a role="button" href="<?php echo $this->csz_referrer->getIndex()?>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-arrow-left"></i> <?php echo  $this->lang->line('btn_back') ?></a></div>
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><b><i class="glyphicon glyphicon-user"></i> <?php echo $users->name; ?></b></div>
+                    <div class="panel-heading"><div class="row"><div class="text-left col-xs-6"><b><i class="glyphicon glyphicon-user"></i> <?php echo $users->name; ?></b></div><div class="text-right col-xs-6"><a href="<?php echo $this->csz_referrer->getIndex()?>" style="color:#fff;"><i class="glyphicon glyphicon-arrow-left"></i> <?php echo $this->lang->line('btn_back') ?></a></div></div></div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-2 col-md-2 text-center">

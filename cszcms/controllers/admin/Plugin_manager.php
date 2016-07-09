@@ -5,9 +5,6 @@ if (!defined('BASEPATH'))
 
 class Plugin_manager extends CI_Controller {
 
-    var $cur_version;
-    var $last_version;
-
     function __construct() {
         parent::__construct();
         $this->load->helper('form');
@@ -27,13 +24,10 @@ class Plugin_manager extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
-        $this->cur_version = $this->Csz_model->getVersion();
-        $this->last_version = $this->Csz_admin_model->getLatestVersion()->version;
     }
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->csz_referrer->setIndex();
 
         $this->load->helper('form');
@@ -92,6 +86,29 @@ class Plugin_manager extends CI_Controller {
         }
         // When Success 
         redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
+    
+    public function setstatus() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        if($this->uri->segment(4)){
+            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != ''", '', 1);
+            if($status->plugin_active){
+                $this->db->set('plugin_active', 0, FALSE);
+                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->where('plugin_manager_id', $this->uri->segment(4));
+                $this->db->update('plugin_manager');
+            }else{
+                $this->db->set('plugin_active', 1, FALSE);
+                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->where('plugin_manager_id', $this->uri->segment(4));
+                $this->db->update('plugin_manager');
+            }
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
     }
 
 }

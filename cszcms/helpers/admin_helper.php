@@ -6,7 +6,7 @@ class Admin_helper{
             $url_return = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $redirect= BASE_URL.'/admin/login?url_return='.$url_return;
             header("Location: $redirect");	
-            exit;	
+            exit;
         }
     }
     
@@ -14,7 +14,7 @@ class Admin_helper{
         if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['admin_type'] != 'member'){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
-            exit;	
+            exit;
         }
     }
     
@@ -22,15 +22,26 @@ class Admin_helper{
         if($user_type != 'admin'){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
-            exit;	
+            exit;
         }
     }
     
     static function is_a_member($user_type){
         if($user_type == 'member'){
-            return TRUE;	
+            return TRUE;
         }else{
             return FALSE;
+        }
+    }
+    
+    static function plugin_not_active($plugin_urlrewrite){
+        $CI =& get_instance();
+        $CI->load->model('Csz_admin_model');
+        $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_urlrewrite);
+        if($chkactive === FALSE){
+            $redirect= BASE_URL.'/admin';
+            header("Location: $redirect");	
+            exit;
         }
     }
 } 

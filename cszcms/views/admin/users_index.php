@@ -32,11 +32,11 @@
                 <thead>
                     <tr>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('user_status'); ?></th>
-                        <th width="20%"><?php echo $this->lang->line('user_name'); ?></th>
-                        <th width="30%"><?php echo $this->lang->line('user_email'); ?></th>
-                        <th width="20%" class="text-center"><?php echo $this->lang->line('user_new_type'); ?></th>
+                        <th width="20%" class="text-center"><?php echo $this->lang->line('user_name'); ?></th>
+                        <th width="30%" class="text-center"><?php echo $this->lang->line('user_email'); ?></th>
+                        <th width="15%" class="text-center"><?php echo $this->lang->line('user_new_type'); ?></th>
                         <?php if($this->session->userdata('admin_type') == 'admin'){ ?>
-                        <th width="20%"></th>
+                        <th width="25%"></th>
                         <?php } ?>
                     </tr>
                 </thead>

@@ -65,14 +65,16 @@
                             echo '<tr>';
                             echo '<td'.$inactive.' class="text-center">' . $status . '</td>';
                             echo '<td'.$inactive.' class="text-center">' . $u['plugin_name'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center">' . $u['plugin_email'] . '</td>';
+                            echo '<td'.$inactive.' class="text-center">' . $u['plugin_version'] . '</td>';
                             echo '<td'.$inactive.' class="text-center">' . ucfirst($u['plugin_owner']) . '</td>';
                             echo '<td class="text-center">';
-                            echo '<a href="'.BASE_URL.'/admin/plugin/view/' . $u['plugin_manager_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('pluginmgr_config').'</a> &nbsp;&nbsp; ';
+                            if($u['plugin_active']){
+                                echo '<a href="'.BASE_URL.'/admin/plugin/' . $u['plugin_urlrewrite'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('pluginmgr_manage').'</a> &nbsp;&nbsp; ';
+                            }
                             if(!$u['plugin_active']){
-                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/enable/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('pluginmgr_enable').'</a>';
+                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-ok"></i> '.$this->lang->line('pluginmgr_enable').'</a>';
                             }else{
-                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/disable/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('pluginmgr_disable').'</a>';
+                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('pluginmgr_disable').'</a>';
                             }
                             echo '</td>';
                             echo '</tr>';

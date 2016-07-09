@@ -145,7 +145,8 @@ $route['admin/genlabel/edit'] = "admin/General_label/edit";
 $route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
 $route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/(:any)'] = "admin/General_label";
-$route['admin/plugin/(:any)'] = "admin/Plugin_manager/$1";
+$route['admin/plugin/setstatus/(:any)'] = "admin/Plugin_manager/setstatus";
+$route['admin/plugin/(:any)'] = "admin/plugin/$1";
 $route['admin/plugin'] = "admin/Plugin_manager";
 
 $route['member'] = 'Member';
@@ -166,7 +167,8 @@ $route['formsaction'] = 'formsaction';
 $route['linkstats/(:any)'] = 'linkstats';
 $route['linkstats'] = 'linkstats';
 $route['lang/(:any)'] = "home/setLang";
+
+$route['^(?!admin|member|formsaction|linkstats).*'] = 'home';
 $route['default_controller'] = 'home';
-$route['(.+)'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

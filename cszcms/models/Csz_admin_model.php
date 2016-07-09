@@ -1191,5 +1191,18 @@ class Csz_admin_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    public function chkPluginActive($plugin_urlrewrite) {
+        if($plugin_urlrewrite){
+            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite", $plugin_urlrewrite, 1);
+            if($status->plugin_active){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }else{
+            return FALSE;
+        }
+    }
 
 }

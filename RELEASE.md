@@ -6,7 +6,7 @@ CSZ-CMS V.1.0.9
 - Add plugin manager.
 - Add article plugin.
 - Add gallery plugin.
-- Add proxy config file.
+- Add proxy config file for get real ip address.
 - Add member user and login page on frontpage.
 - Add page cache time control in site settings.
 - Disable sql show error.
