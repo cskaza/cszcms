@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 ?>
 <?php echo doctype('html5')?>
-<html lang="en">
+<html lang="<?php echo $this->session->userdata('fronlang_iso') ?>">
     <head>
         <?php echo $meta_tags?>
         <?php echo link_tag('templates/cszdefault/imgs/favicon.ico', 'shortcut icon', 'image/ico');?>

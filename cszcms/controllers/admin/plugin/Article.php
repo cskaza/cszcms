@@ -29,7 +29,7 @@ class Article extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->csz_referrer->setIndex('plugin');
+        $this->csz_referrer->setIndex('article');
 
         $this->load->helper('form');
         $this->load->library('pagination');

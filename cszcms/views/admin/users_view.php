@@ -21,7 +21,7 @@
                                 <?php if($users->picture){ ?>
                                 <img src="<?php echo BASE_URL . '/photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php }else{ ?>
-                                <img src="<?php echo BASE_URL . '/photo/profile/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
+                                <img src="<?php echo BASE_URL . '/photo/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php } ?>
                                 <br><br>
                             </div>

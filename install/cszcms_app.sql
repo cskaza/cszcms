@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `footer_social` (
   `active` int(11) NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`footer_social_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 INSERT INTO `footer_social` (`footer_social_id`, `social_name`, `social_url`, `active`, `timestamp_update`) VALUES
 (1, 'twitter', '', 0, '2016-05-06 15:50:59'),
@@ -31,6 +31,8 @@ INSERT INTO `footer_social` (`footer_social_id`, `social_name`, `social_url`, `a
 (21, 'tripadvisor', '', 0, '2016-05-06 15:50:59'),
 (22, 'stackoverflow', '', 0, '2016-05-06 15:50:59'),
 (23, 'persona', '', 0, '2016-05-06 15:50:59');
+(24, 'odnoklassniki', '', 0, '2016-05-06 15:50:59'),
+(25, 'vk', '', 0, '2016-05-06 15:50:59');
 
 CREATE TABLE IF NOT EXISTS `form_contactus_en` (
   `form_contactus_en_id` int(11) NOT NULL AUTO_INCREMENT,

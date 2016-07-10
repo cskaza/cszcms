@@ -7,7 +7,7 @@ $row = $this->Csz_admin_model->load_config();
  */
 ?>
 <?php echo  doctype('html5') ?>
-<html lang="en">
+<html lang="<?php echo $row->admin_lang ?>">
     <head>
         <?php echo  $meta_tags ?>
         <?php echo  link_tag('templates/admin/imgs/favicon.ico', 'shortcut icon', 'image/ico'); ?>

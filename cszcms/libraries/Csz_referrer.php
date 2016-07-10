@@ -28,7 +28,11 @@ class Csz_referrer {
         }else{
             $key = 'referred_'.$index;
         }
-        $referred_from = $_SESSION[$key];
+        if(isset($_SESSION[$key])){
+            $referred_from = $_SESSION[$key];
+        }else{
+            $referred_from = current_url();
+        }
         return $referred_from;
     }
     

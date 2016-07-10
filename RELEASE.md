@@ -2,23 +2,23 @@
 
 CSZ-CMS V.1.0.9
 - Add statistic for link can delete with checkbox.
-- Add label language for plugin.
+- Add label language for frontend plugin.
 - Add plugin manager.
 - Add article plugin.
 - Add gallery plugin.
 - Add proxy config file for get real ip address.
-- Add member user and login page on frontpage.
+- Add member user and login page on frontend.
 - Add page cache time control in site settings.
-- Disable sql show error.
-- Fix page show on frontend bug.
+- Add VK.com and Odnoklassniki social icon.
+- Fix page show on frontend error bug.
 - Fix backend forget password template.
 - Fix something about navigation.
 - Fix pagination working.
-- Fix redirect page when save.
+- Fix redirect page when save on backend.
 - Fix thai language on backend (some word).
 - Fix link statistics security bug.
 - Fix reCaptcha bug when active and key is null.
-- Fix language not have pages or menu error.
+- Fix create new language and not have pages or menu error.
 
 CSZ-CMS V.1.0.8
 - Fix statistic for link menu is show when don't enable statistic for link.

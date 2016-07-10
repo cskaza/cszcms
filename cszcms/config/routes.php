@@ -146,6 +146,14 @@ $route['admin/genlabel/updated/(:any)'] = "admin/General_label/updated";
 $route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/(:any)'] = "admin/General_label";
 $route['admin/plugin/setstatus/(:any)'] = "admin/Plugin_manager/setstatus";
+$route['admin/plugin/(:any)/new'] = "admin/plugin/$1/new";
+$route['admin/plugin/(:any)/newcat'] = "admin/plugin/$1/newCat";
+$route['admin/plugin/(:any)/newsave'] = "admin/plugin/$1/newSave";
+$route['admin/plugin/(:any)/edit/(:any)'] = "admin/plugin/$1/edit";
+$route['admin/plugin/(:any)/editsave/(:any)'] = "admin/plugin/$1/editSave";
+$route['admin/plugin/(:any)/delete/(:any)'] = "admin/plugin/$1/delete";
+$route['admin/plugin/(:any)/view/(:any)'] = "admin/plugin/$1/view";
+$route['admin/plugin/(:any)/(:any)'] = "admin/plugin/$1";
 $route['admin/plugin/(:any)'] = "admin/plugin/$1";
 $route['admin/plugin'] = "admin/Plugin_manager";
 
