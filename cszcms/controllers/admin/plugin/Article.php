@@ -75,15 +75,20 @@ class Article extends CI_Controller {
         $this->load->model('plugin/Article_model');
         //Load the form validation library
         $this->load->library('form_validation');
-        //Set validation rules
-        $this->form_validation->set_rules('lang_name', 'Language Name', 'required');
-        $this->form_validation->set_rules('lang_iso', 'Language ISO Code', 'trim|required|min_length[2]|max_length[2]');
-        $this->form_validation->set_rules('country', 'Country Name', 'required');
-        $this->form_validation->set_rules('country_iso', 'Country ISO Code', 'trim|required|min_length[2]|max_length[2]');
-
+        $is_category = $this->input->post('is_category', TRUE);
+        if(!$is_category){
+            //Set validation rules
+            $this->form_validation->set_rules('title', 'Title', 'required');
+            $this->form_validation->set_rules('short_desc', 'Short Description', 'required');
+            $this->form_validation->set_rules('cat_id', 'Category', 'required');
+        }
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
-            $this->add();
+            if($is_category){
+                redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
+            }else{
+                $this->add();
+            }
         } else {
             //Validation passed
             //Add the user

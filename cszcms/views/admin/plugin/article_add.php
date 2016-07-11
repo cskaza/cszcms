@@ -23,7 +23,6 @@ if($category !== FALSE){
         <input type="hidden" name="is_category" id="is_category" value="<?php if($this->input->get('is_category',TRUE)){  echo  '1';  }else{ echo  '0'; } ?>">
         <?php if($this->input->get('is_category',TRUE)){ ?>
             <div class="control-group">	
-                <?php echo form_error('category_name', '<div class="error">', '</div>'); ?>
                 <label class="control-label" for="category_name"><?php echo $this->lang->line('category_name'); ?>*</label>
                 <?php
                 $data = array(
@@ -54,7 +53,78 @@ if($category !== FALSE){
                 </div> <!-- /controls -->
             </div> <!-- /control-group -->
         <?php }else{ ?>
-            
+            <div class="control-group">	
+                <?php echo form_error('title', '<div class="error">', '</div>'); ?>
+                <label class="control-label" for="title"><?php echo $this->lang->line('article_title'); ?>*</label>
+                <?php
+                $data = array(
+                    'name' => 'title',
+                    'id' => 'title',
+                    'required' => 'required',
+                    'autofocus' => 'true',
+                    'class' => 'form-control',
+                    'value' => set_value('title', '', FALSE)
+                );
+                echo form_input($data);
+                ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="keyword"><?php echo $this->lang->line('article_keyword'); ?></label>
+                <?php
+                $data = array(
+                    'name' => 'keyword',
+                    'id' => 'keyword',
+                    'class' => 'form-control',
+                    'value' => set_value('keyword', '', FALSE)
+                );
+                echo form_input($data);
+                ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <?php echo form_error('short_desc', '<div class="error">', '</div>'); ?>
+                <label class="control-label" for="short_desc"><?php echo $this->lang->line('article_short_desc'); ?>*</label>
+                <?php
+                $data = array(
+                    'name' => 'short_desc',
+                    'id' => 'short_desc',
+                    'required' => 'required',
+                    'autofocus' => 'true',
+                    'class' => 'form-control',
+                    'value' => set_value('short_desc', '', FALSE)
+                );
+                echo form_input($data);
+                ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">
+                <?php echo form_error('cat_id', '<div class="error">', '</div>'); ?>
+                <label class="control-label" for="cat_id"><?php echo $this->lang->line('category_header'); ?>*</label>
+                <div class="controls">
+                    <?php
+                    $att = 'id="cat_id" class="form-control" required="required"';
+                    $data = array();
+                    $data[''] = $this->lang->line('option_choose');
+                    if(isset($cat_arr)){
+                        foreach ($cat_arr as $key => $value) {
+                            $data[$key] = $value;
+                        }
+                    }
+                    echo form_dropdown('cat_id', $data, '', $att);
+                    ?>
+                </div> <!-- /controls -->
+            </div> <!-- /control-group -->
+            <div class="control-group">
+                <?php
+                 $starter_html = '<div class="container">
+                                <div class="row">
+                                <div class="col-md-12">
+                                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+                                </div>
+                                </div>
+                                </div><br><br>';
+                ?>
+                <label class="control-label" for="content"><?php echo $this->lang->line('article_content'); ?></label>
+                <textarea name="content" id="content" class="form-control body-tinymce"><?php echo $starter_html?></textarea>
+            </div> <!-- /control-group -->
         <?php } ?>
         <br>
         <div class="control-group">										
@@ -67,8 +137,7 @@ if($category !== FALSE){
             );
             echo form_checkbox($data);
             ?> <?php echo $this->lang->line('lang_active'); ?></label>	
-        </div> <!-- /control-group -->
-        
+        </div> <!-- /control-group -->       
         <br><br>
         <div class="form-actions">
             <?php
