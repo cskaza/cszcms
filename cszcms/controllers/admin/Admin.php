@@ -145,13 +145,15 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $path = FCPATH . "/photo/upload/";
         $filedel = $this->input->post('filedel');
-        foreach ($filedel as $value) {
-            if ($value) {
-                $filename = $this->Csz_model->getValue('file_upload', 'upload_file', 'upload_file_id', $value, 1);
-                if($filename->file_upload){
-                    @unlink($path . $filename->file_upload);
+        if(isset($filedel)){
+            foreach ($filedel as $value) {
+                if ($value) {
+                    $filename = $this->Csz_model->getValue('file_upload', 'upload_file', 'upload_file_id', $value, 1);
+                    if($filename->file_upload){
+                        @unlink($path . $filename->file_upload);
+                    }
+                    $this->Csz_admin_model->removeData('upload_file', 'upload_file_id', $value);
                 }
-                $this->Csz_admin_model->removeData('upload_file', 'upload_file_id', $value);
             }
         }
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');

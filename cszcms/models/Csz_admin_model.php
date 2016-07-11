@@ -636,15 +636,17 @@ class Csz_admin_model extends CI_Model {
         $i = 0;
         $main_arrange = 1;
         $menu_id = $this->input->post('menu_id', TRUE);
-        while ($i < count($menu_id)) {
-            if ($menu_id[$i]) {
-                $this->db->set('arrange', $main_arrange, FALSE);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
-                $this->db->where("page_menu_id", $menu_id[$i]);
-                $this->db->update('page_menu');
-                $main_arrange++;
+        if (!empty($menu_id)) {
+            while ($i < count($menu_id)) {
+                if ($menu_id[$i]) {
+                    $this->db->set('arrange', $main_arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("page_menu_id", $menu_id[$i]);
+                    $this->db->update('page_menu');
+                    $main_arrange++;
+                }
+                $i++;
             }
-            $i++;
         }
         $menusub_id = $this->input->post('menusub_id', TRUE);
         if (!empty($menusub_id)) {

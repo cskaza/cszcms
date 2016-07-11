@@ -29,13 +29,22 @@ class Article extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->csz_referrer->setIndex('article');
-
+        $this->csz_referrer->setIndex('article'); /* Set index page when redirect after save */
+        $search_arr = ' 1=1 ';
+        if($this->input->get('search') || $this->input->get('category')){
+            if($this->input->get('search')){
+                $search_arr.= " AND title LIKE '%".$this->input->get('search', TRUE)."%' OR short_desc LIKE '%".$this->input->get('search', TRUE)."%'";
+            }
+            if($this->input->get('category')){
+                $search_arr.= " AND cat_id = '".$this->input->get('category', TRUE)."'";
+            }
+        }
+        $search_arr.= " AND is_category = 0";
         $this->load->helper('form');
         $this->load->library('pagination');
         // Pages variable
         $result_per_page = 20;
-        $total_row = $this->Csz_model->countData('article_content');
+        $total_row = $this->Csz_model->countData('article_db', $search_arr);
         $num_link = 10;
         $base_url = BASE_URL . '/admin/plugin/article/';
 
@@ -44,12 +53,44 @@ class Article extends CI_Controller {
         ($this->uri->segment(4)) ? $pagination = $this->uri->segment(4) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_content', $result_per_page, $pagination, 'timestamp_create', 'desc'));
-        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_category', "category_name != ''", ''));
+        $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
         $this->template->loadSub('admin/plugin/article_index');
+    }
+    
+    public function add() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        //Load the form helper
+        $this->load->helper('form');
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+        //Load the view
+        $this->template->loadSub('admin/plugin/article_add');
+    }
+    
+    public function addSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->load->model('plugin/Article_model');
+        //Load the form validation library
+        $this->load->library('form_validation');
+        //Set validation rules
+        $this->form_validation->set_rules('lang_name', 'Language Name', 'required');
+        $this->form_validation->set_rules('lang_iso', 'Language ISO Code', 'trim|required|min_length[2]|max_length[2]');
+        $this->form_validation->set_rules('country', 'Country Name', 'required');
+        $this->form_validation->set_rules('country_iso', 'Country ISO Code', 'trim|required|min_length[2]|max_length[2]');
+
+        if ($this->form_validation->run() == FALSE) {
+            //Validation failed
+            $this->add();
+        } else {
+            //Validation passed
+            //Add the user
+            $this->Article_model->insert();
+            //Return to user list
+            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+        }
     }
 
 }

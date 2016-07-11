@@ -155,8 +155,9 @@ class Users extends CI_Controller {
             if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
                 //Delete the user account
                 $this->Csz_admin_model->removeUser($this->uri->segment(4));
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             } else {
-                echo "<script>alert(\"" . $this->lang->line('user_delete_myacc') . "\");</script>";
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('user_delete_myacc').'</div>');
             }
         }
         //Return to user list

@@ -9,7 +9,7 @@ CSZ-CMS V.1.0.9
 - Add proxy config file for get real ip address.
 - Add member user and login page on frontend.
 - Add page cache time control in site settings.
-- Add VK.com and Odnoklassniki social icon.
+- Add VKontakte and Odnoklassniki social icon.
 - Fix page show on frontend error bug.
 - Fix backend forget password template.
 - Fix something about navigation.

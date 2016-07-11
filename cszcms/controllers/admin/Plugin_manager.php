@@ -55,15 +55,19 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
-        if($_FILES['file_upload'] != null){
+        if ($_FILES['file_upload'] != null) {
             if (in_array($_FILES['file_upload']['type'], $zip_ext)) {
-                $paramiter = '_1';
-                $photo_id = time();
-                $uploaddir = 'photo/plugin/';
-                $file_f = $_FILES['file_upload']['tmp_name'];
-                $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
-                $newfname = FCPATH.$uploaddir.$upload_file;
+                $config['upload_path'] = FCPATH;
+                /* set the filter image types Ex. zip|rar|7z */
+                $config['allowed_types'] = 'zip';
+                $file_name = 'plugin_'.time().'.zip';
+                $config['file_name'] = $file_name;
+                //load the upload library
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+                $this->upload->set_allowed_types('*');
+                @$this->upload->do_upload('file_upload');
+                $newfname = FCPATH . $file_name;
                 if (file_exists($newfname)) {
                     @$this->unzip->extract($newfname, FCPATH);
                     if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
@@ -75,30 +79,30 @@ class Plugin_manager extends CI_Controller {
                         @unlink($newfname);
                     }
                     $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-                }else{
-                    $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                } else {
+                    $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
                 }
-            }else{
-                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('pluginmgr_zip_remark').'</div>');
+            } else {
+                $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('pluginmgr_zip_remark') . '</div>');
             }
-        }else{
-            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+        } else {
+            $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
         }
         // When Success 
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
-    
+
     public function setstatus() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        if($this->uri->segment(4)){
+        if ($this->uri->segment(4)) {
             $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != ''", '', 1);
-            if($status->plugin_active){
+            if ($status->plugin_active) {
                 $this->db->set('plugin_active', 0, FALSE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);
                 $this->db->where('plugin_manager_id', $this->uri->segment(4));
                 $this->db->update('plugin_manager');
-            }else{
+            } else {
                 $this->db->set('plugin_active', 1, FALSE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);
                 $this->db->where('plugin_manager_id', $this->uri->segment(4));
@@ -106,7 +110,7 @@ class Plugin_manager extends CI_Controller {
             }
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
-        }else{
+        } else {
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }

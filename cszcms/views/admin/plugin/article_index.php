@@ -11,7 +11,56 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('article_header') ?> <a role="button" href="<?php echo BASE_URL?>/admin/plugin/article/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('article_new_header') ?></a>  <a role="button" href="<?php echo BASE_URL?>/admin/plugin/article/newcat" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('category_new_header') ?></a> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
+        <div class="h2 sub-header"><div class="row"><div class="text-left col-xs-8"><?php echo  $this->lang->line('article_category') ?> <a role="button" href="<?php echo BASE_URL?>/admin/plugin/article/add?is_category=1" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('category_new_header') ?></a></div><div class="text-right col-xs-4"><a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div></div></div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('category_main'); ?></th>
+                        <th width="50%" class="text-center"><?php echo $this->lang->line('category_name'); ?></th>
+                        <th width="18%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
+                        <th width="12%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($category === FALSE) { ?>
+                        <tr>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($category as $c) {
+                            $cat_arr[$c['article_db_id']] = $c['category_name'];
+                            if(!$c['active']){
+                                $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
+                            }else{
+                                $inactive = '';
+                            }
+                            if($c['main_cat_id']){
+                                $main_cat = '<b>['.$this->lang->line('id_col_table').' '.$c['main_cat_id'].']</b>';
+                            }else{
+                                $main_cat = '<i class="glyphicon glyphicon-ok"></i>';
+                            }
+                            echo '<tr>';
+                            echo '<td'.$inactive.' class="text-center">' . $c['article_db_id'] . '</td>';
+                            echo '<td'.$inactive.' class="text-center">' . $main_cat . '</td>';
+                            echo '<td'.$inactive.' class="text-center">' . $c['category_name'] . '</td>';
+                            echo '<td'.$inactive.' class="text-center">' . $c['timestamp_update'] . '</td>';
+                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/plugin/article/edit' . $c['article_db_id'] . '?is_category=1" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('user_edit_btn').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('user_delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/delete/'.$c['article_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('user_delete_btn').'</a></td>';
+                            echo '</tr>';
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="h2 sub-header"><?php echo  $this->lang->line('article_header') ?> <a role="button" href="<?php echo BASE_URL?>/admin/plugin/article/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('article_new_header') ?></a></div>
         <form action="<?php echo current_url(); ?>" method="get">
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('search'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label> &nbsp;&nbsp;&nbsp; 
@@ -19,10 +68,9 @@
                     <select name="category" id="category">
                         <option value=""><?php echo $this->lang->line('option_all'); ?></option>
                         <?php
-                        if($category !== FALSE){
-                            foreach ($category as $c) { 
-                                $cat_arr[$c['catagory_id']] = $c['category_name']; ?>
-                                <option value="<?php echo $c['catagory_id'] ?>"<?php echo ($this->input->get('category') == $c['catagory_id'])?' selected="selected"':''?>><?php echo $c['category_name'] ?></option>
+                        if(isset($cat_arr)){
+                            foreach ($cat_arr as $key => $value) { ?>
+                                <option value="<?php echo $key ?>"<?php echo ($this->input->get('category') == $key)?' selected="selected"':''?>><?php echo $value ?></option>
                         <?php }
                         }
                         ?>
@@ -70,7 +118,7 @@
                             echo '<small>'.$u['keyword'].'</small><br>';
                             echo '<em>'.$u['short_desc'].'</em><br>';
                             echo '</td>';
-                            echo '<td'.$inactive.' class="text-center">' . $cat_arr[$u['category_id']] . '</td>';
+                            echo '<td'.$inactive.' class="text-center">' . $cat_arr[$u['cat_id']] . '</td>';
                             echo '<td'.$inactive.' class="text-center">' . ucfirst($this->Csz_admin_model->getUser($u['user_admin_id'])->name) . '</td>';
                             echo '<td'.$inactive.' class="text-center">' . $u['timestamp_update'] . '</td>';
                             echo '<td class="text-center"><a href="'.BASE_URL.'/admin/plugin/article/edit' . $u['content_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('user_edit_btn').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('user_delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/delete/'.$u['content_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('user_delete_btn').'</a></td>';
@@ -83,7 +131,5 @@
         </div>
         <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
         <!-- /widget-content --> 
-        <br><br>
-        <span class="warning"><i class="glyphicon glyphicon-lock"></i> <?php echo  $this->lang->line('default_data_remark') ?></span>
     </div>
 </div>

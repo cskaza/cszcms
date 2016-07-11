@@ -104,9 +104,11 @@ class Linkstats extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $delR = $this->input->post('delR');
-        foreach ($delR as $value) {
-            if ($value) {
-                $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $value);
+        if(isset($delR)){
+            foreach ($delR as $value) {
+                if ($value) {
+                    $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $value);
+                }
             }
         }
         redirect($this->csz_referrer->getIndex('view'), 'refresh');
@@ -116,10 +118,12 @@ class Linkstats extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $delR = $this->input->post('delR');
-        foreach ($delR as $value) {
-            if ($value) {
-                $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $value, 1);
-                $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);
+        if(isset($delR)){
+            foreach ($delR as $value) {
+                if ($value) {
+                    $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $value, 1);
+                    $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);
+                }
             }
         }
         redirect($this->csz_referrer->getIndex(), 'refresh');
