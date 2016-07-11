@@ -10,14 +10,24 @@ class Article_model extends CI_Model {
     
     public function insert() {
         // Create the new lang
+        $is_category = $this->input->post('is_category', TRUE);
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-        $data = array(
-            'lang_name' => $this->input->post('lang_name', TRUE),
-            'lang_iso' => $this->input->post('lang_iso', TRUE),
-            'country' => $this->input->post('country', TRUE),
-            'country_iso' => $this->input->post('country_iso', TRUE),
-            'active' => $active,
-        );
+        if($is_category){
+            $data = array(
+                'category_name' => $this->input->post('category_name', TRUE),
+                'main_cat_id' => $this->input->post('main_cat_id', TRUE),
+            );
+        }else{
+            $data = array(
+                'lang_name' => $this->input->post('lang_name', TRUE),
+                'lang_iso' => $this->input->post('lang_iso', TRUE),
+                'country' => $this->input->post('country', TRUE),
+                'country_iso' => $this->input->post('country_iso', TRUE),
+            );
+        }
+        $this->db->set('is_category', $is_category);
+        $this->db->set('active', $active);
+        $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('article_db', $data);

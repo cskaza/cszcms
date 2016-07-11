@@ -19,8 +19,8 @@
                         <th width="10%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('category_main'); ?></th>
                         <th width="50%" class="text-center"><?php echo $this->lang->line('category_name'); ?></th>
-                        <th width="18%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
-                        <th width="12%"></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>

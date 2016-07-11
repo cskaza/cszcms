@@ -73,29 +73,44 @@ class Article extends CI_Controller {
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->load->model('plugin/Article_model');
-        //Load the form validation library
-        $this->load->library('form_validation');
         $is_category = $this->input->post('is_category', TRUE);
         if(!$is_category){
+            //Load the form validation library
+            $this->load->library('form_validation');
             //Set validation rules
             $this->form_validation->set_rules('title', 'Title', 'required');
             $this->form_validation->set_rules('short_desc', 'Short Description', 'required');
             $this->form_validation->set_rules('cat_id', 'Category', 'required');
-        }
-        if ($this->form_validation->run() == FALSE) {
-            //Validation failed
-            if($is_category){
-                redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
-            }else{
+            if ($this->form_validation->run() == FALSE) {
+                //Validation failed
                 $this->add();
+            } else {
+                //Validation passed
+                //Add the user
+                $this->Article_model->insert();
+                //Return to user list
+                redirect($this->csz_referrer->getIndex('article'), 'refresh');
             }
-        } else {
-            //Validation passed
-            //Add the user
-            $this->Article_model->insert();
-            //Return to user list
-            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+        }else{
+            if($this->input->post('category_name', TRUE)){
+                $this->Article_model->insert();
+                //Return to user list
+                redirect($this->csz_referrer->getIndex('article'), 'refresh');
+            }else{
+                redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
+            }
         }
+    }
+    
+    public function delete() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->uri->segment(5)){
+            //Delete the data
+            $this->Article_model->delete($this->uri->segment(5));
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }
+        //Return to languages list
+        redirect($this->csz_referrer->getIndex('article'), 'refresh');
     }
 
 }

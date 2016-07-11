@@ -125,8 +125,23 @@ if($category !== FALSE){
                 <label class="control-label" for="content"><?php echo $this->lang->line('article_content'); ?></label>
                 <textarea name="content" id="content" class="form-control body-tinymce"><?php echo $starter_html?></textarea>
             </div> <!-- /control-group -->
+            <hr />
+            <div class="control-group">		
+            <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									
+                <label class="control-label" for="file_upload"><?php echo $this->lang->line('article_mainpic'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'file_upload',
+                        'id' => 'file_upload',
+                        'class' => 'span5'
+                    );
+                    echo form_upload($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group --> 
+            <hr>
         <?php } ?>
-        <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">
             <?php
@@ -137,7 +152,7 @@ if($category !== FALSE){
             );
             echo form_checkbox($data);
             ?> <?php echo $this->lang->line('lang_active'); ?></label>	
-        </div> <!-- /control-group -->       
+        </div> <!-- /control-group -->
         <br><br>
         <div class="form-actions">
             <?php
