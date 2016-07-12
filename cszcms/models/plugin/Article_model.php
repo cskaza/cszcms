@@ -17,6 +17,7 @@ class Article_model extends CI_Model {
                 'category_name' => $this->input->post('category_name', TRUE),
                 'main_cat_id' => $this->input->post('main_cat_id', TRUE),
             );
+            $url_rewrite = $this->Csz_model->rw_link($this->input->post('category_name', TRUE));
         }else{
             $upload_file = '';
             if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
@@ -35,7 +36,9 @@ class Article_model extends CI_Model {
                 'content' => $this->input->post('content', TRUE),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
+            $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
         }
+        $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', $is_category);
         $this->db->set('active', $active);
@@ -54,6 +57,7 @@ class Article_model extends CI_Model {
                 'category_name' => $this->input->post('category_name', TRUE),
                 'main_cat_id' => $this->input->post('main_cat_id', TRUE),
             );
+            $url_rewrite = $this->Csz_model->rw_link($this->input->post('category_name', TRUE));
         }else{
             if ($this->input->post('del_file')) {
                 $upload_file = '';
@@ -77,7 +81,9 @@ class Article_model extends CI_Model {
                 'content' => $this->input->post('content', TRUE),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
+            $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
         }
+        $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', $is_category);
         $this->db->set('active', $active);
@@ -105,6 +111,31 @@ class Article_model extends CI_Model {
         }else{
             return FALSE;
         }
+    }
+    
+    public function categoryMenu() {
+        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '0'", '', 0, 'category_name', 'ASC');
+        $html = '<div class="panel panel-primary">
+                <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('article_category_menu').'</b></div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">';
+                        if($maincat === FALSE){
+                            $html.= '<li role="presentation" class="text-left"><h4>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</h4></li>';
+                        }else{
+                            foreach ($maincat as $mc) {
+                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b>'.$mc['category_name'].'</b></a></li>';
+                                $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
+                                if(!empty($subcat)){
+                                    foreach ($subcat as $sc) {
+                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$sc['category_name'].'</b></a></li>';
+                                    }
+                                }
+                            } 
+                        }
+            $html.= '</ul>
+                </div>
+            </div>';
+        return $html;
     }
     
 }

@@ -8,10 +8,10 @@
     </div>
     <!-- /.row -->
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php echo $this->Headfoot_html->memberleftMenu(); ?>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('your_profile') ?></b></div>
                 <div class="panel-body">

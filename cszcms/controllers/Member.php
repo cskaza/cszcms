@@ -29,7 +29,6 @@ class Member extends CI_Controller {
         $this->template->set('core_js', $this->Csz_model->coreJs());
         $row = $this->Csz_model->load_config();
         $pageURL = $this->Csz_model->getCurPages();
-        $this->page_url = $pageURL;
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
         $this->template->set('title', 'Member | ' . $row->site_name);
