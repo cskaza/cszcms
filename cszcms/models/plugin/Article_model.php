@@ -36,6 +36,7 @@ class Article_model extends CI_Model {
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
         }
+        $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', $is_category);
         $this->db->set('active', $active);
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
@@ -77,6 +78,7 @@ class Article_model extends CI_Model {
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
         }
+        $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', $is_category);
         $this->db->set('active', $active);
         $this->db->set('timestamp_update', 'NOW()', FALSE);

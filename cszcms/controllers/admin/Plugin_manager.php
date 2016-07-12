@@ -50,48 +50,6 @@ class Plugin_manager extends CI_Controller {
         $this->template->loadSub('admin/plugin_mgr_index');
     }
 
-    public function install() {
-        admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        /* upload zip file */
-        $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
-        if ($_FILES['file_upload'] != null) {
-            if (in_array($_FILES['file_upload']['type'], $zip_ext)) {
-                $config['upload_path'] = FCPATH;
-                /* set the filter image types Ex. zip|rar|7z */
-                $config['allowed_types'] = 'zip';
-                $file_name = 'plugin_'.time().'.zip';
-                $config['file_name'] = $file_name;
-                //load the upload library
-                $this->load->library('upload', $config);
-                $this->upload->initialize($config);
-                $this->upload->set_allowed_types('*');
-                @$this->upload->do_upload('file_upload');
-                $newfname = FCPATH . $file_name;
-                if (file_exists($newfname)) {
-                    @$this->unzip->extract($newfname, FCPATH);
-                    if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
-                        $this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
-                        delete_files(FCPATH . 'plugin_sql', TRUE);
-                        rmdir(FCPATH . 'plugin_sql');
-                    }
-                    if (is_writable($newfname)) {
-                        @unlink($newfname);
-                    }
-                    $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-                } else {
-                    $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-                }
-            } else {
-                $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('pluginmgr_zip_remark') . '</div>');
-            }
-        } else {
-            $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-        }
-        // When Success 
-        redirect($this->csz_referrer->getIndex(), 'refresh');
-    }
-
     public function setstatus() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));

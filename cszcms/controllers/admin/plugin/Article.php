@@ -39,6 +39,9 @@ class Article extends CI_Controller {
             if($this->input->get('category')){
                 $search_arr.= " AND cat_id = '".$this->input->get('category', TRUE)."'";
             }
+            if($this->input->get('lang')){
+                $search_arr.= " AND lang_iso = '".$this->input->get('lang', TRUE)."'";
+            }
         }
         $search_arr.= " AND is_category = 0";
         $this->load->helper('form');
@@ -57,6 +60,7 @@ class Article extends CI_Controller {
         $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
         $this->template->setSub('total_row', $total_row);
+        $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
         //Load the view
         $this->template->loadSub('admin/plugin/article_index');
@@ -67,6 +71,7 @@ class Article extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+        $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
         $this->template->loadSub('admin/plugin/article_add');
     }
@@ -107,6 +112,7 @@ class Article extends CI_Controller {
         if($this->uri->segment(5)){
             $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
+            $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
             $this->template->loadSub('admin/plugin/article_edit');
         }else{

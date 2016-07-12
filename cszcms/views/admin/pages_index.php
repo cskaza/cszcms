@@ -53,7 +53,7 @@
                         echo '<td'.$inactive.' class="text-center">' . $u['pages_id'] . '</td>';
                         echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
                         echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
-                        echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';                        
+                        echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
                         echo '<td class="text-center"><a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                         echo '</tr>';
                     }

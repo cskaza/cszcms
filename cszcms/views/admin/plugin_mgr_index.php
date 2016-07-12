@@ -1,36 +1,11 @@
 <!-- Page Heading -->
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12 col-md-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo  $this->lang->line('pluginmgr_header') ?>
+                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('pluginmgr_header') ?>
             </li>
         </ol>
-        <?php if($this->session->userdata('admin_type') == 'admin'){ ?>
-            <div class="h2 sub-header"><?php echo  $this->lang->line('pluginmgr_install') ?></div>
-            <?php echo form_open_multipart(BASE_URL . '/admin/plugin/install'); ?>
-            <?php
-            $data = array(
-                'name' => 'file_upload',
-                'id' => 'file_upload',
-                'class' => 'form-control-static',
-                'accept' => '.zip'
-            );
-            echo form_upload($data); ?>
-            <blockquote class="remark">
-                <em><?php echo  $this->lang->line('pluginmgr_zip_remark') ?></em>
-            </blockquote>
-            <?php
-            $data = array(
-                'name' => 'submit',
-                'id' => 'submit',
-                'class' => 'btn btn-primary form-inline',
-                'value' => $this->lang->line('btn_install'),
-                'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
-            );
-            echo form_submit($data); ?>
-            <?php echo form_close(); ?>
-        <?php } ?>
     </div>
 </div>
 <!-- /.row -->

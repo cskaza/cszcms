@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php if($article->is_category){  echo  $this->lang->line('category_new_header');  }else{ echo  $this->lang->line('article_new_header'); } ?></div>
+        <div class="h2 sub-header"><?php if($article->is_category){  echo  $this->lang->line('category_new_header');  }else{ echo  $this->lang->line('article_new_header'); } ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('article'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
         <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editsave/'.$this->uri->segment(5)); ?>
         <input type="hidden" name="is_category" id="is_category" value="<?php echo $article->is_category; ?>">
         <?php if($article->is_category){ ?>
@@ -141,6 +141,18 @@
             </div> <!-- /control-group -->
             <hr>
         <?php } ?>
+        <div class="control-group">	
+            <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>
+            <?php
+                $att = 'id="lang_iso" class="form-control"';
+                $data = array();
+                foreach ($lang as $lg) {
+                    $data[$lg->lang_iso] = $lg->lang_name;
+                }
+                echo form_dropdown('lang_iso', $data, '', $att);
+            ?>	
+        </div> <!-- /control-group -->
+        <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">
             <?php

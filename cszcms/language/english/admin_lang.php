@@ -282,7 +282,7 @@ $lang['formpost_notfound']                 = "Form post not found.";
 $lang['formpost_ipaddress']                 = "IP Address";
 
 //Upgrade
-$lang['upgrade_header']			= "System Upgrade";
+$lang['upgrade_header']			= "System Upgrade Automatic";
 $lang['btn_upgrade']			= "Start Upgrade";
 $lang['upgrade_curver']			= "Current Version:";
 $lang['upgrade_lastver']		= "Latest Version:";
@@ -291,6 +291,7 @@ $lang['upgrade_lastver_alert']          = "Your CSZ-CMS is latest version!";
 $lang['upgrade_success_alert']          = "Upgrade successfully!";
 $lang['upgrade_error_alert']            = "Upgrade Error!";
 $lang['upgrade_text']                   = "<b>Important!</b> Please, backup the database and your modified file before upgrade! Please immediately upgrade for latest version.";
+$lang['manual_upgrade']			= "System Upgrade Manually";
 
 //Optimize Database
 $lang['maintenance_header']             = "Maintenance System";

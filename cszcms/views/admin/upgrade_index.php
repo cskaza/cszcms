@@ -1,12 +1,43 @@
 <!-- Page Heading -->
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6 col-md-6">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('upgrade_header') ?>
+                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') . ' / ' . $this->lang->line('pluginmgr_install') ?>
             </li>
-        </ol>
-        <div class="h2 sub-header"><?php echo  $this->lang->line('maintenance_header') ?></div>
+        </ol><hr>
+        <?php echo form_open_multipart(BASE_URL . '/admin/upgrade/install'); ?>
+        <?php
+        $data = array(
+            'name' => 'file_upload',
+            'id' => 'file_upload',
+            'class' => 'form-control-static',
+            'accept' => '.zip'
+        );
+        echo form_upload($data);
+        ?>
+        <blockquote class="remark">
+            <em><?php echo $this->lang->line('pluginmgr_zip_remark') ?></em>
+        </blockquote>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-primary form-inline',
+            'value' => $this->lang->line('btn_install'),
+            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+        <br><br>
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('maintenance_header') ?>
+            </li>
+        </ol><hr>
         <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllCache'); ?>
         <?php
         $data = array(
@@ -14,20 +45,25 @@
             'id' => 'submit',
             'class' => 'btn btn-danger',
             'value' => $this->lang->line('btn_clearallcache'),
-            'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
+            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
         );
         echo form_submit($data);
         ?>
         <?php echo form_close(); ?>
+        <br><br>
     </div>
 </div>
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-6 col-md-6">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('upgrade_header') ?></div>
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('upgrade_header') ?>
+            </li>
+        </ol><hr>
         <div class="panel panel-default">
             <div class="panel-body">
-                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo  $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo  $last_version ?></i></b>
+                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b>
             </div>
         </div>
         <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>
@@ -39,15 +75,19 @@
             'id' => 'submit',
             'class' => 'btn btn-primary',
             'value' => $this->lang->line('btn_upgrade'),
-            'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
+            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
         );
         echo form_submit($data);
         ?>   
         <?php echo form_close(); ?>
+        <br><br>
     </div>
     <div class="col-lg-6 col-md-6">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('database_maintain_header') ?></div>
-
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('database_maintain_header') ?>
+            </li>
+        </ol><hr>
         <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
         <?php
         $data = array(
@@ -59,6 +99,7 @@
         echo form_submit($data);
         ?>   
         <?php echo form_close(); ?>
-        <br><a href="<?php echo BASE_URL . '/admin/upgrade/backup'?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db')?></a>
+        <br><a href="<?php echo BASE_URL . '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
+        <br><br>
     </div>
 </div>

@@ -14,8 +14,8 @@ class Csz_referrer {
             $key = 'referred_'.$index;
         }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
-        if(strpos($paramiter_url, '?') !== false){
-            $param = $paramiter_url;
+        if(strpos($paramiter_url, '?') !== false){ /* Find ? in string */
+            $param = strstr($paramiter_url,'?'); /* Remove string before ? */
         }else{
             $param = '';
         }
