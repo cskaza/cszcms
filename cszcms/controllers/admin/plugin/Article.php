@@ -13,6 +13,7 @@ class Article extends CI_Controller {
         $this->lang->load('admin', LANG);
         $this->lang->load('plugin/article', LANG);
         $this->template->set_template('admin');
+        $this->load->model('plugin/Article_model');
         $this->_init();
         admin_helper::plugin_not_active($this->uri->segment(3));
     }
@@ -72,7 +73,6 @@ class Article extends CI_Controller {
     
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->load->model('plugin/Article_model');
         $is_category = $this->input->post('is_category', TRUE);
         if(!$is_category){
             //Load the form validation library
@@ -88,17 +88,62 @@ class Article extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Article_model->insert();
-                //Return to user list
                 redirect($this->csz_referrer->getIndex('article'), 'refresh');
             }
         }else{
             if($this->input->post('category_name', TRUE)){
                 $this->Article_model->insert();
-                //Return to user list
                 redirect($this->csz_referrer->getIndex('article'), 'refresh');
             }else{
                 redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
             }
+        }
+    }
+    
+    public function edit() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        //Load the form helper
+        $this->load->helper('form');
+        if($this->uri->segment(5)){
+            $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+            $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
+            //Load the view
+            $this->template->loadSub('admin/plugin/article_edit');
+        }else{
+            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+        } 
+    }
+    
+    public function editSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $is_category = $this->input->post('is_category', TRUE);
+        if($this->uri->segment(5)){
+            if(!$is_category){
+                //Load the form validation library
+                $this->load->library('form_validation');
+                //Set validation rules
+                $this->form_validation->set_rules('title', 'Title', 'required');
+                $this->form_validation->set_rules('short_desc', 'Short Description', 'required');
+                $this->form_validation->set_rules('cat_id', 'Category', 'required');
+                if ($this->form_validation->run() == FALSE) {
+                    //Validation failed
+                    $this->add();
+                } else {
+                    //Validation passed
+                    //Add the user
+                    $this->Article_model->update($this->uri->segment(5));
+                    redirect($this->csz_referrer->getIndex('article'), 'refresh');
+                }
+            }else{
+                if($this->input->post('category_name', TRUE)){
+                    $this->Article_model->update($this->uri->segment(5));
+                    redirect($this->csz_referrer->getIndex('article'), 'refresh');
+                }else{
+                    redirect(BASE_URL.'/admin/plugin/article/edit/'.$this->uri->segment(5), 'refresh');
+                }
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex('article'), 'refresh');
         }
     }
     
@@ -109,7 +154,6 @@ class Article extends CI_Controller {
             $this->Article_model->delete($this->uri->segment(5));
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
-        //Return to languages list
         redirect($this->csz_referrer->getIndex('article'), 'refresh');
     }
 
