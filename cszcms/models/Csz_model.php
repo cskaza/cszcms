@@ -586,7 +586,6 @@ class Csz_model extends CI_Model {
                         'admin_name' => $rows->name,
                         'admin_email' => $rows->email,
                         'admin_type' => $rows->user_type,
-                        'admin_hash' => $rows->md5_hash,
                         'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);

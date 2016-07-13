@@ -2,7 +2,7 @@
  
 class Admin_helper{
     static function is_logged_in($email){
-        if(!$email || !$_SESSION['admin_logged_in'] || !$_SESSION['admin_type'] || !$_SESSION['admin_hash'] || $_SESSION['admin_type'] == 'member'){
+        if(!$email || !$_SESSION['admin_logged_in'] || !$_SESSION['admin_type'] || $_SESSION['admin_type'] == 'member'){
             $url_return = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $redirect= BASE_URL.'/admin/login?url_return='.$url_return;
             header("Location: $redirect");	
