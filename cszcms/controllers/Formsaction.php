@@ -75,7 +75,7 @@ class Formsaction extends CI_Controller {
         if ($active) {
             $webconfig = $this->Csz_admin_model->load_config();
             # ---- set from, to, bcc --#
-            $from_name = $email_from;
+            $from_name = $webconfig->site_name;
             $from_email = $email_from;
             if($email_to){
                 $to_email = $email_to;
