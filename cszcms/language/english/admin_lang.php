@@ -299,6 +299,10 @@ $lang['upgrade_success_alert']          = "Upgrade successfully!";
 $lang['upgrade_error_alert']            = "Upgrade Error!";
 $lang['upgrade_text']                   = "<b>Important!</b> Please, backup the database and your modified file before upgrade! Please immediately upgrade for latest version.";
 $lang['manual_upgrade']			= "System Upgrade Manually";
+$lang['logs_download_header']		= "Error Logs Download";
+$lang['btn_logs_download']		= "Download!";
+$lang['btn_clear_logs']                 = "Clear All Error Logs";
+
 
 //Optimize Database
 $lang['maintenance_header']             = "Maintenance System";

@@ -5,7 +5,7 @@
             <li class="active">
                 <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') . ' / ' . $this->lang->line('pluginmgr_install') ?>
             </li>
-        </ol><hr>
+        </ol>
         <?php echo form_open_multipart(BASE_URL . '/admin/upgrade/install'); ?>
         <?php
         $data = array(
@@ -37,7 +37,7 @@
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('maintenance_header') ?>
             </li>
-        </ol><hr>
+        </ol>
         <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllCache'); ?>
         <?php
         $data = array(
@@ -46,6 +46,52 @@
             'class' => 'btn btn-danger',
             'value' => $this->lang->line('btn_clearallcache'),
             'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+        <br>
+        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllErrLog'); ?>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-danger',
+            'value' => $this->lang->line('btn_clear_logs'),
+            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+        <br>
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
+            </li>
+        </ol>
+        <?php echo form_open(BASE_URL . '/admin/upgrade/downloadErrLog'); ?>
+        <?php
+        $att = 'id="errlogfile" class="form-control-static"';
+        $data = array();
+        $data[''] = $this->lang->line('option_choose');
+        if(!empty($logsdir)){
+            foreach ($logsdir as $t) {
+                if (!is_dir($t)) {
+                    $t = str_replace("\\", "", $t);
+                    $t = str_replace("/", "", $t);
+                    if (($t != "index.html") && ($t != ".htaccess")) {
+                        $data[$t] = str_replace('.php', '', $t);
+                    }
+                }
+            }
+        }
+        echo form_dropdown('errlogfile', $data, '', $att); ?>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-primary',
+            'value' => $this->lang->line('btn_logs_download'),
         );
         echo form_submit($data);
         ?>
@@ -60,7 +106,7 @@
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('upgrade_header') ?>
             </li>
-        </ol><hr>
+        </ol>
         <div class="panel panel-default">
             <div class="panel-body">
                 <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b>
@@ -87,7 +133,7 @@
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('database_maintain_header') ?>
             </li>
-        </ol><hr>
+        </ol>
         <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
         <?php
         $data = array(

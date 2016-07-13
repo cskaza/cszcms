@@ -165,12 +165,18 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `googlecapt_secretkey` varchar(255) NOT NULL,
   `link_statistic_active` int(11) NOT NULL,
   `pagecache_time` int(3) NOT NULL,
+  `email_protocal` varchar(20) NOT NULL,
+  `smtp_host` varchar(255) NOT NULL,
+  `smtp_user` varchar(255) NOT NULL,
+  `smtp_pass` varchar(255) NOT NULL,
+  `smtp_port` varchar(5) NOT NULL,
+  `sendmail_path` varchar(255) NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 30, '2016-05-19 15:08:31');
+(1, 'CSZ-CMS Starter', '', '&copy; 2016 CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 30, '', '', '', '', '', '', '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -217,12 +223,12 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
-(1, 'login_heading', 'For member login Header text', 'Member Login', '2016-06-23 23:28:41'),
-(2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-06-23 23:33:55'),
-(3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-06-23 23:34:16'),
+(1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
+(2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-07-04 11:44:09'),
+(3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-07-04 11:44:39'),
 (4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 23:34:45'),
 (5, 'login_password', 'For password label', 'Password', '2016-06-23 23:35:22'),
 (6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 23:35:53'),
@@ -264,4 +270,46 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (42, 'change_password', 'For change password text', 'Change Password', '2016-07-02 18:04:49'),
 (43, 'picture', 'For picture text', 'You Picture', '2016-07-02 18:18:58'),
 (44, 'save_btn', 'For save button text', 'Save', '2016-07-02 18:35:11'),
-(45, 'cancel_btn', 'For cancel button text', 'Cancel', '2016-07-02 18:35:11');
+(45, 'cancel_btn', 'For cancel button text', 'Cancel', '2016-07-02 18:35:11'),
+(46, 'article_index_header', 'For article index page', 'List of Article', '2016-07-12 17:08:16'),
+(47, 'article_category_menu', 'For category of article text', 'Category', '2016-07-12 17:23:40'),
+(48, 'article_readmore_text', 'For read more button of article text', 'Read More', '2016-07-12 17:23:40'),
+(49, 'article_not_found', 'For article not found text', 'Article not found!', '2016-07-12 17:33:20'),
+(50, 'article_cat_not_found', 'For category of article not found text', 'Category not found!', '2016-07-12 17:54:29'),
+(51, 'article_postdate', 'For date time of article text', 'Posted date', '2016-07-13 13:56:02'),
+(52, 'article_postby', 'For post by text', 'Posted by', '2016-07-13 13:56:02');
+
+CREATE TABLE IF NOT EXISTS `plugin_manager` (
+  `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_name` varchar(255) NOT NULL,
+  `plugin_urlrewrite` varchar(255) NOT NULL,
+  `plugin_version` varchar(10) NOT NULL,
+  `plugin_owner` varchar(255) NOT NULL,
+  `plugin_active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`plugin_manager_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'Article', 'article', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25');
+
+CREATE TABLE IF NOT EXISTS `article_db` (
+  `article_db_id` int(11) NOT NULL AUTO_INCREMENT,
+  `url_rewrite` varchar(255) NOT NULL,
+  `is_category` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `main_cat_id` int(11) NOT NULL,
+  `main_picture` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `short_desc` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `user_admin_id` int(11) NOT NULL,
+  `cat_id` int(11) NOT NULL,
+  `lang_iso` varchar(10) NOT NULL,
+  `active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`article_db_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

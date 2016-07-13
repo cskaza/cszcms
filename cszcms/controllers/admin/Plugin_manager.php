@@ -54,7 +54,7 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         if ($this->uri->segment(4)) {
-            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != ''", '', 1);
+            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_manager_id = '".$this->uri->segment(4)."'", '', 1);
             if ($status->plugin_active) {
                 $this->db->set('plugin_active', 0, FALSE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);

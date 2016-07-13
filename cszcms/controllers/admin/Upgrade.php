@@ -35,8 +35,10 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->csz_referrer->setIndex();
+        $this->load->helper('directory');
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
+        $this->template->setSub('logsdir', directory_map(APPPATH . '/logs/', 1));
         //Load the view
         $this->template->loadSub('admin/upgrade_index');
     }
@@ -128,7 +130,7 @@ class Upgrade extends CI_Controller {
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('optimize_success_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }else{
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('optimize_error_alert').'</div>');
             redirect('admin/upgrade', 'refresh');
@@ -165,5 +167,20 @@ class Upgrade extends CI_Controller {
         $this->Csz_model->clear_all_error_log();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
+    }
+    
+    public function downloadErrLog() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        $log_file = $this->input->post('errlogfile', TRUE);
+        if($log_file){
+            $data = read_file(APPPATH . '/logs/'.$log_file);
+            $string = str_replace("<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>", '', $data);
+            $this->load->helper('download');
+            force_download('errorlog_'.date('Ymd').'.txt', $string);
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
     }
 }
