@@ -171,11 +171,12 @@ $route['member/forgot'] = 'Member/forgot';
 $route['member/reset/:any'] = 'Member/getPassword';
 $route['member/:any'] = 'Member';
 
-$route['plugin/([a-zA-Z]+)/view/:any'] = "plugin/$1/view";
+$route['plugin/([a-zA-Z]+)/view/:num/:any'] = "plugin/$1/view";
 $route['plugin/([a-zA-Z]+)/category/:any/:num'] = "plugin/$1/category";
 $route['plugin/([a-zA-Z]+)/category/:any'] = "plugin/$1/category";
 $route['plugin/([a-zA-Z]+)/:num'] = "plugin/$1";
 $route['plugin/([a-zA-Z]+)'] = "plugin/$1";
+$route['plugin'] = "home";
 
 $route['formsaction/:any'] = 'formsaction';
 $route['formsaction'] = 'formsaction';
@@ -183,7 +184,7 @@ $route['linkstats/:any'] = 'linkstats';
 $route['linkstats'] = 'linkstats';
 $route['lang/:any'] = "home/setLang";
 
-$route['^(?!admin|member|formsaction|linkstats).*'] = 'home';
+$route['^(?!admin|member|formsaction|linkstats|plugin).*'] = 'home';
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

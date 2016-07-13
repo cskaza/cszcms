@@ -53,6 +53,7 @@ class Navigation extends CI_Controller {
                 $this->template->setSub('pages', $this->Csz_admin_model->getPagesAll());
                 $this->template->setSub('dropmenu', $this->Csz_admin_model->getDropMenuAll());
                 $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+                $this->template->setSub('plugin', $this->Csz_admin_model->getPluginAll());
 		$this->load->helper('form');
 		//Load the view
                 $this->template->loadSub('admin/nav_add');
@@ -88,6 +89,7 @@ class Navigation extends CI_Controller {
                     $this->template->setSub('lang', $this->Csz_model->loadAllLang());
                     //Get navigation from database
                     $this->template->setSub('nav', $this->Csz_model->getValue('*', 'page_menu', 'page_menu_id', $this->uri->segment(4), 1));
+                    $this->template->setSub('plugin', $this->Csz_admin_model->getPluginAll());
                     $this->load->helper('form');
                     //Load the view
                     $this->template->loadSub('admin/nav_edit');

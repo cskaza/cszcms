@@ -35,7 +35,11 @@ class Headfoot_html extends CI_Model {
                 $page_link = $rs->other_link;
                 $target = ' target="_blank"';
             }else if(!$rs->other_link && !$page_url_rs && $rs->plugin_menu){
-                $page_link = base_url().$rs->plugin_menu;
+                if($rs->plugin_menu == 'member'){
+                    $page_link = base_url().$rs->plugin_menu;
+                }else{
+                    $page_link = base_url().'plugin/'.$rs->plugin_menu;
+                }
                 $target = '';
             }else{
                 $page_link = '#';
@@ -72,7 +76,11 @@ class Headfoot_html extends CI_Model {
                             $page_link_sub = $rs_sub->other_link;
                             $target_sub = ' target="_blank"';       
                         }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
-                            $page_link_sub = base_url().$rs_sub->plugin_menu;
+                            if($rs_sub->plugin_menu == 'member'){
+                                $page_link = base_url().$rs_sub->plugin_menu;
+                            }else{
+                                $page_link = base_url().'plugin/'.$rs_sub->plugin_menu;
+                            }
                             $target_sub = '';
                         }else{
                             $page_link_sub = '#';

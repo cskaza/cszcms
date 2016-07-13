@@ -87,11 +87,7 @@ class Formsaction extends CI_Controller {
                 $to_email = $email_to;
             }else{
                 $to_email = $webconfig->default_email;
-            }
-            # ---- set header --#
-            $headers = 'MIME-Version: 1.0' . "\r\n";
-            $headers.= 'Content-type: text/html; charset=utf-8' . "\r\n";
-            $headers.= 'From: ' . $from_name . ' <' . $from_email . '>' . "\r\n";
+            }            
             $message_html = 'Dear ' . $email_to . ',<br><br>';
             $message_html.= 'Please see below detail<br><br>';
             if ($field_val) {
@@ -114,9 +110,8 @@ class Formsaction extends CI_Controller {
                     }
                 }
             }
-            $message_html.= '<br><br>Regards,<br>' . $webconfig->site_name;
-            # ---- send mail --#
-            @mail($to_email, $subject, $message_html, $headers);
+            $message_html.= '<br><br>Regards,<br>' . $webconfig->site_name;           
+            @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
         } else {
             return FALSE;
         }

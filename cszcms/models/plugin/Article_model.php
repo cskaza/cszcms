@@ -33,7 +33,7 @@ class Article_model extends CI_Model {
                 'title' => $this->input->post('title', TRUE),
                 'keyword' => $this->input->post('keyword', TRUE),
                 'short_desc' => $this->input->post('short_desc', TRUE),
-                'content' => $this->input->post('content', TRUE),
+                'content' => str_replace(' class="container"', '', $this->input->post('content', TRUE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
@@ -78,7 +78,7 @@ class Article_model extends CI_Model {
                 'title' => $this->input->post('title', TRUE),
                 'keyword' => $this->input->post('keyword', TRUE),
                 'short_desc' => $this->input->post('short_desc', TRUE),
-                'content' => $this->input->post('content', TRUE),
+                'content' => str_replace(' class="container"', '', $this->input->post('content', TRUE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
@@ -113,21 +113,22 @@ class Article_model extends CI_Model {
         }
     }
     
-    public function categoryMenu() {
-        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '0'", '', 0, 'category_name', 'ASC');
+    public function categoryMenu($lang_iso) {
+        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '0' AND lang_iso = '".$lang_iso."'", '', 0, 'category_name', 'ASC');
         $html = '<div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('article_category_menu').'</b></div>
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">';
+                            $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article"><b><i class="glyphicon glyphicon-home"></i> '.$this->Csz_model->getLabelLang('article_index_header').'</b></a></li>';
                         if($maincat === FALSE){
                             $html.= '<li role="presentation" class="text-left"><h4>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</h4></li>';
                         }else{
                             foreach ($maincat as $mc) {
-                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b>'.$mc['category_name'].'</b></a></li>';
+                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$mc['category_name'].'</b></a></li>';
                                 $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
                                 if(!empty($subcat)){
                                     foreach ($subcat as $sc) {
-                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$sc['category_name'].'</b></a></li>';
+                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'"> |-- '.$sc['category_name'].'</a></li>';
                                     }
                                 }
                             } 

@@ -9,13 +9,11 @@
     </div>
 </div>
 <!-- /.row -->
+<?php echo form_open_multipart(BASE_URL . '/admin/settings/update'); ?>
 <div class="row">
-    <div class="col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6">
         <div class="h2 sub-header"><?php echo  $this->lang->line('settings_header') ?></div>
-        <div class="control-group">	
-            <?php
-                echo form_open_multipart(BASE_URL . '/admin/settings/update');
-                ?>
+            <div class="control-group">
                 <?php echo form_error('siteTitle', '<div class="error">', '</div>'); ?>									
                 <label class="control-label" for="siteTitle"><?php echo $this->lang->line('settings_name'); ?></label>
                 <div class="controls">
@@ -43,21 +41,7 @@
                     echo form_input($data);
                     ?>
                 </div> <!-- /controls -->				
-            </div> <!-- /control-group -->           
-            <div class="control-group">	
-                <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>
-                <div class="controls">
-                    <?php
-                    $data = array(
-                        'name' => 'siteEmail',
-                        'id' => 'siteEmail',
-                        'class' => 'form-control',
-                        'value' => set_value('siteEmail', $settings->default_email, FALSE)
-                    );
-                    echo form_input($data);
-                    ?>
-                </div> <!-- /controls -->				
-            </div> <!-- /control-group -->         
+            </div> <!-- /control-group -->
             <div class="control-group">	
                 <label class="control-label" for="siteKeyword"><?php echo $this->lang->line('settings_keyword'); ?></label>
                 <div class="controls">
@@ -252,18 +236,120 @@
                     <input type="hidden" id="siteLogo" name="siteLogo" value="<?php echo $settings->site_logo?>"/>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
-            <hr />
-            <?php
-            $data = array(
-                'name' => 'submit',
-                'id' => 'submit',
-                'class' => 'btn btn-primary',
-                'value' => $this->lang->line('btn_save'),
-            );
-            echo form_submit($data);
-            ?>                   
-    <?php
-    echo form_close();
-?>
+                        
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <div class="h2 sub-header"><?php echo  $this->lang->line('settings_email_header') ?></div>
+            <div class="control-group">	
+                <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'siteEmail',
+                        'id' => 'siteEmail',
+                        'class' => 'form-control',
+                        'value' => set_value('siteEmail', $settings->default_email, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="control-label" for="email_protocal"><?php echo $this->lang->line('settings_email_protocal'); ?></label>
+                <?php
+                    $att = 'id="email_protocal" class="form-control"';
+                    $data = array();
+                    $data['mail'] = 'Mail';
+                    $data['sendmail'] = 'Sendmail';
+                    $data['smtp'] = 'SMTP';
+                    echo form_dropdown('email_protocal', $data, $settings->email_protocal, $att);
+                ?>		
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="smtp_host"><?php echo $this->lang->line('settings_smtp_host'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'smtp_host',
+                        'id' => 'smtp_host',
+                        'class' => 'form-control',
+                        'value' => set_value('smtp_host', $settings->smtp_host, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="smtp_user"><?php echo $this->lang->line('settings_smtp_user'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'smtp_user',
+                        'id' => 'smtp_user',
+                        'class' => 'form-control',
+                        'value' => set_value('smtp_user', $settings->smtp_user, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="smtp_pass"><?php echo $this->lang->line('settings_smtp_pass'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'smtp_pass',
+                        'id' => 'smtp_pass',
+                        'class' => 'form-control',
+                        'value' => set_value('smtp_pass', $settings->smtp_pass, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="smtp_port"><?php echo $this->lang->line('settings_smtp_port'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'smtp_port',
+                        'id' => 'smtp_port',
+                        'class' => 'form-control',
+                        'maxlength' => '5',
+                        'value' => set_value('smtp_port', $settings->smtp_port, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="sendmail_path"><?php echo $this->lang->line('settings_sendmail_path'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'sendmail_path',
+                        'id' => 'sendmail_path',
+                        'class' => 'form-control',
+                        'value' => set_value('sendmail_path', $settings->sendmail_path, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <hr />
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-primary',
+            'value' => $this->lang->line('btn_save'),
+        );
+        echo form_submit($data);
+        ?>       
+    </div>
+</div>
+<?php echo form_close(); ?>

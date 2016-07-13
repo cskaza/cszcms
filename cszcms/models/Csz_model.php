@@ -678,4 +678,41 @@ class Csz_model extends CI_Model {
         $this->db->update('user_admin');
     }
     
+    public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $alt_message = '', $attach_file = array()) {
+        $this->load->library('email');
+        $load_conf = $this->load_config();
+        $protocal = $load_conf->email_protocal;
+        if(!$protocal){ $protocal = 'mail'; }
+        $config = array();  
+        $config['protocol'] = $protocal;  /* mail, sendmail, smtp */
+        if($protocal == 'smtp'){
+            $config['smtp_host'] = $load_conf->smtp_host;  
+            $config['smtp_user'] = $load_conf->smtp_user;  
+            $config['smtp_pass'] = $load_conf->smtp_pass;  
+            $config['smtp_port'] = $load_conf->smtp_port;  
+        }else if($protocal == 'sendmail' && $load_conf->sendmail_path){
+            $config['mailpath'] = $load_conf->sendmail_path;
+        }
+        $config['mailtype'] = 'html';
+        $config['charset'] = 'utf-8';
+        $config['wordwrap'] = TRUE;
+        $this->email->initialize($config);  
+        $this->email->set_newline("\r\n");
+        $this->email->from($from_email, $from_name); // change it to yours
+        $this->email->to($to_email);// change it to yours
+        $this->email->subject($subject);
+        $this->email->message($message);
+        if($alt_message){ $this->email->set_alt_message($alt_message); }
+        if(is_array($attach_file) && !empty($attach_file)){
+            foreach ($attach_file as $value) {
+                $this->email->attach($value);
+            }
+        }
+        if($this->email->send()) {
+            return TRUE;
+        } else {
+            return $this->email->print_debugger();
+        }
+    }
+    
 }

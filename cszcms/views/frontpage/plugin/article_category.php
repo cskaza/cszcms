@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-9">
             <div class="panel panel-primary">
-                <div class="panel panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_index_header') ?></b></div>
+                <div class="panel panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_category_menu').': '.$category_name ?></b></div>
                 <div class="panel-body">
                     <?php
                     if ($article === FALSE) {

@@ -174,6 +174,13 @@ $lang['settings_pagecache_time']	= "ควบคุมเวลาหน้า�
 $lang['settings_pagecache_time_min']	= "นาที";
 $lang['settings_pagecache_time_off']	= "ปิด";
 $lang['settings_pagecache_time_remark']	= "ใช้ค่าน้อย สำหรับเว็บไซต์ที่มีการเปลี่ยนแปลงบ่อย<br>หากใช้ค่ามาก สำหรับการเปลี่ยนแปลงเว็บไซต์ไม่บ่อยนักและต้องการประสิทธิภาพในการโหลดหน้าเว็บ";
+$lang['settings_email_header']          = "การตั้งค่าอีเมล์";
+$lang['settings_email_protocal']        = "Email Protocal";
+$lang['settings_smtp_host']             = "SMTP Host";
+$lang['settings_smtp_user']             = "SMTP Username";
+$lang['settings_smtp_pass']             = "SMTP Password";
+$lang['settings_smtp_port']             = "SMTP Port";
+$lang['settings_sendmail_path']         = "Sendmail Path";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

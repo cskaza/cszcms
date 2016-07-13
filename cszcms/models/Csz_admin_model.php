@@ -465,7 +465,13 @@ class Csz_admin_model extends CI_Model {
             'googlecapt_sitekey' => $this->input->post('googlecapt_sitekey', TRUE),
             'googlecapt_secretkey' => $this->input->post('googlecapt_secretkey', TRUE),
             'link_statistic_active' => $this->input->post('link_statistic_active', TRUE),
-            'pagecache_time' => $this->input->post('pagecache_time', TRUE)
+            'pagecache_time' => $this->input->post('pagecache_time', TRUE),
+            'email_protocal' => $this->input->post('email_protocal', TRUE),
+            'smtp_host' => $this->input->post('smtp_host', TRUE),
+            'smtp_user' => $this->input->post('smtp_user', TRUE),
+            'smtp_pass' => $this->input->post('smtp_pass', TRUE),
+            'smtp_port' => $this->input->post('smtp_port', TRUE),
+            'sendmail_path' => $this->input->post('sendmail_path', TRUE),
         );
 
         if ($this->input->post('del_file')) {
@@ -669,6 +675,17 @@ class Csz_admin_model extends CI_Model {
     public function getPagesAll() {
         $this->db->select("*");
         $query = $this->db->get('pages');
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return array();
+    }
+    
+    public function getPluginAll() {
+        $this->db->select("*");
+        $this->db->where("plugin_active", 1);
+        $this->db->order_by("plugin_name", "asc");
+        $query = $this->db->get('plugin_manager');
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }

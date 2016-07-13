@@ -91,6 +91,9 @@
                     $att = 'id="pluginmenu" class="form-control"';
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
+                    foreach ($plugin as $p) {
+                        $data[$p['plugin_urlrewrite']] = $p['plugin_name'];
+                    }
                     $data['member'] = 'Member';
                     echo form_dropdown('pluginmenu', $data, '', $att);
                     ?>

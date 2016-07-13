@@ -174,6 +174,13 @@ $lang['settings_pagecache_time']	= "Pages cache time control";
 $lang['settings_pagecache_time_min']	= "Minutes";
 $lang['settings_pagecache_time_off']	= "Off";
 $lang['settings_pagecache_time_remark']	= "Less time for websites change frequently.<br>If more than for website change not frequently and want to page load performance.";
+$lang['settings_email_header']          = "Email Settings";
+$lang['settings_email_protocal']        = "Email Protocal";
+$lang['settings_smtp_host']             = "SMTP Host";
+$lang['settings_smtp_user']             = "SMTP Username";
+$lang['settings_smtp_pass']             = "SMTP Password";
+$lang['settings_smtp_port']             = "SMTP Port";
+$lang['settings_sendmail_path']         = "Sendmail Path";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
