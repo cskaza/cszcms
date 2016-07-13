@@ -49,18 +49,12 @@ class Formsaction extends CI_Controller {
                         }elseif($frm_rs->form_method == 'get'){
                             $data[$f_val->field_name] = $this->input->get($f_val->field_name, TRUE);
                         }
-                        if ($f_val->field_type == 'email') {
-                            if($frm_rs->form_method == 'post'){
-                                $email_from = $this->input->post($f_val->field_name, TRUE);
-                            }elseif($frm_rs->form_method == 'get'){
-                                $email_from = $this->input->get($f_val->field_name, TRUE);
-                            }
-                        }
                     }                    
                 }
                 $this->db->set('ip_address', $this->input->ip_address(), TRUE);
                 $this->db->set('timestamp_create', 'NOW()', FALSE);
                 $this->db->insert('form_' . $frm_rs->form_name, $data);
+                $email_from = 'no-reply@' . EMAIL_DOMAIN;
                 $this->sendMail($frm_rs->sendmail, $frm_rs->email, $email_from, $frm_rs->subject, $field_rs, $frm_rs->form_method);
                 //Return to last page: Success
                 redirect(urlencode($cur_page) . '/1', 'refresh');
