@@ -303,7 +303,7 @@
                         'class' => 'form-control',
                         'value' => set_value('smtp_pass', $settings->smtp_pass, FALSE)
                     );
-                    echo form_input($data);
+                    echo form_password($data);
                     ?>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
