@@ -83,12 +83,12 @@ class Formsaction extends CI_Controller {
             # ---- set from, to, bcc --#
             $from_name = $email_from;
             $from_email = $email_from;
-            if($email_from){
+            if($email_to){
                 $to_email = $email_to;
             }else{
                 $to_email = $webconfig->default_email;
             }            
-            $message_html = 'Dear ' . $email_to . ',<br><br>';
+            $message_html = 'Dear ' . $to_email . ',<br><br>';
             $message_html.= 'Please see below detail<br><br>';
             if ($field_val) {
                 foreach ($field_val as $val) {

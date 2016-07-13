@@ -124,7 +124,7 @@ class Forms extends CI_Controller {
     public function viewForm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4)){
-            $this->csz_referrer->setIndex();
+            $this->csz_referrer->setIndex('admin_form_view');
             $this->load->library('pagination');
             // Get form name
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -156,6 +156,6 @@ class Forms extends CI_Controller {
         }
         
         //Return to languages list
-        redirect($this->csz_referrer->getIndex(), 'refresh');
+        redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
     }
 }
