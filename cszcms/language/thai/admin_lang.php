@@ -329,7 +329,7 @@ $lang['records']                         = "รายการ";
 //General Label
 $lang['genlabel_header']             = "ฉลากทั่วไป";
 $lang['genlabel_name']			= "ชื่อฉลาก";
-$lang['genlabel_lang']			= "ภาษาฉลาก";
+$lang['genlabel_lang']			= "ภาษาของส่วนหน้าเว็บ";
 $lang['genlabel_synclang_success']	= "ภาษาฉลากตรงกันเรียบร้อยแล้ว!";
 $lang['btn_label_synclang']             = "ปรับภาษาให้ตรงกัน";
 

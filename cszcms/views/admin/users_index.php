@@ -41,34 +41,40 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($users as $u) {
-                        if(!$u['active']){
-                            $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
-                            $status = '<span style="color:red;">Deactivated</span>';
-                        }else{
-                            $inactive = '';
-                            $status = '<span style="color:green;">Activated</span>';
+                    <?php if ($users === FALSE) { ?>
+                        <tr>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($users as $u) {
+                            if(!$u['active']){
+                                $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
+                                $status = '<span style="color:red;">Deactivated</span>';
+                            }else{
+                                $inactive = '';
+                                $status = '<span style="color:green;">Activated</span>';
+                            }
+                            if($u['user_admin_id'] == 1){
+                                $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
+                            }else{
+                                $default_txt = '';
+                            }
+                            if($u['user_type'] != 'member'){
+                                $admin_color = ' style="color:blue;font-weight:bold;"';
+                            }else{
+                                $admin_color = '';
+                            }
+                            echo '<tr>';
+                            echo '<td'.$inactive.' class="text-center">' . $status . '</td>';
+                            echo '<td'.$inactive.'><span'.$admin_color.'>' . $u['name'] . ''.$default_txt.'</span></td>';
+                            echo '<td'.$inactive.'><span'.$admin_color.'>' . $u['email'] . '</span></td>';
+                            echo '<td'.$inactive.' class="text-center"><span'.$admin_color.'>' . ucfirst($u['user_type']) . '</span></td>';
+                            if($this->session->userdata('admin_type') == 'admin'){
+                                echo '<td class="text-center"><a href="'.BASE_URL.'/admin/users/view/' . $u['user_admin_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i> '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/admin/users/edit/' . $u['user_admin_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('user_edit_btn').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('user_delete_message').'\')" href="'.BASE_URL.'/admin/users/delete/'.$u['user_admin_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('user_delete_btn').'</a></td>';
+                            }
+                            echo '</tr>';
                         }
-                        if($u['user_admin_id'] == 1){
-                            $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
-                        }else{
-                            $default_txt = '';
-                        }
-                        if($u['user_type'] != 'member'){
-                            $admin_color = ' style="color:blue;font-weight:bold;"';
-                        }else{
-                            $admin_color = '';
-                        }
-                        echo '<tr>';
-                        echo '<td'.$inactive.' class="text-center">' . $status . '</td>';
-                        echo '<td'.$inactive.'><span'.$admin_color.'>' . $u['name'] . ''.$default_txt.'</span></td>';
-                        echo '<td'.$inactive.'><span'.$admin_color.'>' . $u['email'] . '</span></td>';
-                        echo '<td'.$inactive.' class="text-center"><span'.$admin_color.'>' . ucfirst($u['user_type']) . '</span></td>';
-                        if($this->session->userdata('admin_type') == 'admin'){
-                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/users/view/' . $u['user_admin_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i> '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/admin/users/edit/' . $u['user_admin_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('user_edit_btn').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('user_delete_message').'\')" href="'.BASE_URL.'/admin/users/delete/'.$u['user_admin_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('user_delete_btn').'</a></td>';
-                        }
-                        echo '</tr>';
                     }
                     ?>
                 </tbody>

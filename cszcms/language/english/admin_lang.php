@@ -330,7 +330,7 @@ $lang['records']                         = "Records";
 //General Label
 $lang['genlabel_header']             = "General Label";
 $lang['genlabel_name']			= "Label Name";
-$lang['genlabel_lang']			= "Label Language";
+$lang['genlabel_lang']			= "Language of Frontend";
 $lang['genlabel_synclang_success']	= "Label language synchronized successfully!";
 $lang['btn_label_synclang']             = "Language Sync";
 
