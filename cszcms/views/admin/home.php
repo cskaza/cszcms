@@ -103,17 +103,20 @@
                         </div>                          
                     <?php } else { ?>
                         <?php foreach ($email_logs as $el) { 
+                            $i = 0;
                             if($el['email_result'] != 'success'){
-                                $error_rs = '<a id="popover" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="'.strip_tags($el['email_result']).'"><span class="error">Error</span></a>';
+                                $error_rs = '<span title="'.strip_tags($el['email_result']).'"><span class="error">Error</span></span>';
                             }else{
                                 $error_rs = '<span class="success">Success</span>';
                             }
+                            $i++;
                         ?>
-                        <div class="list-group-item">
+                        <a class="list-group-item">
                             <span class="badge"><?php echo $el['timestamp_create'] ?></span>
+                            <b><?php echo $el['subject'] ?></b><br>
                             <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
                             <pre><?php echo strip_tags($el['message']) ?></pre>
-                        </div>
+                        </a>
                         <?php } ?>        
                     <?php } ?>
                 </div>
@@ -133,10 +136,10 @@
             <div class="panel-body">
                 <div class="list-group">
                     <?php if ($link_stats === FALSE) { ?>
-                        <a class="list-group-item">
+                        <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
                             <b><?php echo  $this->lang->line('data_notfound') ?></b>
-                        </a>                          
+                        </div>                          
                     <?php } else { ?>
                         <?php foreach ($link_stats as $ls) { ?>
                         <a class="list-group-item" href="#">
