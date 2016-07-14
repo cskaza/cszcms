@@ -90,7 +90,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i><span class="glyphicon glyphicon-envelope"></span></i> <?php echo $this->lang->line('dashboard_emailrecent') ?></h3>
             </div>
@@ -120,7 +120,7 @@
 ?>
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i><span class="glyphicon glyphicon-envelope"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>
             </div>
