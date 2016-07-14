@@ -134,4 +134,4 @@ $(function()
 		return false;
 	});
 });
-
+$('#popover').popover();

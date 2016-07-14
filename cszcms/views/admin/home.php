@@ -97,17 +97,23 @@
             <div class="panel-body">
                 <div class="list-group">
                     <?php if ($email_logs === FALSE) { ?>
-                        <a class="list-group-item">
+                        <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
                             <b><?php echo  $this->lang->line('data_notfound') ?></b>
-                        </a>                          
+                        </div>                          
                     <?php } else { ?>
-                        <?php foreach ($email_logs as $el) { ?>
-                        <a class="list-group-item">
+                        <?php foreach ($email_logs as $el) { 
+                            if($el['email_result'] != 'success'){
+                                $error_rs = '<a id="popover" tabindex="0" data-toggle="popover" data-trigger="focus" data-content="'.strip_tags($el['email_result']).'"><span class="error">Error</span></a>';
+                            }else{
+                                $error_rs = '<span class="success">Success</span>';
+                            }
+                        ?>
+                        <div class="list-group-item">
                             <span class="badge"><?php echo $el['timestamp_create'] ?></span>
-                            <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<span style="font-weight:bold; font-size:12px;"><span class="<?php if($el['email_result'] == 'success'){ echo 'sucess'; }else{ echo 'error'; } ?>"><?php echo ucfirst($el['email_result'])?></span></span>]<br>
+                            <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
                             <pre><?php echo strip_tags($el['message']) ?></pre>
-                        </a>
+                        </div>
                         <?php } ?>        
                     <?php } ?>
                 </div>

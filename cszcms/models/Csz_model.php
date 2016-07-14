@@ -717,10 +717,8 @@ class Csz_model extends CI_Model {
         }
         if($this->email->send()) {
             $result = 'success';
-            $sql_save = $result;
         } else {
-            $result = $this->email->print_debugger();
-            $sql_save = 'error';
+            $result = $this->email->print_debugger(FALSE);
         }
         $data = array(
             'to_email' => $to_email,
@@ -728,7 +726,7 @@ class Csz_model extends CI_Model {
             'from_name' => $from_name,
             'subject' => $subject,
             'message' => $message,
-            'email_result' => $sql_save,
+            'email_result' => $result,
         );
         $this->db->set('user_agent', $this->input->user_agent(), TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
