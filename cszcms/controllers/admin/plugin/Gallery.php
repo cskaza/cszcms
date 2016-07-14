@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Article extends CI_Controller {
+class Gallery extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->helper('form');
@@ -11,9 +11,9 @@ class Article extends CI_Controller {
         $this->load->library('unzip');
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
-        $this->lang->load('plugin/article', LANG);
+        $this->lang->load('plugin/gallery', LANG);
         $this->template->set_template('admin');
-        $this->load->model('plugin/Article_model');
+        $this->load->model('plugin/Gallery_model');
         $this->_init();
         admin_helper::plugin_not_active($this->uri->segment(3));
     }
@@ -30,14 +30,11 @@ class Article extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        $this->csz_referrer->setIndex('article'); /* Set index page when redirect after save */
+        $this->csz_referrer->setIndex('gallery'); /* Set index page when redirect after save */
         $search_arr = ' 1=1 ';
-        if($this->input->get('search') || $this->input->get('category') || $this->input->get('lang')){
+        if($this->input->get('search') || $this->input->get('lang')){
             if($this->input->get('search')){
                 $search_arr.= " AND title LIKE '%".$this->input->get('search', TRUE)."%' OR short_desc LIKE '%".$this->input->get('search', TRUE)."%'";
-            }
-            if($this->input->get('category')){
-                $search_arr.= " AND cat_id = '".$this->input->get('category', TRUE)."'";
             }
             if($this->input->get('lang')){
                 $search_arr.= " AND lang_iso = '".$this->input->get('lang', TRUE)."'";

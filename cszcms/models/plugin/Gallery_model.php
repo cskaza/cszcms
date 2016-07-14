@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Article_model extends CI_Model {
+class Gallery_model extends CI_Model {
     
     function __construct() {
         parent::__construct();
@@ -114,18 +114,18 @@ class Article_model extends CI_Model {
     }
     
     public function categoryMenu($lang_iso) {
-        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '0' AND lang_iso = '".$lang_iso."'", '', 0, 'category_name', 'ASC');
+        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '0' AND lang_iso = '".$lang_iso."'", '', 0, 'category_name', 'ASC');
         $html = '<div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('article_category_menu').'</b></div>
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">';
                             $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article"><b><i class="glyphicon glyphicon-home"></i> '.$this->Csz_model->getLabelLang('article_index_header').'</b></a></li>';
                         if($maincat === FALSE){
-                            $html.= '<li role="presentation" class="text-left"><a><b>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</b></a></li>';
+                            $html.= '<li role="presentation" class="text-left"><h4>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</h4></li>';
                         }else{
                             foreach ($maincat as $mc) {
                                 $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$mc['category_name'].'</b></a></li>';
-                                $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
+                                $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
                                 if(!empty($subcat)){
                                     foreach ($subcat as $sc) {
                                         $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'"> |-- '.$sc['category_name'].'</a></li>';
