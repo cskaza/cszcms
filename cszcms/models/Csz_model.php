@@ -283,7 +283,7 @@ class Csz_model extends CI_Model {
 
     public function cszCopyright() {
         $row = $this->Csz_model->load_config();
-        $html = '<span class="copyright">'.$row->site_footer.'</span>
+        $html = '<span class="copyright">'.str_replace(' %YEAR ', ' '.date('Y').' ', $row->site_footer).'</span>
                 <small style="color:gray;">'.$this->Csz_admin_model->cszCopyright().'</small>';
         return $html;
     }
