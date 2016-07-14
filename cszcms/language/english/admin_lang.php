@@ -2,6 +2,16 @@
 //Backend System
 $lang['backend_system']		= "Backend System";
 
+//Dashboard
+$lang['dashboard_totalemail']	= "Total Email Logs";
+$lang['dashboard_totallink']	= "Total Link Stats";
+$lang['dashboard_totalmember']	= "Total Members";
+$lang['dashboard_viewdetail']	= "View Details";
+$lang['dashboard_linkrecent']	= "20 Recent Link Statistic";
+$lang['dashboard_emailrecent']	= "10 Recent Email Logs";
+$lang['dashboard_toemail']	= "To";
+$lang['dashboard_fromemail']	= "From";
+
 //Navigation Bar
 $lang['nav_dash']		= "Dashboard";
 $lang['nav_view_site']		= "View Site";
@@ -169,6 +179,7 @@ $lang['settings_googlecapt_sitekey']	= "reCaptcha Site Key";
 $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'You can get key of reCaptcha at <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Site Logo";
+$lang['settings_logo_remark']		= "Site logo has height not exceeding 50 px for default template.";
 $lang['settings_link_statistic_active']	= "Statistic for link Enable (In page content)";
 $lang['settings_pagecache_time']	= "Pages cache time control";
 $lang['settings_pagecache_time_min']	= "Minutes";

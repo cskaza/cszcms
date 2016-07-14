@@ -313,3 +313,17 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`article_db_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `email_logs` (
+  `email_logs_id` int(11) NOT NULL AUTO_INCREMENT,
+  `to_email` varchar(255) NOT NULL,
+  `from_email` varchar(255) NOT NULL,
+  `from_name` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `email_result` text NOT NULL,
+  `user_agent` varchar(255) NOT NULL,
+  `ip_address` varchar(100) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  PRIMARY KEY (`email_logs_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

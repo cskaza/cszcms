@@ -4,6 +4,7 @@ CSZ-CMS V.1.0.9
 - Add statistic for link can delete with checkbox.
 - Add label language for frontend plugin.
 - Add plugin manager.
+- Add gallery plugin.
 - Add article plugin.
 - Add error log manager on backend.
 - Add proxy config file for get real ip address.
@@ -12,6 +13,7 @@ CSZ-CMS V.1.0.9
 - Add VKontakte and Odnoklassniki social icon.
 - Add Upgrade Manually / Install plugin upload.
 - Add email settings on backend.
+- Add email logs show on dashboard backend.
 - Fix forms sendmail bug.
 - Fix page show on frontend error bug.
 - Fix backend forget password template.

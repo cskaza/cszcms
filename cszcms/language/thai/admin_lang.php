@@ -2,6 +2,16 @@
 //Backend System
 $lang['backend_system']		= "ระบบเบื้องหลัง";
 
+//Dashboard
+$lang['dashboard_totalemail']	= "รวมบันทึกอีเมล์";
+$lang['dashboard_totallink']	= "รวมสถิติลิงค์";
+$lang['dashboard_totalmember']	= "รวมสมาชิก";
+$lang['dashboard_viewdetail']	= "ดูรายละเอียด";
+$lang['dashboard_linkrecent']	= "สถิติลิงค์ล่าสุด 20 รายการ";
+$lang['dashboard_emailrecent']	= "บันทึกอีเมล์ล่าสุด 10 รายการ";
+$lang['dashboard_toemail']	= "ถึง";
+$lang['dashboard_fromemail']	= "จาก";
+
 //Navigation Bar
 $lang['nav_dash']		= "แดชบอร์ด";
 $lang['nav_view_site']		= "ดูเว็บไซต์";
@@ -169,6 +179,7 @@ $lang['settings_googlecapt_sitekey']	= "reCaptcha Site Key";
 $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'คุณสามารถรับคีย์ของ reCaptcha ได้ที่ <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "เว็บโลโก้";
+$lang['settings_logo_remark']		= "เว็บโลโก้มีความสูงไม่เกิน 50 พิกเซลสำหรับแม่แบบเริ่มต้น";
 $lang['settings_link_statistic_active']	= "เปิดการใช้งานสถิติสำหรับลิงค์ (ในหน้าเนื้อหา)";
 $lang['settings_pagecache_time']	= "ควบคุมเวลาหน้าแคช";
 $lang['settings_pagecache_time_min']	= "นาที";

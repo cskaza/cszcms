@@ -97,14 +97,18 @@ class Csz_model extends CI_Model {
             $this->db->limit($limit, 0);
         }
         $query = $this->db->get($table);
-        if ($query->num_rows() > 0) {
-            if ($query->num_rows() == 1) {
-                $row = $query->row();
-            } else if ($query->num_rows() > 1) {
-                $row = $query->result();
+        if(!empty($query)){
+            if ($query->num_rows() > 0) {
+                if ($query->num_rows() == 1) {
+                    $row = $query->row();
+                } else if ($query->num_rows() > 1) {
+                    $row = $query->result();
+                }
+                return $row;
+            } else {
+                return FALSE;
             }
-            return $row;
-        } else {
+        }else{
             return FALSE;
         }
     }
@@ -125,9 +129,13 @@ class Csz_model extends CI_Model {
             $this->db->limit($limit, 0);
         }
         $query = $this->db->get($table);
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        } else {
+        if(!empty($query)){
+            if ($query->num_rows() > 0) {
+                return $query->result_array();
+            } else {
+                return FALSE;
+            }
+        }else{
             return FALSE;
         }
     }
@@ -708,10 +716,25 @@ class Csz_model extends CI_Model {
             }
         }
         if($this->email->send()) {
-            return TRUE;
+            $result = 'success';
+            $sql_save = $result;
         } else {
-            return $this->email->print_debugger();
+            $result = $this->email->print_debugger();
+            $sql_save = 'error';
         }
+        $data = array(
+            'to_email' => $to_email,
+            'from_email' => $from_email,
+            'from_name' => $from_name,
+            'subject' => $subject,
+            'message' => $message,
+            'email_result' => $sql_save,
+        );
+        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->insert('email_logs', $data);
+        return $result;
     }
     
 }

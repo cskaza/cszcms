@@ -25,6 +25,11 @@ class Admin extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->template->setSub('email_logs', $this->Csz_model->getValueArray('*', 'email_logs', "ip_address != ''", '', 10, 'timestamp_create', 'desc'));
+        $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
+        $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
+        $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
+        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
         $this->template->loadSub('admin/home');
     }
 

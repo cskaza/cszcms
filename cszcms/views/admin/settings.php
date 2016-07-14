@@ -234,6 +234,7 @@
                     echo form_upload($data);
                     ?>
                     <input type="hidden" id="siteLogo" name="siteLogo" value="<?php echo $settings->site_logo?>"/>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_logo_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
                         
