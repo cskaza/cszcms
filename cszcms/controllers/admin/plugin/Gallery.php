@@ -34,20 +34,19 @@ class Gallery extends CI_Controller {
         $search_arr = ' 1=1 ';
         if($this->input->get('search') || $this->input->get('lang')){
             if($this->input->get('search')){
-                $search_arr.= " AND title LIKE '%".$this->input->get('search', TRUE)."%' OR short_desc LIKE '%".$this->input->get('search', TRUE)."%'";
+                $search_arr.= " AND album_name LIKE '%".$this->input->get('search', TRUE)."%' OR short_desc LIKE '%".$this->input->get('search', TRUE)."%'";
             }
             if($this->input->get('lang')){
                 $search_arr.= " AND lang_iso = '".$this->input->get('lang', TRUE)."'";
             }
         }
-        $search_arr.= " AND is_category = 0";
         $this->load->helper('form');
         $this->load->library('pagination');
         // Pages variable
         $result_per_page = 20;
-        $total_row = $this->Csz_model->countData('article_db', $search_arr);
+        $total_row = $this->Csz_model->countData('gallery_db', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/article/';
+        $base_url = BASE_URL . '/admin/plugin/gallery/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 4);

@@ -78,7 +78,7 @@ class Article extends CI_Controller {
                 $result_per_page = 10;
                 $total_row = $this->Csz_model->countData('article_db', $search_arr);
                 $num_link = 10;
-                $base_url = BASE_URL . '/plugin/article/';
+                $base_url = BASE_URL . '/plugin/article/category/'.$this->uri->segment(4).'/';
 
                 // Pageination config
                 $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
