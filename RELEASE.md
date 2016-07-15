@@ -11,7 +11,7 @@ CSZ-CMS V.1.0.9
 - Add member user and login page on frontend.
 - Add page cache time control in site settings.
 - Add VKontakte and Odnoklassniki social icon.
-- Add Upgrade Manually / Install plugin upload.
+- Add Upgrade Manually / Install plugin upload on Maintenance System.
 - Add email settings on backend.
 - Add email logs show on dashboard backend.
 - Fix forms sendmail bug.

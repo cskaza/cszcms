@@ -174,6 +174,7 @@ $route['member/forgot'] = 'Member/forgot';
 $route['member/reset/:any'] = 'Member/getPassword';
 $route['member/:any'] = 'Member';
 
+$route['plugin/([a-zA-Z]+)/view/:num/:any/:num'] = "plugin/$1/view";
 $route['plugin/([a-zA-Z]+)/view/:num/:any'] = "plugin/$1/view";
 $route['plugin/([a-zA-Z]+)/category/:any/:num'] = "plugin/$1/category";
 $route['plugin/([a-zA-Z]+)/category/:any'] = "plugin/$1/category";

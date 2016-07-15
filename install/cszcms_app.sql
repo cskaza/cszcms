@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
@@ -277,7 +277,14 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (49, 'article_not_found', 'For article not found text', 'Article not found!', '2016-07-12 17:33:20'),
 (50, 'article_cat_not_found', 'For category of article not found text', 'Category not found!', '2016-07-12 17:54:29'),
 (51, 'article_postdate', 'For date time of article text', 'Posted date', '2016-07-13 13:56:02'),
-(52, 'article_postby', 'For post by text', 'Posted by', '2016-07-13 13:56:02');
+(52, 'article_postby', 'For post by text', 'Posted by', '2016-07-13 13:56:02'),
+(53, 'gallery_header', 'For gallery header text', 'Gallery', '2016-07-15 13:47:17'),
+(54, 'gallery_albumlist', 'For album list text', 'List of Album', '2016-07-15 13:47:17'),
+(55, 'total_txt', 'For total text', 'Total:', '2016-07-15 15:24:11'),
+(56, 'records_txt', 'For records text', 'Records', '2016-07-15 15:23:54'),
+(57, 'gallery_not_found', 'for gallery not found text', 'Gallery not found!', '2016-07-15 15:33:35'),
+(58, 'picture_not_found', 'For picture not found text', 'Picture not found!', '2016-07-15 15:35:40'),
+(59, 'gellery_view_btn', 'For gallery view button', 'View Gallery', '2016-07-15 15:41:19');
 
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -289,10 +296,11 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`plugin_manager_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Article', 'article', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25');
+(1, 'Article', 'article', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25'),
+(2, 'Gallery', 'gallery', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25');
 
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -326,4 +334,27 @@ CREATE TABLE IF NOT EXISTS `email_logs` (
   `ip_address` varchar(100) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   PRIMARY KEY (`email_logs_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `gallery_db` (
+  `gallery_db_id` int(11) NOT NULL AUTO_INCREMENT,
+  `album_name` varchar(255) NOT NULL,
+  `url_rewrite` varchar(255) NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `short_desc` varchar(255) NOT NULL,
+  `lang_iso` varchar(10) NOT NULL,
+  `active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`gallery_db_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `gallery_picture` (
+  `gallery_picture_id` int(11) NOT NULL AUTO_INCREMENT,
+  `gallery_db_id` int(11) NOT NULL,
+  `file_upload` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`gallery_picture_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

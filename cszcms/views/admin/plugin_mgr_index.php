@@ -33,18 +33,18 @@
                         foreach ($plugin_mgr as $u) {
                             if(!$u['plugin_active']){
                                 $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
-                                $status = '<span style="color:red;">Deactivated</span>';
+                                $status = '<span style="color:red;">'.$this->lang->line('pluginmgr_disable').'</span>';
                             }else{
                                 $inactive = '';
-                                $status = '<span style="color:green;">Activated</span>';
+                                $status = '<span style="color:green;">'.$this->lang->line('pluginmgr_enable').'</span>';
                             }
                             
                             echo '<tr>';
-                            echo '<td'.$inactive.' class="text-center">' . $status . '</td>';
-                            echo '<td'.$inactive.' class="text-center">' . $u['plugin_name'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center">' . $u['plugin_version'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center">' . ucfirst($u['plugin_owner']) . '</td>';
-                            echo '<td class="text-center">';
+                            echo '<td class="text-center" style="vertical-align: middle;">' . $status . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['plugin_name'] . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['plugin_version'] . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . ucfirst($u['plugin_owner']) . '</td>';
+                            echo '<td class="text-center" style="vertical-align: middle;">';
                             if($u['plugin_active']){
                                 echo '<a href="'.BASE_URL.'/admin/plugin/' . $u['plugin_urlrewrite'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('pluginmgr_manage').'</a> &nbsp;&nbsp; ';
                             }

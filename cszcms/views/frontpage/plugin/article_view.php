@@ -18,7 +18,7 @@
                     <hr>
                     <p><b><?php echo $article->short_desc?></b></p><br>
                     <?php if($article->main_picture){
-                        echo '<center><img src="'.BASE_URL.'/photo/plugin/article/'.$article->main_picture.'" class="img-responsive" alt="'.$article->title.'"></center><br>';
+                        echo '<center><img src="'.BASE_URL.'/photo/plugin/article/'.$article->main_picture.'" class="img-responsive img-circle" alt="'.$article->title.'"></center><br>';
                     } ?>
                     <?php echo $article->content ?>
                 </div>

@@ -60,7 +60,11 @@ class Csz_model extends CI_Model {
         if($groupby) $this->db->group_by($groupby);
         $this->db->order_by($orderby, $sort);
         $query = $this->db->get($table);
-        return $query->num_rows();
+        if(!empty($query)){
+            return $query->num_rows();
+        }else{
+            return FALSE;
+        }
     }
 
     public function getCurPages() {
@@ -293,6 +297,7 @@ class Csz_model extends CI_Model {
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
         $core_css.= link_tag('assets/css/full-slider.css');
+        $core_css.= link_tag('assets/css/lightbox.min.css');
         return $core_css;
     }
 
@@ -304,9 +309,10 @@ class Csz_model extends CI_Model {
         }
         $core_js = '<script src="' . base_url() . 'assets/js/jquery-1.10.2.min.js"></script>';
         $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>';
-        $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
+        $core_js.= '<script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/4.0.1/ekko-lightbox.min.js"></script>';
+        $core_js.= '<script src="' . base_url() . 'assets/js/lightbox.min.js"></script>';    
         $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
+        $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
         return $core_js;
     }
 

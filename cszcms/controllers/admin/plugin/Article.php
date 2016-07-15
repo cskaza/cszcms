@@ -133,7 +133,7 @@ class Article extends CI_Controller {
                 $this->form_validation->set_rules('cat_id', 'Category', 'required');
                 if ($this->form_validation->run() == FALSE) {
                     //Validation failed
-                    $this->add();
+                    $this->edit();
                 } else {
                     //Validation passed
                     //Add the user

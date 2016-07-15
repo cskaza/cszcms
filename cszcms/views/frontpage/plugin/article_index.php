@@ -41,7 +41,7 @@
                     } ?>
                 </div>
                 <div class="panel-footer">
-                    <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total') . ' ' . $total_row . ' ' . $this->lang->line('records'); ?></b>
+                    <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->Csz_model->getLabelLang('total_txt') . ' ' . $total_row . ' ' . $this->Csz_model->getLabelLang('records_txt'); ?></b>
                 </div>
             </div>
         </div>
