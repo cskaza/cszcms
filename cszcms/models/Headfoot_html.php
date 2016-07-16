@@ -77,9 +77,9 @@ class Headfoot_html extends CI_Model {
                             $target_sub = ' target="_blank"';       
                         }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
                             if($rs_sub->plugin_menu == 'member'){
-                                $page_link = base_url().$rs_sub->plugin_menu;
+                                $page_link_sub = base_url().$rs_sub->plugin_menu;
                             }else{
-                                $page_link = base_url().'plugin/'.$rs_sub->plugin_menu;
+                                $page_link_sub = base_url().'plugin/'.$rs_sub->plugin_menu;
                             }
                             $target_sub = '';
                         }else{

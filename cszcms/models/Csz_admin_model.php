@@ -156,10 +156,14 @@ class Csz_admin_model extends CI_Model {
         }
         
         $query = $this->db->get($table);
-        if ($query->num_rows() > 0) {
-            $row = $query->result_array();
-            return $row;
-        } else {
+        if(!empty($query)){
+            if ($query->num_rows() > 0) {
+                $row = $query->result_array();
+                return $row;
+            } else {
+                return FALSE;
+            }
+        }else{
             return FALSE;
         }
     }
