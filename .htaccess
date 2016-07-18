@@ -39,15 +39,14 @@ RewriteOptions inherit
 </ifModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
-#   RewriteBase /
     # Enforce www
     # If you have subdomains, you can add them to 
     # the list using the "|" (OR) regex operator
-#    RewriteCond %{HTTP_HOST} !^(www|subdomain) [NC]
-#    RewriteRule ^(.*)$ http://www.domain.tld/$1 [L,R=301]
+#   RewriteCond %{HTTP_HOST} !^(www|subdomain) [NC]
+#   RewriteRule ^(.*)$ http://www.domain.tld/$1 [L,R=301]
     # Enforce NO www
-    #RewriteCond %{HTTP_HOST} ^www [NC]
-    #RewriteRule ^(.*)$ http://domain.tld/$1 [L,R=301]
+#   RewriteCond %{HTTP_HOST} ^www [NC]
+#   RewriteRule ^(.*)$ http://domain.tld/$1 [L,R=301]
     ###
     # Checks to see if the user is attempting to access a valid file,
     # such as an image or css document, if this isn't true it sends the
