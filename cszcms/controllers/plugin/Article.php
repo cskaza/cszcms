@@ -71,7 +71,7 @@ class Article extends CI_Controller {
                 $this->template->set('title', 'Article | ' . $row->site_name);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Article',$row->keywords));
                 $this->template->set('cur_page', $this->page_url);
-                $search_arr = " is_category = 0 AND lang_iso = '".$this->session->userdata('fronlang_iso')."' AND cat_id = $cat_row->article_db_id";
+                $search_arr = " is_category = 0 AND active = '1' AND lang_iso = '".$this->session->userdata('fronlang_iso')."' AND cat_id = $cat_row->article_db_id";
                 $this->load->helper('form');
                 $this->load->library('pagination');
                 // Pages variable
@@ -101,7 +101,7 @@ class Article extends CI_Controller {
     
     public function view() {
         if($this->uri->segment(4)){
-            $art_row = $this->Csz_model->getValue('*', 'article_db', "active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
+            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
                 $row = $this->Csz_model->load_config();
                 $this->template->set('title', $art_row->title.' | ' . $row->site_name);
