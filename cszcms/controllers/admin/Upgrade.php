@@ -148,7 +148,7 @@ class Upgrade extends CI_Controller {
                 'add_insert'  => TRUE,              // Whether to add INSERT data to backup file
                 'newline'     => "\n"               // Newline character used in backup file
               );
-        $backup =& $this->dbutil->backup($prefs);
+        $backup = $this->dbutil->backup($prefs);
         $this->load->helper('download');
         force_download('cszcmsbackup_'.date('Ymd').'.sql', $backup);
     }
