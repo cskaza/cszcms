@@ -12,8 +12,8 @@ class Csz_model extends CI_Model {
         if (!$xml_url) { 
             $xml_file = BASE_URL . '/version.xml';
         }
-        $xml = simplexml_load_file($xml_file) or die("Error: Cannot create object");
-        if ($xml->version) {
+        $xml = @simplexml_load_file($xml_file) or die("Error: Cannot create object");
+        if ($xml !== FALSE && $xml->version) {
             if ($xml->release == 'beta') {
                 $beta = ' Beta';
             } else {
@@ -547,9 +547,10 @@ class Csz_model extends CI_Model {
         $config = $this->load_config();
         $respone = '';
         if($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey){
-            $recaptcha = $_POST['g-recaptcha-response'];
-            if (!empty($recaptcha)) {
-                $ip = $_SERVER['REMOTE_ADDR'];
+            //$recaptcha = $_POST['g-recaptcha-response'];   
+            $recaptcha = $this->input->post('g-recaptcha-response');
+            if ($recaptcha != null && strlen($recaptcha) != 0) {
+                $ip = $this->input->ip_address();
                 $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $ip;
                 $res = $this->getCurlreCaptData($url);
                 if ($res) { 
