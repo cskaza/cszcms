@@ -66,6 +66,10 @@ class Linkstats extends CI_Controller {
             $this->load->helper('form');
             $this->load->library('pagination');   
             $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
+            if(empty($getLink)|| $getLink == NULL){
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+                exit();
+            }
             $search_arr = "link = '".str_replace("'", "\'", $getLink->link)."' ";
             if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
                 if($this->input->get('search')){

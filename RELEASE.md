@@ -9,6 +9,7 @@ x- Add visitor permission for admin user (Can't insert update or delete anything
 - Fix Article plugin to version 1.0.1.
 - Fix some bug for frontend top menu.
 - Fix install wizard to use easy.
+- Fix Link Statistic bug on backend.
 
 CSZ-CMS V.1.0
 - Add statistic for link can delete with checkbox.
