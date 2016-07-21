@@ -62,7 +62,7 @@ class Member extends CI_Controller {
             if($url_return){
                 redirect($url_return, 'refresh');
             }else{
-                redirect('member', 'refresh');
+                redirect(BASE_URL.'/member', 'refresh');
             }
         } else {
             $this->template->setSub('error', $result);
@@ -81,7 +81,7 @@ class Member extends CI_Controller {
         );
         $this->session->unset_userdata($data);
         $this->session->sess_destroy();
-        redirect('member', 'refresh');
+        redirect(BASE_URL.'/member', 'refresh');
     }
 
     public function registMember() {

@@ -63,7 +63,7 @@ class Admin extends CI_Controller {
                 if($url_return){
                     redirect($url_return, 'refresh');
                 }else{
-                    redirect('admin', 'refresh');
+                    redirect(BASE_URL.'/admin', 'refresh');
                 }
             } else {
                 $this->template->setSub('error', $result);
@@ -83,7 +83,7 @@ class Admin extends CI_Controller {
         );
         $this->session->unset_userdata($data);
         $this->session->sess_destroy();
-        redirect('admin', 'refresh');
+        redirect(BASE_URL.'/admin', 'refresh');
     }
 
     public function social() {

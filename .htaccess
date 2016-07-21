@@ -35,6 +35,9 @@ RewriteOptions inherit
 </ifModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # For force HTTPS using only
+#    RewriteCond %{SERVER_PORT} 80 
+#    RewriteRule ^(.*)$ https://www.domain.tld/$1 [R,L]
     # Enforce www
     # If you have subdomains, you can add them to 
     # the list using the "|" (OR) regex operator
