@@ -51,6 +51,7 @@ $lang['user_gender']                    = "Gender";
 $lang['user_address']                   = "Address";
 $lang['user_phone']                     = "Phone";
 $lang['user_picture']                   = "Picture";
+$lang['user_backend_visitor']           = "Visitor for Backend";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";

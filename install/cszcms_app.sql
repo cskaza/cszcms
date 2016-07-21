@@ -200,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `address` text NOT NULL,
   `phone` varchar(100) NOT NULL,
   `picture` varchar(255) NOT NULL,
+  `backend_visitor` int(11) NOT NULL,
   `active` int(11) NOT NULL,
   `md5_hash` varchar(255) NOT NULL,
   `md5_lasttime` datetime NOT NULL,

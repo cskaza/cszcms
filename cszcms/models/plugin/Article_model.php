@@ -82,6 +82,7 @@ class Article_model extends CI_Model {
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
+            $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode('plugin/article/view/'.$id.'/'.$this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1)->url_rewrite)); /* Clear Page Cache when update */
         }
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));

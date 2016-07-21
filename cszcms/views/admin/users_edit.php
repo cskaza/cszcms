@@ -88,6 +88,27 @@
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
+            <label class="form-control-static" for="backend_visitor">
+            <?php
+            if($users->backend_visitor){
+                $checked = 'checked';
+            }else{
+                $checked = '';
+            }
+            $data = array(
+                'name' => 'backend_visitor',
+                'id' => 'backend_visitor',
+                'value' => '1',
+                'checked' => $checked               
+            );
+            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor'){
+                $data['disabled'] = 'disabled';
+            }
+            echo form_checkbox($data);
+            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label>	
+        </div> <!-- /control-group -->
+        <br>
+        <div class="control-group">										
             <label class="form-control-static" for="active">
             <?php
             if($users->active){

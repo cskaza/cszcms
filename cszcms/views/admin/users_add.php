@@ -90,6 +90,18 @@
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
+            <label class="form-control-static" for="backend_visitor">
+            <?php
+            $data = array(
+                'name' => 'backend_visitor',
+                'id' => 'backend_visitor',
+                'value' => '1'
+            );
+            echo form_checkbox($data);
+            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label>	
+        </div> <!-- /control-group -->
+        <br>
+        <div class="control-group">										
             <label class="form-control-static" for="active">
             <?php
             $data = array(

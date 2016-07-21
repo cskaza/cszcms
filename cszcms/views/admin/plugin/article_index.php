@@ -47,8 +47,8 @@
                         <th width="12%" class="text-center"><?php echo $this->lang->line('category_header'); ?></th>
                         <th width="12%" class="text-center"><?php echo $this->lang->line('article_author'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
-                        <th width="15%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
-                        <th width="15%"></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>

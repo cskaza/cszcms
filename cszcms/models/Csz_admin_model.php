@@ -194,6 +194,18 @@ class Csz_admin_model extends CI_Model {
             }
         }
     }
+    
+    public function chkVisitorUser($id) {
+        $this->db->select("backend_visitor");
+        $this->db->where("user_admin_id", $id);
+        $query = $this->db->get('user_admin');
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $rows) {
+                $backend_visitor = $rows->backend_visitor;
+                return $backend_visitor;
+            }
+        }
+    }
 
     public function createUser() {
         // Create the user account
@@ -201,6 +213,11 @@ class Csz_admin_model extends CI_Model {
             $active = $this->input->post('active', TRUE);
         } else {
             $active = 0;
+        }
+        if ($this->input->post('backend_visitor')) {
+            $backend_visitor = $this->input->post('backend_visitor', TRUE);
+        } else {
+            $backend_visitor = 0;
         }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
             $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
@@ -228,6 +245,7 @@ class Csz_admin_model extends CI_Model {
             'address' => $this->input->post('address', TRUE),
             'phone' => $this->input->post('phone', TRUE),
             'picture' => $upload_file,
+            'backend_visitor' => $backend_visitor,
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
         );
@@ -243,6 +261,11 @@ class Csz_admin_model extends CI_Model {
             $active = $this->input->post('active', TRUE);
         } else {
             $active = 0;
+        }
+        if ($this->input->post('backend_visitor')) {
+            $backend_visitor = $this->input->post('backend_visitor', TRUE);
+        } else {
+            $backend_visitor = 0;
         }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
             $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
@@ -272,6 +295,7 @@ class Csz_admin_model extends CI_Model {
         }
         if($id != 1 && $this->session->userdata('admin_type') == 'admin'){
             $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
+            $this->db->set('backend_visitor', $backend_visitor, FALSE);
         }
         $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
         $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);

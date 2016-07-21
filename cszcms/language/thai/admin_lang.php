@@ -51,6 +51,7 @@ $lang['user_gender']                    = "เพศ";
 $lang['user_address']                   = "ที่อยู่";
 $lang['user_phone']                     = "โทรศัพท์";
 $lang['user_picture']                   = "รูปภาพ";
+$lang['user_backend_visitor']           = "ผู้เยี่ยมชมสำหรับระบบเบื้องหลัง";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "บันทึก";
