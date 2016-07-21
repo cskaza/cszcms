@@ -313,12 +313,12 @@ class Csz_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script src="' . base_url() . 'assets/js/jquery-1.10.2.min.js"></script>';
-        $core_js.= '<script src="' . base_url() . 'assets/js/bootstrap.min.js"></script>';
+        $core_js = '<script src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
+        $core_js.= '<script src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/4.0.1/ekko-lightbox.min.js"></script>';
-        $core_js.= '<script src="' . base_url() . 'assets/js/lightbox.min.js"></script>';    
+        $core_js.= '<script src="' . BASE_URL . '/assets/js/lightbox.min.js"></script>';    
         $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
-        $core_js.= '<script src="' . base_url() . 'assets/js/scripts.js"></script>';
+        $core_js.= '<script src="' . BASE_URL . '/assets/js/scripts.js"></script>';
         return $core_js;
     }
 
