@@ -1,3 +1,5 @@
+# For Cloudflare allow IPs
+allow from all
 RewriteOptions inherit
 <IfModule mod_expires.c>
         ExpiresActive On
