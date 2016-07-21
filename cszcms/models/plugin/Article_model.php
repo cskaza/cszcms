@@ -136,6 +136,27 @@ class Article_model extends CI_Model {
             $html.= '</ul>
                 </div>
             </div>';
+            $archive = $this->Csz_model->getValueArray('YEAR(timestamp_create) AS article_year', 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '".$lang_iso."'", '', 0, 'article_year', 'DESC', 'article_year');
+            $html.= '<div class="panel panel-primary">
+                <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('article_archive').'</b></div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">';
+                        if($archive === FALSE){
+                            $html.= '<li role="presentation" class="text-left"><a><b>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</b></a></li>';
+                        }else{
+                            foreach ($archive as $ac) {
+                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$ac['article_year'].'</b></a></li>';
+                                $subarchive = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS article_month_name, MONTH(timestamp_create) AS article_month", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '".$lang_iso."' AND YEAR(timestamp_create) = '".$ac['article_year']."'", '', 0, 'article_month', 'DESC', 'article_month');
+                                if(!empty($subarchive)){
+                                    foreach ($subarchive as $sa) {
+                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'-'.$sa['article_month'].'"> |-- '.$sa['article_month_name'].'</a></li>';
+                                    }
+                                }
+                            } 
+                        }
+            $html.= '</ul>
+                </div>
+            </div>';
         return $html;
     }
     

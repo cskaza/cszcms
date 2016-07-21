@@ -7,12 +7,9 @@
     </div>
     <!-- /.row -->
     <div class="row">
-        <div class="col-md-3">
-            <?php echo $this->Article_model->categoryMenu($this->session->userdata('fronlang_iso')); ?>
-        </div>
         <div class="col-md-9">
             <div class="panel panel-primary">
-                <div class="panel panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_index_header') ?></b></div>
+                <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_index_header') ?></b></div>
                 <div class="panel-body">
                     <?php
                     if ($article === FALSE) {
@@ -24,9 +21,9 @@
                                     <center><a href="<?php echo BASE_URL.'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'] ?>" title="<?php echo $a['title'] ?>">
                                     <?php
                                     if($a["main_picture"]){
-                                        echo '<img src="'.BASE_URL.'/photo/plugin/article/'.$a['main_picture'].'" width="180" alt="'.$a['title'].'">';
+                                        echo '<img src="'.BASE_URL.'/photo/plugin/article/'.$a['main_picture'].'" class="img-responsive img-thumbnail" alt="'.$a['title'].'">';
                                     }else{
-                                        echo '<img src="'.BASE_URL.'/photo/no_image.png" width="180" alt="'.$a['title'].'">';
+                                        echo '<img src="'.BASE_URL.'/photo/no_image.png" class="img-responsive img-thumbnail" alt="'.$a['title'].'">';
                                     }
                                     ?></a></center>
                                 </div>
@@ -44,6 +41,9 @@
                     <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->Csz_model->getLabelLang('total_txt') . ' ' . $total_row . ' ' . $this->Csz_model->getLabelLang('records_txt'); ?></b>
                 </div>
             </div>
+        </div>
+        <div class="col-md-3">
+            <?php echo $this->Article_model->categoryMenu($this->session->userdata('fronlang_iso')); ?>
         </div>
     </div>
 </div>

@@ -100,7 +100,7 @@ $lang['email_reset_message']    = "Please click the link below within 30 minutes
 
 // EMAIL TEXT DEFAULT
 $lang['email_dear']             = "Dear ";
-$lang['email_footer']           = "Regards,<br>";
+$lang['email_footer']           = "Regards,";
 
 // ERROR MESSAGES
 $lang['email_check']		= "This email address does not exist.";

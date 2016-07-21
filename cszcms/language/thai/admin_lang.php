@@ -100,7 +100,7 @@ $lang['email_reset_message']    = "กรุณาคลิกลิงค์ข
 
 // EMAIL TEXT DEFAULT
 $lang['email_dear']             = "เรียน ";
-$lang['email_footer']           = "ด้วยความเคารพ,<br>";
+$lang['email_footer']           = "ด้วยความเคารพ,";
 
 // ERROR MESSAGES
 $lang['email_check']		= "ที่อยู่อีเมล์นี้ไม่มีอยู่ในระบบ.";

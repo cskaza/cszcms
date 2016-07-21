@@ -8,7 +8,8 @@ $success = 0;
 if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbpass'] && $_POST['dbname']) {
     /* Prepare Input Data */
     /*$dbdsn = $_POST['dbdsn'];*/
-    $baseurl = $_POST['baseurl'];
+    $url_replace = array('https://','http://');
+    $baseurl = $_POST['protocal'].str_replace($url_replace, '', $_POST['baseurl']);
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
     $dbpass = $_POST['dbpass'];
@@ -177,8 +178,16 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     <h3 class="panel-title"><b>Website Setup</b></h3>
                                 </div>
                                 <div class="panel-body">
-                                    <label for="baseurl">Base URL (Include http://)*: </label>
-                                    <input id="baseurl" name="baseurl" type="text" class="form-control" placeholder="http://www.ex.com or http://www.ex.com/subdir" required>
+                                    <label for="baseurl">Base URL*: </label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <select name="protocal">
+                                                <option value="http://">http://</option>
+                                                <option value="https://">https://</option>
+                                            </select>
+                                        </span>
+                                        <input id="baseurl" name="baseurl" type="text" class="form-control" placeholder="www.ex.com or www.ex.com/subdir" required>
+                                    </div><!-- /input-group -->
                                     <span class="remark"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b> or <b>http://localhost/subdir</b> on localhost. subdir is directory when you extract file from zip file</em></span><br>
                                     <label for="timezone">Time Zone*: </label>
                                     <input id="timezone" name="timezone" type="text" class="form-control" placeholder="Asia/Bangkok" required>

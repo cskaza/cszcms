@@ -284,7 +284,8 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (56, 'records_txt', 'For records text', 'Records', '2016-07-15 15:23:54'),
 (57, 'gallery_not_found', 'for gallery not found text', 'Gallery not found!', '2016-07-15 15:33:35'),
 (58, 'picture_not_found', 'For picture not found text', 'Picture not found!', '2016-07-15 15:35:40'),
-(59, 'gellery_view_btn', 'For gallery view button', 'View Gallery', '2016-07-15 15:41:19');
+(59, 'gellery_view_btn', 'For gallery view button', 'View Gallery', '2016-07-15 15:41:19'),
+(60, 'article_archive', 'For article archive text', 'Archive', '2016-07-21 10:39:19');
 
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -299,8 +300,8 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Article', 'article', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.0', 'CSKAZA', 1, '2016-07-11 09:59:53', '2016-07-13 15:28:25');
+(1, 'Article', 'article', '1.0.1', 'CSKAZA', 1, '2016-07-21 09:59:53', '2016-07-21 15:28:25'),
+(2, 'Gallery', 'gallery', '1.0.1', 'CSKAZA', 1, '2016-07-21 09:59:53', '2016-07-21 15:28:25');
 
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) NOT NULL AUTO_INCREMENT,

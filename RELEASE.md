@@ -1,11 +1,14 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.0
-- Add Widget plugin for get data from other plugin to show on the page.
-- Add Email Template send to visitor for Forms Builder.
+x- Add Widget plugin for get data from other plugin to show on the page.
+x- Add Email Template send to visitor for Forms Builder.
+x- Add visitor permission for admin user (Can't insert update or delete anythings)
 - Fix bug about xml_load and recaptcha error.
 - Fix download button for Upload Tools.
 - Fix Gallery plugin to version 1.0.1.
 - Fix Article plugin to version 1.0.1.
+- Fix some bug for frontend top menu.
+- Fix install wizard to use easy.
 
 CSZ-CMS V.1.0.x
 - Add statistic for link can delete with checkbox.

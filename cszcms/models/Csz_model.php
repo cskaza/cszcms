@@ -85,7 +85,7 @@ class Csz_model extends CI_Model {
         return $pageURL;
     }
 
-    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '') {
+    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
         if (is_array($where_field) && is_array($where_val)) {
             for ($i = 0; $i < count($where_field); $i++) {
@@ -93,6 +93,9 @@ class Csz_model extends CI_Model {
             }
         } else {
             $this->db->where($where_field, $where_val);
+        }
+        if ($groupby){
+            $this->db->group_by($groupby);
         }
         if ($orderby && $sort) {
             $this->db->order_by($orderby, $sort);
@@ -117,7 +120,7 @@ class Csz_model extends CI_Model {
         }
     }
     
-    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '') {
+    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
         if (is_array($where_field) && is_array($where_val)) {
             for ($i = 0; $i < count($where_field); $i++) {
@@ -125,6 +128,9 @@ class Csz_model extends CI_Model {
             }
         } else {
             $this->db->where($where_field, $where_val);
+        }
+        if ($groupby){
+            $this->db->group_by($groupby);
         }
         if ($orderby && $sort) {
             $this->db->order_by($orderby, $sort);

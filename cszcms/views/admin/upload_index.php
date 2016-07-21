@@ -86,7 +86,7 @@
                                     <span class="h5"><b><?php echo  $file["timestamp_create"] ?></b></span>
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
-                                    <a href="<?php echo  BASE_URL ?>/photo/upload/<?php echo  $file["file_upload"] ?>" class="btn btn-primary" role="button" title="<?php echo  $this->lang->line('uploadfile_download') ?>" target="_blank"><i class="glyphicon glyphicon-download"></i></a>
+                                    <a href="<?php echo  BASE_URL ?>/admin/uploadDownload/<?php echo $file["upload_file_id"] ?>" class="btn btn-primary" role="button" title="<?php echo  $this->lang->line('uploadfile_download') ?>" target="_blank"><i class="glyphicon glyphicon-download"></i></a>
                                 </td>
                             </tr>
                         <?php } ?>

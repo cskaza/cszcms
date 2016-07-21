@@ -26,74 +26,68 @@ class Headfoot_html extends CI_Model {
         if($get_mainmenu === FALSE){
             $get_mainmenu = $this->Csz_model->main_menu('', $this->Csz_model->getDefualtLang());
         }
-        foreach ($get_mainmenu as $rs){
-            $page_url_rs = $this->Csz_model->getPageUrlFromID($rs->pages_id);
-            if($page_url_rs && !$rs->other_link && !$rs->plugin_menu){
-                $page_link = base_url().$page_url_rs;
-                $target = '';
-            }else if($rs->other_link && !$page_url_rs && !$rs->plugin_menu){
-                $page_link = $rs->other_link;
-                $target = ' target="_blank"';
-            }else if(!$rs->other_link && !$page_url_rs && $rs->plugin_menu){
-                if($rs->plugin_menu == 'member'){
-                    $page_link = base_url().$rs->plugin_menu;
-                }else{
-                    $page_link = base_url().'plugin/'.$rs->plugin_menu;
-                }
-                $target = '';
-            }else{
-                $page_link = '#';
-                $target = '';
-            }
-            if($page_url_rs == $cur_page){
-                $active = ' id="active"';
-            }else{
-                $active = "";
-            }
-            if($rs->drop_menu){
-                $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->session->userdata('fronlang_iso'));
-                if(is_array($drop_menu)){
-                    foreach ($drop_menu as $rs1){
-                        $page_url_rs1 = $this->Csz_model->getPageUrlFromID($rs1->pages_id);
-                        if($page_url_rs1 == $cur_page){
-                            $active = ' id="active"';
-                        }else{
-                            $active = "";
-                        }
+        if(!empty($get_mainmenu)){
+            foreach ($get_mainmenu as $rs){
+                $page_url_rs = $this->Csz_model->getPageUrlFromID($rs->pages_id);
+                if($page_url_rs && !$rs->other_link && !$rs->plugin_menu){
+                    $page_link = base_url().$page_url_rs;
+                    $target = '';
+                }else if($rs->other_link && !$page_url_rs && !$rs->plugin_menu){
+                    $page_link = $rs->other_link;
+                    $target = ' target="_blank"';
+                }else if(!$rs->other_link && !$page_url_rs && $rs->plugin_menu){
+                    if($rs->plugin_menu == 'member'){
+                        $page_link = base_url().$rs->plugin_menu;
+                    }else{
+                        $page_link = base_url().'plugin/'.$rs->plugin_menu;
                     }
+                    $target = '';
+                }else{
+                    $page_link = '#';
+                    $target = '';
                 }
-                $menu_list.= '<li class="dropdown">
-                <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">'.$rs->menu_name.' <span class="caret"></span></a>
-                <ul class="dropdown-menu">';
-                $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->session->userdata('fronlang_iso'));
-                if(is_array($drop_menu)){
-                    foreach ($drop_menu as $rs_sub){
-                        $page_url_rs_sub = $this->Csz_model->getPageUrlFromID($rs_sub->pages_id);
-                        if($page_url_rs_sub && !$rs_sub->other_link && !$rs_sub->plugin_menu){
-                            $page_link_sub = base_url().$page_url_rs_sub;
-                            $target_sub = '';      
-                        }else if($rs_sub->other_link && !$page_url_rs_sub  && !$rs_sub->plugin_menu){
-                            $page_link_sub = $rs_sub->other_link;
-                            $target_sub = ' target="_blank"';       
-                        }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
-                            if($rs_sub->plugin_menu == 'member'){
-                                $page_link_sub = base_url().$rs_sub->plugin_menu;
+                if($page_url_rs == $cur_page){
+                    $active = ' id="active"';
+                }else{
+                    $active = "";
+                }
+                if($rs->drop_menu){
+                    $menu_list.= '<li class="dropdown">
+                    <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">'.$rs->menu_name.' <span class="caret"></span></a>
+                    <ul class="dropdown-menu">';
+                    $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->session->userdata('fronlang_iso'));
+                    if($drop_menu === FALSE){
+                        $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->Csz_model->getDefualtLang());
+                    }
+                    if(!empty($drop_menu)){
+                        foreach ($drop_menu as $rs_sub){
+                            $page_url_rs_sub = $this->Csz_model->getPageUrlFromID($rs_sub->pages_id);
+                            if($page_url_rs_sub && !$rs_sub->other_link && !$rs_sub->plugin_menu){
+                                $page_link_sub = base_url().$page_url_rs_sub;
+                                $target_sub = '';      
+                            }else if($rs_sub->other_link && !$page_url_rs_sub  && !$rs_sub->plugin_menu){
+                                $page_link_sub = $rs_sub->other_link;
+                                $target_sub = ' target="_blank"';       
+                            }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
+                                if($rs_sub->plugin_menu == 'member'){
+                                    $page_link_sub = base_url().$rs_sub->plugin_menu;
+                                }else{
+                                    $page_link_sub = base_url().'plugin/'.$rs_sub->plugin_menu;
+                                }
+                                $target_sub = '';
                             }else{
-                                $page_link_sub = base_url().'plugin/'.$rs_sub->plugin_menu;
+                                $page_link_sub = '#';
+                                $target_sub = '';
                             }
-                            $target_sub = '';
-                        }else{
-                            $page_link_sub = '#';
-                            $target_sub = '';
-                        }
-                        $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.'>'.$rs_sub->menu_name.'</a></li>';
-                    }    
-                }   
-                $menu_list.= '</ul></li>';
-            }else{
-                $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.'>'.$rs->menu_name.'</a></li>';
-            }
-        }       
+                            $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.'>'.$rs_sub->menu_name.'</a></li>';
+                        }    
+                    }   
+                    $menu_list.= '</ul></li>';
+                }else{
+                    $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.'>'.$rs->menu_name.'</a></li>';
+                }
+            } 
+        }
         return $menu_list;
     }
     

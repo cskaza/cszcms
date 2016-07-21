@@ -124,7 +124,7 @@ class Admin extends CI_Controller {
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
-
+    
     public function uploadIndex() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
@@ -144,6 +144,23 @@ class Admin extends CI_Controller {
 
         $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination));
         $this->template->loadSub('admin/upload_index');
+    }
+    
+    public function uploadDownload() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        //Load the form helper
+        if($this->uri->segment(3)){
+            $file = $this->Csz_model->getValue('file_upload', 'upload_file', "upload_file_id", $this->uri->segment(3), 1);
+            $path = FCPATH."/photo/upload/".$file->file_upload;
+            $this->load->helper('file');
+            $data = read_file($path);
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
+            $this->load->helper('download');
+            force_download($filename.'.'.$ext, $data);
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
     }
 
     public function uploadIndexSave() {
