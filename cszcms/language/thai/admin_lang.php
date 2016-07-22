@@ -281,6 +281,11 @@ $lang['forms_view']			= "ดูแบบฟอร์มที่โพสต์"
 $lang['forms_success_txt']		= "ข้อความแสดงว่าสำเร็จ";
 $lang['forms_captchaerror_txt']		= "ข้อความแสดงว่า Captcha ผิด";
 $lang['forms_error_txt']		= "ข้อความแสดงข้อผิดพลาด";
+$lang['forms_send_to_visitor']		= "ส่งอีเมล์ถึงผู้เยี่ยมชม";
+$lang['forms_email_field_name']		= "อีเมล์ถึง ฟิล name";
+$lang['forms_visitor_subject']		= "หัวข้ออีเมล์";
+$lang['forms_visitor_body']		= "เนื้อหาอีเมล์";
+$lang['forms_visitor_newtxt']		= "ส่งอีเมล์ถึงผู้เยี่ยมชม. กรุณาแก้ไขแบบฟอร์มนี้";
 
 //Field Text
 $lang['field_header']                   = "เพิ่มฟิล";

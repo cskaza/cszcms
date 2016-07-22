@@ -56,6 +56,19 @@ class Formsaction extends CI_Controller {
                 $this->db->insert('form_' . $frm_rs->form_name, $data);
                 $email_from = 'no-reply@' . EMAIL_DOMAIN;
                 $this->sendMail($frm_rs->sendmail, $frm_rs->email, $email_from, $frm_rs->subject, $field_rs, $frm_rs->form_method);
+                
+                if($frm_rs->send_to_visitor && $frm_rs->email_field_id){
+                    $visit_field = $this->Csz_model->getValue('field_name', 'form_field', 'form_field_id', $frm_rs->email_field_id, 1);
+                    if($visit_field->field_name && $frm_rs->visitor_subject){
+                        if($frm_rs->form_method == 'post'){
+                            $visit_email = $this->input->post($visit_field->field_name, TRUE);
+                        }elseif($frm_rs->form_method == 'get'){
+                            $visit_email = $this->input->get($visit_field->field_name, TRUE);
+                        }
+                        $webconfig = $this->Csz_admin_model->load_config();
+                        @$this->Csz_model->sendEmail($visit_email, $frm_rs->visitor_subject, $frm_rs->visitor_body, $email_from, $webconfig->site_name);
+                    }
+                }
                 //Return to last page: Success
                 redirect(urlencode($cur_page) . '/1', 'refresh');
                 exit;

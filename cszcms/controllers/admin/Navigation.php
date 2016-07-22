@@ -76,6 +76,7 @@ class Navigation extends CI_Controller {
 			//Validation passed
 			$this->Csz_admin_model->insertMenu();
 			//Return to navigation list
+                        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
 			redirect($this->csz_referrer->getIndex(), 'refresh');
 	  	}
 		
@@ -116,6 +117,7 @@ class Navigation extends CI_Controller {
 			//Validation passed
 			$this->Csz_admin_model->updateMenu($this->uri->segment(4));
 			//Return to navigation list
+                        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
 			redirect($this->csz_referrer->getIndex(), 'refresh');
 	  	}
 	}
@@ -129,6 +131,7 @@ class Navigation extends CI_Controller {
                 $this->Csz_admin_model->removeData('page_menu','drop_page_menu_id',$this->uri->segment(4));
             }
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
 }

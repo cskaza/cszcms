@@ -81,6 +81,10 @@ CREATE TABLE IF NOT EXISTS `form_main` (
   `sendmail` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `subject` varchar(255) NOT NULL,
+  `send_to_visitor` int(11) NOT NULL,
+  `email_field_id` int(11) NOT NULL,
+  `visitor_subject` varchar(255) NOT NULL,
+  `visitor_body` text NOT NULL,
   `active` int(11) NOT NULL,
   `captcha` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
@@ -88,8 +92,8 @@ CREATE TABLE IF NOT EXISTS `form_main` (
   PRIMARY KEY (`form_main_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
+INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
 
 CREATE TABLE IF NOT EXISTS `lang_iso` (
   `lang_iso_id` int(11) NOT NULL AUTO_INCREMENT,

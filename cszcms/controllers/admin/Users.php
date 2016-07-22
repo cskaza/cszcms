@@ -86,6 +86,7 @@ class Users extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->createUser();
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
@@ -134,6 +135,7 @@ class Users extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateUser($this->uri->segment(4));
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }

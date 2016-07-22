@@ -281,6 +281,11 @@ $lang['forms_view']			= "View Form Post";
 $lang['forms_success_txt']		= "Success Text";
 $lang['forms_captchaerror_txt']		= "Captcha Wrong Text";
 $lang['forms_error_txt']		= "Error Text";
+$lang['forms_send_to_visitor']		= "Sendmail to visitor";
+$lang['forms_email_field_name']		= "Email to field name";
+$lang['forms_visitor_subject']		= "Email subject";
+$lang['forms_visitor_body']		= "Email body";
+$lang['forms_visitor_newtxt']		= "Sendmail to visitor. Please edit this form";
 
 //Field Text
 $lang['field_header']                   = "Field Insert";

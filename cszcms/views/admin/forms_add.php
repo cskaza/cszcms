@@ -140,6 +140,25 @@
             </div>
         </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <label class="checkbox-inline" style="width: 100%;">
+                    <?php
+                    $data = array(
+                        'name' => 'send_to_visitor',
+                        'id' => 'send_to_visitor',
+                        'onclick' => "ChkHideShow('chk-visitor');",
+                        'value' => '1'
+                    );
+                    echo form_checkbox($data);
+                    ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo $this->lang->line('forms_send_to_visitor'); ?></b>
+                </label>
+            </div>
+            <div class="panel-body" id="chk-visitor" style="display: none;">
+                <span class="remark"><?php echo $this->lang->line('forms_visitor_newtxt'); ?></span>
+            </div>
+        </div>
+
         <div class="control-group">										
             <label class="form-control-static" for="active">
                 <?php

@@ -978,6 +978,7 @@ class Csz_admin_model extends CI_Model {
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
+        ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
         $str_arr = array(' ', '-');
         $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
@@ -990,6 +991,7 @@ class Csz_admin_model extends CI_Model {
             'sendmail' => $sendmail,
             'email' => $this->input->post('email', TRUE),
             'subject' => $this->input->post('subject', TRUE),
+            'send_to_visitor' => $send_to_visitor,
             'active' => $active,
             'captcha' => $captcha,
         );
@@ -1058,6 +1060,7 @@ class Csz_admin_model extends CI_Model {
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
+        ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
         $str_arr = array(' ', '-');
         $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
@@ -1070,6 +1073,10 @@ class Csz_admin_model extends CI_Model {
             'sendmail' => $sendmail,
             'email' => $this->input->post('email', TRUE),
             'subject' => $this->input->post('subject', TRUE),
+            'send_to_visitor' => $send_to_visitor,
+            'email_field_id' => $this->input->post('email_field_id', TRUE),
+            'visitor_subject' => $this->input->post('visitor_subject', TRUE),
+            'visitor_body' => $this->input->post('visitor_body', TRUE),
             'active' => $active,
             'captcha' => $captcha,
         );

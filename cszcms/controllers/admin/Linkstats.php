@@ -116,6 +116,7 @@ class Linkstats extends CI_Controller {
                 }
             }
         }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex('view'), 'refresh');
     }
     
@@ -131,6 +132,7 @@ class Linkstats extends CI_Controller {
                 }
             }
         }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
@@ -141,6 +143,7 @@ class Linkstats extends CI_Controller {
         if($this->uri->segment(4)){
             $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $this->uri->segment(4));   
         }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
@@ -152,6 +155,7 @@ class Linkstats extends CI_Controller {
             $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
             $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);   
         }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 

@@ -69,6 +69,7 @@ class Forms extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertForms();
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
@@ -77,11 +78,12 @@ class Forms extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
         $this->load->helper('form');
-
+        $this->csz_referrer->setIndex('edit_form');
         if($this->uri->segment(4)){
             //Get data from database
             $this->template->setSub('form_rs', $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $this->uri->segment(4), 1));
-            $this->template->setSub('field_rs', $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+            $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+            $this->template->setSub('field_email', $this->Csz_model->getValueArray('*', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'email'", ''));
             //Load the view
             $this->template->loadSub('admin/forms_edit');
         }else{
@@ -105,6 +107,7 @@ class Forms extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateForms($this->uri->segment(4));
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
@@ -118,10 +121,29 @@ class Forms extends CI_Controller {
             $this->Csz_admin_model->dropTable('form_'.$frm_rs->form_name);
             $this->Csz_admin_model->removeData('form_field', 'form_main_id', $this->uri->segment(4));
             $this->Csz_admin_model->removeData('form_main', 'form_main_id', $this->uri->segment(4));
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         
         //Return to languages list
         redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
+    
+    public function deleteField() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        //Delete the languages
+        if($this->uri->segment(4) && $this->uri->segment(5)) {
+            $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            $field_rs = $this->Csz_model->getValue('field_name', 'form_field', "form_field_id = '".$this->uri->segment(5)."' AND form_main_id = '".$this->uri->segment(4)."'", '', 1);
+            //$this->Csz_admin_model->dropTable('form_'.$frm_rs->form_name);
+            $this->load->dbforge();
+            $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
+            $this->Csz_admin_model->removeData('form_field', 'form_field_id', $this->uri->segment(5));
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }
+        
+        //Return to languages list
+        redirect($this->csz_referrer->getIndex('edit_form'), 'refresh');
     }
     
     public function viewForm() {
@@ -157,6 +179,7 @@ class Forms extends CI_Controller {
         if($this->uri->segment(4) && $this->uri->segment(6)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
             $this->Csz_admin_model->removeData('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $this->uri->segment(6));
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         
         //Return to languages list

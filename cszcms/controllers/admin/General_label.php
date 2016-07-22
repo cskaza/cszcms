@@ -72,6 +72,7 @@ class General_label extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
 
         $this->Csz_admin_model->updateLabel($this->uri->segment(4));
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     

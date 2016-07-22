@@ -80,6 +80,7 @@ class Pages extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertPage();
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
@@ -119,6 +120,7 @@ class Pages extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updatePage($this->uri->segment(4));
             //Return to user list
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
@@ -134,6 +136,7 @@ class Pages extends CI_Controller {
             } else {
                 echo "<script>alert(\"" . $this->lang->line('pages_delete_default') . "\");</script>";
             }
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         //Return to languages list
         redirect($this->csz_referrer->getIndex(), 'refresh');
