@@ -2,7 +2,7 @@
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.
 - Add visitor permission for admin user (Can't insert update or delete anythings)
-x- Add email logs management system.
+- Add email logs delete button.
 - Add Enable pagecache for article.
 - Add message alert when finished insert update and delete.
 - Fix bug about xml_load and recaptcha error.

@@ -17,10 +17,11 @@
                 <thead>
                     <tr>
                         <th width="8%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="27%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_name'); ?></th>
+                        <th width="17%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_name'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_enctype'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_method'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_sendmail'); ?></th>  
+                        <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_send_to_visitor'); ?></th> 
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_captcha'); ?></th>
                         <th width="25%"></th>
                     </tr>
@@ -28,7 +29,7 @@
                 <tbody>
                     <?php if ($forms === FALSE) { ?>
                         <tr>
-                            <td colspan="7" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('forms_notfound') ?></span></td>
+                            <td colspan="8" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('forms_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php foreach ($forms as $u) {
@@ -42,6 +43,11 @@
                             }else{
                                 $sendmail = '<i class="error glyphicon glyphicon-remove"></i>';
                             }
+                            if($u['send_to_visitor']){
+                                $send_to_visitor = '<i class="success glyphicon glyphicon-ok"></i>';
+                            }else{
+                                $send_to_visitor = '<i class="error glyphicon glyphicon-remove"></i>';
+                            }
                             if($u['captcha']){
                                 $captcha = '<i class="success glyphicon glyphicon-ok"></i>';
                             }else{
@@ -53,6 +59,7 @@
                             <td class="text-center"<?php echo $inactive?> style="vertical-align:middle;"><?php echo ($u['form_enctype'])?$u['form_enctype']:'-'?></td>
                             <?php echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_method'] . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $sendmail . '</td>';
+                            echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $send_to_visitor . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $captcha . '</td>';
                             echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL.'/admin/forms/view/' . $u['form_main_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp;&nbsp; <a href="'.BASE_URL.'/admin/forms/edit/' . $u['form_main_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.BASE_URL.'/admin/forms/delete/'.$u['form_main_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';

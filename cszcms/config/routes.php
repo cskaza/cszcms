@@ -56,6 +56,8 @@ $route['admin/login/error'] = "admin/admin/login";
 $route['admin/login/check'] = "admin/admin/loginCheck";
 $route['admin/logout'] = "admin/admin/logout";
 
+$route['admin/admin/deleteEmailLogs/:any'] = "admin/admin/deleteEmailLogs";
+$route['admin/admin/deleteEmailLogs'] = "admin/admin/deleteEmailLogs";
 $route['admin/users'] = "admin/users";
 $route['admin/users/new'] = "admin/users/addUser";
 $route['admin/users/new/add'] = "admin/users/confirm";

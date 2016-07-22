@@ -25,12 +25,26 @@ class Admin extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->csz_referrer->setIndex();
         $this->template->setSub('email_logs', $this->Csz_model->getValueArray('*', 'email_logs', "ip_address != ''", '', 10, 'timestamp_create', 'desc'));
         $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
         $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
         $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
         $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
         $this->template->loadSub('admin/home');
+    }
+    
+    public function deleteEmailLogs() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        //Delete the languages
+        if($this->uri->segment(4)) {
+            $this->Csz_admin_model->removeData('email_logs', 'email_logs_id', $this->uri->segment(4));
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }
+        //Return to languages list
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function login() {

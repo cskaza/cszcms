@@ -105,18 +105,23 @@
                         <?php foreach ($email_logs as $el) { 
                             $i = 0;
                             if($el['email_result'] != 'success'){
-                                $error_rs = '<span title="'.strip_tags($el['email_result']).'"><span class="error">Error</span></span>';
+                                $error_rs = '<span class="error">Error - '.strip_tags($el['email_result']).'</span>';
                             }else{
                                 $error_rs = '<span class="success">Success</span>';
                             }
                             $i++;
                         ?>
-                        <a class="list-group-item">
+                        <span class="list-group-item">
                             <span class="badge"><?php echo $el['timestamp_create'] ?></span>
-                            <b><?php echo $el['subject'] ?></b><br>
+                            <b><?php echo $this->lang->line('forms_subject') ?>:</b> <?php echo $el['subject'] ?><br>
                             <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
                             <pre><?php echo strip_tags($el['message']) ?></pre>
-                        </a>
+                            <div class="control-group text-right">
+                                <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteEmailLogs/'.$el['email_logs_id']?>">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                        </span>
                         <?php } ?>        
                     <?php } ?>
                 </div>
@@ -142,7 +147,7 @@
                         </div>                          
                     <?php } else { ?>
                         <?php foreach ($link_stats as $ls) { ?>
-                        <a class="list-group-item" href="#">
+                        <a class="list-group-item" href="<?php echo BASE_URL.'/admin/linkstats/view/'.$ls['link_statistic_id'] ?>">
                             <span class="badge"><?php echo $ls['timestamp_create'] ?></span>
                             <b>[<?php echo $ls['ip_address'] ?>]</b> - <?php echo $ls['link'] ?>
                         </a>
