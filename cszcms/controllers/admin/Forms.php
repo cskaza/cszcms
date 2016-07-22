@@ -56,6 +56,7 @@ class Forms extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -90,6 +91,7 @@ class Forms extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -109,6 +111,7 @@ class Forms extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Delete the languages
         if($this->uri->segment(4)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -149,6 +152,7 @@ class Forms extends CI_Controller {
     
     public function deleteViewData() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Delete the languages
         if($this->uri->segment(4) && $this->uri->segment(6)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);

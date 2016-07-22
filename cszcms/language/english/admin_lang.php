@@ -52,6 +52,7 @@ $lang['user_address']                   = "Address";
 $lang['user_phone']                     = "Phone";
 $lang['user_picture']                   = "Picture";
 $lang['user_backend_visitor']           = "Visitor for Backend";
+$lang['user_not_allow_txt']             = "You not have permission in visitor mode or demo mode!";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";

@@ -46,6 +46,7 @@ class Upgrade extends CI_Controller {
     public function download() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
@@ -79,6 +80,7 @@ class Upgrade extends CI_Controller {
     public function install() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
         if ($_FILES['file_upload'] != null) {
@@ -126,6 +128,7 @@ class Upgrade extends CI_Controller {
     public function dbOptimize() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->load->dbutil();
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
@@ -140,6 +143,7 @@ class Upgrade extends CI_Controller {
     public function dbBackup() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->load->dbutil();
         $prefs = array(
                 'format'      => 'txt',             // gzip, zip, txt
@@ -156,6 +160,7 @@ class Upgrade extends CI_Controller {
     public function clearAllCache() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_model->clear_all_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
@@ -164,6 +169,7 @@ class Upgrade extends CI_Controller {
     public function clearAllErrLog() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_model->clear_all_error_log();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
@@ -172,6 +178,7 @@ class Upgrade extends CI_Controller {
     public function downloadErrLog() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $log_file = $this->input->post('errlogfile', TRUE);
         if($log_file){
             $data = read_file(APPPATH . '/logs/'.$log_file);

@@ -41,6 +41,7 @@ class Navigation extends CI_Controller {
         
         public function saveNav(){
                 admin_helper::is_logged_in($this->session->userdata('admin_email'));
+                admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
                 $this->Csz_admin_model->sortNav();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -62,6 +63,7 @@ class Navigation extends CI_Controller {
         public function insert()
 	{
 		admin_helper::is_logged_in($this->session->userdata('admin_email'));
+                admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
 		//Load the form validation library
 		$this->load->library('form_validation');
 		
@@ -101,6 +103,7 @@ class Navigation extends CI_Controller {
 	public function update()
 	{
 		admin_helper::is_logged_in($this->session->userdata('admin_email'));
+                admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
 		//Load the form validation library
 		$this->load->library('form_validation');
 		
@@ -119,6 +122,7 @@ class Navigation extends CI_Controller {
 	
         public function deleteNav() {
             admin_helper::is_logged_in($this->session->userdata('admin_email'));
+            admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
             if($this->uri->segment(4)){
                 //Delete the user account
                 $this->Csz_admin_model->removeData('page_menu','page_menu_id',$this->uri->segment(4));

@@ -98,6 +98,7 @@ class Admin extends CI_Controller {
 
     public function updateSocial() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_admin_model->updateSocial();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -120,6 +121,7 @@ class Admin extends CI_Controller {
     public function updateSettings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_admin_model->updateSettings();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -165,6 +167,7 @@ class Admin extends CI_Controller {
 
     public function uploadIndexSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $path = FCPATH . "/photo/upload/";
         $filedel = $this->input->post('filedel');
         if(isset($filedel)){
@@ -184,6 +187,7 @@ class Admin extends CI_Controller {
 
     public function htmlUpload() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(3)) {
             $year = $this->uri->segment(3);
         } else {

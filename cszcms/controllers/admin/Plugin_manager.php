@@ -53,6 +53,7 @@ class Plugin_manager extends CI_Controller {
     public function setstatus() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(4)) {
             $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_manager_id = '".$this->uri->segment(4)."'", '', 1);
             if ($status->plugin_active) {

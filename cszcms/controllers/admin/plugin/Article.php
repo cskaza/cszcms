@@ -78,6 +78,7 @@ class Article extends CI_Controller {
     
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $is_category = $this->input->post('is_category', TRUE);
         if(!$is_category){
             //Load the form validation library
@@ -122,6 +123,7 @@ class Article extends CI_Controller {
     
     public function editSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $is_category = $this->input->post('is_category', TRUE);
         if($this->uri->segment(5)){
             if(!$is_category){
@@ -155,6 +157,7 @@ class Article extends CI_Controller {
     
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->uri->segment(5)){
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));

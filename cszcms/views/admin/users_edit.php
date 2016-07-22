@@ -101,7 +101,7 @@
                 'value' => '1',
                 'checked' => $checked               
             );
-            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor'){
+            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
                 $data['disabled'] = 'disabled';
             }
             echo form_checkbox($data);
@@ -122,6 +122,9 @@
                 'value' => '1',
                 'checked' => $checked
             );
+            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
+                $data['disabled'] = 'disabled';
+            }
             echo form_checkbox($data);
             ?> <?php echo $this->lang->line('user_new_active'); ?></label>	
         </div> <!-- /control-group -->

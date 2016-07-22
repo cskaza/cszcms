@@ -73,6 +73,7 @@ class Gallery extends CI_Controller {
 
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -121,6 +122,7 @@ class Gallery extends CI_Controller {
 
     public function editSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             //Load the form validation library
             $this->load->library('form_validation');
@@ -143,6 +145,7 @@ class Gallery extends CI_Controller {
 
     public function htmlUpload() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $path = FCPATH . "/photo/plugin/gallery/";
             $files = $_FILES;
@@ -168,6 +171,7 @@ class Gallery extends CI_Controller {
 
     public function uploadIndexSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $path = FCPATH . "/photo/plugin/gallery/";
         $filedel = $this->input->post('filedel', TRUE);
         $caption = $this->input->post('caption', TRUE);
@@ -198,6 +202,7 @@ class Gallery extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $path = FCPATH . "/photo/plugin/gallery/";
             //Delete the data

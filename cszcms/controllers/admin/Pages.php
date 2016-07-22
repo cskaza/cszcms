@@ -63,6 +63,7 @@ class Pages extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -101,6 +102,7 @@ class Pages extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -123,6 +125,7 @@ class Pages extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->uri->segment(4)){
             //Delete the languages
             if($this->uri->segment(4) != 1) {

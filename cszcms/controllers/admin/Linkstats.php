@@ -107,6 +107,7 @@ class Linkstats extends CI_Controller {
     public function deleteViewByID() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $delR = $this->input->post('delR');
         if(isset($delR)){
             foreach ($delR as $value) {
@@ -136,6 +137,7 @@ class Linkstats extends CI_Controller {
     public function deleteByID() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->uri->segment(4)){
             $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $this->uri->segment(4));   
         }
@@ -145,6 +147,7 @@ class Linkstats extends CI_Controller {
     public function deleteByURL() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->uri->segment(4)){
             $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
             $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);   

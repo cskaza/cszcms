@@ -198,12 +198,14 @@ class Csz_admin_model extends CI_Model {
     public function chkVisitorUser($id) {
         $this->db->select("backend_visitor");
         $this->db->where("user_admin_id", $id);
+        $this->db->limit(1, 0);
         $query = $this->db->get('user_admin');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $rows) {
-                $backend_visitor = $rows->backend_visitor;
-                return $backend_visitor;
-            }
+        $rows = $query->row();
+        if(!empty($rows)){
+            $backend_visitor = $rows->backend_visitor;
+            return $backend_visitor;
+        }else{
+            return FALSE;
         }
     }
 
@@ -295,7 +297,10 @@ class Csz_admin_model extends CI_Model {
         }
         if($id != 1 && $this->session->userdata('admin_type') == 'admin'){
             $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
+        }
+        if($id != 1 && $this->session->userdata('admin_type') == 'admin' && $this->session->userdata('user_admin_id') != $id){
             $this->db->set('backend_visitor', $backend_visitor, FALSE);
+            $this->db->set('active', $active, FALSE);
         }
         $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
         $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
@@ -304,9 +309,6 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('address', $this->input->post("address", TRUE), TRUE);
         $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
         $this->db->set('picture', $upload_file, TRUE);
-        if ($this->session->userdata('user_admin_id') != $id) {
-            $this->db->set('active', $active, FALSE);
-        }
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('user_admin_id', $id);
         $this->db->update('user_admin');

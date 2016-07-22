@@ -64,6 +64,7 @@ class Users extends CI_Controller {
     public function confirm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -108,6 +109,7 @@ class Users extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->session->userdata('admin_type') != 'admin' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
             redirect('/admin/users', 'refresh');
         }       
@@ -151,6 +153,7 @@ class Users extends CI_Controller {
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if($this->uri->segment(4)){
             if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
                 //Delete the user account

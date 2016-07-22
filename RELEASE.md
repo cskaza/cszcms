@@ -2,7 +2,8 @@
 CSZ-CMS V.1.1.0
 x- Add Widget plugin for get data from other plugin to show on the page.
 x- Add Email Template send to visitor for Forms Builder.
-x- Add visitor permission for admin user (Can't insert update or delete anythings)
+- Add visitor permission for admin user (Can't insert update or delete anythings)
+x- Add email logs management system.
 - Add Enable pagecache for article.
 - Fix bug about xml_load and recaptcha error.
 - Fix download button for Upload Tools.
@@ -12,7 +13,7 @@ x- Add visitor permission for admin user (Can't insert update or delete anything
 - Fix install wizard to use easy.
 - Fix Link Statistic bug on backend.
 
-CSZ-CMS V.1.0
+CSZ-CMS V.1.0.x
 - Add statistic for link can delete with checkbox.
 - Add label language for frontend plugin.
 - Add plugin manager.
@@ -37,7 +38,7 @@ CSZ-CMS V.1.0
 - Add optimize the database tools on upgrade page.
 - Add the database backup tools on upgrade page.
 - Add default content when create new page.
-- Add permission for admin user (Admin, Editor).
+- Add permission for admin user (Admin, Editor, Member).
 - Upgrade tools with one click.
 - Auto check lastest version from server.
 - Social Settings for icon link on frontpage.
@@ -48,4 +49,4 @@ CSZ-CMS V.1.0
 - Manage page content for frontpage with TinyMCE Text Editor.
 - Upload/Download for use in content with Upload Tools
 - Forms Builder for add the form into content page with [?]{=forms:forms_name}[?] tag.
-- Fix all bug has in V1.0
+- Fix all bug has in V.1.0.x

@@ -47,13 +47,15 @@ class Admin_helper{
     
     static function chkVisitor($user_admin_id) {
         $CI =& get_instance();
+        $CI->lang->load('admin', LANG);
         $CI->load->model('Csz_admin_model');
         $CI->load->library('session'); 
-        $chk = $CI->Csz_admin_model->chkVisitorUser($id);
+        $CI->load->library('csz_referrer');
+        $CI->load->helper('url');
+        $chk = $CI->Csz_admin_model->chkVisitorUser($user_admin_id);
         if($chk != 0){
-            $redirect= BASE_URL.'/admin';
-            $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">You not have permission in demo version!</div>');
-            header("Location: $redirect");	
+            $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$CI->lang->line('user_not_allow_txt').'</div>');
+            redirect($CI->csz_referrer->getIndex(), 'refresh');	
             exit;
         }
     }

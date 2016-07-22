@@ -50,7 +50,7 @@
                         <h1><i><span class="glyphicon glyphicon-list-alt"></span></i></h1>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge"><?php echo $total_linkstats ?></div>
+                        <div class="huge"><?php if($config->link_statistic_active){ echo $total_linkstats; }else{ echo '-'; } ?></div>
                         <div><?php echo $this->lang->line('dashboard_totallink') ?>!</div>
                     </div>
                 </div>
