@@ -23,23 +23,43 @@ class Csz_admin_model extends CI_Model {
     
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url)
-            $xml_url = 'http://www.cszcms.com/downloads/lastest_version.xml';
+            $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
         $xml = @simplexml_load_file($xml_url) or die("Error!: Cannot connect xml file.");
         return $xml;
     }
+    
+    public function setSessionLastVer($xml_url) {
+        if(!$this->session->userdata('cszcms_lastver')){
+            $xml = $this->getLatestVersion($xml_url);
+            $last_ver = $xml->version;
+            if ($last_ver) {
+                $data = array('cszcms_lastver' => (string)$last_ver,);
+                $this->session->set_userdata($data);
+                $xml_version = $last_ver;
+            }
+        }else{
+            $xml_version = $this->session->userdata('cszcms_lastver');
+        }
+        return $xml_version;
+    }
 
-    public function chkVerUpdate($cur_ver, $xml_url = '') {
-        $ver_r = array();
+    public function chkVerUpdate($cur_txt, $xml_url = '') {
+        /*$ver_r = array();*/
         $cur_r = array();
-        $xml = $this->getLatestVersion($xml_url);
-        if ($xml->version) {
-            $cur_ver = str_replace(' ', '.', $cur_ver);
+        $cur_xml = explode(' ', $cur_txt);
+        $xml_version = $this->setSessionLastVer($xml_url);
+        if ($xml_version) {
+            $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             $cur_r = explode('.', $cur_ver);
-            $ver_r = explode('.', $xml->version);
-            if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
-                return $xml->version;
-            } else {
-                return FALSE;
+            $ver_r = explode('.', $xml_version);
+            if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
+                return $xml_version;
+            }else{
+                if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
+                    return $xml_version;
+                } else {
+                    return FALSE;
+                }
             }
         } else {
             return FALSE;
@@ -50,8 +70,8 @@ class Csz_admin_model extends CI_Model {
         /* sub version is limit x.9.9 */
         $cur_r = array();
         $pre_r = array();
-        $xml = $this->getLatestVersion($xml_url);
-        $last_ver = $xml->version;
+        $xml_version = $this->setSessionLastVer($xml_url);
+        $last_ver = $xml_version;
         if ($cur_ver && $last_ver) {
             $cur_ver = str_replace(' ', '.', $cur_ver);
             $cur_r = explode('.', $cur_ver);
@@ -407,7 +427,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function cszCopyright() {
-        $csz_copyright = '<br><span class="copyright">Powered by CSZ-CMS V.' . $this->Csz_model->getVersion() . '</span>';
+        $csz_copyright = '<br><span class="copyright">Powered by CSZ CMS V.' . $this->Csz_model->getVersion() . '</span>';
         return $csz_copyright;
     }
 
