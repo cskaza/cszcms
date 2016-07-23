@@ -44,7 +44,6 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function chkVerUpdate($cur_txt, $xml_url = '') {
-        /*$ver_r = array();*/
         $cur_r = array();
         $cur_xml = explode(' ', $cur_txt);
         $xml_version = $this->setSessionLastVer($xml_url);
@@ -53,7 +52,7 @@ class Csz_admin_model extends CI_Model {
             $cur_r = explode('.', $cur_ver);
             $ver_r = explode('.', $xml_version);
             if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
-                return $xml_version;
+                return $cur_xml[0];
             }else{
                 if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
                     return $xml_version;
@@ -66,26 +65,30 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
-    public function findNextVersion($cur_ver, $xml_url = '') {
+    public function findNextVersion($cur_txt, $xml_url = '') {
         /* sub version is limit x.9.9 */
         $cur_r = array();
-        $pre_r = array();
+        $cur_xml = explode(' ', $cur_txt);
         $xml_version = $this->setSessionLastVer($xml_url);
         $last_ver = $xml_version;
-        if ($cur_ver && $last_ver) {
-            $cur_ver = str_replace(' ', '.', $cur_ver);
+        if ($cur_xml[0] && $last_ver) {
+            $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             $cur_r = explode('.', $cur_ver);
-            if($cur_ver == $last_ver){
-                return $last_ver;
+            if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
+                return $cur_xml[0];
             }else{
-                if($cur_r[1] <= 9 && $cur_r[2] < 9){
-                    return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
-                }else if($cur_r[1] < 9 && $cur_r[2] == 9){
-                    return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
-                }else if($cur_r[1] == 9 && $cur_r[2] == 9){
-                    return ($cur_r[0] + 1) . '.0.0';
+                if($cur_ver == $last_ver){
+                    return $last_ver;
                 }else{
-                    return FALSE;
+                    if($cur_r[1] <= 9 && $cur_r[2] < 9){
+                        return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+                    }else if($cur_r[1] < 9 && $cur_r[2] == 9){
+                        return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+                    }else if($cur_r[1] == 9 && $cur_r[2] == 9){
+                        return ($cur_r[0] + 1) . '.0.0';
+                    }else{
+                        return FALSE;
+                    }
                 }
             }
         } else {
