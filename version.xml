@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cszcms>
     <!-- Current Version -->
-    <version>1.0.9</version>
+    <version>1.1.0</version>
     <!-- release or beta -->
-    <release>beta</release>
+    <release>release</release>
 </cszcms>
