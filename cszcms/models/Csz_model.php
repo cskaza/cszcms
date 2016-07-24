@@ -27,20 +27,19 @@ class Csz_model extends CI_Model {
 
     public function downloadFile($url, $path) {
         $newfname = $path;
-        $file = fopen ($url, 'rb');
-        if ($file) {
-            $newf = fopen ($newfname, 'wb');
+        $file = fopen($url, 'rb') or die("Can't open file");
+        if (!$file) {
+            fclose($file);
+            return FALSE;
+        }else{
+            $newf = fopen($newfname, 'wb') or die("Can't create file");;
             if ($newf) {
                 while(!feof($file)) {
                     fwrite($newf, fread($file, 1024 * 1024 * 10), 1024 * 1024 * 10); /* 10MB */
                 }
+                fclose($newf);
             }
-        }
-        if ($file) {
             fclose($file);
-        }
-        if ($newf) {
-            fclose($newf);
         }
     }
 

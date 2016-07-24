@@ -12,6 +12,7 @@ CSZ-CMS V.1.1.0
 - Fix some bug for frontend top menu.
 - Fix install wizard to use easy.
 - Fix Link Statistic bug on backend.
+- Fix automatic upgrade system for beta version.
 
 CSZ-CMS V.1.0.x
 - Add statistic for link can delete with checkbox.

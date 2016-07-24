@@ -35,6 +35,7 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         $this->csz_referrer->setIndex();
+        $this->session->unset_userdata('cszcms_lastver');
         $this->load->helper('directory');
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
@@ -51,24 +52,36 @@ class Upgrade extends CI_Controller {
         if ($lastversion !== FALSE) {
             $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
             $newfname = FCPATH . basename($url);
-            $this->Csz_model->downloadFile($url, $newfname);
-            if (file_exists($newfname)) {
-                @$this->unzip->extract($newfname, FCPATH);
-                if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
-                    $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                    delete_files(FCPATH . 'upgrade_sql', TRUE);
-                    rmdir(FCPATH . 'upgrade_sql');
+            if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
+                if (file_exists($newfname)) {
+                    $unzip = @$this->unzip->extract($newfname, FCPATH);
+                    if(!empty($unzip)){
+                        if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
+                            $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                            delete_files(FCPATH . 'upgrade_sql', TRUE);
+                            rmdir(FCPATH . 'upgrade_sql');
+                        }
+                        if(is_writable($newfname)){
+                            @unlink($newfname);
+                        }
+                    }else{
+                        if(is_writable($newfname)){
+                            @unlink($newfname);
+                        }
+                        $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                    }
                 }
-                if(is_writable($newfname)){
-                    @unlink($newfname);
+                if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+                    redirect('/admin/upgrade/download', 'refresh');
+                }else{
+                    $this->Csz_model->clear_all_cache();
+                    // When Success 
+                    $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
+                    redirect($this->csz_referrer->getIndex(), 'refresh');
                 }
-            }
-            if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
-                redirect('/admin/upgrade/download', 'refresh');
             }else{
-                $this->Csz_model->clear_all_cache();
-                // When Success 
-                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
             }
         } else {

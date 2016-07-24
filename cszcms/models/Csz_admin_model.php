@@ -31,11 +31,14 @@ class Csz_admin_model extends CI_Model {
     public function setSessionLastVer($xml_url) {
         if(!$this->session->userdata('cszcms_lastver')){
             $xml = $this->getLatestVersion($xml_url);
-            $last_ver = $xml->version;
-            if ($last_ver) {
-                $data = array('cszcms_lastver' => (string)$last_ver,);
+            if ($xml->version) {
+                $data = array('cszcms_lastver' => (string)$xml->version,);
                 $this->session->set_userdata($data);
-                $xml_version = $last_ver;
+                $xml_version = $xml->version;
+            }else{
+                $xml_cur = $this->Csz_model->getVersion();
+                $cur_xml = explode(' ', $xml_cur);
+                $xml_version = $cur_xml[0];
             }
         }else{
             $xml_version = $this->session->userdata('cszcms_lastver');
@@ -51,8 +54,12 @@ class Csz_admin_model extends CI_Model {
             $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             $cur_r = explode('.', $cur_ver);
             $ver_r = explode('.', $xml_version);
-            if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
-                return $cur_xml[0];
+            if(isset($cur_xml[1]) && ($cur_xml[1] == 'Beta' || $cur_xml[1] == 'beta')){
+                if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] == $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
+                    return $cur_xml[0];
+                } else {
+                    return FALSE;
+                }
             }else{
                 if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
                     return $xml_version;
