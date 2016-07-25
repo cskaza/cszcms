@@ -45,8 +45,8 @@ class Csz_sitemap extends CI_Model {
     
     private function genSitemapXML() {
         /* Sitemap Generator for XML (include article plugin only) */
-        $sitemap_xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        <urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\">\n';
+        $sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">'."\n";
         $sitemap_xml.= '<url>
 	<loc>'.BASE_URL.'</loc>
 	<changefreq>always</changefreq>
@@ -133,7 +133,7 @@ class Csz_sitemap extends CI_Model {
         $webconfig = $this->Csz_admin_model->load_config();
         /* Sitemap Generator for ROR.XML (include article plugin only) */
         $ror_xml = '<?xml version="1.0" encoding="UTF-8"?>
-        <rss version="2.0" xmlns:ror="http://rorweb.com/0.1/" >
+        <rss version="2.0" xmlns:ror="http://rorweb.com/0.1/">
         <channel>
         <title>ROR Sitemap for '.BASE_URL.'</title>
         <link>'.BASE_URL.'</link>'."\n";
@@ -333,7 +333,7 @@ class Csz_sitemap extends CI_Model {
         </div>
         </div>
         </body>
-        </html>\n";
+        </html>";
         if($sitemap_html){
             $file_path = FCPATH."sitemap.html";
             $fopen = fopen($file_path, 'wb') or die("can't open file");
