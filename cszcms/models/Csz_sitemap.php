@@ -72,7 +72,8 @@ class Csz_sitemap extends CI_Model {
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             foreach ($menu_other as $row) {
-                if($row['other_link']){
+                $chkotherlink = strpos($row['other_link'], BASE_URL);
+                if($row['other_link'] && $chkotherlink !== FALSE){
                     $sitemap_xml.= '<url>
                     <loc>'.$row['other_link'].'</loc>
                     <changefreq>always</changefreq>
@@ -169,7 +170,8 @@ class Csz_sitemap extends CI_Model {
                 if($i < 10) $order = 1;
 		else if($i < 50) $order = 2;
 		else $order = 3;
-                if($row['other_link']){
+                $chkotherlink = strpos($row['other_link'], BASE_URL);
+                if($row['other_link'] && $chkotherlink !== FALSE){
                     $ror_xml.= '<item>
                         <link>'.$row['other_link'].'</link>
                         <title>'.$row['menu_name'].'</title>
@@ -247,7 +249,8 @@ class Csz_sitemap extends CI_Model {
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             foreach ($menu_other as $row) {
-                if($row['other_link']){
+                $chkotherlink = strpos($row['other_link'], BASE_URL);
+                if($row['other_link'] && $chkotherlink !== FALSE){
                     $sitemap_txt.= $row['other_link'].''."\n";
                 }else if($row['plugin_menu']){
                     $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_menu'].''."\n";
@@ -310,7 +313,8 @@ class Csz_sitemap extends CI_Model {
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             foreach ($menu_other as $row) {
-                if($row['other_link']){
+                $chkotherlink = strpos($row['other_link'], BASE_URL);
+                if($row['other_link'] && $chkotherlink !== FALSE){
                     $sitemap_html.= '<p> - <a href="'.$row['other_link'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></p>';
                 }else if($row['plugin_menu']){
                     $sitemap_html.= '<p> - <a href="'.BASE_URL.'/plugin/'.$row['plugin_menu'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></p>';
