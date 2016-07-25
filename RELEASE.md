@@ -6,7 +6,6 @@ CSZ-CMS V.1.1.0
 - Add Enable pagecache for article.
 - Add message alert when finished insert update and delete.
 - Add sitemap generator.
-x- Add widget for plugin. (get plugin to show on page)
 - Fix bug about xml_load and recaptcha error.
 - Fix download button for Upload Tools.
 - Fix Gallery plugin to version 1.0.1.
