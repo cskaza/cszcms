@@ -73,6 +73,7 @@ $route['admin/users/view/:any'] = "admin/users/viewUsers";
 $route['admin/reset/:any'] = 'admin/users/getPassword';
 $route['admin/settings'] = "admin/admin/settings";
 $route['admin/settings/update'] = "admin/admin/updateSettings";
+$route['admin/settings/gensitemap'] = "admin/admin/genSitemap";
 $route['admin/social'] = "admin/admin/social";
 $route['admin/social/update'] = "admin/admin/updateSocial";
 $route['admin/navigation'] = "admin/navigation";

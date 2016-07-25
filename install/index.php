@@ -47,7 +47,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     $config_txt .= "/* Database Name */ \n";
     $config_txt .= "define('DB_NAME', '".$dbname."'); \n\n";
     $config_txt .= "/* Database Driver */ \n";
-    $config_txt .= "define('DB_DRIVER', '".$_POST['dbdriver']."'); \n\n";
+    $config_txt .= "define('DB_DRIVER', 'mysqli'); \n\n";
     $config_txt .= "/* Base URL */ \n";
     $config_txt .= "define('BASE_URL', '".$baseurl."'); \n\n";
     $config_txt .= "/* Email Domain */ \n";
@@ -100,7 +100,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></div>
+                        <div class="text-center"><a href="<?php echo $_POST['baseurl']; ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
                             <div class="well"><h3 class="form-signin-heading success">Installation Completed!</h3></div>
@@ -123,7 +123,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></div>
+                        <div class="text-center"><a href="https://www.cszcms.com" target="_blank" title="CSZ CMS Official Website"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
                             <div class="well"><h3 class="form-signin-heading">Install CSZ-CMS</h3></div>
@@ -148,26 +148,12 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     <input id="dbpass" name="dbpass" type="password" class="form-control" placeholder="Password for DB" required>
                                     <label for="dbname">Database Name*: </label>
                                     <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
-                                    <label for="dbdriver">Database Driver*: </label>
-                                    <select id="dbdriver" name="dbdriver" class="form-control" required>
-                                        <option value="">-- Please Choose --</option>
-                                        <!--<option value="cubrid">cubrid</option>
-                                        <option value="ibase">ibase</option>
-                                        <option value="mssql">mssql</option>-->
-                                        <!--<option value="mysql">MySQL</option>-->
-                                        <option value="mysqli" selected>MySQLi *</option>
-                                        <!--<option value="oci8">oci8</option>
-                                        <option value="odbc">odbc</option>-->
-                                        <!--<option value="pdo">PDO</option>-->
-                                        <!--<option value="postgre">postgre</option>
-                                        <option value="sqlite">sqlite</option>
-                                        <option value="sqlite3">sqlite3</option>
-                                        <option value="sqlsrv">sqlsrv</option>-->
-                                    </select>
                                     <br><span class="remark">
                                         <b>Your PHP Version: <?php echo phpversion(); ?></b><br>
-                                        <em>MySQLi = <b>PHP5.3 or higher</b></em><br>
-                                        <b>Required for MySQLi Only!</b>
+                                        <b>* Required for MySQLi (PHP 5.3 or higher, MySQL 5.0 or higher)</b><br>
+                                        <b>* Please create the database on your hosting control panel.</b><br><br>
+                                        <b>When you have problem or question. Please contact us at</b><br>
+                                        <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
                                     </span>
                                 </div>
                             </div>

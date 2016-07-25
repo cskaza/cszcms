@@ -240,6 +240,10 @@
                         
     </div>
     <div class="col-lg-6 col-md-6">
+        <div class="h2 sub-header"><?php echo $this->lang->line('settings_sitemap_header')?></div>
+        <a href="<?php echo BASE_URL . '/admin/settings/gensitemap'?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_header')?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
+        <b><?php echo $this->lang->line('settings_sitemap_lasttime')?>: </b><b><?php if($sitemaptime !== FALSE){ echo '<span class="success"><em>'.$sitemaptime.'</em></span>'; }else{ echo '<span class="error"><em>-</em></span>';} ?></b>
+        <br><br><br>
         <div class="h2 sub-header"><?php echo  $this->lang->line('settings_email_header') ?></div>
             <div class="control-group">	
                 <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>

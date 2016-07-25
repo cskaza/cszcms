@@ -194,6 +194,9 @@ $lang['settings_smtp_user']             = "SMTP Username";
 $lang['settings_smtp_pass']             = "SMTP Password";
 $lang['settings_smtp_port']             = "SMTP Port";
 $lang['settings_sendmail_path']         = "Sendmail Path";
+$lang['settings_sitemap_header']        = "สร้างไฟล์ Sitemaps";
+$lang['settings_sitemap_runnow']        = "เริ่มเดี๋ยวนี้";
+$lang['settings_sitemap_lasttime']      = "อัพเดทล่าสุด";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

@@ -194,6 +194,9 @@ $lang['settings_smtp_user']             = "SMTP Username";
 $lang['settings_smtp_pass']             = "SMTP Password";
 $lang['settings_smtp_port']             = "SMTP Port";
 $lang['settings_sendmail_path']         = "Sendmail Path";
+$lang['settings_sitemap_header']        = "Sitemaps Generator";
+$lang['settings_sitemap_runnow']        = "Start Now";
+$lang['settings_sitemap_lasttime']      = "Last updated";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";

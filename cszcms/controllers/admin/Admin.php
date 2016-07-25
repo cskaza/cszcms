@@ -117,6 +117,16 @@ class Admin extends CI_Controller {
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
+    
+    public function genSitemap() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        $this->load->model('Csz_sitemap');
+        $this->Csz_sitemap->runSitemap();
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
 
     public function settings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
@@ -125,8 +135,10 @@ class Admin extends CI_Controller {
         $this->csz_referrer->setIndex();
         $this->load->helper('form');
         $this->load->helper('directory');
+        $this->load->model('Csz_sitemap');
         $this->template->setSub('themesdir', directory_map(APPPATH . '/views/templates/', 1));
         $this->template->setSub('langdir', directory_map(APPPATH . '/language/', 1));
+        $this->template->setSub('sitemaptime', $this->Csz_sitemap->getFileTime());
 
         $this->template->setSub('settings', $this->Csz_admin_model->load_config());
         $this->template->loadSub('admin/settings');
