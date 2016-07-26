@@ -117,6 +117,8 @@
                         $link_arr = explode('://', $nav->other_link);
                         $protocal = $link_arr[0].'://';
                         $other_link = $link_arr[1];
+                    }else{
+                        $protocal = '';
                     }
                     $att = 'id="protocal"';
                     $data = array();
