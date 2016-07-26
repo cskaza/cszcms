@@ -133,7 +133,7 @@
 <?php if($config->link_statistic_active){
 ?>
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12" style="word-wrap:break-word;">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i><span class="glyphicon glyphicon-envelope"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>

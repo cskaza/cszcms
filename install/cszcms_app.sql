@@ -360,6 +360,7 @@ CREATE TABLE IF NOT EXISTS `gallery_picture` (
   `gallery_db_id` int(11) NOT NULL,
   `file_upload` varchar(255) NOT NULL,
   `caption` varchar(255) NOT NULL,
+  `arrange` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`gallery_picture_id`)

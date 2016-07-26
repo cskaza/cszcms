@@ -30,10 +30,22 @@
                     <?php } else { ?>
                         <?php
                         foreach ($genlab as $gl) {
+                            $lang_show = '';
                             echo '<tr>';
                             echo '<td class="text-center">' . $gl['general_label_id'] . '</td>';
                             echo '<td class="text-center">' . $gl['name'] . '</td>';
-                            echo '<td class="text-center">' . $lang_show . '</td>';
+                            echo '<td class="text-center">';
+                            foreach ($lang as $key => $value) { 
+                                if($this->db->field_exists('lang_'.$key, 'general_label')){
+                                    if($gl['lang_'.$key]){
+                                        $lang_show.= '<span class="success">'.$value.'</span>, ';
+                                    }else{
+                                        $lang_show.= '<span class="error"><b>'.$value.'</b></span>, ';
+                                    }
+                                }
+                            }
+                            echo rtrim($lang_show, ", ");
+                            echo '</td>';
                             echo '<td class="text-center"><a href="'.BASE_URL.'/admin/genlabel/edit/' . $gl['general_label_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a></td>';
                             echo '</tr>';
                         } ?>

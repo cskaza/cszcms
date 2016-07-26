@@ -40,11 +40,11 @@ class General_label extends CI_Controller {
         
         //Get users from database
         $this->template->setSub('genlab', $this->Csz_admin_model->getIndexData('general_label', $result_per_page, $pagination, 'general_label_id', 'ASC'));
-        $lang = $this->Csz_model->getValueArray('lang_name', 'lang_iso', "lang_name != ''", '');
+        $lang = $this->Csz_model->getValueArray('*', 'lang_iso', "lang_name != ''", '');
         foreach ($lang as $l) { 
-            if($l['lang_name']) $lang_arr[] = $l['lang_name'];
+            if($l['lang_name']) $lang_arr[$l['lang_iso']] = $l['lang_name'];
         }
-        $this->template->setSub('lang_show', implode(", ", $lang_arr));
+        $this->template->setSub('lang', $lang_arr);
 
         //Load the view
         $this->template->loadSub('admin/genlabel_index');
