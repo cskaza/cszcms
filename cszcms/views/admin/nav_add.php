@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('navpage_new_header') ?>
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('navpage_new_header') ?>
             </li>
         </ol>
     </div>
@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('navpage_addnew') ?></a></div>
         <?php echo form_open(BASE_URL . '/admin/navigation/insert'); ?>
         <div id="main_menu">           
             <div class="control-group">		
@@ -45,12 +45,12 @@
         <div class="control-group">										
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('navpage_menulang'); ?>*</label>
             <?php
-                $att = 'id="lang_iso" class="form-control"';
-                $data = array();
-                foreach ($lang as $lg) {
-                    $data[$lg->lang_iso] = $lg->lang_name;
-                }
-                echo form_dropdown('lang_iso', $data, '', $att);
+            $att = 'id="lang_iso" class="form-control"';
+            $data = array();
+            foreach ($lang as $lg) {
+                $data[$lg->lang_iso] = $lg->lang_name;
+            }
+            echo form_dropdown('lang_iso', $data, '', $att);
             ?>		
         </div> <!-- /control-group -->
         <hr>
@@ -67,7 +67,7 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('option_yes'); ?></label>	
         </div> <!-- /control-group -->
-        
+
         <div id="drop_menu">
             <div class="control-group">
                 <label class="control-label" for="pageUrl"><?php echo $this->lang->line('navpage_pagelink'); ?></label>
@@ -77,7 +77,7 @@
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
                     foreach ($pages as $p) {
-                        $data[$p['pages_id']] = $p['page_name'].' ('.$p['lang_iso'].')';
+                        $data[$p['pages_id']] = $p['page_name'] . ' (' . $p['lang_iso'] . ')';
                     }
                     echo form_dropdown('pageUrl', $data, '', $att);
                     ?>
@@ -99,9 +99,20 @@
                     ?>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
-            <br>
-            <div class="control-group">										
-                <label class="control-label" for="url_link"><?php echo $this->lang->line('navpage_link'); ?></label>
+            <br>        
+            <label class="control-label" for="url_link"><?php echo $this->lang->line('navpage_link'); ?></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <?php
+                    $att = 'id="protocal"';
+                    $data = array();
+                    foreach ($dropmenu as $d) {
+                        $data['http://'] = 'http://';
+                        $data['https://'] = 'https://';
+                    }
+                    echo form_dropdown('protocal', $data, '', $att);
+                    ?>
+                </span>
                 <?php
                 $data = array(
                     'name' => 'url_link',
@@ -124,7 +135,7 @@
                     $data = array();
                     $data[0] = $this->lang->line('option_choose');
                     foreach ($dropmenu as $d) {
-                        $data[$d['page_menu_id']] = $d['menu_name'].' ('.$d['lang_iso'].')';
+                        $data[$d['page_menu_id']] = $d['menu_name'] . ' (' . $d['lang_iso'] . ')';
                     }
                     echo form_dropdown('dropMenu', $data, '', $att);
                     ?>
@@ -157,7 +168,7 @@
             ?> 
             <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
-<?php echo form_close(); ?>
+        <?php echo form_close(); ?>
         <!-- /widget-content --> 
     </div>
 </div>

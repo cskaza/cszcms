@@ -794,11 +794,15 @@ class Csz_admin_model extends CI_Model {
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
+        $o_link_input = $this->input->post('url_link', TRUE);
+        $replace_arr = array('https://','http://');
+        $other_link = str_replace($replace_arr, '', $o_link_input);
+        $protocal = $this->input->post('protocal', TRUE);
         $data = array(
             'menu_name' => $this->input->post('name', TRUE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
             'pages_id' => $this->input->post('pageUrl', TRUE),
-            'other_link' => $this->input->post('url_link', TRUE),
+            'other_link' => $protocal.$other_link,
             'plugin_menu' => $this->input->post('pluginmenu', TRUE),
             'drop_menu' => $dropdown,
             'drop_page_menu_id' => $dropMenu,
@@ -818,7 +822,11 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('menu_name', $this->input->post("name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
-        $this->db->set('other_link', $this->input->post('url_link', TRUE), TRUE);
+        $o_link_input = $this->input->post('url_link', TRUE);
+        $replace_arr = array('https://','http://');
+        $other_link = str_replace($replace_arr, '', $o_link_input);
+        $protocal = $this->input->post('protocal', TRUE);
+        $this->db->set('other_link', $protocal.$other_link, TRUE);
         $this->db->set('plugin_menu', $this->input->post('pluginmenu', TRUE), TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);
         $this->db->set('drop_page_menu_id', $dropMenu, TRUE);

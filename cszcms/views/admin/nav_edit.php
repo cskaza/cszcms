@@ -109,15 +109,31 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <br>
-            <div class="control-group">										
-                <label class="control-label" for="url_link"><?php echo $this->lang->line('navpage_link'); ?></label>
+            <label class="control-label" for="url_link"><?php echo $this->lang->line('navpage_link'); ?></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <?php
+                    if($nav->other_link){
+                        $link_arr = explode('://', $nav->other_link);
+                        $protocal = $link_arr[0].'://';
+                        $other_link = $link_arr[1];
+                    }
+                    $att = 'id="protocal"';
+                    $data = array();
+                    foreach ($dropmenu as $d) {
+                        $data['http://'] = 'http://';
+                        $data['https://'] = 'https://';
+                    }
+                    echo form_dropdown('protocal', $data, $protocal, $att);
+                    ?>
+                </span>
                 <?php
                 $data = array(
                     'name' => 'url_link',
                     'id' => 'url_link',
                     'class' => 'form-control',
                     'placeholder' => $this->lang->line('navpage_link'),
-                    'value' => set_value('url_link', $nav->other_link, FALSE)
+                    'value' => set_value('url_link', $other_link, FALSE)
                 );
                 echo form_input($data);
                 ?>			

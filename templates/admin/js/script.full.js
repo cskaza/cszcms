@@ -62,6 +62,7 @@ $(function () {
             baseUrl + '/templates/admin/css/styles.css',
             baseUrl + '/assets/font-awesome/css/font-awesome.min.css'
         ],
+        remove_trailing_brs: false,
         convert_urls : false,
         extended_valid_elements : "*[*]",
         valid_elements: "*[*]",
