@@ -58,7 +58,7 @@ class Gallery_model extends CI_Model {
     
     public function getFirstImgs($gallery_db_id) {
         if($gallery_db_id){
-            $img_rs = $this->Csz_model->getValue('file_upload', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1);
+            $img_rs = $this->Csz_model->getValue('file_upload', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'asc');
             if(!empty($img_rs)){
                 return $img_rs->file_upload;
             }else{

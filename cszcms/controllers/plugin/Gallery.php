@@ -87,7 +87,7 @@ class Gallery extends CI_Controller {
                 ($this->uri->segment(6)) ? $pagination = $this->uri->segment(6) : $pagination = 0;
 
                 //Get users from database
-                $this->template->setSub('image', $this->Csz_admin_model->getIndexData('gallery_picture', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+                $this->template->setSub('image', $this->Csz_admin_model->getIndexData('gallery_picture', $result_per_page, $pagination, 'arrange', 'asc', $search_arr));
                 $this->template->setSub('total_row', $total_row);
 
                 //Load the view

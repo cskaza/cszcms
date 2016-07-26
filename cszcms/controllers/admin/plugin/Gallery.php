@@ -111,7 +111,7 @@ class Gallery extends CI_Controller {
             $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 6);
             ($this->uri->segment(6)) ? $pagination = ($this->uri->segment(6)) : $pagination = 0;
 
-            $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('gallery_picture', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+            $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('gallery_picture', $result_per_page, $pagination, 'arrange', 'ASC', $search_arr));
             $this->template->setSub('total_row', $total_row);
             //Load the view
             $this->template->loadSub('admin/plugin/gallery_edit');
@@ -175,6 +175,21 @@ class Gallery extends CI_Controller {
         $path = FCPATH . "/photo/plugin/gallery/";
         $filedel = $this->input->post('filedel', TRUE);
         $caption = $this->input->post('caption', TRUE);
+        $i = 0;
+        $arrange = 1;
+        $gallery_picture_id = $this->input->post('gallery_picture_id', TRUE);
+        if (!empty($gallery_picture_id)) {
+            while ($i < count($gallery_picture_id)) {
+                if ($gallery_picture_id[$i]) {
+                    $this->db->set('arrange', $arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("gallery_picture_id", $gallery_picture_id[$i]);
+                    $this->db->update('gallery_picture');
+                    $arrange++;
+                }
+                $i++;
+            }
+        }
         if (isset($filedel)) {
             foreach ($filedel as $value) {
                 if ($value) {
@@ -196,6 +211,7 @@ class Gallery extends CI_Controller {
                 }
             }
         }
+        
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
     }

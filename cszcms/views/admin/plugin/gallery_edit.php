@@ -140,21 +140,24 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
+                        <th width="2%" class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-sort"></i></th>
                         <th width="8%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?php echo  $this->lang->line('btn_delete') ?></label></th>                           
                         <th width="15%" class="text-center" style="vertical-align:middle;"><?php echo  $this->lang->line('uploadfile_thumbnail') ?></th>
-                        <th width="62%" style="vertical-align:middle;"><?php echo  $this->lang->line('uploadfile_filename') ?></th>
+                        <th width="60%" style="vertical-align:middle;"><?php echo  $this->lang->line('uploadfile_filename') ?></th>
                         <th width="15%" class="text-center" style="vertical-align:middle;"><?php echo  $this->lang->line('uploadfile_uploadtime') ?></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="ui-sortable">
                     <?php if ($showfile === FALSE) { ?>
                         <tr>
                             <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('uploadfile_filenotfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php foreach ($showfile as $file) { ?>
-                            <tr>
+                            <tr class="ui-state-default">
+                                <td class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-resize-vertical"></i></td>
                                 <td class="text-center" style="vertical-align:middle;">
+                                    <input type="hidden" name="gallery_picture_id[]" value="<?php echo $file["gallery_picture_id"]?>">
                                     <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?php echo $file["gallery_picture_id"] ?>">
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
@@ -241,3 +244,4 @@ fl.onchange = function(e){
     }
 };
 </script>
+<script src="<?php echo base_url()?>assets/js/jquery.mobile-1.4.0-alpha.2.min.js"></script>
