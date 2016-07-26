@@ -826,6 +826,9 @@ class Csz_admin_model extends CI_Model {
         $replace_arr = array('https://','http://');
         $other_link = str_replace($replace_arr, '', $o_link_input);
         $protocal = $this->input->post('protocal', TRUE);
+        if(!$other_link){
+            $protocal = '';
+        }
         $this->db->set('other_link', $protocal.$other_link, TRUE);
         $this->db->set('plugin_menu', $this->input->post('pluginmenu', TRUE), TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);

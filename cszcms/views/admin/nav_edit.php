@@ -119,6 +119,7 @@
                         $other_link = $link_arr[1];
                     }else{
                         $protocal = '';
+                        $other_link = '';
                     }
                     $att = 'id="protocal"';
                     $data = array();
