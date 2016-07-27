@@ -149,7 +149,7 @@
                 foreach ($lang as $lg) {
                     $data[$lg->lang_iso] = $lg->lang_name;
                 }
-                echo form_dropdown('lang_iso', $data, '', $att);
+                echo form_dropdown('lang_iso', $data, $article->lang_iso, $att);
             ?>	
         </div> <!-- /control-group -->
         <br>

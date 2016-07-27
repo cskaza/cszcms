@@ -33,7 +33,7 @@ class Article_model extends CI_Model {
                 'title' => $this->input->post('title', TRUE),
                 'keyword' => $this->input->post('keyword', TRUE),
                 'short_desc' => $this->input->post('short_desc', TRUE),
-                'content' => str_replace(' class="container"', '', $this->input->post('content', TRUE)),
+                'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
@@ -78,7 +78,7 @@ class Article_model extends CI_Model {
                 'title' => $this->input->post('title', TRUE),
                 'keyword' => $this->input->post('keyword', TRUE),
                 'short_desc' => $this->input->post('short_desc', TRUE),
-                'content' => str_replace(' class="container"', '', $this->input->post('content', TRUE)),
+                'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
