@@ -394,18 +394,28 @@ class Csz_model extends CI_Model {
     }
     
     public function linkFromHtml($content) { /* Find and replace a tag in content */
-        if (strpos($content, ' href="') !== false) {
+        if (strpos($content, ' href="') !== false && strpos($content, '</a>') !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $content);
-            $array = explode("<a ", $txt_nonline);
-            foreach ($array as $key => $value) {
-                $link[] = $array[$key];
+            $regexp = "<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
+            $i = 0;$j = 0;$k = 0;
+            if(preg_match_all("/$regexp/siU", $txt_nonline, $matches, PREG_SET_ORDER)) {
+                foreach($matches as $match) {
+                  /* $match[2] = link address | $match[3] = link text */
+                    if(!preg_match('/#/', $match[2])) {
+                        $ori_link[] = $match[2];
+                        $link[] = $match[2].'['.$i.']';
+                        $i++;
+                    }
+                }
+            }
+            foreach ($ori_link as $val) {
+                $content = str_replace('href="'.$val, 'href="'.$val.'['.$j.']', $content);
+                $j++;
             }
             foreach ($link as $val) {
-                if(preg_match('/href=/', $val) && !preg_match('/href="#/', $val)) {
-                    list($Gone,$Keep) = explode("href=\"", trim($val));
-                    list($Keep,$Gone) = explode("\"", $Keep);
-                    $content = strtr($content, array("$Keep" => BASE_URL."/linkstats?url=$Keep"));
-                }
+                $content = str_replace('href="'.$val, 'href="'.BASE_URL.'/linkstats?url='.$val, $content);
+                $content = str_replace('['.$k.']', '', $content);
+                $k++;
             }
         }
         return $content;

@@ -12,7 +12,7 @@ CSZ-CMS V.1.1.0
 - Fix Article plugin to version 1.0.1.
 - Fix some bug for frontend top menu.
 - Fix install wizard to use easy.
-- Fix Link Statistic bug on backend.
+- Fix Link Statistic bug.
 - Fix automatic upgrade system for beta version.
 
 CSZ-CMS V.1.0.x
