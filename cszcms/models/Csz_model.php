@@ -408,14 +408,18 @@ class Csz_model extends CI_Model {
                     }
                 }
             }
-            foreach ($ori_link as $val) {
-                $content = str_replace('href="'.$val, 'href="'.$val.'['.$j.']', $content);
-                $j++;
+            if(!empty($ori_link)){
+                foreach ($ori_link as $val) {
+                    $content = str_replace('href="'.$val, 'href="'.$val.'['.$j.']', $content);
+                    $j++;
+                }
             }
-            foreach ($link as $val) {
-                $content = str_replace('href="'.$val, 'href="'.BASE_URL.'/linkstats?url='.$val, $content);
-                $content = str_replace('['.$k.']', '', $content);
-                $k++;
+            if(!empty($link)){
+                foreach ($link as $val) {
+                    $content = str_replace('href="'.$val, 'href="'.BASE_URL.'/linkstats?url='.$val, $content);
+                    $content = str_replace('['.$k.']', '', $content);
+                    $k++;
+                }
             }
         }
         return $content;
@@ -426,16 +430,20 @@ class Csz_model extends CI_Model {
         if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
             $array = explode("[?]", $txt_nonline);
-            foreach ($array as $key => $value) {
-                $form_name[] = $array[$key];
-            }            
-            foreach ($form_name as $val) {
-                if (strpos($val, '{=forms:') !== false) {
-                    $rep_arr = array('{=forms:', '}');
-                    $frm_name = str_replace($rep_arr, '', $val);
-                    $content = $this->addFrmToHtml($content, $frm_name, $page, $url_segment);
-                    break;
-                }  
+            if(!empty($array)){
+                foreach ($array as $key => $value) {
+                    $form_name[] = $array[$key];
+                }    
+            }
+            if(!empty($form_name)){
+                foreach ($form_name as $val) {
+                    if (strpos($val, '{=forms:') !== false) {
+                        $rep_arr = array('{=forms:', '}');
+                        $frm_name = str_replace($rep_arr, '', $val);
+                        $content = $this->addFrmToHtml($content, $frm_name, $page, $url_segment);
+                        break;
+                    }  
+                }
             }
         }
         return $content;
