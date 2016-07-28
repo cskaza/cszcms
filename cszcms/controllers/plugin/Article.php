@@ -39,8 +39,9 @@ class Article extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $this->template->set('title', 'Article | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Article',$row->keywords));
+        $title = 'Article | ' . $row->site_name;
+        $this->template->set('title', $title);
+        $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
         $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$this->session->userdata('fronlang_iso')."'";
         $this->load->helper('form');
@@ -68,8 +69,9 @@ class Article extends CI_Controller {
             $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
             if($cat_row !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $this->template->set('title', 'Article | ' . $row->site_name);
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Article',$row->keywords));
+                $title = 'Article | ' . $row->site_name;
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
                 $search_arr = " is_category = 0 AND active = '1' AND lang_iso = '".$this->session->userdata('fronlang_iso')."' AND cat_id = $cat_row->article_db_id";
                 $this->load->helper('form');
@@ -105,8 +107,9 @@ class Article extends CI_Controller {
             $year_arr = explode('-', $this->uri->segment(4));
             if($year_arr !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $this->template->set('title', 'Article | ' . $row->site_name);
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Article',$row->keywords));
+                $title = 'Article | ' . $row->site_name;
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
                 if(count($year_arr) == 1){
                     $this->template->setSub('category_name', $year_arr[0]);
@@ -148,8 +151,9 @@ class Article extends CI_Controller {
             if($art_row !== FALSE){
                 $row = $this->Csz_model->load_config();
                 $this->output->cache($row->pagecache_time);
-                $this->template->set('title', $art_row->title.' | ' . $row->site_name);
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword));
+                $title = $art_row->title.' | ' . $row->site_name;
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword,$title));
                 $this->template->set('cur_page', $this->page_url);
 
                 //Get users from database

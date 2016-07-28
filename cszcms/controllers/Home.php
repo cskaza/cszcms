@@ -57,12 +57,14 @@ class Home extends CI_Controller {
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
         if ($page_rs !== FALSE) {
-            $this->template->set('title', $page_rs->page_title . ' | ' . $row->site_name);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc,$page_rs->page_keywords));
+            $title = $page_rs->page_title . ' | ' . $row->site_name;
+            $this->template->set('title', $title);
+            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc,$page_rs->page_keywords,$title));
             $this->template->set('cur_page', $page_rs->page_url);
-        } else {        
-            $this->template->set('title', '404 Page not Found | ' . $row->site_name);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags('404 Page not Found',$row->keywords));
+        } else {    
+            $title = '404 Page not Found | ' . $row->site_name;
+            $this->template->set('title', $title);
+            $this->template->set('meta_tags', $this->Csz_model->coreMetatags('404 Page not Found',$row->keywords,$title));
             $this->template->set('cur_page', $pageURL);
         }
     }

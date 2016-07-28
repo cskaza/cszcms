@@ -39,8 +39,9 @@ class Gallery extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $this->template->set('title', 'Gallery | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('CSZ CMS | Gallery',$row->keywords));
+        $title = 'Gallery | ' . $row->site_name;
+        $this->template->set('title', $title);
+        $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
         $search_arr = " active = '1' AND lang_iso = '".$this->session->userdata('fronlang_iso')."'";
         $this->load->helper('form');
@@ -68,8 +69,9 @@ class Gallery extends CI_Controller {
             $album_row = $this->Csz_model->getValue('*', 'gallery_db', "active = '1' AND gallery_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($album_row !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $this->template->set('title', $album_row->album_name.' | ' . $row->site_name);
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($album_row->short_desc,$album_row->keyword));
+                $title = $album_row->album_name.' | ' . $row->site_name;
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($album_row->short_desc,$album_row->keyword,$title));
                 $this->template->set('cur_page', $this->page_url);
 
                 //Get users from database

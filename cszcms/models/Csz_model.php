@@ -321,16 +321,23 @@ class Csz_model extends CI_Model {
         return $core_js;
     }
 
-    public function coreMetatags($desc_txt, $keywords) {
+    public function coreMetatags($desc_txt, $keywords, $title) {
+        $config = $this->load_config();
         $meta = array(
             array('name' => 'robots', 'content' => 'no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
-            array('name' => 'author', 'content' => $this->load_config()->site_name),
-            array('name' => 'designer', 'content' => 'Powered by CSZ-CMS'),
+            array('name' => 'author', 'content' => $config->site_name),
+            array('name' => 'generator', 'content' => 'CSZ CMS | Open Source Content Management with responsive'),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
-            array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
+            array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
+            array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
+            array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
+            array('name' => 'og:url', 'content' => BASE_URL.'/'.$this->uri->uri_string(), 'type' => 'property'),
+            array('name' => 'og:image', 'content' => BASE_URL.'/photo/logo/'.$config->site_logo, 'type' => 'property'),
+            array('name' => 'name', 'content' => $title, 'type' => 'itemprop'),
+            array('name' => 'description', 'content' => $desc_txt, 'type' => 'itemprop')
         );
         $return_meta = meta($meta);
         return $return_meta;
