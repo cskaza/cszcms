@@ -125,7 +125,7 @@ class Article_model extends CI_Model {
                             $html.= '<li role="presentation" class="text-left"><a><b>'.$this->Csz_model->getLabelLang('article_cat_not_found').'</b></a></li>';
                         }else{
                             foreach ($maincat as $mc) {
-                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b><i class="glyphicon glyphicon-plus"></i> '.$mc['category_name'].'</b></a></li>';
+                                $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$mc['url_rewrite'].'"><b><i class="glyphicon glyphicon-triangle-right"></i> '.$mc['category_name'].'</b></a></li>';
                                 $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
                                 if(!empty($subcat)){
                                     foreach ($subcat as $sc) {
