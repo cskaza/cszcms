@@ -11,7 +11,7 @@
             <div class="panel panel-primary">
                 <div class="panel-body">
                     <h2><?php echo $article->title ?></h2>
-                    <p><small><em><b><?php echo $this->Csz_model->getLabelLang('article_category_menu') ?>: <a href="<?php echo BASE_URL.'/plugin/article/category/'.$this->Csz_model->rw_link($category_name)?>" title="<?php echo $category_name ?>"><?php echo $category_name ?></a></b> <b>| <?php echo $this->Csz_model->getLabelLang('article_postdate') ?>:</b> <?php echo $article->timestamp_create ?> <b>| <?php echo $this->Csz_model->getLabelLang('article_postby') ?>:</b> <?php echo ucfirst($this->Csz_admin_model->getUser($article->user_admin_id)->name) ?></em></small></p>
+                    <p><small><em><b><?php echo $this->Csz_model->getLabelLang('article_category_menu') ?>: <a href="<?php echo BASE_URL.'/plugin/article/category/'.$this->Csz_model->rw_link($category_name)?>" title="<?php echo $category_name ?>"><?php echo $category_name ?></a></b> <b>| <?php echo $this->Csz_model->getLabelLang('article_postdate') ?>:</b> <?php echo $article->timestamp_create ?> <b>| <?php if($article->timestamp_create !== $article->timestamp_update){ echo $this->Csz_model->getLabelLang('article_updatedate').':</b> '.$article->timestamp_update.' <b>|';}?> <?php echo $this->Csz_model->getLabelLang('article_postby') ?>:</b> <?php echo ucfirst($this->Csz_admin_model->getUser($article->user_admin_id)->name) ?></em></small></p>
                     <hr>
                     <p><b><?php echo $article->short_desc?></b></p><br>
                     <?php if($article->main_picture){
