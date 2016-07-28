@@ -39,7 +39,7 @@
                     if(!empty($category)){
                         foreach ($category as $c) {
                             if(!$c['main_cat_id']){
-                                $data[$c['article_db_id']] = $c['category_name'];
+                                $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
                             }
                         }
                     }
@@ -101,7 +101,7 @@
                     $data[''] = $this->lang->line('option_choose');
                     if(!empty($category)){
                         foreach ($category as $c) {
-                            $data[$c['article_db_id']] = $c['category_name'];
+                            $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
                         }
                     }
                     echo form_dropdown('cat_id', $data, '', $att);

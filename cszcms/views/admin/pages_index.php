@@ -37,27 +37,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($pages as $u) {
-                        if(!$u['active']){
-                            $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
-                        }else{
-                            $inactive = '';
+                    <?php if ($pages === FALSE) { ?>
+                        <tr>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($pages as $u) {
+                            if(!$u['active']){
+                                $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
+                            }else{
+                                $inactive = '';
+                            }
+                            if($u['pages_id'] == 1){
+                                $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
+                            }else{
+                                $default_txt = '';
+                            }
+                            echo '<tr>';
+                            echo '<td'.$inactive.' class="text-center">' . $u['pages_id'] . '</td>';
+                            echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
+                            echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
+                            echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
+                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '</tr>';
                         }
-                        if($u['pages_id'] == 1){
-                            $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
-                        }else{
-                            $default_txt = '';
-                        }
-                        echo '<tr>';
-                        echo '<td'.$inactive.' class="text-center">' . $u['pages_id'] . '</td>';
-                        echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
-                        echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
-                        echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
-                        echo '<td class="text-center"><a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
-                        echo '</tr>';
-                    }
-                    ?>
+                        
+                    }?>
                 </tbody>
             </table>
         </div>

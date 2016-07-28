@@ -25,28 +25,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($lang as $u) {
-                        if(!$u['active']){
-                            $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
-                        }else{
-                            $inactive = '';
+                    <?php if ($lang === FALSE) { ?>
+                        <tr>
+                            <td colspan="6" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                        </tr>                           
+                    <?php } else { ?>
+                        <?php
+                        foreach ($lang as $u) {
+                            if(!$u['active']){
+                                $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
+                            }else{
+                                $inactive = '';
+                            }
+                            if($u['lang_iso_id'] == 1){
+                                $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
+                            }else{
+                                $default_txt = '';
+                            }
+                            echo '<tr>';
+                            echo '<td'.$inactive.' class="text-center">' . $u['lang_iso_id'] . '</td>';
+                            echo '<td'.$inactive.'>' . $u['lang_name'] . ''.$default_txt.'</td>';
+                            echo '<td'.$inactive.' class="text-center"'.$inactive.'>' . $u['lang_iso'] . '</td>';
+                            echo '<td'.$inactive.'>' . $u['country'] . '</td>';
+                            echo '<td class="text-center"'.$inactive.'>' . $u['country_iso'] . '</td>';
+                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/lang/edit/' . $u['lang_iso_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('lang_delete_message').'\')" href="'.BASE_URL.'/admin/lang/delete/'.$u['lang_iso_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '</tr>';
                         }
-                        if($u['lang_iso_id'] == 1){
-                            $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
-                        }else{
-                            $default_txt = '';
-                        }
-                        echo '<tr>';
-                        echo '<td'.$inactive.' class="text-center">' . $u['lang_iso_id'] . '</td>';
-                        echo '<td'.$inactive.'>' . $u['lang_name'] . ''.$default_txt.'</td>';
-                        echo '<td'.$inactive.' class="text-center"'.$inactive.'>' . $u['lang_iso'] . '</td>';
-                        echo '<td'.$inactive.'>' . $u['country'] . '</td>';
-                        echo '<td class="text-center"'.$inactive.'>' . $u['country_iso'] . '</td>';
-                        echo '<td class="text-center"><a href="'.BASE_URL.'/admin/lang/edit/' . $u['lang_iso_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('lang_delete_message').'\')" href="'.BASE_URL.'/admin/lang/delete/'.$u['lang_iso_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
-                        echo '</tr>';
-                    }
-                    ?>
+                    }    ?>
                 </tbody>
             </table>
         </div>
