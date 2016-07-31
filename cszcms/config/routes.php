@@ -137,6 +137,7 @@ $route['admin/upgrade/backup'] = "admin/upgrade/dbBackup";
 $route['admin/upgrade/downloadErrLog'] = "admin/upgrade/downloadErrLog";
 $route['admin/upgrade/clearAllCache'] = "admin/upgrade/clearAllCache";
 $route['admin/upgrade/clearAllErrLog'] = "admin/upgrade/clearAllErrLog";
+$route['admin/upgrade/clearAllSession'] = "admin/upgrade/clearAllSession";
 $route['admin/upgrade/:any'] = "admin/upgrade";
 $route['admin/linkstats'] = "admin/linkstats";
 $route['admin/linkstats/view'] = "admin/linkstats/view";

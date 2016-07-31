@@ -324,7 +324,6 @@ $lang['logs_download_header']		= "Error Logs Download";
 $lang['btn_logs_download']		= "Download!";
 $lang['btn_clear_logs']                 = "Clear All Error Logs";
 
-
 //Optimize Database
 $lang['maintenance_header']             = "Maintenance System";
 $lang['btn_clearallcache']              = "Clear All Pages Cache";
@@ -334,6 +333,8 @@ $lang['optimize_error_alert']           = "Optimize the database has error!";
 $lang['btn_optimize_db']		= "Optimize the database";
 $lang['btn_backup_db']			= "Backup the database";
 $lang['clearallcache_success_alert']    = "Clear all pages cached successfully!";
+$lang['btn_clear_sess']                 = "Clear All Session";
+$lang['clear_sess_message']            = "After session has been cleared. Please login again. Do you want to do this?";
 
 //Link Statistic
 $lang['linkstats_header']             = "Statistic for link";

@@ -526,7 +526,10 @@ class Csz_model extends CI_Model {
     }
 
     public function clear_all_error_log() {
-        $logs_path = APPPATH . 'logs/';
+        $CI = & get_instance();
+        $path = $CI->config->item('log_path');
+        
+        $logs_path = ($path == '') ? APPPATH . 'logs/' : $path;
 
         $handle = opendir($logs_path);
         while (($file = readdir($handle)) !== FALSE) {
@@ -534,6 +537,19 @@ class Csz_model extends CI_Model {
             if ($file != '.htaccess' && $file != 'index.html') {
                 @unlink($logs_path . '/' . $file);
             }
+        }
+        closedir($handle);
+    }
+    
+    public function clear_all_session() {
+        $CI = & get_instance();
+        $path = $CI->config->item('sess_save_path');
+
+        $sess_path = ($path == '') ? BASEPATH . '/ci_session' : $path;
+
+        $handle = opendir($sess_path);
+        while (($file = readdir($handle)) !== FALSE) {
+            @unlink($sess_path . '/' . $file);
         }
         closedir($handle);
     }

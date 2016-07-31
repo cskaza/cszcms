@@ -51,6 +51,24 @@
         ?>
         <?php echo form_close(); ?>
         <br>
+        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllSession'); ?>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-danger',
+            'value' => $this->lang->line('btn_clear_sess'),
+            'onclick' => "return confirm('" . $this->lang->line('clear_sess_message') . "');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+        <br>
+        <ol class="breadcrumb">
+            <li class="active">
+                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
+            </li>
+        </ol>
         <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllErrLog'); ?>
         <?php
         $data = array(
@@ -64,11 +82,6 @@
         ?>
         <?php echo form_close(); ?>
         <br>
-        <ol class="breadcrumb">
-            <li class="active">
-                <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
-            </li>
-        </ol>
         <?php echo form_open(BASE_URL . '/admin/upgrade/downloadErrLog'); ?>
         <?php
         $att = 'id="errlogfile" class="form-control-static"';
