@@ -630,16 +630,20 @@ class Csz_model extends CI_Model {
         $this->db->insert('link_statistic');
     }
     
+    public function chkPassword($email, $password) {
+        $this->db->select("*");
+        $this->db->where("email", $email);
+        $this->db->where("password", $password);
+        $this->db->where("active", '1');
+        $this->db->limit(1, 0);
+        return $this->db->get("user_admin");
+    }
+
     public function memberLogin($email, $password) {
         if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
-            $this->db->select("*");
-            $this->db->where("email", $email);
-            $this->db->where("password", $password);
-            $this->db->where("active", '1');
-            $this->db->limit(1, 0);
-            $query = $this->db->get("user_admin");
+            $query = $this->chkPassword($email, $password);
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $rows) {
                     $data = array(
@@ -686,7 +690,7 @@ class Csz_model extends CI_Model {
         $data = array(
             'name' => 'Member User',
             'email' => $this->input->post('email', TRUE),
-            'password' => md5($this->input->post('password', TRUE)),
+            'password' => sha1(md5($this->input->post('password', TRUE))),
             'user_type' => 'member',
             'active' => 0,
             'md5_hash' => $md5_hash,
@@ -699,43 +703,49 @@ class Csz_model extends CI_Model {
     }
     
     public function updateMember($id) {
-        // update the user account
-        if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
-            $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
-        }else{
-            $birthday = '';
-        }
-        if ($this->input->post('del_file')) {
-            $upload_file = '';
-            unlink('photo/profile/' . $this->input->post('del_file', TRUE));
-        } else {
-            $upload_file = $this->input->post('picture');
-            if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
-                $paramiter = '_1';
-                $photo_id = time();
-                $uploaddir = 'photo/profile/';
-                $file_f = $_FILES['file_upload']['tmp_name'];
-                $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+        $query = $this->chkPassword($this->session->userdata('admin_email'), sha1(md5($this->input->post('cur_password', TRUE))));
+        if ($query->num_rows() > 0) {
+            // update the user account
+            if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
+                $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
+            }else{
+                $birthday = '';
             }
+            if ($this->input->post('del_file')) {
+                $upload_file = '';
+                unlink('photo/profile/' . $this->input->post('del_file', TRUE));
+            } else {
+                $upload_file = $this->input->post('picture');
+                if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                    $paramiter = '_1';
+                    $photo_id = time();
+                    $uploaddir = 'photo/profile/';
+                    $file_f = $_FILES['file_upload']['tmp_name'];
+                    $file_name = $_FILES['file_upload']['name'];
+                    $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+                }
+            }
+            $this->db->set('name', $this->input->post("name", TRUE), TRUE);
+            $this->db->set('email', $this->input->post('email', TRUE), TRUE);
+            if ($this->input->post('password') != '') {
+                $this->db->set('password', sha1(md5($this->input->post('password', TRUE))), TRUE);
+                $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
+                $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            }
+            $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
+            $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
+            $this->db->set('birthday', $birthday, TRUE);
+            $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
+            $this->db->set('address', $this->input->post("address", TRUE), TRUE);
+            $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
+            $this->db->set('picture', $upload_file, TRUE);
+            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->where('user_admin_id', $id);
+            $this->db->update('user_admin');
+            return TRUE;
+        }else{
+            return FALSE;
         }
-        $this->db->set('name', $this->input->post("name", TRUE), TRUE);
-        $this->db->set('email', $this->input->post('email', TRUE), TRUE);
-        if ($this->input->post('password') != '') {
-            $this->db->set('password', md5($this->input->post('password', TRUE)), TRUE);
-            $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
-        }
-        $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
-        $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
-        $this->db->set('birthday', $birthday, TRUE);
-        $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
-        $this->db->set('address', $this->input->post("address", TRUE), TRUE);
-        $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
-        $this->db->set('picture', $upload_file, TRUE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
-        $this->db->where('user_admin_id', $id);
-        $this->db->update('user_admin');
     }
     
     public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $alt_message = '', $attach_file = array()) {

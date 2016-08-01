@@ -56,7 +56,7 @@ class Member extends CI_Controller {
     public function loginCheck() {
         Member_helper::login_already($this->session->userdata('admin_email'));
         $email = $this->input->post('email');
-        $password = md5($this->input->post('password'));
+        $password = sha1(md5($this->input->post('password')));
         $result = $this->Csz_model->memberLogin($email, $password);
         if ($result == 'SUCCESS') {
             $url_return = $this->input->post('url_return', TRUE);
@@ -153,6 +153,7 @@ class Member extends CI_Controller {
         $this->load->helper('form');
         if ($this->session->userdata('user_admin_id')) {
             //Get user details from database
+            $this->template->setSub('error', '');
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
             //Load the view
             $this->template->loadSub('frontpage/member/edit');
@@ -167,15 +168,29 @@ class Member extends CI_Controller {
         $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
         $this->form_validation->set_rules('password', 'New Password', 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', 'Confirm Password', 'trim|matches[password]');
+        $this->form_validation->set_rules('cur_password', 'Current Password', 'trim|min_length[4]|max_length[32]');
+        $this->form_validation->set_message('cur_password', $this->Csz_model->getLabelLang('login_incorrect'));
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
             $this->editMember();
         } else {
             //Validation passed
             //Update the user
-            $this->Csz_model->updateMember($this->session->userdata('user_admin_id'));
-            //Return to user list
-            redirect('member', 'refresh');
+            $rs = $this->Csz_model->updateMember($this->session->userdata('user_admin_id'));
+            if($rs !== FALSE){
+                //Return to user list
+                redirect('member', 'refresh');
+            }else{
+                $this->load->helper('form');
+                if ($this->session->userdata('user_admin_id')) {
+                    //Get user details from database
+                    $this->template->setSub('error', 'INVALID');
+                    $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
+                    //Load the view
+                    $this->template->loadSub('frontpage/member/edit');
+                }
+            }
+            
         }
     }
 
@@ -253,7 +268,7 @@ class Member extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => md5($this->input->post('password')),
+                        'password' => sha1(md5($this->input->post('password'))),
                         'md5_hash' => md5(time() + mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);

@@ -235,7 +235,7 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (2, 'login_incorrect', 'For member login incorrect', 'Email address/Password is incorrect', '2016-07-04 11:44:09'),
 (3, 'captcha_wrong', 'For member login when wrong captcha', 'The Security Check was not input correctly. Please try again.', '2016-07-04 11:44:39'),
 (4, 'login_email', 'For email address label', 'Email Address', '2016-06-23 23:34:45'),
-(5, 'login_password', 'For password label', 'Password', '2016-06-23 23:35:22'),
+(5, 'login_password', 'For password label', 'Your Password', '2016-06-23 23:35:22'),
 (6, 'login_signin', 'For member login button', 'Log in', '2016-06-23 23:35:53'),
 (7, 'login_forgetpwd', 'For member forget password button', 'Forgot Password', '2016-06-23 23:37:02'),
 (8, 'login_register', 'For member register label', 'Register', '2016-06-24 16:41:07'),

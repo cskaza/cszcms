@@ -70,7 +70,7 @@ class Admin extends CI_Controller {
             $this->login();
         }else{
             $email = $this->input->post('email', TRUE);
-            $password = md5($this->input->post('password', TRUE));
+            $password = sha1(md5($this->input->post('password', TRUE)));
             $result = $this->Csz_admin_model->login($email, $password);
             if ($result == 'SUCCESS') {
                 $url_return = $this->input->post('url_return', TRUE);

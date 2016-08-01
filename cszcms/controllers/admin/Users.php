@@ -120,6 +120,7 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('email', $this->lang->line('user_new_email'), 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
         $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|matches[password]');
+        $this->form_validation->set_rules('cur_password', $this->lang->line('user_cur_pass'), 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_message('is_unique', $this->lang->line('is_unique'));
         $this->form_validation->set_message('valid_email', $this->lang->line('valid_email'));
         $this->form_validation->set_message('matches', $this->lang->line('matches'));
@@ -133,10 +134,16 @@ class Users extends CI_Controller {
         } else {
             //Validation passed
             //Update the user
-            $this->Csz_admin_model->updateUser($this->uri->segment(4));
-            //Return to user list
-            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $rs = $this->Csz_admin_model->updateUser($this->uri->segment(4));
+            if($rs !== FALSE){
+                //Return to user list
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }else{
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('login_incorrect').'</div>');
+                $this->editUser();
+            }
+            
         }
     }
     
@@ -252,7 +259,7 @@ class Users extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => md5($this->input->post('password')),
+                        'password' => sha1(md5($this->input->post('password'))),
                         'md5_hash' => md5(time()+mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
