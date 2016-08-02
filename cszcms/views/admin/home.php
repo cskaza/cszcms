@@ -96,7 +96,7 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
-                    <?php if ($visitor_admin != 0 && $_SESSION['admin_type'] != 'admin'){ ?>
+                    <?php if ($visitor_admin != 0 || $_SESSION['admin_type'] != 'admin'){ ?>
                         <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
                             <b><?php echo  $this->lang->line('user_not_allow_txt') ?></b>
