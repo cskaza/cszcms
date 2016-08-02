@@ -31,6 +31,7 @@ class Admin extends CI_Controller {
         $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
         $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
         $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
+        $this->template->setSub('visitor_admin', $this->Csz_admin_model->chkVisitorUser($this->session->userdata('user_admin_id')));
         $this->template->loadSub('admin/home');
     }
     

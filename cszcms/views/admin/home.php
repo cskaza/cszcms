@@ -96,34 +96,41 @@
             </div>
             <div class="panel-body">
                 <div class="list-group">
-                    <?php if ($email_logs === FALSE) { ?>
+                    <?php if ($visitor_admin != 0 && $_SESSION['admin_type'] != 'admin'){ ?>
                         <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
-                            <b><?php echo  $this->lang->line('data_notfound') ?></b>
-                        </div>                          
-                    <?php } else { ?>
-                        <?php foreach ($email_logs as $el) { 
-                            $i = 0;
-                            if($el['email_result'] != 'success'){
-                                $error_rs = '<span class="error">Error - '.strip_tags($el['email_result']).'</span>';
-                            }else{
-                                $error_rs = '<span class="success">Success</span>';
-                            }
-                            $i++;
-                        ?>
-                        <span class="list-group-item">
-                            <span class="badge"><?php echo $el['timestamp_create'] ?></span>
-                            <b><?php echo $this->lang->line('forms_subject') ?>:</b> <?php echo $el['subject'] ?><br>
-                            <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
-                            <pre><?php echo strip_tags($el['message']) ?></pre>
-                            <div class="control-group text-right">
-                                <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteEmailLogs/'.$el['email_logs_id']?>">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
-                            </div>
-                        </span>
-                        <?php } ?>        
-                    <?php } ?>
+                            <b><?php echo  $this->lang->line('user_not_allow_txt') ?></b>
+                        </div> 
+                    <?php }else{
+                        if ($email_logs === FALSE) { ?>
+                            <div class="list-group-item">
+                                <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
+                                <b><?php echo  $this->lang->line('data_notfound') ?></b>
+                            </div>                          
+                        <?php } else { ?>
+                            <?php foreach ($email_logs as $el) { 
+                                $i = 0;
+                                if($el['email_result'] != 'success'){
+                                    $error_rs = '<span class="error">Error - '.strip_tags($el['email_result']).'</span>';
+                                }else{
+                                    $error_rs = '<span class="success">Success</span>';
+                                }
+                                $i++;
+                            ?>
+                            <span class="list-group-item">
+                                <span class="badge"><?php echo $el['timestamp_create'] ?></span>
+                                <b><?php echo $this->lang->line('forms_subject') ?>:</b> <?php echo $el['subject'] ?><br>
+                                <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
+                                <pre><?php echo strip_tags($el['message']) ?></pre>
+                                <div class="control-group text-right">
+                                    <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteEmailLogs/'.$el['email_logs_id']?>">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+                                </div>
+                            </span>
+                            <?php } ?>        
+                        <?php } 
+                    } ?>
                 </div>
             </div>
         </div>
