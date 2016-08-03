@@ -105,7 +105,7 @@
                 $data['disabled'] = 'disabled';
             }
             echo form_checkbox($data);
-            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label>	
+            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label> &nbsp; <span class="remark">(<?php echo $this->lang->line('user_notapply_member'); ?>)</span>
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										

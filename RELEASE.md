@@ -8,6 +8,7 @@ CSZ-CMS V.1.1.0
 - Add sitemap generator.
 - Add performance for save_queries turn off.
 - Add clear all session file.
+- Add security when edit the users or change the passwords.
 - Fix metatag support SEO.
 - Fix bug about xml_load and recaptcha error.
 - Fix download button for Upload Tools.

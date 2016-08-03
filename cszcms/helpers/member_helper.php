@@ -28,4 +28,17 @@ class Member_helper{
             exit;
         }
     }
+    
+    static function chkVisitor($user_admin_id) {
+        $CI =& get_instance();
+        $CI->load->model('Csz_admin_model');
+        $CI->load->library('session');
+        $chk = $CI->Csz_admin_model->chkVisitorUser($user_admin_id);
+        if($chk != 0){
+            $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">You not have permission!</div>');
+            $redirect= BASE_URL.'/member';
+            header("Location: $redirect");
+            exit;
+        }
+    }
 } 

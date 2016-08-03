@@ -296,7 +296,7 @@ class Csz_admin_model extends CI_Model {
             } else {
                 $active = 0;
             }
-            if ($this->input->post('backend_visitor')) {
+            if ($this->input->post('backend_visitor') && $this->input->post('user_type') != 'member') {
                 $backend_visitor = $this->input->post('backend_visitor', TRUE);
             } else {
                 $backend_visitor = 0;

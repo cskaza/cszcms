@@ -153,7 +153,6 @@ class Member extends CI_Controller {
         $this->load->helper('form');
         if ($this->session->userdata('user_admin_id')) {
             //Get user details from database
-            $this->template->setSub('error', '');
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
             //Load the view
             $this->template->loadSub('frontpage/member/edit');
@@ -162,6 +161,7 @@ class Member extends CI_Controller {
 
     public function saveEditMember() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -184,9 +184,9 @@ class Member extends CI_Controller {
                 $this->load->helper('form');
                 if ($this->session->userdata('user_admin_id')) {
                     //Get user details from database
-                    $this->template->setSub('error', 'INVALID');
                     $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
                     //Load the view
+                    $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
                     $this->template->loadSub('frontpage/member/edit');
                 }
             }

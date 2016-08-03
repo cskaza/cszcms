@@ -15,15 +15,6 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></b></div>
                 <div class="panel-body text-left">
-                    <div class="text-center">
-                    <?php
-                    if ($error) {
-                        if ($error == 'INVALID') {
-                            echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('login_incorrect') . "</span><br><br>";
-                        }
-                    }
-                    ?>
-                    </div>
                     <?php echo form_open_multipart(BASE_URL.'/member/edit/save'); ?>
                     <div class="control-group">										
                         <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('display_name'); ?>*</label>
