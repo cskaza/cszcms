@@ -131,6 +131,7 @@ $lang['decimal']			= "The %s field must contain a decimal number.";
 $lang['less_than']			= "The %s field must contain a number less than %s.";
 $lang['greater_than']		= "The %s field must contain a number greater than %s.";
 $lang['default_data_remark']		= "is default. You can't delete this.";
+$lang['remark_header']		= "Remark";
 
 //Social Page
 $lang['social_header']			= "Social Settings";

@@ -160,18 +160,25 @@ class Admin extends CI_Controller {
         $this->csz_referrer->setIndex();
         $this->load->helper('form');
         $this->load->library('pagination');
+        $search_arr = '';
+        if($this->input->get('search')){
+            $search_arr.= ' 1=1 ';
+            if($this->input->get('search')){
+                $search_arr.= " AND year LIKE '%".$this->input->get('search', TRUE)."%' OR remark LIKE '%".$this->input->get('search', TRUE)."%' OR file_upload LIKE '%".$this->input->get('search', TRUE)."%'";
+            }
+        }
 
         // Pages variable
         $result_per_page = 20;
-        $total_row = $this->Csz_admin_model->countTable('upload_file');
+        $total_row = $this->Csz_model->countData('upload_file', $search_arr);
         $num_link = 10;
         $base_url = BASE_URL . '/admin/uploadindex/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
         ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 0;
-
-        $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination));
+        
+        $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
         $this->template->loadSub('admin/upload_index');
     }
     
@@ -205,6 +212,17 @@ class Admin extends CI_Controller {
                         @unlink($path . $filename->file_upload);
                     }
                     $this->Csz_admin_model->removeData('upload_file', 'upload_file_id', $value);
+                }
+            }
+        }
+        $remark = $this->input->post('remark',TRUE);
+        if(isset($remark)){
+            foreach ($remark as $key => $value) {
+                if ($value && $key) {
+                    $this->db->set('remark', $value, TRUE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where('upload_file_id', $key);
+                    $this->db->update('upload_file');
                 }
             }
         }

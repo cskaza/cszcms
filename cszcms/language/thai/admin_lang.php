@@ -131,6 +131,7 @@ $lang['decimal']			= "ฟิวล์ %s จะต้องมีตัวเล
 $lang['less_than']			= "ฟิวล์ %s จะต้องมีจำนวนน้อยกว่า %s เท่านั้น.";
 $lang['greater_than']		= "ฟิวล์ %s จะต้องมีจำนวนมากกว่า %s เท่านั้น.";
 $lang['default_data_remark']		= "คือค่าเริ่มต้นของระบบ. คุณไม่สามารถลบสิ่งนี้ได้.";
+$lang['remark_header']		= "หมายเหตุ";
 
 //Social Page
 $lang['social_header']			= "การตั้งค่าสังคมออนไลน์";

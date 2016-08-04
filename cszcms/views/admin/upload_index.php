@@ -41,6 +41,13 @@
         <blockquote class="remark">
             <em><?php echo  $this->lang->line('uploadfile_fileallow') ?></em>
         </blockquote>
+        <form action="<?php echo BASE_URL . '/admin/uploadindex/'; ?>" method="get">
+            <div class="control-group">
+                <label class="control-label" for="search"><?php echo $this->lang->line('search'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label>
+                <input type="submit" name="submit" id="submit" class="btn btn-default" value="<?php echo $this->lang->line('search'); ?>">
+            </div>
+        </form>
+        <br><br>
         <?php echo  form_open(BASE_URL . '/admin/uploadindex_save'); ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
@@ -62,7 +69,7 @@
                         <?php foreach ($showfile as $file) { ?>
                             <tr>
                                 <td class="text-center" style="vertical-align:middle;">
-                                    <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?php echo  $file["upload_file_id"] ?>">
+                                    <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?php echo $file["upload_file_id"] ?>">
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
                                     <?php 
@@ -79,6 +86,12 @@
                                         <div class="input-group">
                                             <div class="input-group-addon"><b><?php echo  $this->lang->line('uploadfile_urlpath') ?></b></div>
                                             <input type="text" readonly class="form-control" id="full_url" value="<?php echo  BASE_URL ?>/photo/upload/<?php echo  $file["file_upload"] ?>" onfocus="this.select();" onmouseup="return false;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><b><?php echo  $this->lang->line('remark_header') ?></b></div>
+                                            <input type="text" class="form-control" name="remark[<?php echo $file["upload_file_id"] ?>]" id="remark" value="<?php echo $file["remark"]; ?>">
                                         </div>
                                     </div>
                                 </td>
@@ -101,7 +114,7 @@
                     'name' => 'submit',
                     'id' => 'submit',
                     'class' => 'btn btn-primary',
-                    'value' => $this->lang->line('btn_delete'),
+                    'value' => $this->lang->line('btn_save'),
                     'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
                 );
                 echo form_submit($data);
