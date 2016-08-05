@@ -510,8 +510,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function updateSettings() {
-        $add_js_clean = array('<script type="text/javascript">', '<script>', '</script>', '[removed]');
-        $additional_js = str_replace($add_js_clean, '', $this->input->post('additional_js'));
+        $additional_js = str_replace('<script', '</script><script', str_replace('</script>','',$this->input->post('additional_js')));
         $data = array(
             'themes_config' => $this->input->post('siteTheme', TRUE),
             'admin_lang' => $this->input->post('siteLang', TRUE),
