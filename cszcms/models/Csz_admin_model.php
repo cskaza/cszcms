@@ -24,14 +24,14 @@ class Csz_admin_model extends CI_Model {
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url)
             $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
-        $xml = @simplexml_load_file($xml_url) or die("Error!: Cannot connect xml file.");
+        $xml = @simplexml_load_file($xml_url);
         return $xml;
     }
     
     public function setSessionLastVer($xml_url) {
         if(!$this->session->userdata('cszcms_lastver')){
             $xml = $this->getLatestVersion($xml_url);
-            if ($xml->version) {
+            if ($xml !== FALSE && $xml->version) {
                 $data = array('cszcms_lastver' => (string)$xml->version,);
                 $this->session->set_userdata($data);
                 $xml_version = $xml->version;
