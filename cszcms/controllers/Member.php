@@ -186,7 +186,7 @@ class Member extends CI_Controller {
                     //Get user details from database
                     $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
                     //Load the view
-                    $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
+                    $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
                     $this->template->loadSub('frontpage/member/edit');
                 }
             }

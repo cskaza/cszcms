@@ -272,8 +272,8 @@ class Headfoot_html extends CI_Model {
         $lang_name = $this->Csz_admin_model->getLangNamefromISO($lang_iso);
         $this->lang->load('admin', $lang_name);
         $html = '';
-        if($this->session->flashdata('error_message') != ''){ 
-            $html.= $this->session->flashdata('error_message');
+        if($this->session->flashdata('f_error_message') != ''){ 
+            $html.= $this->session->flashdata('f_error_message');
         }
         if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
             $html.= '<div class="alert alert-warning text-center" role="alert">'.$this->lang->line('upgrade_newlast_alert').'</div>';
