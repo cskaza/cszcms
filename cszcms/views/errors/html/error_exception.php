@@ -28,5 +28,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<?php endforeach ?>
 
 <?php endif ?>
-
+<br><br>
+<span>Powered by CSZ CMS | Open Source Content Management with responsive</span>
 </div>

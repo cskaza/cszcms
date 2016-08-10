@@ -10,6 +10,7 @@ CSZ-CMS V.1.1.0
 - Add clear all session file.
 - Add security when edit the users or change the passwords.
 - Add remark for file on 'Upload Tools' and can search the file.
+- Update Codeigniter to 3.1.0.
 - Fix metatag support SEO.
 - Fix bug about xml_load and recaptcha error.
 - Fix download button for Upload Tools.
