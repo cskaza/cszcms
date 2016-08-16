@@ -1,4 +1,7 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.1
+- Fix Link Statistic for enable with linkstats="(number of index)" after href="" only.
+
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.
 - Add visitor permission for admin user. (Can't insert update or delete anythings)

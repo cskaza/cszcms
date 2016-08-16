@@ -407,8 +407,8 @@ class Csz_model extends CI_Model {
             $i = 0;$j = 0;$k = 0;
             if(preg_match_all("/$regexp/siU", $txt_nonline, $matches, PREG_SET_ORDER)) {
                 foreach($matches as $match) {
-                  /* $match[2] = link address | $match[3] = link text */
-                    if(!preg_match('/#/', $match[2])) {
+                  /* $match[0] = tag a | $match[2] = link address | $match[3] = link text */
+                    if(!preg_match('/#/', $match[2]) && strpos($match[0], ' linkstats="') !== false) {
                         $ori_link[] = $match[2];
                         $link[] = $match[2].'['.$i.']';
                         $i++;
@@ -417,13 +417,13 @@ class Csz_model extends CI_Model {
             }
             if(!empty($ori_link)){
                 foreach ($ori_link as $val) {
-                    $content = str_replace('href="'.$val, 'href="'.$val.'['.$j.']', $content);
+                    $content = str_replace('href="'.$val.'" linkstats="'.$j.'"', 'href="'.$val.'['.$j.']" linkstats="'.$j.'"', $content);
                     $j++;
                 }
             }
             if(!empty($link)){
                 foreach ($link as $val) {
-                    $content = str_replace('href="'.$val, 'href="'.BASE_URL.'/linkstats?url='.$val, $content);
+                    $content = str_replace('href="'.$val.'" linkstats="'.$k.'"', 'href="'.BASE_URL.'/linkstats?url='.$val.'" linkstats="'.$k.'"', $content);
                     $content = str_replace('['.$k.']', '', $content);
                     $k++;
                 }
