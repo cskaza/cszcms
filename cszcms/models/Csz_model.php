@@ -297,16 +297,27 @@ class Csz_model extends CI_Model {
         return $html;
     }
 
-    public function coreCss() {
+    public function coreCss($more_css = '') {
         $core_css = link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
         $core_css.= link_tag('assets/css/full-slider.css');
-        $core_css.= link_tag('assets/css/lightbox.min.css');
+        //$core_css.= link_tag('assets/css/lightbox.min.css');
+        if(!empty($more_css)){
+            if(is_array($more_css)){
+                foreach ($more_css as $value) {
+                    if($value){
+                        $core_css.= link_tag($value);
+                    }
+                }
+            }else{
+                $core_css.= link_tag($more_css);
+            }
+        }
         return $core_css;
     }
 
-    public function coreJs() {
+    public function coreJs($more_js = '') {
         if($this->session->userdata('fronlang_iso')){
             $hl = '?hl='.$this->session->userdata('fronlang_iso');
         }else{
@@ -314,10 +325,20 @@ class Csz_model extends CI_Model {
         }
         $core_js = '<script src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
         $core_js.= '<script src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/4.0.1/ekko-lightbox.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/lightbox.min.js"></script>';    
+        //$core_js.= '<script src="' . BASE_URL . '/assets/js/lightbox.min.js"></script>';    
         $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
         $core_js.= '<script src="' . BASE_URL . '/assets/js/scripts.js"></script>';
+        if(!empty($more_js)){
+            if(is_array($more_js)){
+                foreach ($more_js as $value) {
+                    if($value){
+                        $core_js.= '<script src="'.$value.'"></script>';
+                    }
+                }
+            }else{     
+                $core_js.= '<script src="'.$more_js.'"></script>';
+            }
+        }
         return $core_js;
     }
 

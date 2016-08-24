@@ -170,5 +170,35 @@ class Article extends CI_Controller {
             redirect(BASE_URL.'/plugin/article', 'refresh');
         }
     }
+    
+    public function rss() {
+        // creating rss feed with our most recent 20
+        // first load the library
+        $this->load->library('feed');
+        $row = $this->Csz_model->load_config();
+        // create new instance
+        $feed = new Feed();
+        // set your feed's title, description, link, pubdate and language
+        $feed->title = $row->site_name;
+        $feed->description = 'Article | ' . $row->site_name;
+        $feed->link = BASE_URL.'/plugin/article';
+        $lang = $this->session->userdata('fronlang_iso');
+        $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$lang."'";
+        $limit = 20;
+        $feed->lang = $lang;
+        // get article list
+        $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
+        // add posts to the feed
+        if($article !== FALSE){
+            foreach ($article as $a)
+            {
+                // set item's title, author, url, pubdate and description
+                $url = BASE_URL.'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'];
+                $feed->add($a['title'], $row->site_name, $url, $a['timestamp_create'], $a['short_desc']);
+            }
+        }
+        // show your feed (options: 'atom' (recommended) or 'rss')
+        $feed->render('rss');
+    }
 
 }

@@ -184,6 +184,7 @@
                 );
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_link_statistic_active'); ?></label>	
+                <br><span class="remark"><em><?php echo $this->lang->line('settings_link_statistic_remark'); ?></em></span><br><br>
             </div> <!-- /control-group -->
             <div class="control-group">
                 <label class="control-label" for="pagecache_time"><?php echo $this->lang->line('settings_pagecache_time'); ?></label>

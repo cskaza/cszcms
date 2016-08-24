@@ -13,3 +13,6 @@ $lang['gallery_short_desc']             = "Short Description";
 $lang['gallery_picture']                = "Pictures Upload";
 $lang['gallery_fileallow']              = "Only files (jpg, jpeg, png, gif) are allowed.";
 $lang['gallery_caption']                = "Caption";
+$lang['gallery_list_remark']            = "is album image cover";
+$lang['gallery_youtube_head']            = "Add New Youtube";
+$lang['gallery_youtube_url']            = "Youtube URL";

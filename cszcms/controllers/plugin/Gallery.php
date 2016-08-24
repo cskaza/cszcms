@@ -29,8 +29,9 @@ class Gallery extends CI_Controller {
     }
 
     public function _init() {
-        $this->template->set('core_css', $this->Csz_model->coreCss());
-        $this->template->set('core_js', $this->Csz_model->coreJs());
+        $this->template->set('core_css', $this->Csz_model->coreCss('assets/css/ekko-lightbox.min.css'));
+        $js_arr = array(BASE_URL . '/assets/js/ekko-lightbox.min.js', BASE_URL . '/assets/js/ekko-lightbox.run.js');
+        $this->template->set('core_js', $this->Csz_model->coreJs($js_arr));
         $row = $this->Csz_model->load_config();
         $this->page_url = $this->Csz_model->getCurPages();	
         $this->template->set('additional_js', $row->additional_js);
@@ -100,6 +101,36 @@ class Gallery extends CI_Controller {
         }else{
             redirect(BASE_URL.'/plugin/gallery', 'refresh');
         }
+    }
+    
+    public function rss() {
+        // creating rss feed with our most recent 20
+        // first load the library
+        $this->load->library('feed');
+        $row = $this->Csz_model->load_config();
+        // create new instance
+        $feed = new Feed();
+        // set your feed's title, description, link, pubdate and language
+        $feed->title = $row->site_name;
+        $feed->description = 'Article | ' . $row->site_name;
+        $feed->link = BASE_URL.'/plugin/article';
+        $lang = $this->session->userdata('fronlang_iso');
+        $search_arr = " active = '1' AND lang_iso = '".$lang."'";
+        $limit = 20;
+        $feed->lang = $lang;
+        // get article list
+        $gallery = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
+        // add posts to the feed
+        if($gallery !== FALSE){
+            foreach ($gallery as $a)
+            {
+                // set item's title, author, url, pubdate and description
+                $url = BASE_URL.'/plugin/gallery/view/'.$a['gallery_db_id'].'/'.$a['url_rewrite'];
+                $feed->add($a['album_name'], $row->site_name, $url, $a['timestamp_create'], $a['short_desc']);
+            }
+        }
+        // show your feed (options: 'atom' (recommended) or 'rss')
+        $feed->render('rss');
     }
 
 }

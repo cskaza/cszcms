@@ -15,14 +15,8 @@
                 $i = 1; ?>
                 <div class="col-md-4">
                     <div class="thumbnail">
-                        <?php
-                        $f_img = $this->Gallery_model->getFirstImgs($value['gallery_db_id']);
-                        if($f_img === FALSE){
-                            $img_src = BASE_URL.'/photo/no_image.png';
-                        }else{
-                            $img_src = BASE_URL.'/photo/plugin/gallery/'.$f_img;
-                        } ?>
-                        <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><img class="img-responsive img-thumbnail" src="<?php echo $img_src?>" alt="<?php echo $value['album_name'] ?>"></a>
+                        <?php $f_img = $this->Gallery_model->getFirstImgs($value['gallery_db_id']); ?>
+                        <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><img class="img-responsive img-thumbnail" src="<?php echo $f_img?>" alt="<?php echo $value['album_name'] ?>"></a>
                         <hr>
                         <div class="caption">
                             <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><h2><?php echo $value['album_name'] ?></h2></a>

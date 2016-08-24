@@ -185,6 +185,7 @@ $lang['settings_googlecapt_remark']	= 'You can get key of reCaptcha at <a href="
 $lang['settings_logo']			= "Site Logo";
 $lang['settings_logo_remark']		= "Site logo has height not exceeding 50 px for default template.";
 $lang['settings_link_statistic_active']	= "Statistic for link Enable (In page content)";
+$lang['settings_link_statistic_remark']	= 'Please use linkstats="(number of index)" after href="" attribute in &lt;a&gt; tag for enable statistic';
 $lang['settings_pagecache_time']	= "Pages cache time control";
 $lang['settings_pagecache_time_min']	= "Minutes";
 $lang['settings_pagecache_time_off']	= "Off";

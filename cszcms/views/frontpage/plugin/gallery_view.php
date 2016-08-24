@@ -14,9 +14,18 @@
             $i = 1;
             foreach ($image as $value) { ?>
                 <div class="col-md-2" style="padding-bottom:15px;">
-                    <a href="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" class="gallery-image-link thumbnail" data-lightbox="gallery-set"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
-                        <img class="img-responsive img-thumbnail gallery-image" src="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" alt="<?php echo $value['caption'] ?>">
-                    </a>
+                    <?php if($value['gallery_type'] == 'multiimages'){ ?>
+                        <a href="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" data-toggle="lightbox" data-gallery="multiimages"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
+                            <img class="img-responsive img-thumbnail" src="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" alt="<?php echo $value['caption'] ?>">
+                        </a>
+                    <?php }else if($value['gallery_type'] == 'youtubevideos'){ 
+                        $youtube_script_replace = array("http://youtu.be/", "http://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/", "https://www.youtube.com/embed/");
+                        $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']); ?>
+                        <a href="http://www.youtube.com/embed/<?php echo $youtube_value?>" data-toggle="lightbox" data-gallery="youtubevideos"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
+                            <span style="position:absolute;margin-top:10px;margin-left:10px;z-index:10;font-size:24px;" class="glyphicon glyphicon-facetime-video"></span>
+                            <img class="img-responsive img-thumbnail" src="<?php echo ($value['youtube_url']) ? '//i1.ytimg.com/vi/'.$youtube_value.'/mqdefault.jpg' : BASE_URL.'/photo/no_image.png' ?>" alt="<?php echo $value['caption'] ?>">
+                        </a>
+                    <?php } ?>                    
                 </div>
                 <?php if ($i % 6 == 0) { ?>
                 </div>

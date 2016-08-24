@@ -13,3 +13,6 @@ $lang['gallery_short_desc']             = "รายละเอียดแบ�
 $lang['gallery_picture']                = "อัพโหลดรูปภาพ";
 $lang['gallery_fileallow']              = "สำหรับไฟล์ (jpg, jpeg, png, gif) เท่านั้นจะได้รับอนุญาต.";
 $lang['gallery_caption']                = "คำอธิบายภาพ";
+$lang['gallery_list_remark']            = "เป็นภาพปกอัลบั้ม";
+$lang['gallery_youtube_head']            = "เพิ่ม Youtube ใหม่";
+$lang['gallery_youtube_url']            = "Youtube URL";

@@ -1,6 +1,14 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.1
+x- Add webboard plugin.
+x- Add get rss feed to widget on content page.
+- Add feed libraries ('atom' or 'rss').
+- Add linkstats index number field in TinyMCE on link plugin.
 - Fix Link Statistic for enable with linkstats="(number of index)" after href="" only.
+- Fix Gallery plugin to version 1.0.2 (Add youtube video and rss feed).
+- Fix Article plugin to version 1.0.2 (Add rss feed).
+- Fix article change main picture and get error on backend.
+- Fix article archive menu bug on frontend.
 
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.

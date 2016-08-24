@@ -101,17 +101,9 @@ class Gallery extends CI_Controller {
             $this->load->library('pagination');
             
             $search_arr = "gallery_db_id = '".$this->uri->segment(5)."'";
-            // Pages variable
-            $result_per_page = 10;
-            $total_row = $this->Csz_model->countData('gallery_picture', $search_arr);
-            $num_link = 10;
-            $base_url = BASE_URL . '/admin/plugin/gallery/edit/'.$this->uri->segment(5).'/';
-
-            // Pageination config
-            $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 6);
-            ($this->uri->segment(6)) ? $pagination = ($this->uri->segment(6)) : $pagination = 0;
-
-            $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('gallery_picture', $result_per_page, $pagination, 'arrange', 'ASC', $search_arr));
+            // Pages variable           
+            $total_row = $this->Csz_model->countData('gallery_picture', $search_arr);           
+            $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('gallery_picture', 0, 0, 'arrange', 'ASC', $search_arr));
             $this->template->setSub('total_row', $total_row);
             //Load the view
             $this->template->loadSub('admin/plugin/gallery_edit');
@@ -142,11 +134,29 @@ class Gallery extends CI_Controller {
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
         }
     }
+    
+    public function addYoutube() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        if ($this->uri->segment(5)) {
+            $gallery_type = $this->input->post('gallery_type', TRUE);
+            $youtube_url = $this->input->post('youtube_url', TRUE);
+            if ($youtube_url) {
+                $this->Gallery_model->insertFileUpload($this->uri->segment(5), $gallery_type, '', $youtube_url);
+            }                
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+            redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
+        } else {
+            $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
+            redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
+        }
+    }
 
     public function htmlUpload() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
+            $gallery_type = $this->input->post('gallery_type', TRUE);
             $path = FCPATH . "/photo/plugin/gallery/";
             $files = $_FILES;
             $cpt = count($_FILES['files']['name']);
@@ -157,7 +167,7 @@ class Gallery extends CI_Controller {
                     $photo = $files['files']['tmp_name'][$i];
                     $file_id1 = $this->Csz_admin_model->file_upload($photo, $photo_name, '', $path, $file_id, '');
                     if ($file_id1) {
-                        $this->Gallery_model->insertFileUpload($this->uri->segment(5), $file_id1);
+                        $this->Gallery_model->insertFileUpload($this->uri->segment(5), $gallery_type, $file_id1);
                     }
                 }
             }
@@ -178,6 +188,17 @@ class Gallery extends CI_Controller {
         $i = 0;
         $arrange = 1;
         $gallery_picture_id = $this->input->post('gallery_picture_id', TRUE);
+        if (isset($filedel)) {
+            foreach ($filedel as $value) {
+                if ($value) {
+                    $filename = $this->Csz_model->getValue('file_upload', 'gallery_picture', 'gallery_picture_id', $value, 1);
+                    if ($filename->file_upload) {
+                        @unlink($path . $filename->file_upload);
+                    }
+                    $this->Csz_admin_model->removeData('gallery_picture', 'gallery_picture_id', $value);
+                }
+            }
+        }
         if (!empty($gallery_picture_id)) {
             while ($i < count($gallery_picture_id)) {
                 if ($gallery_picture_id[$i]) {
@@ -188,17 +209,6 @@ class Gallery extends CI_Controller {
                     $arrange++;
                 }
                 $i++;
-            }
-        }
-        if (isset($filedel)) {
-            foreach ($filedel as $value) {
-                if ($value) {
-                    $filename = $this->Csz_model->getValue('file_upload', 'gallery_picture', 'gallery_picture_id', $value, 1);
-                    if ($filename->file_upload) {
-                        @unlink($path . $filename->file_upload);
-                    }
-                    $this->Csz_admin_model->removeData('gallery_picture', 'gallery_picture_id', $value);
-                }
             }
         }
         if (isset($caption)) {

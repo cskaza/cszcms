@@ -441,15 +441,26 @@ class Csz_admin_model extends CI_Model {
         return $csz_copyright;
     }
 
-    public function coreCss() {
+    public function coreCss($more_css = '') {
         $core_css = link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
+        if(!empty($more_css)){
+            if(is_array($more_css)){
+                foreach ($more_css as $value) {
+                    if($value){
+                        $core_css.= link_tag($value);
+                    }
+                }
+            }else{
+                $core_css.= link_tag($more_css);
+            }
+        }
         return $core_css;
     }
 
-    public function coreJs() {
+    public function coreJs($more_js = '') {
         if(LANG){
             $hl = '?hl='.$this->getLangISOfromName(LANG);
         }else{
@@ -461,6 +472,17 @@ class Csz_admin_model extends CI_Model {
         $core_js.= '<script src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';
         $core_js.= '<script src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';
         $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
+        if(!empty($more_js)){
+            if(is_array($more_js)){
+                foreach ($more_js as $value) {
+                    if($value){
+                        $core_js.= '<script src="'.$value.'"></script>';
+                    }
+                }
+            }else{     
+                $core_js.= '<script src="'.$more_js.'"></script>';
+            }
+        }
         return $core_js;
     }
 

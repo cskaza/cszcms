@@ -46,11 +46,20 @@ class Gallery_model extends CI_Model {
         }
     }
     
-    public function insertFileUpload($gallery_db_id, $fileupload) {
+    public function insertFileUpload($gallery_db_id, $gallery_type, $fileupload = '', $youtube_url = '') {
+        $img_rs = $this->Csz_model->getValue('arrange', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'desc');
+        if(!empty($img_rs)){
+            $arrange = $img_rs->arrange;
+        }else{
+            $arrange = 0;
+        }
         $data = array(
             'gallery_db_id' => $gallery_db_id,
-            'file_upload' => $fileupload,
+            'arrange' => ($arrange)+1,
         );
+        if($fileupload){ $this->db->set('file_upload', $fileupload, TRUE); }
+        $this->db->set('gallery_type', $gallery_type, TRUE);
+        if($youtube_url){ $this->db->set('youtube_url', $youtube_url, TRUE); }
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('gallery_picture', $data);
@@ -58,9 +67,21 @@ class Gallery_model extends CI_Model {
     
     public function getFirstImgs($gallery_db_id) {
         if($gallery_db_id){
-            $img_rs = $this->Csz_model->getValue('file_upload', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'asc');
+            $img_rs = $this->Csz_model->getValue('file_upload,gallery_type,youtube_url', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'asc');
             if(!empty($img_rs)){
-                return $img_rs->file_upload;
+                if($img_rs->gallery_type == 'multiimages'){
+                    if($img_rs->file_upload){
+                        return BASE_URL.'/photo/plugin/gallery/'.$img_rs->file_upload;
+                    }else{
+                        return BASE_URL.'/photo/no_image.png';
+                    }                   
+                }else if($img_rs->gallery_type == 'youtubevideos'){
+                    $youtube_script_replace = array("http://youtu.be/", "http://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/", "https://www.youtube.com/embed/");
+                    $youtube_value = str_replace($youtube_script_replace, '', $img_rs->youtube_url);
+                    return '//i1.ytimg.com/vi/'.$youtube_value.'/mqdefault.jpg';
+                }else{
+                    return FALSE;
+                }                
             }else{
                 return FALSE;
             }

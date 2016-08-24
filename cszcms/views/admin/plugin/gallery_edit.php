@@ -107,9 +107,31 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('gallery_picture') ?></div>
         <div class="row">
-            <div class="col-lg-12 col-md-12">  
-                <h4><?php echo  $this->lang->line('uploadfile_uploadtools') ?></h4>
+            <div class="col-lg-6 col-md-6">
+                <div class="h4 sub-header"><?php echo  $this->lang->line('gallery_youtube_head') ?></div>
+                <?php echo  form_open(BASE_URL . '/admin/plugin/gallery/addYoutube/'.$this->uri->segment(5)) ?>
+                <input type="hidden" name="gallery_type" value="youtubevideos">
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <div class="input-group-addon"><b><?php echo  $this->lang->line('gallery_youtube_url') ?></b></div>
+                        <input style="z-index: 1;" type="text" class="form-control" id="youtube_url" name="youtube_url" required>
+                    </div>
+                </div>
+                <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-primary',
+                    'value' => $this->lang->line('btn_add'),
+                );
+                echo form_submit($data);
+                ?> 
+                <?php echo form_close(); ?>               
+            </div>
+            <div class="col-lg-6 col-md-6">  
+                <div class="h4 sub-header"><?php echo  $this->lang->line('uploadfile_uploadtools') ?></div>
                 <?php echo  form_open_multipart(BASE_URL . '/admin/plugin/gallery/htmlUpload/'.$this->uri->segment(5)) ?>
+                <input type="hidden" name="gallery_type" value="multiimages">
                 <div class="row form-control-static">
                     <div class="col-lg-12 col-md-12">
                         <span class="btn btn-success fileinput-button">
@@ -129,7 +151,7 @@
                     </div>
                 </div>
                 <?php echo form_close(); ?>       
-            </div>    
+            </div>
         </div>
         <br>
         <blockquote class="remark">
@@ -153,7 +175,8 @@
                             <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('uploadfile_filenotfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
-                        <?php foreach ($showfile as $file) { ?>
+                        <?php 
+                        foreach ($showfile as $file) { ?>
                             <tr class="ui-state-default">
                                 <td class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-resize-vertical"></i></td>
                                 <td class="text-center" style="vertical-align:middle;">
@@ -163,14 +186,21 @@
                                 <td class="text-center" style="vertical-align:middle;">
                                     <?php 
                                     $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
-                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif'){ ?>
+                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' && $file["gallery_type"] == 'multiimages'){ ?>
                                     <img src="<?php echo BASE_URL.'/photo/plugin/gallery/'.$file["file_upload"]?>" width="100">
                                     <?php }else{ ?>
-                                        <i class="glyphicon glyphicon-file"></i> <?php echo strtoupper($ext)?>
+                                        <i class="glyphicon glyphicon-facetime-video"></i> YOUTUBE
                                     <?php } ?>
                                 </td>
                                 <td style="vertical-align:middle;">
-                                    <span class="h5"><b><?php echo  $file["file_upload"] ?></b></span>
+                                    <span class="h5"><b>
+                                        <?php 
+                                        if($file["gallery_type"] == 'multiimages'){
+                                            echo $file["file_upload"];
+                                        }else if($file["gallery_type"] == 'youtubevideos'){ ?>
+                                            <a href="<?php echo $file["youtube_url"]; ?>" target="_blank"><?php echo $file["youtube_url"]; ?></a>
+                                        <?php } ?>
+                                    </b></span><?php if($file['arrange'] == 1){ ?> <i class="glyphicon glyphicon-book"></i><?php } ?>
                                     <div class="form-group has-feedback">
                                         <div class="input-group">
                                             <div class="input-group-addon"><b><?php echo  $this->lang->line('gallery_caption') ?></b></div>
@@ -188,7 +218,11 @@
             </table>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-12 col-md-12">                
+                <span class="warning">
+                    <i class="glyphicon glyphicon-book"></i> <?php echo  $this->lang->line('gallery_list_remark') ?><br>
+                </span>
+                <br><br>
                 <?php
                 $data = array(
                     'name' => 'submit',
@@ -205,7 +239,7 @@
         <?php echo  form_close(); ?>
         <!-- /widget-content --> 
         <br><br>
-        <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
+        <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
     </div>
 </div>
 <script type="text/javascript">

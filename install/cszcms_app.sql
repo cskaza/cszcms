@@ -308,8 +308,8 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Article', 'article', '1.0.1', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-07-21 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.1', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-07-21 15:28:25');
+(1, 'Article', 'article', '1.0.2', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
+(2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25');
 
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -364,6 +364,8 @@ CREATE TABLE IF NOT EXISTS `gallery_picture` (
   `file_upload` varchar(255) NOT NULL,
   `caption` varchar(255) NOT NULL,
   `arrange` int(11) NOT NULL,
+  `gallery_type` varchar(255) NOT NULL,
+  `youtube_url` varchar(255) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`gallery_picture_id`)

@@ -70,7 +70,7 @@ class Article_model extends CI_Model {
                     $uploaddir = 'photo/plugin/article/';
                     $file_f = $_FILES['file_upload']['tmp_name'];
                     $file_name = $_FILES['file_upload']['name'];
-                    $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
+                    $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
                 }
             }
             $data = array(
@@ -147,12 +147,14 @@ class Article_model extends CI_Model {
                         }else{
                             foreach ($archive as $ac) {
                                 $html.= '<li role="presentation" class="text-left"><a onclick="ChkHideShow('.$ac['article_year'].');"><b><i class="glyphicon glyphicon-triangle-bottom"></i> '.$ac['article_year'].'</b></a></li>';
+                                $html.= '<div id="'.$ac['article_year'].'" style="display:none;margin-left:30px;line-height:25px;">';
                                 $subarchive = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS article_month_name, MONTH(timestamp_create) AS article_month", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '".$lang_iso."' AND YEAR(timestamp_create) = '".$ac['article_year']."'", '', 0, 'article_month', 'DESC', 'article_month');
                                 if(!empty($subarchive)){
                                     foreach ($subarchive as $sa) {
-                                        $html.= '<li role="presentation" class="text-left" id="'.$ac['article_year'].'" style="display:none;"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'-'.$sa['article_month'].'"> <i class="glyphicon glyphicon-minus"></i> '.$sa['article_month_name'].'</a></li>';
+                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'-'.$sa['article_month'].'"> <i class="glyphicon glyphicon-minus"></i> '.$sa['article_month_name'].'</a></li>';
                                     }
                                 }
+                                $html.= '</div>';
                             } 
                         }
             $html.= '</ul>

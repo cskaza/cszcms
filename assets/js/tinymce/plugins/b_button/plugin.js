@@ -52,7 +52,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 
 	function showDialog(linkList) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
-		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value, btnClass, sizeClass;
+		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value, btnClass, linkStatsCtrl, sizeClass;
 
 		function linkListChangeHandler(e) {
 			var textCtrl = win.find('#text');
@@ -166,6 +166,10 @@ tinymce.PluginManager.add('b_button', function(editor) {
 		if ((value = dom.getAttrib(anchorElm, 'title'))) {
 			data.title = value;
 		}
+                
+                if ((value = dom.getAttrib(anchorElm, 'linkstats'))) {
+			data.linkstats = value;
+		}
 
 		if (onlyText) {
 			textListCtrl = {
@@ -269,6 +273,15 @@ tinymce.PluginManager.add('b_button', function(editor) {
 				value: data.title
 			};
 		}
+                
+                if (editor.settings.linkstats !== false) {
+			linkStatsCtrl = {
+				name: 'linkstats',
+				type: 'textbox',
+				label: 'Linkstats index number',
+				value: data.linkstats
+			};
+		}
 
 		win = editor.windowManager.open({
 			title: 'Insert Bootstrap Button',
@@ -289,6 +302,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 				buildAnchorListControl(data.href),
 				linkListCtrl,
 				relListCtrl,
+                                linkStatsCtrl,
 				targetListCtrl,
 				classListCtrl,
                                 btnClass,
@@ -314,6 +328,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 				function insertLink() {
 					var linkAttrs = {
 						href: href,
+                                                linkstats: data.linkstats ? data.linkstats : null,
 						target: data.target ? data.target : null,
 						rel: data.rel ? data.rel : null,
 						class: data.btn_class + data.size_class,
