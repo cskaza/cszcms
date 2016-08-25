@@ -51,6 +51,19 @@
         ?>
         <?php echo form_close(); ?>
         <br>
+        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllDBCache'); ?>
+        <?php
+        $data = array(
+            'name' => 'submit',
+            'id' => 'submit',
+            'class' => 'btn btn-danger',
+            'value' => $this->lang->line('btn_clearalldbcache'),
+            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
+        );
+        echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+        <br>
         <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllSession'); ?>
         <?php
         $data = array(

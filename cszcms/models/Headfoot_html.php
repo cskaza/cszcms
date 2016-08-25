@@ -178,6 +178,7 @@ class Headfoot_html extends CI_Model {
                             $html.= '<li><a href="'.base_url().'admin/plugin"><i class="glyphicon glyphicon-gift"></i> '.$this->lang->line('pluginmgr_header').'</a></li>';
                             $html.= '<li><a href="'.base_url().'admin/users"><i class="glyphicon glyphicon-user"></i> '.$this->lang->line('nav_admin_users').'</a></li>
                                      <hr><li><a href="'.BASE_URL.'/admin/upgrade/clearAllCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearallcache').'</a></li>
+                                         <li><a href="'.BASE_URL.'/admin/upgrade/clearAllDBCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearalldbcache').'</a></li>
                                 </ul>
                             </li>
                             <li><a href="'.base_url().'admin/logout"><i class="glyphicon glyphicon-log-out"></i> '.$this->lang->line('nav_logout').'</a></li>

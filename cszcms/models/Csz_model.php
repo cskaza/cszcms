@@ -570,7 +570,10 @@ class Csz_model extends CI_Model {
 
         $handle = opendir($sess_path);
         while (($file = readdir($handle)) !== FALSE) {
-            @unlink($sess_path . '/' . $file);
+            //Leave the directory protection alone
+            if ($file != '.htaccess' && $file != 'index.html') {
+                @unlink($sess_path . '/' . $file);
+            } 
         }
         closedir($handle);
     }

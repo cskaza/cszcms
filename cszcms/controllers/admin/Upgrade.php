@@ -179,6 +179,15 @@ class Upgrade extends CI_Controller {
         redirect('admin/upgrade', 'refresh');
     }
     
+    public function clearAllDBCache() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
+        redirect('admin/upgrade', 'refresh');
+    }
+    
     public function clearAllSession() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));

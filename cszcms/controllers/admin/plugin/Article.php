@@ -94,11 +94,13 @@ class Article extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Article_model->insert();
+                $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('article'), 'refresh');
             }
         }else{
             if($this->input->post('category_name', TRUE)){
                 $this->Article_model->insert();
+                $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('article'), 'refresh');
             }else{
                 redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
@@ -140,11 +142,13 @@ class Article extends CI_Controller {
                     //Validation passed
                     //Add the user
                     $this->Article_model->update($this->uri->segment(5));
+                    $this->db->cache_delete_all();
                     redirect($this->csz_referrer->getIndex('article'), 'refresh');
                 }
             }else{
                 if($this->input->post('category_name', TRUE)){
                     $this->Article_model->update($this->uri->segment(5));
+                    $this->db->cache_delete_all();
                     redirect($this->csz_referrer->getIndex('article'), 'refresh');
                 }else{
                     redirect(BASE_URL.'/admin/plugin/article/edit/'.$this->uri->segment(5), 'refresh');
@@ -161,6 +165,7 @@ class Article extends CI_Controller {
         if($this->uri->segment(5)){
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         redirect($this->csz_referrer->getIndex('article'), 'refresh');

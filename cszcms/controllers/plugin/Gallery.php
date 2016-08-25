@@ -36,6 +36,7 @@ class Gallery extends CI_Controller {
         $this->page_url = $this->Csz_model->getCurPages();	
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
+        $this->db->cache_on();
     }
 
     public function index() {

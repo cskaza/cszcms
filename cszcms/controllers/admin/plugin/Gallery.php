@@ -86,6 +86,7 @@ class Gallery extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Gallery_model->insert();
+            $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
         }
     }
@@ -128,6 +129,7 @@ class Gallery extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Gallery_model->update($this->uri->segment(5));
+                $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
             }
         } else {
@@ -143,6 +145,7 @@ class Gallery extends CI_Controller {
             $youtube_url = $this->input->post('youtube_url', TRUE);
             if ($youtube_url) {
                 $this->Gallery_model->insertFileUpload($this->uri->segment(5), $gallery_type, '', $youtube_url);
+                $this->db->cache_delete_all();
             }                
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
@@ -171,6 +174,7 @@ class Gallery extends CI_Controller {
                     }
                 }
             }
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
         } else {
@@ -221,7 +225,7 @@ class Gallery extends CI_Controller {
                 }
             }
         }
-        
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
     }
@@ -244,6 +248,7 @@ class Gallery extends CI_Controller {
                 }
             }
             $this->Gallery_model->delete($this->uri->segment(5));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('gallery'), 'refresh');

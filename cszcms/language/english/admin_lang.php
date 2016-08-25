@@ -330,12 +330,14 @@ $lang['btn_clear_logs']                 = "Clear All Error Logs";
 //Optimize Database
 $lang['maintenance_header']             = "Maintenance System";
 $lang['btn_clearallcache']              = "Clear All Pages Cache";
+$lang['btn_clearalldbcache']              = "Clear All DB Cache";
 $lang['database_maintain_header']	= "Database Maintenance";
 $lang['optimize_success_alert']         = "Optimize the database successfully!";
 $lang['optimize_error_alert']           = "Optimize the database has error!";
 $lang['btn_optimize_db']		= "Optimize the database";
 $lang['btn_backup_db']			= "Backup the database";
 $lang['clearallcache_success_alert']    = "Clear all pages cached successfully!";
+$lang['clearalldbcache_success_alert']    = "Clear all DB cached successfully!";
 $lang['btn_clear_sess']                 = "Clear All Session";
 $lang['clear_sess_message']            = "After session has been cleared. Please login again. Do you want to do this?";
 

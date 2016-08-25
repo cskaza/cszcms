@@ -66,6 +66,7 @@ class Gallery_model extends CI_Model {
     }
     
     public function getFirstImgs($gallery_db_id) {
+        $no_img = BASE_URL.'/photo/no_image.png';
         if($gallery_db_id){
             $img_rs = $this->Csz_model->getValue('file_upload,gallery_type,youtube_url', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'asc');
             if(!empty($img_rs)){
@@ -73,17 +74,17 @@ class Gallery_model extends CI_Model {
                     if($img_rs->file_upload){
                         return BASE_URL.'/photo/plugin/gallery/'.$img_rs->file_upload;
                     }else{
-                        return BASE_URL.'/photo/no_image.png';
+                        return $no_img;
                     }                   
                 }else if($img_rs->gallery_type == 'youtubevideos'){
                     $youtube_script_replace = array("http://youtu.be/", "http://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/", "https://www.youtube.com/embed/");
                     $youtube_value = str_replace($youtube_script_replace, '', $img_rs->youtube_url);
                     return '//i1.ytimg.com/vi/'.$youtube_value.'/mqdefault.jpg';
                 }else{
-                    return FALSE;
+                    return $no_img;
                 }                
             }else{
-                return FALSE;
+                return $no_img;
             }
         }else{
             return FALSE;
