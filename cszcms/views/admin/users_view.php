@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-lg-5 col-md-5">
                                 <p><b><?php echo $this->lang->line('user_new_name') ?>:</b> <?php echo ($users->name) ? $users->name : '-'; ?></p>
-                                <p><b><?php echo $this->lang->line('user_new_email') ?>:</b> <?php echo ($users->email) ? $users->email : '-'; ?></p>
+                                <p><b><?php echo $this->lang->line('user_new_email') ?>:</b> <?php if($this->session->userdata('admin_visitor') == 0){ echo ($users->email) ? $users->email : '-'; }else{ echo $this->lang->line('user_not_allow_txt'); } ?></p>
                                 <p><b><?php echo $this->lang->line('user_new_type') ?>:</b> <?php echo ucfirst($users->user_type); ?></p>
                                 <p><b><?php echo $this->lang->line('user_first_name') ?> - <?php echo $this->lang->line('user_last_name') ?>:</b> <?php echo ($users->first_name) ? ucfirst($users->first_name) : '-'; ?> <?php echo ($users->last_name) ? ucfirst($users->last_name) : '-'; ?></p>
                             </div>

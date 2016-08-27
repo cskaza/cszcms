@@ -160,6 +160,11 @@ class Article_model extends CI_Model {
             $html.= '</ul>
                 </div>
             </div>';
+            $html.= '<div class="panel panel-primary">
+                <div class="panel-body text-center">
+            <a href="'.BASE_URL.'/plugin/article/rss" class="btn btn-sm btn-primary" target="_blank" title="RSS FEED"><i class="fa fa-rss" aria-hidden="true"></i> RSS FEED</a>
+            </div>
+            </div>';
         return $html;
     }
     

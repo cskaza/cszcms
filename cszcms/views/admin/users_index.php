@@ -73,7 +73,12 @@
                             echo '<tr>';
                             echo '<td class="text-center" style="vertical-align: middle;">' . $status . '</td>';
                             echo '<td'.$inactive.' style="vertical-align: middle;"><span'.$admin_color.'>' . $u['name'] . ''.$default_txt.''.$visitor_txt.'</span></td>';
-                            echo '<td'.$inactive.' style="vertical-align: middle;"><span'.$admin_color.'>' . $u['email'] . '</span></td>';
+                            if($this->session->userdata('admin_visitor') == 0){
+                                $email_show = $u['email'];
+                            }else{
+                                $email_show = $this->lang->line('user_not_allow_txt');
+                            }
+                            echo '<td'.$inactive.' style="vertical-align: middle;"><span'.$admin_color.'>' . $email_show . '</span></td>';
                             echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;"><span'.$admin_color.'>' . ucfirst($u['user_type']) . '</span></td>';
                             if($this->session->userdata('admin_type') == 'admin'){
                                 echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/users/view/' . $u['user_admin_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i> '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/admin/users/edit/' . $u['user_admin_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('user_edit_btn').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('user_delete_message').'\')" href="'.BASE_URL.'/admin/users/delete/'.$u['user_admin_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('user_delete_btn').'</a></td>';

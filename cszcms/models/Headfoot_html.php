@@ -53,7 +53,7 @@ class Headfoot_html extends CI_Model {
                 }
                 if($rs->drop_menu){
                     $menu_list.= '<li class="dropdown">
-                    <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">'.$rs->menu_name.' <span class="caret"></span></a>
+                    <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#" title="'.$rs->menu_name.'">'.$rs->menu_name.' <span class="caret"></span></a>
                     <ul class="dropdown-menu">';
                     $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->session->userdata('fronlang_iso'));
                     if($drop_menu === FALSE){
@@ -79,12 +79,12 @@ class Headfoot_html extends CI_Model {
                                 $page_link_sub = '#';
                                 $target_sub = '';
                             }
-                            $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.'>'.$rs_sub->menu_name.'</a></li>';
+                            $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.$rs_sub->menu_name.'">'.$rs_sub->menu_name.'</a></li>';
                         }    
                     }   
                     $menu_list.= '</ul></li>';
                 }else{
-                    $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.'>'.$rs->menu_name.'</a></li>';
+                    $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.' title="'.$rs->menu_name.'">'.$rs->menu_name.'</a></li>';
                 }
             } 
         }
@@ -102,7 +102,7 @@ class Headfoot_html extends CI_Model {
                     $socail_url = '#';
                     $target = '';
                 }
-                $social_list.= '<li><a href="'.$socail_url.'"'.$target.' rel="nofollow external"><i class="fa fa-'.$rs->social_name.'"></i></a></li>';
+                $social_list.= '<li><a href="'.$socail_url.'"'.$target.' rel="nofollow external" title="'.$rs->social_name.'"><i class="fa fa-'.$rs->social_name.'"></i></a></li>';
             }
         }
         $html = '<ul class="list-inline social-buttons">
@@ -117,13 +117,13 @@ class Headfoot_html extends CI_Model {
         foreach ($this->Csz_model->loadAllLang(1) as $rs){
             ($rs->lang_iso) ? $lang_url = base_url().'lang/'.$rs->lang_iso : $lang_url = base_url().'lang/';
             if($type == 1){ /* Show flag only */
-                $lang_list.= '<li><a href="'.$lang_url.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span></a></li>';
+                $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country_iso.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span></a></li>';
             }else if($type == 2){ /* Show flag and Language */
-                $lang_list.= '<li><a href="'.$lang_url.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->lang_name.'</a></li>';
+                $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->lang_name.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->lang_name.'</a></li>';
             }else if($type == 3){ /* Show flag and Country */
-                $lang_list.= '<li><a href="'.$lang_url.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'</a></li>';
+                $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'</a></li>';
             }else{ /* Show Full detail */
-                $lang_list.= '<li><a href="'.$lang_url.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'('.$rs->lang_name.')</a></li>';
+                $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'('.$rs->lang_name.')"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'('.$rs->lang_name.')</a></li>';
             } 
             $i++;
         }

@@ -32,6 +32,9 @@
             <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
             <label class="control-label" for="email"><?php echo $this->lang->line('user_new_email'); ?>*</label>
             <?php
+            if($this->session->userdata('admin_visitor')){
+                $users->email = $this->lang->line('user_not_allow_txt');
+            }
             $data = array(
                 'name' => 'email',
                 'id' => 'email',

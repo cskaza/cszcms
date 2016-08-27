@@ -405,6 +405,7 @@ class Csz_admin_model extends CI_Model {
                         'admin_name' => $rows->name,
                         'admin_email' => $rows->email,
                         'admin_type' => $rows->user_type,
+                        'admin_visitor' => $rows->backend_visitor,
                         'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);
