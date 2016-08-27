@@ -3,7 +3,7 @@
         <h1><?php echo $this->Csz_model->getLabelLang('gallery_header') ?></h1>
         <h3><?php echo $this->Csz_model->getLabelLang('gallery_albumlist') ?></h3>
         <br>
-        <a href="http://192.168.1.246/MyCMS/plugin/gallery/rss" class="btn btn-primary" target="_blank" title="RSS FEED"><i class="fa fa-rss" aria-hidden="true"></i> RSS FEED</a>
+        <a href="<?php echo BASE_URL; ?>/plugin/gallery/rss" class="btn btn-primary" target="_blank" title="RSS FEED"><i class="fa fa-rss" aria-hidden="true"></i> RSS FEED</a>
     </div>
 </div>
 <div class="container">
