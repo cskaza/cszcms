@@ -76,6 +76,7 @@ class Upgrade extends CI_Controller {
                     redirect('/admin/upgrade/download', 'refresh');
                 }else{
                     $this->Csz_model->clear_all_cache();
+                    $this->db->cache_delete_all();
                     // When Success 
                     $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
                     redirect($this->csz_referrer->getIndex(), 'refresh');

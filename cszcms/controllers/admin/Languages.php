@@ -72,6 +72,7 @@ class Languages extends CI_Controller {
             //Add the user
             $this->Csz_admin_model->insertLang();
             //Return to user list
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -111,6 +112,7 @@ class Languages extends CI_Controller {
             //Update the user
             $this->Csz_admin_model->updateLang($this->uri->segment(4));
             //Return to user list
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -125,6 +127,7 @@ class Languages extends CI_Controller {
                 $lang = $this->Csz_model->getValue('lang_iso', 'lang_iso', 'lang_iso_id', $this->uri->segment(4), 1);
                 $this->Csz_admin_model->findLangDataUpdate($lang->lang_iso);
                 $this->Csz_admin_model->removeData('lang_iso', 'lang_iso_id', $this->uri->segment(4));
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             } else {
                 $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('lang_delete_default').'</div>');

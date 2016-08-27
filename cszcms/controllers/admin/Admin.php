@@ -115,6 +115,7 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_admin_model->updateSocial();
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
@@ -150,6 +151,7 @@ class Admin extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $this->Csz_admin_model->updateSettings();
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }

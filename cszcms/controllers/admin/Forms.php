@@ -68,6 +68,7 @@ class Forms extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Csz_admin_model->insertForms();
+            $this->db->cache_delete_all();
             //Return to user list
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -106,6 +107,7 @@ class Forms extends CI_Controller {
             //Validation passed
             //Update the user
             $this->Csz_admin_model->updateForms($this->uri->segment(4));
+            $this->db->cache_delete_all();
             //Return to user list
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -121,6 +123,7 @@ class Forms extends CI_Controller {
             $this->Csz_admin_model->dropTable('form_'.$frm_rs->form_name);
             $this->Csz_admin_model->removeData('form_field', 'form_main_id', $this->uri->segment(4));
             $this->Csz_admin_model->removeData('form_main', 'form_main_id', $this->uri->segment(4));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         
@@ -139,6 +142,7 @@ class Forms extends CI_Controller {
             $this->load->dbforge();
             $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
             $this->Csz_admin_model->removeData('form_field', 'form_field_id', $this->uri->segment(5));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         

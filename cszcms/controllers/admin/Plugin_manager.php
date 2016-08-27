@@ -67,6 +67,7 @@ class Plugin_manager extends CI_Controller {
                 $this->db->where('plugin_manager_id', $this->uri->segment(4));
                 $this->db->update('plugin_manager');
             }
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         } else {
