@@ -96,11 +96,13 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     <body>
         <!-- Start For Content -->
         <div class="container">
-<?php if ($success) { ?>
+<?php if ($success) { 
+    $url_replace = array('https://','http://');
+    $baseurl = $_POST['protocal'].str_replace($url_replace, '', $_POST['baseurl']); ?>
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><a href="<?php echo $_POST['baseurl']; ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
+                        <div class="text-center"><a href="<?php echo $baseurl; ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
                             <div class="well"><h3 class="form-signin-heading success">Installation Completed!</h3></div>
@@ -114,7 +116,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 <h3 class="panel-title"><b>Please login to backend with your Email address and Password was setup.</b></h3>
                             </div>
                             <div class="panel-body">
-                                <a href="<?php echo $_POST['baseurl']; ?>/admin" class="btn btn-lg btn-success">Go to Backend login</a>
+                                <a href="<?php echo $baseurl; ?>/admin" class="btn btn-lg btn-success">Go to Backend login</a>
                             </div>
                         </div>
                     </div>
