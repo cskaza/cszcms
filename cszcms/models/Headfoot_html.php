@@ -277,7 +277,7 @@ class Headfoot_html extends CI_Model {
             $html.= $this->session->flashdata('f_error_message');
         }
         if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
-            $html.= '<div class="alert alert-warning text-center" role="alert">'.$this->lang->line('upgrade_newlast_alert').'</div>';
+            $html.= '<div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->lang->line('upgrade_newlast_alert').'</div>';
         }
         return $html;
     }

@@ -1,5 +1,6 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.1
+x- Add shopping plugin.
 x- Add webboard plugin.
 x- Add get rss feed to widget on content page.
 - Add feed libraries ('atom' or 'rss').
