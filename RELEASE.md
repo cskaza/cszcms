@@ -10,6 +10,7 @@ x- Add get rss feed to widget on content page.
 - Fix Article plugin to version 1.0.2 (Add rss feed).
 - Fix article change main picture and get error on backend.
 - Fix article archive menu bug on frontend.
+- Fix language bug on backend.
 - Fix installer wizard bug.
 
 CSZ-CMS V.1.1.0

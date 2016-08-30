@@ -24,6 +24,7 @@ class Gallery extends CI_Controller {
             $this->session->unset_userdata('fronlang_iso');
             $this->Csz_model->setSiteLang(); 
         }
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
         $this->_init();
         member_helper::plugin_not_active($this->uri->segment(2));
     }
@@ -36,7 +37,6 @@ class Gallery extends CI_Controller {
         $this->page_url = $this->Csz_model->getCurPages();	
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
-        $this->db->cache_on();
     }
 
     public function index() {

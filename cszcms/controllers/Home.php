@@ -72,7 +72,7 @@ class Home extends CI_Controller {
     public function index() {
         $config = $this->Csz_model->load_config();
         //Get pages from database
-        $this->db->cache_on();
+        if($config->pagecache_time != 0){ $this->db->cache_on(); }
         $this->template->setSub('page', $this->page_url);
         $this->template->setSub('page_rs', $this->page_rs);
         if($this->uri->segment(1) && $this->page_rs !== FALSE){
