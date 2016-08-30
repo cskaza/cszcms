@@ -90,14 +90,14 @@ class Admin extends CI_Controller {
 
     public function logout() {
         $data = array(
-            'user_admin_id' => '',
-            'admin_name' => '',
-            'admin_email' => '',
-            'admin_type' => '',
-            'admin_logged_in' => FALSE,
+            'user_admin_id',
+            'admin_name',
+            'admin_email',
+            'admin_type',
+            'admin_visitor',
+            'admin_logged_in',
         );
         $this->session->unset_userdata($data);
-        $this->session->sess_destroy();
         redirect(BASE_URL.'/admin', 'refresh');
     }
 
