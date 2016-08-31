@@ -123,6 +123,7 @@ class Linkstats extends CI_Controller {
     public function deleteIndexByURL() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $delR = $this->input->post('delR');
         if(isset($delR)){
             foreach ($delR as $value) {
