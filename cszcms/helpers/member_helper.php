@@ -7,6 +7,15 @@ class Member_helper{
             $redirect= BASE_URL.'/member/login?url_return='.$url_return;
             header("Location: $redirect");
             exit;
+        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
+            $CI =& get_instance();
+            $CI->load->model('Csz_admin_model');
+            $chk = $CI->Csz_admin_model->sessionLoginChk();
+            if($chk === FALSE){
+                $redirect= BASE_URL.'/member/logout';
+                header("Location: $redirect");	
+                exit;
+            }
         }
     }
     

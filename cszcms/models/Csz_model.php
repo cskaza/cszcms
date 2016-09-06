@@ -670,12 +670,17 @@ class Csz_model extends CI_Model {
             $query = $this->chkPassword($email, $password);
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $rows) {
+                    $session_id = session_id();
+                    $this->db->set('session_id', $session_id, TRUE);
+                    $this->db->where('user_admin_id', $rows->user_admin_id);
+                    $this->db->update('user_admin');
                     $data = array(
                         'user_admin_id' => $rows->user_admin_id,
                         'admin_name' => $rows->name,
                         'admin_email' => $rows->email,
                         'admin_type' => $rows->user_type,
                         'admin_visitor' => $rows->backend_visitor,
+                        'session_id' => $session_id,
                         'admin_logged_in' => TRUE,
                     );
                     $this->session->set_userdata($data);

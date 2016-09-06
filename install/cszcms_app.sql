@@ -207,6 +207,7 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `picture` varchar(255) NOT NULL,
   `backend_visitor` int(11) NOT NULL,
   `active` int(11) NOT NULL,
+  `session_id` varchar(255) NOT NULL,
   `md5_hash` varchar(255) NOT NULL,
   `md5_lasttime` datetime NOT NULL,
   `timestamp_create` datetime NOT NULL,

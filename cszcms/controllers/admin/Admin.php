@@ -95,6 +95,7 @@ class Admin extends CI_Controller {
             'admin_email',
             'admin_type',
             'admin_visitor',
+            'session_id',
             'admin_logged_in',
         );
         $this->session->unset_userdata($data);

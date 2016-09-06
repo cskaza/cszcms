@@ -7,11 +7,20 @@ class Admin_helper{
             $redirect= BASE_URL.'/admin/login?url_return='.$url_return;
             header("Location: $redirect");	
             exit;
+        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member'){
+            $CI =& get_instance();
+            $CI->load->model('Csz_admin_model');
+            $chk = $CI->Csz_admin_model->sessionLoginChk();
+            if($chk === FALSE){
+                $redirect= BASE_URL.'/admin/logout';
+                header("Location: $redirect");	
+                exit;
+            }
         }
     }
     
     static function login_already($email_session){
-        if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['admin_type'] != 'member'){
+        if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member'){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;
