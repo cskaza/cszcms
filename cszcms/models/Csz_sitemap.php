@@ -72,18 +72,25 @@ class Csz_sitemap extends CI_Model {
         }
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
+            $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
                 if($row['other_link'] && $chkotherlink !== FALSE){
-                    $sitemap_xml.= '<url>
-                    <loc>'.$row['other_link'].'</loc>
-                    <changefreq>always</changefreq>
-                    </url>'."\n";
-                }else if($row['plugin_menu']){
-                    $sitemap_xml.= '<url>
-                    <loc>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</loc>
-                    <changefreq>always</changefreq>
-                    </url>'."\n";
+                    if(!in_array($row['other_link'], $url_same)){
+                        $sitemap_xml.= '<url>
+                        <loc>'.$row['other_link'].'</loc>
+                        <changefreq>always</changefreq>
+                        </url>'."\n";
+                    }
+                    $url_same[] = $row['other_link'];
+                }else if($row['plugin_menu']){                    
+                    if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
+                        $sitemap_xml.= '<url>
+                        <loc>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</loc>
+                        <changefreq>always</changefreq>
+                        </url>'."\n";
+                    }
+                    $url_same[] = BASE_URL.'/plugin/'.$row['plugin_menu'];
                 }
             }
         }
@@ -148,6 +155,7 @@ class Csz_sitemap extends CI_Model {
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             $i = 0;
+            $url_same = array();
             foreach ($menu_other as $row) {
                 $i++;
                 if($i < 10) $order = 1;
@@ -155,23 +163,29 @@ class Csz_sitemap extends CI_Model {
 		else $order = 3;
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
                 if($row['other_link'] && $chkotherlink !== FALSE){
-                    $ror_xml.= '<item>
-                        <link>'.$row['other_link'].'</link>
-                        <title>'.$row['menu_name'].'</title>
-                        <description>'.$row['menu_name'].'</description>
-                        <ror:updatePeriod>always</ror:updatePeriod>
-                        <ror:sortOrder>'.$order.'</ror:sortOrder>
-                        <ror:resourceOf>sitemap</ror:resourceOf>
-                    </item>'."\n";
+                    if(!in_array($row['other_link'], $url_same)){
+                        $ror_xml.= '<item>
+                            <link>'.$row['other_link'].'</link>
+                            <title>'.$row['menu_name'].'</title>
+                            <description>'.$row['menu_name'].'</description>
+                            <ror:updatePeriod>always</ror:updatePeriod>
+                            <ror:sortOrder>'.$order.'</ror:sortOrder>
+                            <ror:resourceOf>sitemap</ror:resourceOf>
+                        </item>'."\n";
+                    }
+                    $url_same[] = $row['other_link'];                   
                 }else if($row['plugin_menu']){
-                    $ror_xml.= '<item>
-                        <link>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</link>
-                        <title>'.$row['menu_name'].'</title>
-                        <description>'.$row['menu_name'].'</description>
-                        <ror:updatePeriod>always</ror:updatePeriod>
-                        <ror:sortOrder>'.$order.'</ror:sortOrder>
-                        <ror:resourceOf>sitemap</ror:resourceOf>
-                    </item>'."\n";
+                    if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
+                        $ror_xml.= '<item>
+                            <link>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</link>
+                            <title>'.$row['menu_name'].'</title>
+                            <description>'.$row['menu_name'].'</description>
+                            <ror:updatePeriod>always</ror:updatePeriod>
+                            <ror:sortOrder>'.$order.'</ror:sortOrder>
+                            <ror:resourceOf>sitemap</ror:resourceOf>
+                        </item>'."\n";
+                    }
+                    $url_same[] = BASE_URL.'/plugin/'.$row['plugin_menu'];   
                 }
             }
         }
@@ -226,12 +240,19 @@ class Csz_sitemap extends CI_Model {
         }
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
+            $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
                 if($row['other_link'] && $chkotherlink !== FALSE){
-                    $sitemap_txt.= $row['other_link'].''."\n";
+                    if(!in_array($row['other_link'], $url_same)){
+                        $sitemap_txt.= $row['other_link'].''."\n";
+                    }
+                    $url_same[] = $row['other_link'];
                 }else if($row['plugin_menu']){
-                    $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_menu'].''."\n";
+                    if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
+                        $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_menu'].''."\n";
+                    }
+                    $url_same[] = BASE_URL.'/plugin/'.$row['plugin_menu'];
                 }
             }
         }
@@ -282,12 +303,20 @@ class Csz_sitemap extends CI_Model {
         $sitemap_html.= '<h3>Navigations List</h3>';
         $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
+            $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
                 if($row['other_link'] && $chkotherlink !== FALSE){
-                    $sitemap_html.= '<h4> - <a href="'.$row['other_link'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></h4>';
+                    if(!in_array($row['other_link'], $url_same)){
+                        $sitemap_html.= '<h4> - <a href="'.$row['other_link'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></h4>';
+                    }
+                    $url_same[] = $row['other_link'];
                 }else if($row['plugin_menu']){
-                    $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/plugin/'.$row['plugin_menu'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></h4>';
+                    if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
+                        $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/plugin/'.$row['plugin_menu'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></h4>';
+                    }
+                    $url_same[] = BASE_URL.'/plugin/'.$row['plugin_menu'];
+                    
                 }
             }
         }

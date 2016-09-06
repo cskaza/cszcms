@@ -13,6 +13,7 @@ x- Add get rss feed to widget on content page.
 - Fix article archive menu bug on frontend.
 - Fix language bug on backend.
 - Fix installer wizard bug.
+- Fix sitemap generator.
 
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.
