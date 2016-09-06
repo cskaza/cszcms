@@ -7,7 +7,7 @@ class Admin_helper{
             $redirect= BASE_URL.'/admin/login?url_return='.$url_return;
             header("Location: $redirect");	
             exit;
-        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member'){
+        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member' && $_SESSION['admin_visitor'] != 1){
             $CI =& get_instance();
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
