@@ -8,7 +8,6 @@ class Article extends CI_Controller {
         parent::__construct();
         $this->load->helper('form');
         $this->load->helper('file');
-        $this->load->library('unzip');
         define('LANG', $this->Csz_admin_model->getLang());
         $this->lang->load('admin', LANG);
         $this->lang->load('plugin/article', LANG);
