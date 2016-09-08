@@ -25,7 +25,11 @@ class Csz_admin_model extends CI_Model {
         if (!$xml_url)
             $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
         $xml = @simplexml_load_file($xml_url);
-        return $xml;
+        if($xml !== FALSE){
+            return $xml;
+        }else{
+            return FALSE;
+        }
     }
     
     public function setSessionLastVer($xml_url) {
