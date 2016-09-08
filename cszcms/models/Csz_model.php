@@ -610,7 +610,11 @@ class Csz_model extends CI_Model {
         curl_close($ch);
 
         $obj = json_decode($result);
-        return $obj->success;
+        if(!empty($obj)){
+            return $obj->success;
+        }else{
+            return FALSE;
+        }
     }
 
     public function chkCaptchaRes() {
@@ -623,7 +627,7 @@ class Csz_model extends CI_Model {
                 $ip = $this->input->ip_address();
                 $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $ip;
                 $res = $this->getCurlreCaptData($url);
-                if ($res) { 
+                if ($res !== FALSE && $res) { 
                     $respone = $res;
                 } else {
                     $respone = '';
