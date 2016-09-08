@@ -236,6 +236,7 @@
                             $data['button'] = 'button';
                             $data['checkbox'] = 'checkbox';
                             $data['email'] = 'email';
+                            $data['label'] = 'label';
                             $data['password'] = 'password';
                             $data['radio'] = 'radio';
                             $data['reset'] = 'reset';
@@ -307,6 +308,7 @@
                                 <option value="button">button</option>
                                 <option value="checkbox">checkbox</option>
                                 <option value="email">email</option>
+                                <option value="label">label</option>
                                 <option value="password">password</option>
                                 <option value="radio">radio</option>
                                 <option value="reset">reset</option>

@@ -5,6 +5,7 @@ x- Add webboard plugin.
 x- Add get rss feed to widget on content page.
 - Add feed libraries ('atom' or 'rss').
 - Add linkstats index number field in TinyMCE on link plugin.
+- Add label field in Forms Builder.
 - Improve page load performance.
 - Fix Link Statistic for enable with linkstats="(number of index)" after href="" only.
 - Fix Gallery plugin to version 1.0.2 (Add youtube video and rss feed).

@@ -19,7 +19,7 @@
                         <th width="8%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('id_col_table'); ?></th>
                         <?php $i = 3; 
                         foreach ($field_rs as $field) { 
-                            if($field->field_type != 'button' && $field->field_type != 'reset' && $field->field_type != 'submit'){ ?>                            
+                            if($field->field_type != 'button' && $field->field_type != 'reset' && $field->field_type != 'submit' && $field->field_type != 'label'){ ?>                            
                                 <th class="text-center" style="vertical-align:middle;"><?php echo $field->field_label?></th>
                             <?php $i++; }                    
                         } ?>
@@ -37,7 +37,7 @@
                             echo '<tr>';
                             echo '<td class="text-center" style="vertical-align:middle;">' . $u['form_'.$form_name.'_id'] . '</td>';
                             foreach ($field_rs as $field) { 
-                                if($field->field_type != 'button' && $field->field_type != 'reset' && $field->field_type != 'submit'){ ?>
+                                if($field->field_type != 'button' && $field->field_type != 'reset' && $field->field_type != 'submit' && $field->field_type != 'label'){ ?>
                                     <td class="text-center" style="vertical-align:middle;"><?php echo ($u[$field->field_name])?$u[$field->field_name]:'-'?></td>
                                 <?php }
                             }

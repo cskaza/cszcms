@@ -505,10 +505,15 @@ class Csz_model extends CI_Model {
                     $f_req = '';
                     $star_req = '';
                 }
+                if($field->field_type == 'email' || $field->field_type == 'password' || $field->field_type == 'text'){
+                    $maxlength = ' maxlength="255"';
+                }else{
+                    $maxlength = '';
+                }
                 if ($field->field_type == 'checkbox' || $field->field_type == 'email' || $field->field_type == 'password' || $field->field_type == 'radio' || $field->field_type == 'text') {
                     $html.= '<label class="control-label" for="' . $field->field_id . '">' . $field->field_label . $star_req . '</label>
                     <div class="controls">
-                        <input type="' . $field->field_type . '" name="' . $field->field_name . '" value="' . $field->field_value . '" id="' . $field->field_id . '" class="' . $field->field_class . '" placeholder="' . $field->field_placeholder . '"' . $f_req . '/>
+                        <input type="' . $field->field_type . '" name="' . $field->field_name . '" value="' . $field->field_value . '" id="' . $field->field_id . '" class="' . $field->field_class . '" placeholder="' . $field->field_placeholder . '"' . $f_req . $maxlength.'/>
                     </div>';
                 } else if ($field->field_type == 'selectbox') {
                     $opt_html = '';
@@ -532,6 +537,8 @@ class Csz_model extends CI_Model {
                     </div>';
                 } else if ($field->field_type == 'button' || $field->field_type == 'reset' || $field->field_type == 'submit') {
                     $html_btn.= '<input type="' . $field->field_type . '" name="' . $field->field_name . '" value="' . $field->field_value . '" id="' . $field->field_id . '" class="' . $field->field_class . '" placeholder="' . $field->field_placeholder . '"' . $f_req . '/> ';
+                } else if($field->field_type == 'label'){
+                    $html.= '<label class="' . $field->field_class . '" id="' . $field->field_id . '" name="' . $field->field_name . '">' . $field->field_label . $star_req . '</label><br>';
                 }
             }
             if ($form_data->captcha) {

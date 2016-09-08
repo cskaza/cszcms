@@ -31,19 +31,19 @@ class Formsaction extends CI_Controller {
                 $data = array();
                 foreach ($field_rs as $f_val) {
                     if($frm_rs->form_method == 'post'){
-                            if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE)){
+                            if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
                                redirect(urlencode($cur_page) . '/3', 'refresh'); 
                                exit;
                             }
                     }elseif($frm_rs->form_method == 'get'){
-                            if($f_val->field_required && !$this->input->get($f_val->field_name, TRUE)){
+                            if($f_val->field_required && !$this->input->get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
                                redirect(urlencode($cur_page) . '/3', 'refresh'); 
                                exit;
                             }
                     }
-                    if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit') {      
+                    if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label') {      
                         if($frm_rs->form_method == 'post'){
                             $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
                         }elseif($frm_rs->form_method == 'get'){
@@ -99,7 +99,7 @@ class Formsaction extends CI_Controller {
             $message_html.= 'Please see below detail<br><br>';
             if ($field_val) {
                 foreach ($field_val as $val) {
-                    if ($val->field_type != 'button' && $val->field_type != 'reset' && $val->field_type != 'submit') {
+                    if ($val->field_type != 'button' && $val->field_type != 'reset' && $val->field_type != 'submit' && $val->field_type != 'label') {
                         ($val->field_label)?$field_label = $val->field_label:$field_label = $val->field_name;
                         if($val->field_type == 'textarea'){
                             if($form_method == 'post'){
