@@ -461,7 +461,7 @@ class Csz_admin_model extends CI_Model {
     }
 
     public function cszCopyright() {
-        $csz_copyright = '<br><span class="copyright">Powered by CSZ CMS V.' . $this->Csz_model->getVersion() . '</span>';
+        $csz_copyright = '<br><span class="copyright">Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> Version ' . $this->Csz_model->getVersion() . '</span>';
         return $csz_copyright;
     }
 
