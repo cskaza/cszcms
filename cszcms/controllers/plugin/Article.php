@@ -33,7 +33,7 @@ class Article extends CI_Controller {
         $this->template->set('core_css', $this->Csz_model->coreCss());
         $this->template->set('core_js', $this->Csz_model->coreJs());
         $row = $this->Csz_model->load_config();
-        $this->page_url = $this->Csz_model->getCurPages();	
+        $this->page_url = $this->uri->segment(2);	
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
     }

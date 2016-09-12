@@ -46,7 +46,7 @@ class Headfoot_html extends CI_Model {
                     $page_link = '#';
                     $target = '';
                 }
-                if($page_url_rs == $cur_page){
+                if($page_url_rs == $cur_page || $rs->plugin_menu == $cur_page){
                     $active = ' id="active"';
                 }else{
                     $active = "";
