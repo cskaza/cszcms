@@ -298,11 +298,11 @@ class Csz_model extends CI_Model {
     }
 
     public function coreCss($more_css = '') {
-        $core_css = link_tag('assets/css/bootstrap.min.css');
+        $core_css = '<link rel="canonical" href="'.base_url(uri_string()).'" />';
+        $core_css.= link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
         $core_css.= link_tag('assets/css/full-slider.css');
-        //$core_css.= link_tag('assets/css/lightbox.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
                 foreach ($more_css as $value) {
@@ -325,7 +325,6 @@ class Csz_model extends CI_Model {
         }
         $core_js = '<script src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
         $core_js.= '<script src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
-        //$core_js.= '<script src="' . BASE_URL . '/assets/js/lightbox.min.js"></script>';    
         $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
         $core_js.= '<script src="' . BASE_URL . '/assets/js/scripts.js"></script>';
         if(!empty($more_js)){
@@ -354,6 +353,7 @@ class Csz_model extends CI_Model {
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
+            array('name' => 'og:type', 'content' => 'website', 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
             array('name' => 'og:url', 'content' => BASE_URL.'/'.$this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => BASE_URL.'/photo/logo/'.$config->site_logo, 'type' => 'property'),
