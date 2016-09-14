@@ -500,11 +500,11 @@ class Csz_admin_model extends CI_Model {
             if(is_array($more_js)){
                 foreach ($more_js as $value) {
                     if($value){
-                        $core_js.= '<script src="'.$value.'"></script>';
+                        $core_js.= '<script type="text/javascript" src="'.$value.'"></script>';
                     }
                 }
             }else{     
-                $core_js.= '<script src="'.$more_js.'"></script>';
+                $core_js.= '<script type="text/javascript" src="'.$more_js.'"></script>';
             }
         }
         return $core_js;
