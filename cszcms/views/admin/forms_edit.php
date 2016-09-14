@@ -235,6 +235,7 @@
                             $data = array();
                             $data['button'] = 'button';
                             $data['checkbox'] = 'checkbox';
+                            $data['datepicker'] = 'datepicker';
                             $data['email'] = 'email';
                             $data['label'] = 'label';
                             $data['password'] = 'password';
@@ -307,6 +308,7 @@
                             <select id="field_type" name="field_type[]" class="form-control">
                                 <option value="button">button</option>
                                 <option value="checkbox">checkbox</option>
+                                <option value="datepicker">datepicker</option>
                                 <option value="email">email</option>
                                 <option value="label">label</option>
                                 <option value="password">password</option>

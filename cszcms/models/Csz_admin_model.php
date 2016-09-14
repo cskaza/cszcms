@@ -490,12 +490,12 @@ class Csz_admin_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';
-        $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
+        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach ($more_js as $value) {
@@ -1215,7 +1215,11 @@ class Csz_admin_model extends CI_Model {
                     $this->db->update('form_field', $data);
                     if ($field_oldname[$i] != $field_name1[$i]) {
                         $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
-                        $this->dbforge->modify_column('form_' . $form_name, $fields);
+                        $mod_field = $this->dbforge->modify_column('form_' . $form_name, $fields);
+                        if($mod_field === FALSE){
+                            $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
+                            $this->dbforge->add_column('form_' . $form_name, $fields);
+                        }
                     }
                 }
             }
@@ -1268,6 +1272,13 @@ class Csz_admin_model extends CI_Model {
                     ),
                 );
                 break;
+            case 'datepicker':
+                $fields = array(
+                    $name => array(
+                        'type' => 'DATE',
+                    ),
+                );
+                break;
             case 'email':
             case 'password':
             case 'radio':
@@ -1302,6 +1313,14 @@ class Csz_admin_model extends CI_Model {
                         'name' => $newname,
                         'type' => 'INT',
                         'constraint' => 11
+                    ),
+                );
+                break;
+            case 'datepicker':
+                $fields = array(
+                    $oldname => array(
+                        'name' => $newname,
+                        'type' => 'DATE',
                     ),
                 );
                 break;

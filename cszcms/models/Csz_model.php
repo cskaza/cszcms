@@ -298,11 +298,12 @@ class Csz_model extends CI_Model {
     }
 
     public function coreCss($more_css = '') {
-        $core_css = '<link rel="canonical" href="'.base_url(uri_string()).'" />';
+        $core_css = '<link rel="canonical" href="'.base_url(uri_string()).'" />'."\n";
         $core_css.= link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
         $core_css.= link_tag('assets/css/full-slider.css');
+        $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
                 foreach ($more_css as $value) {
@@ -323,19 +324,21 @@ class Csz_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
-        $core_js.= '<script src="' . BASE_URL . '/assets/js/scripts.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>'."\n";
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>'."\n";        
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>'."\n";
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/ui-loader.js"></script>'."\n";
+        $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/scripts.js"></script>'."\n";
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach ($more_js as $value) {
                     if($value){
-                        $core_js.= '<script src="'.$value.'"></script>';
+                        $core_js.= '<script type="text/javascript" src="'.$value.'"></script>';
                     }
                 }
             }else{     
-                $core_js.= '<script src="'.$more_js.'"></script>';
+                $core_js.= '<script type="text/javascript" src="'.$more_js.'"></script>';
             }
         }
         return $core_js;
@@ -514,6 +517,16 @@ class Csz_model extends CI_Model {
                     $html.= '<label class="control-label" for="' . $field->field_id . '">' . $field->field_label . $star_req . '</label>
                     <div class="controls">
                         <input type="' . $field->field_type . '" name="' . $field->field_name . '" value="' . $field->field_value . '" id="' . $field->field_id . '" class="' . $field->field_class . '" placeholder="' . $field->field_placeholder . '"' . $f_req . $maxlength.'/>
+                    </div>';
+                } else if ($field->field_type == 'datepicker') {
+                    if($field->field_class){
+                        $class = $field->field_class.' form-datepicker';
+                    }else{
+                        $class = 'form-datepicker';
+                    }
+                    $html.= '<label class="control-label" for="' . $field->field_id . '">' . $field->field_label . $star_req . '</label>
+                    <div class="controls">
+                        <input type="text" name="' . $field->field_name . '" value="' . $field->field_value . '" id="' . $field->field_id . '" class="' . $class . '" placeholder="' . $field->field_placeholder . '"' . $f_req .'/>
                     </div>';
                 } else if ($field->field_type == 'selectbox') {
                     $opt_html = '';
