@@ -9,6 +9,7 @@ $lang['dashboard_totalmember']	= "รวมสมาชิก";
 $lang['dashboard_viewdetail']	= "ดูรายละเอียด";
 $lang['dashboard_linkrecent']	= "สถิติลิงค์ล่าสุด 20 รายการ";
 $lang['dashboard_emailrecent']	= "บันทึกอีเมล์ล่าสุด 10 รายการ";
+$lang['dashboard_loginrecent']	= "บันทึกการเข้าสู่ระบบล่าสุด 20 รายการ";
 $lang['dashboard_toemail']	= "ถึง";
 $lang['dashboard_fromemail']	= "จาก";
 

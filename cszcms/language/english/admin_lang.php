@@ -9,6 +9,7 @@ $lang['dashboard_totalmember']	= "Total Members";
 $lang['dashboard_viewdetail']	= "View Details";
 $lang['dashboard_linkrecent']	= "20 Recent Link Statistic";
 $lang['dashboard_emailrecent']	= "10 Recent Email Logs";
+$lang['dashboard_loginrecent']	= "20 Recent Login Logs";
 $lang['dashboard_toemail']	= "To";
 $lang['dashboard_fromemail']	= "From";
 

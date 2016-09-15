@@ -2,6 +2,7 @@
 CSZ-CMS V.1.1.1
 x- Add shopping plugin.
 x- Add get rss feed to widget on content page.
+- Add login logs for backend.
 - Add feed libraries ('atom' or 'rss').
 - Add linkstats index number field in TinyMCE on link plugin.
 - Add label field in Forms Builder.

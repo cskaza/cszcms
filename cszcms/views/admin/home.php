@@ -25,7 +25,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <h1><i><span class="glyphicon glyphicon-list-alt"></span></i></h1>
+                        <h1><i><span class="glyphicon glyphicon-user"></span></i></h1>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge"><?php echo $total_member ?></div>
@@ -47,7 +47,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <h1><i><span class="glyphicon glyphicon-list-alt"></span></i></h1>
+                        <h1><i><span class="glyphicon glyphicon-link"></span></i></h1>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge"><?php if($config->link_statistic_active){ echo $total_linkstats; }else{ echo '-'; } ?></div>
@@ -137,13 +137,61 @@
     </div>
 </div>
 <!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i><span class="glyphicon glyphicon-log-in"></span></i> <?php echo $this->lang->line('dashboard_loginrecent') ?></h3>
+            </div>
+            <div class="panel-body">
+                <div class="list-group">
+                    <?php if ($visitor_admin != 0 || $_SESSION['admin_type'] != 'admin'){ ?>
+                        <div class="list-group-item">
+                            <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
+                            <b><?php echo  $this->lang->line('user_not_allow_txt') ?></b>
+                        </div> 
+                    <?php }else{
+                        if ($login_logs === FALSE) { ?>
+                            <div class="list-group-item">
+                                <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
+                                <b><?php echo  $this->lang->line('data_notfound') ?></b>
+                            </div>                          
+                        <?php } else { ?>
+                            <?php foreach ($login_logs as $el) { 
+                                $i = 0;
+                                if($el['result'] != 'SUCCESS'){
+                                    $error_rs = '<span class="error">Error! - '.$el['result'].'</span>';
+                                }else{
+                                    $error_rs = '<span class="success">Success!</span>';
+                                }
+                                $i++;
+                            ?>
+                            <span class="list-group-item">
+                                <span class="badge"><?php echo $el['timestamp_create'] ?></span>
+                                <span style="font-size:12px;"><b><?php echo $el['email_login'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
+                                <pre><?php echo strip_tags($el['note']) ?></pre>
+                                <div class="control-group text-right">
+                                    <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteLoginLogs/'.$el['login_logs_id']?>">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+                                </div>
+                            </span>
+                            <?php } ?>        
+                        <?php } 
+                    } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
 <?php if($config->link_statistic_active){
 ?>
 <div class="row">
     <div class="col-lg-12" style="word-wrap:break-word;">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><i><span class="glyphicon glyphicon-envelope"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>
+                <h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>
             </div>
             <div class="panel-body">
                 <div class="list-group">

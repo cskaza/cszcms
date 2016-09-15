@@ -716,6 +716,18 @@ class Csz_model extends CI_Model {
         }
     }
     
+    public function saveLogs($email, $note = '', $result = '') {
+        $data = array(
+            'email_login' => $email,
+            'note' => $note,
+            'result' => $result,
+        );
+        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->insert('login_logs', $data);
+    }
+    
     public function getLabelLang($name) {
         if(!$this->session->userdata('fronlang_iso')){
             $this->setSiteLang();
