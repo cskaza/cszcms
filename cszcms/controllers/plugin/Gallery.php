@@ -107,6 +107,7 @@ class Gallery extends CI_Controller {
     public function rss() {
         // creating rss feed with our most recent 20
         // first load the library
+        $this->db->cache_off();
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
         // create new instance
