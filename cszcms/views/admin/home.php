@@ -168,8 +168,7 @@
                             ?>
                             <span class="list-group-item">
                                 <span class="badge"><?php echo $el['timestamp_create'] ?></span>
-                                <span style="font-size:12px;"><b><?php echo $el['email_login'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
-                                <pre><?php echo strip_tags($el['note']) ?></pre>
+                                <span style="font-size:12px;"><b><?php echo $el['email_login'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>] - <?php echo strip_tags($el['note']) ?>
                                 <div class="control-group text-right">
                                     <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteLoginLogs/'.$el['login_logs_id']?>">
                                         <i class="glyphicon glyphicon-remove"></i>
