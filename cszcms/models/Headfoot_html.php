@@ -22,7 +22,14 @@ class Headfoot_html extends CI_Model {
 
     public function topmenu($cur_page){
         $menu_list = '';
-        $get_mainmenu = $this->Csz_model->main_menu('', $this->session->userdata('fronlang_iso'));
+        $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
+        if($cur_page_lang === FALSE){
+            $cur_page_lang_iso = $this->session->userdata('fronlang_iso');
+        }else{
+            $cur_page_lang_iso = $cur_page_lang->lang_iso;
+            $this->Csz_model->setSiteLang($cur_page_lang_iso);
+        }
+        $get_mainmenu = $this->Csz_model->main_menu('', $cur_page_lang_iso);
         if($get_mainmenu === FALSE){
             $get_mainmenu = $this->Csz_model->main_menu('', $this->Csz_model->getDefualtLang());
         }
@@ -55,7 +62,7 @@ class Headfoot_html extends CI_Model {
                     $menu_list.= '<li class="dropdown">
                     <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#" title="'.$rs->menu_name.'">'.$rs->menu_name.' <span class="caret"></span></a>
                     <ul class="dropdown-menu">';
-                    $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->session->userdata('fronlang_iso'));
+                    $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $cur_page_lang_iso);
                     if($drop_menu === FALSE){
                         $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $this->Csz_model->getDefualtLang());
                     }

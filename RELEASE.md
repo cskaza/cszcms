@@ -16,6 +16,7 @@ x- Add get rss feed to widget on content page.
 - Fix language bug on backend.
 - Fix installer wizard bug.
 - Fix sitemap generator.
+- Fix topmenu language when go to other page language without language selected.
 
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.
