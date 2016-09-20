@@ -129,7 +129,7 @@ class Article_model extends CI_Model {
                                 $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '".$mc['article_db_id']."'", '', 0, 'category_name', 'ASC');
                                 if(!empty($subcat)){
                                     foreach ($subcat as $sc) {
-                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'"> <i class="glyphicon glyphicon-minus"></i> '.$sc['category_name'].'</a></li>';
+                                        $html.= '<li role="presentation" class="text-left" style="padding-left:20px;"><a href="'.BASE_URL.'/plugin/article/category/'.$sc['url_rewrite'].'">'.$sc['category_name'].'</a></li>';
                                     }
                                 }
                             } 
@@ -151,7 +151,7 @@ class Article_model extends CI_Model {
                                 $subarchive = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS article_month_name, MONTH(timestamp_create) AS article_month", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '".$lang_iso."' AND YEAR(timestamp_create) = '".$ac['article_year']."'", '', 0, 'article_month', 'DESC', 'article_month');
                                 if(!empty($subarchive)){
                                     foreach ($subarchive as $sa) {
-                                        $html.= '<li role="presentation" class="text-left"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'-'.$sa['article_month'].'"> <i class="glyphicon glyphicon-minus"></i> '.$sa['article_month_name'].'</a></li>';
+                                        $html.= '<li role="presentation" class="text-left" style="padding-left:10px;"><a href="'.BASE_URL.'/plugin/article/archive/'.$ac['article_year'].'-'.$sa['article_month'].'">'.$sa['article_month_name'].'</a></li>';
                                     }
                                 }
                                 $html.= '</div>';
