@@ -1,6 +1,6 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.1
-x- Add shopping plugin.
+x- Add shopping cart plugin.
 x- Add get rss feed to widget on content page.
 - Add login logs for backend.
 - Add feed libraries ('atom' or 'rss').
