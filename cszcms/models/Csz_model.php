@@ -148,6 +148,17 @@ class Csz_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    public function getLastID($table, $field_id) {
+        $this->db->select($field_id);
+        $this->db->order_by($field_id, 'DESC');
+        $this->db->limit(1, 0);
+        $query = $this->db->get($table);
+        if(!empty($query)){
+            $row = $query->result_array();
+            return $row[$field_id];
+        }   
+    }
 
     public function load_config() {
         $this->db->limit(1, 0);
