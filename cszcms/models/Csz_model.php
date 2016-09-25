@@ -157,7 +157,9 @@ class Csz_model extends CI_Model {
         if(!empty($query)){
             $row = $query->result_array();
             return $row[$field_id];
-        }   
+        }else{
+            return 1;
+        }
     }
 
     public function load_config() {
