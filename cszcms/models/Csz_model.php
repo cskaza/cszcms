@@ -158,7 +158,7 @@ class Csz_model extends CI_Model {
             $row = $query->result_array();
             return $row[$field_id];
         }else{
-            return 1;
+            return 0;
         }
     }
 
