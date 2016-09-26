@@ -188,6 +188,17 @@ class Headfoot_html extends CI_Model {
                                          <li><a href="'.BASE_URL.'/admin/upgrade/clearAllDBCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearalldbcache').'</a></li>
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('pluginmgr_header').'</a>
+                                <ul class="dropdown-menu">';
+                                    $plugin_arr = $this->Csz_model->getValueArray('plugin_name,plugin_urlrewrite', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_active = '1'", '', 0);
+                                    if($plugin_arr !== FALSE){
+                                        foreach ($plugin_arr as $value) {
+                                            $html.= '<li><a href="'.base_url().'admin/plugin/'.$value['plugin_urlrewrite'].'"><i class="glyphicon glyphicon-gift"></i> '.$value['plugin_name'].'</a></li>';
+                                        }
+                                    }
+                                $html.= '</ul>
+                            </li>
                             <li><a href="'.base_url().'admin/logout"><i class="glyphicon glyphicon-log-out"></i> '.$this->lang->line('nav_logout').'</a></li>
                         </ul> 
                     </div>           
@@ -251,6 +262,21 @@ class Headfoot_html extends CI_Model {
             if($this->session->userdata('admin_type') == 'admin'){ $html.= $this->admin_leftli($cur_page,'upgrade','admin/upgrade',$this->lang->line('maintenance_header'),'glyphicon-compressed',TRUE); }        
             $html.= $this->admin_leftli($cur_page,'plugin','admin/plugin',$this->lang->line('pluginmgr_header'),'glyphicon-gift',TRUE);
             $html.= $this->admin_leftli($cur_page,'users','admin/users',$this->lang->line('nav_admin_users'),'glyphicon-user',TRUE);
+            $html.= '</ul></ul><hr>';
+            
+            $html.= '<ul class="nav nav-sidebar">';
+            $html.= '<li><a href="#" title="'.$this->lang->line('pluginmgr_header').'" onclick="ChkHideShow(\'plugins\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('pluginmgr_header').'</a></li>';
+            $plugin_arr = $this->Csz_model->getValueArray('plugin_name,plugin_urlrewrite', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_active = '1'", '', 0);
+            $plugin_menu = '';
+            if($plugin_arr !== FALSE){
+                foreach ($plugin_arr as $value) {
+                    $plugin_url[] = $value['plugin_urlrewrite'];
+                    $plugin_menu.= $this->admin_leftli($cur_page,$value['plugin_urlrewrite'],'admin/plugin/'.$value['plugin_urlrewrite'],$value['plugin_name'],'glyphicon-gift',TRUE);
+                }
+            }
+            (in_array($cur_page, $plugin_url)) ? $plugin_display = "" : $plugin_display = "display: none;";
+            $html.= '<ul id="plugins" class="nav nav-sidebar" style="'.$plugin_display.'padding: 0 25px;">';
+            $html.= $plugin_menu;
             $html.= '</ul></ul><hr>';
             $html.= '<ul class="nav nav-sidebar">
                         <li><a href="'.base_url().'admin/logout"><span class="glyphicon glyphicon-log-out"></span> '.$this->lang->line('nav_logout').'</a></li>
