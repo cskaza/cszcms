@@ -17,6 +17,7 @@ x- Add get plugin widget on content page.
 - Fix installer wizard bug.
 - Fix sitemap generator.
 - Fix topmenu language when go to other page language without language selected.
+- Fix maintenance system error bug (new version checking bug).
 
 CSZ-CMS V.1.1.0
 - Add email send to visitor for Forms Builder.
