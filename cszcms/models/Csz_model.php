@@ -203,7 +203,7 @@ class Csz_model extends CI_Model {
     }
 
     public function getDefualtPage($lang) {
-        $this->db->where("lang_iso", $lang);
+        $this->db->where("lang_iso = '".$lang."' AND active = '1'", '');
         $this->db->limit(1, 0);
         $this->db->order_by('pages_id ASC');
         $query = $this->db->get('pages');
@@ -216,7 +216,8 @@ class Csz_model extends CI_Model {
     }
 
     public function getDefualtLang() {
-        $this->db->where('lang_iso_id', 1);
+        $this->db->where('active', 1);
+        $this->db->order_by("lang_iso_id", "asc");
         $this->db->limit(1, 0);
         $query = $this->db->get('lang_iso');
         if ($query->num_rows() > 0) {
