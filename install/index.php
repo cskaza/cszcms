@@ -23,14 +23,20 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     $db = new Database($dbhost, $dbuser, $dbpass, $dbname);
     $mysqli = $db->connectDB();
     
-    /* Database Insert */
-    $filename = 'cszcms_app.sql';
-    $db->mysqli_multi_query_file($mysqli, $filename);
-    
-    $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".sha1(md5($_POST['password']))."', 'admin', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
-    $mysqli->query($insert_user);
-    $update_sql = "UPDATE `settings` SET `default_email` = '".$email."' WHERE `settings_id` = 1";
-    $mysqli->query($update_sql);
+    if($email && $_POST['password']){
+        /* Database Insert */
+        $filename = 'cszcms_app.sql';
+        $db->mysqli_multi_query_file($mysqli, $filename);
+        
+        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".sha1(md5($_POST['password']))."', 'admin', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
+        $mysqli->query($insert_user);
+        $update_sql = "UPDATE `settings` SET `default_email` = '".$email."' WHERE `settings_id` = 1";
+        $mysqli->query($update_sql);
+    }else{
+        /* Database Insert */
+        $filename = 'cszcms_app_default.sql';
+        $db->mysqli_multi_query_file($mysqli, $filename);
+    }
     
     /* Prepare data for config.inc.php file */
     $config_file = '../config.inc.php';
@@ -187,10 +193,11 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     <h3 class="panel-title"><b>Backend Login Setup</b></h3>
                                 </div>
                                 <div class="panel-body">
-                                    <label for="email">Email Address*: </label>
-                                    <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login" required>
-                                    <label for="password">Password*: </label>
-                                    <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login" required>
+                                    <label for="email">Email Address: </label>
+                                    <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login">
+                                    <label for="password">Password: </label>
+                                    <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login">
+                                    <span class="remark"><em>Please <b>blank</b>. If you want default backend login account<br>Email: <b>demo@cszcms.com</b> | Password: <b>123456</b></em></span>
                                 </div>
                             </div>
                         </div>
