@@ -12,7 +12,7 @@ class Csz_model extends CI_Model {
         if (!$xml_url) { 
             $xml_file = BASE_URL . '/version.xml';
         }
-        $xml = @simplexml_load_file($xml_file);
+        $xml = simplexml_load_file($xml_file);
         if ($xml !== FALSE && $xml->version) {
             if ($xml->release == 'beta') {
                 $beta = ' Beta';
