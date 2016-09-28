@@ -20,7 +20,6 @@ $proxy_ip_arr = array(
     /* Important! Please not remove this! */
     /* (Start Cloudflare) */
     '103.21.244.0/22',
-    '103.21.244.0/22',
     '103.22.200.0/22',
     '103.31.4.0/22',
     '104.16.0.0/12',
