@@ -828,7 +828,7 @@ class Csz_model extends CI_Model {
         }
     }
     
-    public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $alt_message = '', $attach_file = array()) {
+    public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $bcc = '', $alt_message = '', $attach_file = array()) {
         $this->load->library('email');
         $load_conf = $this->load_config();
         $protocal = $load_conf->email_protocal;
@@ -852,6 +852,7 @@ class Csz_model extends CI_Model {
         $this->email->to($to_email);// change it to yours
         $this->email->subject($subject);
         $this->email->message($message);
+        if($bcc){ $this->email->bcc($bcc); }
         if($alt_message){ $this->email->set_alt_message($alt_message); }
         if(is_array($attach_file) && !empty($attach_file)){
             foreach ($attach_file as $value) {
