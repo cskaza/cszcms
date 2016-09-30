@@ -382,3 +382,13 @@ $lang['pluginmgr_status']              = "สถานะปลั๊กอิ�
 $lang['pluginmgr_enable']               = "เปิดการใช้งาน";
 $lang['pluginmgr_disable']               = "ปิดการใช้งาน";
 $lang['pluginmgr_manage']               = "จัดการ";
+
+// Widget Builder
+$lang['widget_header']               = "Widgets ปลั๊กอิน";
+$lang['widget_new_header']		= "สร้าง Widget";
+$lang['widget_edit_header']		= "แก้ไข Widget";
+$lang['widget_active']                    = "เปิดการใช้งาน";
+$lang['widget_name']                 = "ชื่อ Widget";
+$lang['widget_xml_url']                 = "Widget XML URL";
+$lang['widget_limit_view']                 = "จำกัดการแสดงผล";
+$lang['widget_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่ม widget ปลั๊กอินเข้าไปยังหน้าเนื้อหา. กรุณาดูที่ชื่อ widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";

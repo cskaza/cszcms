@@ -166,6 +166,7 @@ class Headfoot_html extends CI_Model {
                                 <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('nav_content_menu').'</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="'.base_url().'admin/forms"><i class="glyphicon glyphicon-modal-window"></i> '.$this->lang->line('forms_header').'</a></li>
+                                    <li><a href="'.base_url().'admin/widget"><i class="glyphicon glyphicon-gift"></i> '.$this->lang->line('widget_header').'</a></li>
                                     <li><a href="'.base_url().'admin/uploadindex"><i class="glyphicon glyphicon-picture"></i> '.$this->lang->line('uploadfile_header').'</a></li>
                                     <li><a href="'.base_url().'admin/pages"><i class="glyphicon glyphicon-file"></i> '.$this->lang->line('pages_header').'</a></li> 
                                     <li><a href="'.base_url().'admin/navigation"><i class="glyphicon glyphicon-object-align-top"></i> '.$this->lang->line('nav_nav_header').'</a></li>';                             
@@ -240,6 +241,7 @@ class Headfoot_html extends CI_Model {
             }
             $html.= '<ul id="content_menu" class="nav nav-sidebar" style="'.$gel_settings_display.'padding: 0 25px;">';
             $html.= $this->admin_leftli($cur_page,'forms','admin/forms',$this->lang->line('forms_header'),'glyphicon-modal-window',TRUE);
+            $html.= $this->admin_leftli($cur_page,'widget','admin/widget',$this->lang->line('widget_header'),'glyphicon-gift',TRUE);
             $html.= $this->admin_leftli($cur_page,'uploadindex','admin/uploadindex',$this->lang->line('uploadfile_header'),'glyphicon-picture',TRUE);
             $html.= $this->admin_leftli($cur_page,'pages','admin/pages',$this->lang->line('pages_header'),'glyphicon-file',TRUE);
             $html.= $this->admin_leftli($cur_page,'navigation','admin/navigation',$this->lang->line('nav_nav_header'),'glyphicon-object-align-top',TRUE);       

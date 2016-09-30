@@ -435,7 +435,70 @@ class Csz_model extends CI_Model {
             $ori_content = $this->linkFromHtml($ori_content);
         }
         $ori_content = $this->frmNameInHtml($ori_content, $page, $url_segment);
+        $ori_content = $this->widgetInHtml($ori_content);
         return $ori_content;
+    }
+    
+    public function widgetInHtml($content) { /* Find the widget in content */
+        $txt_nonhtml = strip_tags($content);
+        if (strpos($txt_nonhtml, '[?]{=widget:') !== false) {
+            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
+            $array = explode("[?]", $txt_nonline);
+            if(!empty($array)){
+                foreach ($array as $key => $value) {
+                    $widget_name[] = $array[$key];
+                }    
+            }
+            if(!empty($widget_name)){
+                foreach ($widget_name as $val) {
+                    if (strpos($val, '{=widget:') !== false) {
+                        $rep_arr = array('{=widget:', '}');
+                        $wid_name = str_replace($rep_arr, '', $val);                       
+                        $content = $this->addWidgetToHTML($content, $wid_name);                        
+                    }  
+                }
+            }
+        }
+        return $content;
+    }
+    
+    public function addWidgetToHTML($content, $wid_name) {
+        $getWidget = $this->getValue('*', 'widget_xml', "active = '1' AND widget_name = '".$wid_name."' AND xml_url != '' AND limit_view != '0'", '', 1);
+        if($getWidget !== FALSE){
+            $html = '<div class="panel panel-default">
+            <div class="panel-heading"><b>'.$getWidget->widget_name.'</b></div>
+            <div class="panel-body">';
+            $xml = simplexml_load_file($getWidget->xml_url);
+            if($xml !== FALSE){
+                if($xml->plugin[0]->null == 0){
+                    $i = 1;
+                    foreach ($xml->plugin[0]->item as $item) {
+                        $html.= '<div class="row">
+                                    <div class="col-md-3">
+                                        <a href="'.$item->sub_url.'" title="'.$item->title.'">
+                                            <img class="img-responsive img-thumbnail" src="'.$item->photo.'" alt="'.$item->title.'">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <a href="'.$item->sub_url.'" title="'.$item->title.'"><h4>'.$item->title.'</h4></a><br>
+                                        <p>'.$item->short_desc.'</p>
+                                    </div>
+                                </div><hr>';
+                        if($i === $getWidget->limit_view){
+                            break;
+                        }
+                        $i++;
+                    }
+                }else{
+                    $html.= '<h4 class="error">'.$this->getLabelLang('shop_notfound').'</h4>';
+                }
+                $html.= '</div>
+                <div class="panel-footer text-right"><a href="'.$xml->plugin[0]->main_url.'" class="btn btn-primary btn-sm">'.$this->getLabelLang('article_readmore_text').'</a></div>';
+            }
+            $html.= '</div>';
+            $content = str_replace('[?]{=widget:' . $getWidget->widget_name . '}[?]', $html, $content);
+        }
+        return $content;
     }
     
     public function linkFromHtml($content) { /* Find and replace a tag in content */
@@ -486,7 +549,7 @@ class Csz_model extends CI_Model {
                         $rep_arr = array('{=forms:', '}');
                         $frm_name = str_replace($rep_arr, '', $val);
                         $content = $this->addFrmToHtml($content, $frm_name, $page, $url_segment);
-                        break;
+                        break; /* Break for reCaptcha one form per page only */
                     }  
                 }
             }

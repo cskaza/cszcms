@@ -1,7 +1,7 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.1
-x- Add shopping cart plugin.
-x- Add get plugin widget on content page.
+- Add shopping cart plugin.
+- Add get plugin widget on content page.
 - Add login logs for backend.
 - Add feed libraries ('atom' or 'rss').
 - Add linkstats index number field in TinyMCE on link plugin.

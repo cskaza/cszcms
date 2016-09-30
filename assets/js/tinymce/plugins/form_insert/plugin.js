@@ -24,21 +24,31 @@ tinymce.PluginManager.add('form_insert', function (editor) {
         return appendItems(inputList, startItems || []);
     }
 
-    function displayHtml(form_name) {
+    function displayHtml(type, name) {
         var newTable;
-        newTable = '[?]{=forms:'+form_name+'}[?]';
+        newTable = '[?]{='+type+':'+name+'}[?]';
         return newTable;
     }
     function showPopup() {
         // Open window
+        var selType = [
+            {text: 'Forms', value: 'forms'},
+            {text: 'Widget', value: 'widget'}
+        ];
         editor.windowManager.open({
-            title: 'CSZ-CMS Forms',
+            title: 'CSZ-CMS Forms/Widget',
             body: [
-                {type: 'textbox', name: 'form_name', label: 'Forms Name', size: 40}
+                {
+                    name: 'type',
+                    type: 'listbox',
+                    label: 'Type',
+                    values: buildListItems(selType)
+                },
+                {type: 'textbox', name: 'name', label: 'Name', size: 40}
             ],
             onsubmit: function (e) {
                 // Insert content when the window form is submitted
-                var div = displayHtml(e.data.form_name);
+                var div = displayHtml(e.data.type,e.data.name);
                 editor.execCommand('mceInsertContent', false, div);
             }
         });
@@ -48,7 +58,7 @@ tinymce.PluginManager.add('form_insert', function (editor) {
     editor.addButton('form_insert', {
         /*text: 'PN',*/
         icon: 'glyphicons guicon guicon-form',
-        tooltip: 'Insert Forms',
+        tooltip: 'Insert Forms/Widget',
         onclick: function () {
             showPopup();
         }

@@ -382,3 +382,13 @@ $lang['pluginmgr_status']              = "Plugin Status";
 $lang['pluginmgr_enable']               = "Enable";
 $lang['pluginmgr_disable']               = "Disable";
 $lang['pluginmgr_manage']               = "Manage";
+
+// Widget Builder
+$lang['widget_header']               = "Plugin Widgets";
+$lang['widget_new_header']		= "New Widget";
+$lang['widget_edit_header']		= "Edit Widget";
+$lang['widget_active']                    = "Active";
+$lang['widget_name']                 = "Widget Name";
+$lang['widget_xml_url']                 = "Widget XML URL";
+$lang['widget_limit_view']                 = "Show Limit";
+$lang['widget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see Widget Name<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";

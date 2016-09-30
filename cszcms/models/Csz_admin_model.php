@@ -1381,5 +1381,31 @@ class Csz_admin_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    public function insertWidget() {
+        // Create the new lang
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $data = array(
+            'widget_name' => $this->input->post('widget_name', TRUE),
+            'xml_url' => $this->input->post('xml_url', TRUE),
+            'limit_view' => $this->input->post('limit_view', TRUE),
+            'active' => $active,
+        );
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('widget_xml', $data);
+    }
+
+    public function updateWidget($id) {
+        // Update the lang
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $this->db->set('widget_name', $this->input->post("widget_name", TRUE));
+        $this->db->set('xml_url', $this->input->post("xml_url", TRUE));
+        $this->db->set('limit_view', $this->input->post('limit_view', TRUE));
+        $this->db->set('active', $active);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('widget_xml_id', $id);
+        $this->db->update('widget_xml');
+    }
 
 }

@@ -174,6 +174,10 @@ $route['admin/plugin/([a-zA-Z]+)/:num'] = "admin/plugin/$1";
 $route['admin/plugin/([a-zA-Z]+)'] = "admin/plugin/$1";
 $route['admin/plugin/:num'] = "admin/Plugin_manager";
 $route['admin/plugin'] = "admin/Plugin_manager";
+$route['admin/widget/([a-zA-Z]+)/:num'] = "admin/widget/$1";
+$route['admin/widget/([a-zA-Z]+)'] = "admin/widget/$1";
+$route['admin/widget/:num'] = "admin/widget";
+$route['admin/widget'] = "admin/widget";
 
 $route['member'] = 'Member';
 $route['member/login'] = 'Member/login';

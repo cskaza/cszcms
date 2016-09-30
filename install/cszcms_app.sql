@@ -529,12 +529,12 @@ CREATE TABLE IF NOT EXISTS `shop_shipping` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `widget_xml` (
-  `widget_xml_id` int(11) NOT NULL,
+  `widget_xml_id` int(11) NOT NULL AUTO_INCREMENT,
   `widget_name` varchar(255) NOT NULL,
   `xml_url` varchar(255) NOT NULL,
   `limit_view` int(11) NOT NULL,
   `active` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`shop_shipping_id`)
+  PRIMARY KEY (`widget_xml_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
