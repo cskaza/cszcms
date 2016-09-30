@@ -202,5 +202,46 @@ class Article extends CI_Controller {
         // show your feed (options: 'atom' (recommended) or 'rss')
         $feed->render('rss');
     }
+    
+    public function getWidget() {
+        // For New Category
+        $this->load->library('Xml_writer');
+        // Initiate class
+        $xml = new Xml_writer;
+        $xml->setRootName('csz_widget');
+        $xml->initiate();
+        // Start Main branch
+        $xml->startBranch('plugin'); 
+        $xml->addNode('main_url', BASE_URL.'/plugin/article');
+        // Get article 10 items
+        $lang = $this->session->userdata('fronlang_iso');
+        $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$lang."'";
+        $limit = 20;
+        $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
+        if($article !== FALSE){
+            $xml->addNode('null', '0'); // For check item is not empty
+            foreach ($article as $row) {
+                // start sub branch
+                $xml->startBranch('item', array('id' => $row['article_db_id'])); 
+                $xml->addNode('sub_url', BASE_URL.'/plugin/article/view/'.$row['article_db_id'].'/'.$row['url_rewrite']);
+                $xml->addNode('title', $row['title']);
+                $xml->addNode('short_desc', $row['short_desc']);
+                if($row['main_picture']){
+                    $xml->addNode('photo', BASE_URL.'/photo/plugin/article/'.$row['main_picture']);
+                }else{
+                    $xml->addNode('photo', BASE_URL.'photo/no_image.png');
+                }
+                // End sub branch
+                $xml->endBranch();
+            }
+        }else{
+            $xml->addNode('null', '1'); // For check item is empty
+        }
+        // End Main branch 
+        $xml->endBranch();
+        // Print the XML to screen
+        $xml->getXml(true);
+        exit();
+    }
 
 }
