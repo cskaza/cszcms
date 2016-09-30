@@ -19,6 +19,7 @@ defined('FCPATH') OR exit('No direct script access allowed');
 $proxy_ip_arr = array(
     /* Important! Please not remove this! */
     /* (Start Cloudflare) */
+    /* IPv4 */
     '103.21.244.0/22',
     '103.22.200.0/22',
     '103.31.4.0/22',
@@ -34,6 +35,14 @@ $proxy_ip_arr = array(
     '197.234.240.0/22',
     '198.41.128.0/17',
     '199.27.128.0/21',
+    /* IPv6 */
+    '2400:cb00::/32',
+    '2405:8100::/32',
+    '2405:b500::/32',
+    '2606:4700::/32',
+    '2803:f800::/32',
+    '2c0f:f248::/32',
+    '2a06:98c0::/29',
     /* (End Cloudflare) */
     /* Please add new after this. Example: '10.0.1.200', */
     #'127.0.0.1',
