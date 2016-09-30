@@ -296,7 +296,37 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (58, 'picture_not_found', 'For picture not found text', 'Picture not found!', '2016-07-15 15:35:40'),
 (59, 'gellery_view_btn', 'For gallery view button', 'View Gallery', '2016-07-15 15:41:19'),
 (60, 'article_archive', 'For article archive text', 'Archive', '2016-07-21 10:39:19'),
-(61, 'article_updatedate', 'For article updatetime text', 'Updated date', '2016-07-21 10:39:19');
+(61, 'article_updatedate', 'For article updatetime text', 'Updated date', '2016-07-21 10:39:19'),
+(62, 'shop_new_product', 'For new product label', 'New Products', '2016-09-19 16:26:59'),
+(63, 'shop_hot_product', 'For hot product label', 'Hot Products', '2016-09-19 16:26:59'),
+(64, 'shop_bestseller_product', 'For beset seller label', 'Best Seller', '2016-09-19 16:26:59'),
+(65, 'shop_soldout_product', 'For soldout label', 'Sold Out', '2016-09-19 16:26:59'),
+(66, 'shop_see_more', 'For see more button', 'See More', '2016-09-19 16:28:41'),
+(67, 'shop_product_category', 'For product category label', 'Products Category', '2016-09-19 16:28:41'),
+(68, 'shop_cart_text', 'For cart text', 'Shopping Cart', '2016-09-19 16:44:00'),
+(69, 'shop_notfound', 'For data not found', 'Data not found!', '2016-09-19 17:31:26'),
+(70, 'shop_view_btn', 'For view button', 'View', '2016-09-20 17:17:59'),
+(71, 'shop_price_txt', 'For price text.', 'Price', '2016-09-21 17:53:25'),
+(72, 'shop_add_to_cart_btn', 'For Add to cart button', 'Add to Cart', '2016-09-21 17:53:25'),
+(73, 'shop_option_txt', 'For option text', 'Additional Option', '2016-09-22 10:51:25'),
+(74, 'shop_product_code_txt', 'For product code text', 'Product Code', '2016-09-22 11:00:53'),
+(75, 'shop_home_txt', 'For home text', 'Home', '2016-09-22 15:24:07'),
+(76, 'shop_product_search_txt', 'For product search text', 'Products Search', '2016-09-22 15:47:27'),
+(77, 'shop_qty_txt', 'For quantity text', 'Qty', '2016-09-22 16:02:59'),
+(78, 'shop_product_name_txt', 'For product name text', 'Product Name', '2016-09-22 17:56:16'),
+(79, 'shop_amount_txt', 'For amount text', 'Amount', '2016-09-22 17:56:16'),
+(80, 'shop_clear_cart_txt', 'For clear cart text', 'Clear Cart', '2016-09-22 17:56:16'),
+(81, 'shop_place_order_txt', 'For place order text', 'Place Order', '2016-09-22 17:56:16'),
+(82, 'shop_order_total_txt', 'For order total text', 'Total', '2016-09-22 17:56:16'),
+(83, 'shop_delete_alert', 'For delete alert text', 'Do you want to do this ?', '2016-09-22 18:07:39'),
+(84, 'shop_payment_btn', 'For payment button text', 'Payment Now', '2016-09-23 15:23:48'),
+(85, 'shop_contact_detail_txt', 'For contact detail text', 'Contact Detail', '2016-09-23 15:27:55'),
+(86, 'shop_your_email_login', 'For your email logged in as text', 'Your email logged in as', '2016-09-23 16:55:09'),
+(87, 'shop_payment_methods', 'For payment methods text', 'Payment Methods', '2016-09-23 17:31:37'),
+(88, 'shop_bank_transfer', 'For bank transfer text', 'Bank Transfer', '2016-09-23 17:31:37'),
+(89, 'shop_special_price', 'For special price text', 'Special Price', '2016-09-25 19:51:06'),
+(90, 'shop_cancel_order_txt', 'For order cancel text', 'We are sorry! Your last transaction was cancelled.', '2016-09-26 10:53:09'),
+(91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09');
 
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -313,7 +343,8 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Article', 'article', '1.0.2', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25');
+(2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
+(3, 'Shopping', 'shop', '1.0.0', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -385,3 +416,128 @@ CREATE TABLE IF NOT EXISTS `login_logs` (
   `timestamp_create` datetime NOT NULL,
   PRIMARY KEY (`login_logs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_category` (
+  `shop_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `shop_category_main_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `url_rewrite` varchar(255) NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `short_desc` varchar(255) NOT NULL,
+  `active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_category_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_config` (
+  `shop_config_id` int(11) NOT NULL AUTO_INCREMENT,
+  `stat_new_show` int(11) NOT NULL,
+  `stat_hot_show` int(11) NOT NULL,
+  `stat_bestseller_show` int(11) NOT NULL,
+  `stat_soldout_show` int(11) NOT NULL,
+  `paypal_active` int(11) NOT NULL,
+  `sanbox_active` int(11) NOT NULL,
+  `paypal_email` varchar(255) NOT NULL,
+  `paysbuy_active` int(11) NOT NULL,
+  `paysbuy_email` varchar(255) NOT NULL,
+  `bank_detail` text NOT NULL,
+  `currency_code` varchar(10) NOT NULL,
+  `seller_email` varchar(255) NOT NULL,
+  `order_subject` varchar(255) NOT NULL,
+  `order_body` text NOT NULL,
+  `payment_subject` varchar(255) NOT NULL,
+  `payment_body` text NOT NULL,
+  `signature` text NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_config_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+INSERT INTO `shop_config` (`shop_config_id`, `stat_new_show`, `stat_hot_show`, `stat_bestseller_show`, `stat_soldout_show`, `paypal_active`, `sanbox_active`, `paypal_email`, `paysbuy_active`, `paysbuy_email`, `bank_detail`, `currency_code`, `seller_email`, `order_subject`, `order_body`, `payment_subject`, `payment_body`, `signature`, `timestamp_update`) VALUES
+(1, 1, 1, 1, 0, 0, 0, '', 0, '', '<h2>Bank Detail:</h2>\r\n<h4><strong>Example Bank (Test Branch)</strong></h4>\r\n<p><strong>ACC ID :</strong> 857-1531-19-9<br /> <strong>ACC Name :</strong> Example Tester</p>\r\n<p><em>After transfer the payment. Please send the payslip to test@example.com</em></p>', 'USD', '', 'Thank you for your order!', '<div class="moz-text-html" lang="x-unicode">\r\n<p><strong>Dear Valued Customer,</strong></p>\r\n<p><strong></strong><br /></p>\r\n<p>Thank you very much for your order.&nbsp;After payment successed. Your order is being processed and will be shipped to you.</p>\r\n<p><strong></strong></p>\r\n</div>', 'Your payment has now been confirmed!', '<p><strong>Dear Valued Customer,</strong></p>\r\n<p><strong></strong><br /></p>\r\n<p>Thank you for your order. Your payment has now been confirmed.&nbsp;Your order is already being processed and will be shipped to you.</p>', '<p><strong>Regards,</strong></p>\r\n<p><strong>Shopping Web Team</strong><br /><strong>Tel: (001)&nbsp;234 567 8910</strong><br /><strong>Email: test@example.com</strong></p>', '2016-09-27 12:59:09');
+
+CREATE TABLE IF NOT EXISTS `shop_payment` (
+  `shop_payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sha1_hash` varchar(255) NOT NULL,
+  `inv_id` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `payment_methods` varchar(100) NOT NULL,
+  `price_total` double NOT NULL,
+  `order_detail` text NOT NULL,
+  `user_agent` varchar(255) NOT NULL,
+  `ip_address` varchar(100) NOT NULL,
+  `payment_status` varchar(100) NOT NULL,
+  `shipping` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_payment_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_product` (
+  `shop_product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(255) NOT NULL,
+  `url_rewrite` varchar(255) NOT NULL,
+  `shop_category_id` int(11) NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `short_desc` varchar(255) NOT NULL,
+  `full_desc` text NOT NULL,
+  `price` double NOT NULL,
+  `discount` double NOT NULL,
+  `stock` int(11) NOT NULL,
+  `product_code` varchar(100) NOT NULL,
+  `product_status` varchar(255) NOT NULL,
+  `active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_product_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_product_imgs` (
+  `shop_product_imgs_id` int(11) NOT NULL AUTO_INCREMENT,
+  `shop_product_id` int(11) NOT NULL,
+  `file_upload` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `arrange` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_product_imgs_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_product_option` (
+  `shop_product_option_id` int(11) NOT NULL AUTO_INCREMENT,
+  `shop_product_id` int(11) NOT NULL,
+  `field_type` varchar(100) NOT NULL,
+  `field_name` varchar(255) NOT NULL,
+  `field_placeholder` varchar(255) NOT NULL,
+  `field_value` varchar(255) NOT NULL,
+  `field_label` varchar(255) NOT NULL,
+  `field_sel_value` text NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_product_option_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `shop_shipping` (
+  `shop_shipping_id` int(11) NOT NULL AUTO_INCREMENT,
+  `inv_id` varchar(100) NOT NULL,
+  `shipping_name` varchar(255) NOT NULL,
+  `shipping_id` varchar(100) NOT NULL,
+  `note` text NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_shipping_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `widget_xml` (
+  `widget_xml_id` int(11) NOT NULL,
+  `widget_name` varchar(255) NOT NULL,
+  `xml_url` varchar(255) NOT NULL,
+  `limit_view` int(11) NOT NULL,
+  `active` int(11) NOT NULL,
+  `timestamp_create` datetime NOT NULL,
+  `timestamp_update` datetime NOT NULL,
+  PRIMARY KEY (`shop_shipping_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
