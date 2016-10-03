@@ -6,6 +6,7 @@ $lang['article_title']                  = "หัวข้อ/รายละเ
 $lang['article_author']                 = "ผู้เขียน";
 $lang['article_datetime']               = "วัน/เวลา";
 $lang['category_header']		= "หมวดหมู่";
+$lang['article_widget_remark']		= "{language_iso} เป็นต่อย่อภาษาสำหรับหน้าเว็บ. คุณสามารถดูได้ในส่วนของ 'ภาษา' บนระบบเบื้องหลัง";
 
 //Article new/edit
 $lang['article_new_header']		= "บทความใหม่";
