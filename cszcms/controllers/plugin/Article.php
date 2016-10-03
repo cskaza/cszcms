@@ -214,8 +214,7 @@ class Article extends CI_Controller {
         $xml->startBranch('plugin'); 
         $xml->addNode('main_url', BASE_URL.'/plugin/article');
         // Get article 10 items
-        $lang = $this->session->userdata('fronlang_iso');
-        $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$lang."'";
+        $search_arr = " is_category = '0' AND active = '1'";
         $limit = 20;
         $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
         if($article !== FALSE){
