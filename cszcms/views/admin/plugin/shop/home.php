@@ -84,6 +84,14 @@
 <div class="row">
     <div class="col-lg-12" style="word-wrap:break-word;">
         <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('widget_xml_url') ?></h3></div>
+            <div class="panel-body">
+                <h5><b><?php echo $this->lang->line('shop_stat_new') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/new' ?></h5>
+                <h5><b><?php echo $this->lang->line('shop_stat_hot') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/hot' ?></h5>
+                <h5><b><?php echo $this->lang->line('shop_stat_bestseller') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/bestseller' ?></h5>
+            </div>
+        </div>
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i><span class="glyphicon glyphicon-usd"></span></i> <?php echo $this->lang->line('shop_paymentrecent') ?></h3>
             </div>

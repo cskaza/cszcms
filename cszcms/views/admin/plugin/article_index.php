@@ -11,6 +11,12 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('widget_xml_url') ?></h3></div>
+            <div class="panel-body">
+                <h5><b><?php echo $this->lang->line('article_header') ?>:</b> <?php echo BASE_URL.'/plugin/article/getWidget' ?></h5>
+            </div>
+        </div>
         <div class="h2 sub-header"><div class="row"><div class="text-left col-xs-8"><?php echo  $this->lang->line('article_header') ?> <a role="button" href="<?php echo BASE_URL?>/admin/plugin/article/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('article_new_header') ?></a></div><div class="text-right col-xs-4"><a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div></div></div>
         <form action="<?php echo current_url(); ?>" method="get">
             <div class="control-group">
