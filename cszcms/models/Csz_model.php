@@ -484,7 +484,7 @@ class Csz_model extends CI_Model {
                                         <p>'.$item->short_desc.'</p>
                                     </div>
                                 </div><hr>';
-                        if($i === $getWidget->limit_view){
+                        if($i == $getWidget->limit_view){
                             break;
                         }
                         $i++;

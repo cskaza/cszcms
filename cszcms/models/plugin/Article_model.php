@@ -61,7 +61,7 @@ class Article_model extends CI_Model {
         }else{
             if ($this->input->post('del_file')) {
                 $upload_file = '';
-                unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
+                @unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('mainPicture');
                 if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
