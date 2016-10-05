@@ -27,9 +27,6 @@ class Shop extends CI_Controller {
             $this->session->unset_userdata('fronlang_iso');
             $this->Csz_model->setSiteLang();
         }
-        if ($row->pagecache_time != 0) {
-            $this->db->cache_on();
-        }
         $this->_init();
         member_helper::plugin_not_active($this->uri->segment(2));
     }

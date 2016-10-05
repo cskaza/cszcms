@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package	Csz_model
+ * @author	CSKAZA
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {

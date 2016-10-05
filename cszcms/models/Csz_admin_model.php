@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @package	Csz_admin_model
+ * @author	CSKAZA
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_admin_model extends CI_Model {
@@ -21,6 +27,14 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
+    /**
+    * Get Latest Version From Server
+    *
+    * Function for get latest version from xml url
+    *
+    * @param	string	$xml_url    xml url file
+    * @return	array or FALSE
+    */
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url){
             $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
