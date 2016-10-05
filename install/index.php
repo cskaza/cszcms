@@ -68,6 +68,9 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <meta name="robots" content="no-cache" />
         <meta name="description" content="Backend System for CSZ Content Management" />
         <meta name="keywords" content="CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english" />
@@ -158,7 +161,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
                                     <br><span class="remark">
                                         <b>Your PHP Version: <?php echo phpversion(); ?></b><br>
-                                        <b>* Required for MySQLi (PHP 5.3 or higher, MySQL 5.0 or higher)</b><br>
+                                        <b>* Required for MySQLi (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
                                         <b>* Please create the database on your hosting control panel.</b><br><br>
                                         <b>When you have problem or question. Please contact us at</b><br>
                                         <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
