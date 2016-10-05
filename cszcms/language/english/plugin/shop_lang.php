@@ -15,6 +15,7 @@ $lang['shop_dashboard_totalcomplete']   = "Total Payment Complete";
 $lang['shop_dashboard_totalorder']      = "Total Orders";
 $lang['shop_dashboard_totalshipping']   = "Total Shipping";
 $lang['shop_dashboard_totalproduct']   = "Total Products";
+$lang['shop_allproducts']                  = "All Products";
 
 // Shop Config
 $lang['shop_config_header']             = "Shopping Settings";

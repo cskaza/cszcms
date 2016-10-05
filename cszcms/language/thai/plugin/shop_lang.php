@@ -15,6 +15,7 @@ $lang['shop_dashboard_totalcomplete']   = "การชำระเงินส�
 $lang['shop_dashboard_totalorder']   = "รวมคำสั่งซื้อทั้งหมด";
 $lang['shop_dashboard_totalshipping']   = "รวมการจัดส่งสินค้าทั้งหมด";
 $lang['shop_dashboard_totalproduct']    = "รวมสินค้าทั้งหมด";
+$lang['shop_allproducts']                  = "สินค้าทั้งหมด";
 
 // Shop Config
 $lang['shop_config_header']             = "ตั้งค่าร้านค้า";

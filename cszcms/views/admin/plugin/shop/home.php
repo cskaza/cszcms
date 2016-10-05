@@ -89,6 +89,7 @@
                 <h5><b><?php echo $this->lang->line('shop_stat_new') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/new' ?></h5>
                 <h5><b><?php echo $this->lang->line('shop_stat_hot') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/hot' ?></h5>
                 <h5><b><?php echo $this->lang->line('shop_stat_bestseller') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget/bestseller' ?></h5>
+                <h5><b><?php echo $this->lang->line('shop_allproducts') ?>:</b> <?php echo BASE_URL.'/plugin/shop/getWidget' ?></h5>
             </div>
         </div>
         <div class="panel panel-default">
