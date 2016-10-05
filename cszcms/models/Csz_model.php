@@ -154,9 +154,9 @@ class Csz_model extends CI_Model {
         $this->db->order_by($field_id, 'DESC');
         $this->db->limit(1, 0);
         $query = $this->db->get($table);
-        if(!empty($query)){
-            $row = $query->result_array();
-            return $row[$field_id];
+        if(!empty($query) && $query->num_rows() > 0){
+            $row = $query->row();
+            return $row->$field_id;
         }else{
             return 0;
         }
