@@ -54,7 +54,7 @@ class Upgrade extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
-            $url = "http://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
+            $url = "https://www.cszcms.com/downloads/upgrade/upgrade-to-" . $this->Csz_admin_model->findNextVersion($this->cur_version) . ".zip";
             $newfname = FCPATH . basename($url);
             if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
                 if (file_exists($newfname)) {
