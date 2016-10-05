@@ -36,7 +36,7 @@
                 <tbody>
                     <?php if ($shipping === FALSE) { ?>
                         <tr>
-                            <td colspan="6" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
