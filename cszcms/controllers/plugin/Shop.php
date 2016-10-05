@@ -243,7 +243,6 @@ class Shop extends CI_Controller {
                 $row = $this->Csz_model->load_config();
                 $shop_config = $this->Shop_model->load_config();
                 $this->load->helper('form');
-                $this->output->cache($row->pagecache_time);
                 $title = $art_row->product_name . ' | ' . $row->site_name;
                 $this->template->set('title', $title);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc, $art_row->keyword, $title));
