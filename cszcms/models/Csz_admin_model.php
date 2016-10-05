@@ -1372,12 +1372,18 @@ class Csz_admin_model extends CI_Model {
             $backup = read_file($sql_file);
             $sql1 = preg_replace('#/\*.*?\*/#s', '', $backup);
             $sql2 = preg_replace('/^-- .*[\r\n]*/m', '', $sql1);
-            $sqls = explode(';', $sql2);
-            array_pop($sqls);
-            foreach($sqls as $statement){
-                $sql = $statement . ";";
-                $this->db->query($sql);
-            }
+            $asql = explode("\n", $sql2);
+            $i = 0;
+            foreach ( $asql as $key ) {
+                if ( trim($key) != null ) {
+                    $this->db->query(trim($key));
+                    if ( $i >= 1000 ) { /* When 1000 query. Is sleep 3 sec. */
+                        sleep(3);
+                        $i = 0;
+                    }
+                    $i++;
+                }
+            }     
         }else{
             return FALSE;
         }
