@@ -15,7 +15,14 @@ class Csz_admin_model extends CI_Model {
         $this->load->model('Csz_model');
         $this->load->database();
     }
-
+    
+    /**
+    * Load Config
+    *
+    * Function for load settings from database
+    *
+    * @return	object or FALSE
+    */
     public function load_config() {
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
@@ -39,7 +46,11 @@ class Csz_admin_model extends CI_Model {
         if (!$xml_url){
             $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
         }
-        $xml = simplexml_load_file($xml_url);
+        if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
+            $xml = simplexml_load_file($xml_url);
+        }else{
+            $xml = FALSE;
+        }
         if($xml !== FALSE){
             return $xml;
         }else{
@@ -47,6 +58,14 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
+    /**
+    * Set session version
+    *
+    * Function for set version into session
+    *
+    * @param	string	$xml_url    xml url file
+    * @return	string
+    */
     public function setSessionLastVer($xml_url) {
         if(!$this->session->userdata('cszcms_lastver')){
             $xml = $this->getLatestVersion($xml_url);
@@ -64,7 +83,16 @@ class Csz_admin_model extends CI_Model {
         }
         return $xml_version;
     }
-
+    
+    /**
+    * Check version update
+    *
+    * Function for check version for update
+    *
+    * @param	string	$cur_txt    current version
+    * @param	string	$xml_url    xml url file
+    * @return	string or false
+    */
     public function chkVerUpdate($cur_txt, $xml_url = '') {
         $cur_r = array();
         $cur_xml = explode(' ', $cur_txt);
@@ -91,6 +119,15 @@ class Csz_admin_model extends CI_Model {
         }
     }
     
+    /**
+    * Find next version number
+    *
+    * Function for check version for update
+    *
+    * @param	string	$cur_txt    current version
+    * @param	string	$xml_url    xml url file
+    * @return	string or false
+    */
     public function findNextVersion($cur_txt, $xml_url = '') {
         /* sub version is limit x.9.9 */
         $cur_r = array();
@@ -145,6 +182,14 @@ class Csz_admin_model extends CI_Model {
         return $pageURL;
     }
 
+    /**
+    * Count table
+    *
+    * Function for count in the table
+    *
+    * @param	string	$table    DB table
+    * @return	int
+    */
     public function countTable($table) {
         return $this->db->count_all($table);
     }

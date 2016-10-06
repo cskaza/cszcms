@@ -14,12 +14,24 @@ class Csz_model extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-
+    
+    /**
+    * Get Version From url
+    *
+    * Function for get current version from xml url
+    *
+    * @param	string	$xml_url    xml url file
+    * @return	string or FALSE
+    */
     public function getVersion($xml_url = '') {
         if (!$xml_url) { 
-            $xml_file = BASE_URL . '/version.xml';
+            $xml_url = BASE_URL . '/version.xml';
         }
-        $xml = simplexml_load_file($xml_file);
+        if($this->is_url_exist($xml_url) !== FALSE){
+            $xml = simplexml_load_file($xml_url);
+        }else{
+            $xml = FALSE;
+        }       
         if ($xml !== FALSE && $xml->version) {
             if ($xml->release == 'beta') {
                 $beta = ' Beta';
@@ -475,32 +487,34 @@ class Csz_model extends CI_Model {
             $html = '<div class="panel panel-default">
             <div class="panel-heading"><b>'.$getWidget->widget_name.'</b></div>
             <div class="panel-body">';
-            $xml = simplexml_load_file($getWidget->xml_url);
-            if($xml !== FALSE){
-                if($xml->plugin[0]->null == 0){
-                    $i = 1;
-                    foreach ($xml->plugin[0]->item as $item) {
-                        $html.= '<div class="row">
-                                    <div class="col-md-3">
-                                        <a href="'.$item->sub_url.'" title="'.$item->title.'">
-                                            <img class="img-responsive img-thumbnail" src="'.$item->photo.'" alt="'.$item->title.'">
-                                        </a>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <a href="'.$item->sub_url.'" title="'.$item->title.'"><h4>'.$item->title.'</h4></a><br>
-                                        <p>'.$item->short_desc.'</p>
-                                    </div>
-                                </div><hr>';
-                        if($i == $getWidget->limit_view){
-                            break;
+            if($this->is_url_exist($getWidget->xml_url) !== FALSE){
+                $xml = simplexml_load_file($getWidget->xml_url);
+                if($xml !== FALSE){
+                    if($xml->plugin[0]->null == 0){
+                        $i = 1;
+                        foreach ($xml->plugin[0]->item as $item) {
+                            $html.= '<div class="row">
+                                        <div class="col-md-3">
+                                            <a href="'.$item->sub_url.'" title="'.$item->title.'">
+                                                <img class="img-responsive img-thumbnail" src="'.$item->photo.'" alt="'.$item->title.'">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <a href="'.$item->sub_url.'" title="'.$item->title.'"><h4>'.$item->title.'</h4></a><br>
+                                            <p>'.$item->short_desc.'</p>
+                                        </div>
+                                    </div><hr>';
+                            if($i == $getWidget->limit_view){
+                                break;
+                            }
+                            $i++;
                         }
-                        $i++;
+                    }else{
+                        $html.= '<h4 class="error">'.$this->getLabelLang('shop_notfound').'</h4>';
                     }
-                }else{
-                    $html.= '<h4 class="error">'.$this->getLabelLang('shop_notfound').'</h4>';
+                    $html.= '</div>
+                    <div class="panel-footer text-right"><a href="'.$xml->plugin[0]->main_url.'" class="btn btn-primary btn-sm">'.$this->getLabelLang('article_readmore_text').'</a></div>';
                 }
-                $html.= '</div>
-                <div class="panel-footer text-right"><a href="'.$xml->plugin[0]->main_url.'" class="btn btn-primary btn-sm">'.$this->getLabelLang('article_readmore_text').'</a></div>';
             }
             $html.= '</div>';
             $content = str_replace('[?]{=widget:' . $getWidget->widget_name . '}[?]', $html, $content);
@@ -947,6 +961,23 @@ class Csz_model extends CI_Model {
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->insert('email_logs', $data);
         return $result;
+    }
+    
+    /**
+    * is_url_exist
+    *
+    * Function for check url is exist
+    *
+    * @param	string	$url    url file
+    * @return	TRUE or FALSE
+    */
+    public function is_url_exist($url){
+        $headers = get_headers($url);
+        if(stripos($headers[0],'200') || stripos($headers[0],'301') || stripos($headers[0],'302')){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
     }
     
 }
