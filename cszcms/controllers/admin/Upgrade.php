@@ -220,7 +220,7 @@ class Upgrade extends CI_Controller {
             $data = read_file(APPPATH . '/logs/'.$log_file);
             $string = str_replace("<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>", '', $data);
             $this->load->helper('download');
-            force_download('errorlog_'.date('Ymd').'.txt', $string);
+            force_download('error_'.str_replace('.php', '', $log_file).'.txt', $string);
         }else{
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');

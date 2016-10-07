@@ -972,7 +972,7 @@ class Csz_model extends CI_Model {
     * @return	TRUE or FALSE
     */
     public function is_url_exist($url){
-        $headers = get_headers($url);
+        $headers = @get_headers($url);
         if(stripos($headers[0],'200') || stripos($headers[0],'301') || stripos($headers[0],'302')){
             return TRUE;
         }else{

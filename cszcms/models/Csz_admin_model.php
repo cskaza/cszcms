@@ -44,7 +44,7 @@ class Csz_admin_model extends CI_Model {
     */
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url){
-            $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
+            $xml_url = 'http://www.cszcms.com/downloads/lastest_version.xml';
         }
         if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
             $xml = simplexml_load_file($xml_url);
