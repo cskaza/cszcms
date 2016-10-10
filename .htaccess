@@ -1,6 +1,5 @@
 # For Cloudflare allow IPs
 allow from all
-RewriteOptions inherit
 <IfModule mod_expires.c>
         ExpiresActive On
         ExpiresDefault "access plus 1 day"
@@ -16,6 +15,7 @@ RewriteOptions inherit
 </IfModule>
 <IfModule mod_headers.c>
     Header set Connection keep-alive
+    Header unset ETag
     <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
             Header set Cache-Control "max-age=290304000, public"
     </FilesMatch>
@@ -38,6 +38,7 @@ RewriteOptions inherit
 </ifModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteOptions inherit
     # For force HTTPS using only
 #    RewriteCond %{SERVER_PORT} 80 
 #    RewriteRule ^(.*)$ https://www.domain.tld/$1 [L,R=301]

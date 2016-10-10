@@ -492,7 +492,7 @@ class Csz_model extends CI_Model {
             <div class="panel-heading"><b>'.$getWidget->widget_name.'</b></div>
             <div class="panel-body">';
             if($this->is_url_exist($getWidget->xml_url) !== FALSE){
-                $xml = simplexml_load_file($getWidget->xml_url);
+                $xml = @simplexml_load_file($getWidget->xml_url);
                 if($xml !== FALSE){
                     if($xml->plugin[0]->null == 0){
                         $i = 1;

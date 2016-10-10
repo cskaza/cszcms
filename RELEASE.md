@@ -2,6 +2,7 @@
 CSZ-CMS V.1.1.2
 - Fix is_url_exist function error with https.
 - Fix get version error.
+- Fix .htaccess for performance.
 
 CSZ-CMS V.1.1.1
 - Add shopping cart plugin.
