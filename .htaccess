@@ -16,8 +16,11 @@ allow from all
 <IfModule mod_headers.c>
     Header set Connection keep-alive
     Header unset ETag
-    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|woff|woff2|svg)$">
             Header set Cache-Control "max-age=290304000, public"
+    </FilesMatch>
+    <FilesMatch "\.(js|css)$">
+            Header set Cache-Control "max-age=360000, public, must-revalidate"
     </FilesMatch>
     <FilesMatch "\.(xml|txt)$">
             Header set Cache-Control "max-age=3600, public, must-revalidate"
