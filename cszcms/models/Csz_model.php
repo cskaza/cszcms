@@ -25,12 +25,16 @@ class Csz_model extends CI_Model {
     */
     public function getVersion($xml_url = '') {
         if (!$xml_url) { 
-            $xml_url = BASE_URL . '/version.xml';
+            $xml_url = str_replace('https://', 'http://', BASE_URL) . '/version.xml';
         }
         if($this->is_url_exist($xml_url) !== FALSE){
-            $xml = simplexml_load_file($xml_url);
+            $xml = @simplexml_load_file($xml_url);
         }else{
-            $xml = FALSE;
+            if (file_exists(FCPATH . '/version.xml')) {
+                $xml = @simplexml_load_file(FCPATH . '/version.xml');
+            }else{
+                $xml = FALSE;
+            }
         }       
         if ($xml !== FALSE && $xml->version) {
             if ($xml->release == 'beta') {

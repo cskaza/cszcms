@@ -3,6 +3,7 @@ CSZ-CMS V.1.1.2
 x- Add forum plugin.
 x- Add files downloads plugin.
 - Fix is_url_exist function error with https.
+- Fix get version error.
 
 CSZ-CMS V.1.1.1
 - Add shopping cart plugin.

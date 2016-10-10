@@ -15,6 +15,7 @@ RewriteOptions inherit
         ExpiresByType image/x-icon "access plus 1 year"
 </IfModule>
 <IfModule mod_headers.c>
+    Header set Connection keep-alive
     <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|woff|woff2)$">
             Header set Cache-Control "max-age=290304000, public"
     </FilesMatch>
@@ -56,4 +57,8 @@ RewriteOptions inherit
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+    # Disable hotlinking of images
+#    RewriteCond %{HTTP_REFERER} !^$
+#    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?cszcms.com [NC]
+#    RewriteRule \.(jpg|jpeg|png|gif)$ – [NC,F,L]
 </IfModule>

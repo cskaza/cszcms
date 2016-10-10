@@ -3,6 +3,9 @@ if (!file_exists('config.inc.php')) {
 	header("Location: ./install");
 	exit();
 }
+if (function_exists('ini_set')) {
+    @ini_set('max_execution_time', 300);
+}
 /**
  * CodeIgniter
  *
