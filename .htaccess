@@ -8,10 +8,13 @@ allow from all
         ExpiresByType image/gif "access plus 5 days"
         ExpiresByType image/png "access plus 5 days"
         ExpiresByType text/css "access plus 1 month"
+	ExpiresByType text/javascript "access plus 1 month"
         ExpiresByType application/pdf "access plus 1 month"
         ExpiresByType text/x-javascript "access plus 1 month"
         ExpiresByType application/x-shockwave-flash "access plus 1 month"
         ExpiresByType image/x-icon "access plus 1 year"
+	ExpiresByType text/html "access plus 600 seconds"
+	ExpiresByType application/xhtml+xml "access plus 600 seconds"
 </IfModule>
 <IfModule mod_headers.c>
     Header set Connection keep-alive
@@ -29,6 +32,44 @@ allow from all
             Header set Cache-Control "max-age=3600, must-revalidate"
     </FilesMatch>
 </IfModule>
+# BEGIN Compress files
+<ifModule mod_deflate.c>
+    # Insert filters / compress text, html, javascript, css, xml:
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/vtt 
+    AddOutputFilterByType DEFLATE text/x-component
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/js
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/x-httpd-php
+    AddOutputFilterByType DEFLATE application/x-httpd-fastphp
+    AddOutputFilterByType DEFLATE application/atom+xml 
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/ld+json 
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject 
+    AddOutputFilterByType DEFLATE application/x-font-ttf 
+    AddOutputFilterByType DEFLATE application/x-web-app-manifest+json 
+    AddOutputFilterByType DEFLATE font/opentype 
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon 
+
+    # Exception: Images
+    SetEnvIfNoCase REQUEST_URI \.(?:gif|jpg|jpeg|png)$ no-gzip dont-vary
+
+    # Drop problematic browsers
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+
+    # Make sure proxies don't deliver the wrong content
+    Header append Vary User-Agent env=!dont-vary
+</ifModule>
 <ifModule mod_gzip.c>
 	mod_gzip_on Yes
 	mod_gzip_dechunk Yes
