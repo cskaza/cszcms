@@ -94,7 +94,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                              * Null or 0=Show Full detail)*/ ?>
                             <?php echo $this->Headfoot_html->langMenu(2);?>
                             <?php echo $this->Headfoot_html->footer();?>
-                            <br>
+                            <br><br>
                             <?php echo $this->Headfoot_html->getSocial();?>
                         </div>
                     </div>
