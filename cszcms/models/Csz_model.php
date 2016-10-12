@@ -400,7 +400,8 @@ class Csz_model extends CI_Model {
             array('name' => 'name', 'content' => $title, 'type' => 'itemprop'),
             array('name' => 'description', 'content' => $desc_txt, 'type' => 'itemprop')
         );
-        $return_meta = meta($meta);
+        $return_meta = '<base href="'.BASE_URL.'/"/>'."\n";
+        $return_meta.= meta($meta);
         return $return_meta;
     }
 
