@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
@@ -323,7 +323,8 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (88, 'shop_bank_transfer', 'For bank transfer text', 'Bank Transfer', '2016-09-23 17:31:37'),
 (89, 'shop_special_price', 'For special price text', 'Special Price', '2016-09-25 19:51:06'),
 (90, 'shop_cancel_order_txt', 'For order cancel text', 'We are sorry! Your last transaction was cancelled.', '2016-09-26 10:53:09'),
-(91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09');
+(91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09'),
+(92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09');
 
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -341,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Article', 'article', '1.0.2', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(3, 'Shopping', 'shop', '1.0.0', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
+(3, 'Shopping', 'shop', '1.0.1', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) NOT NULL AUTO_INCREMENT,
