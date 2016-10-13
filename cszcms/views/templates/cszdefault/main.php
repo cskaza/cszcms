@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="col-md-2 hidden-sm hidden-xs text-center">
                             <a href="<?php echo base_url(uri_string()) ?>#top" title="To Top" style="text-decoration:none;">
-                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
                             </a><br><br>
                         </div>
                         <div class="col-md-5 div-social hidden-sm hidden-xs">
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="col-md-12 visible-sm visible-xs text-center">
                             <a href="<?php echo base_url(uri_string()) ?>#top" title="To Top" style="text-decoration:none;">
-                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
                             </a><br><br>
                             <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
                              * 2=Show flag and Language, 
