@@ -56,6 +56,20 @@ class Shop extends CI_Controller {
         $this->template->setSub('hot_product', $this->Csz_model->getValueArray('*', 'shop_product', "active = 1 AND product_status = 'hot'", '', 6));
         $this->template->setSub('best_product', $this->Csz_model->getValueArray('*', 'shop_product', "active = 1 AND product_status = 'bestseller'", '', 6));
         $this->template->setSub('sold_product', $this->Csz_model->getValueArray('*', 'shop_product', "active = '1' AND stock = '0'", '', 6));
+        
+        $search_arr = " active = '1' AND stock > '0'";
+        $this->load->library('pagination');
+        // Pages variable
+        $result_per_page = 15;
+        $total_row = $this->Csz_model->countData('shop_product', $search_arr);
+        $num_link = 10;
+        $base_url = BASE_URL . '/plugin/shop/';
+
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 3);
+        ($this->uri->segment(3)) ? $pagination = $this->uri->segment(3) : $pagination = 0;
+        $this->template->setSub('all_product', $this->Csz_admin_model->getIndexData('shop_product', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('total_row', $total_row);
 
         //Load the view
         $this->template->loadSub('frontpage/plugin/shop/shop_index');

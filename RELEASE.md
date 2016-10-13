@@ -2,6 +2,7 @@
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.
 - Update Font-awesome to 4.6.3.
+- Fix shopping plugin to 1.0.1.
 - Fix is_url_exist function error with https.
 - Fix get version error.
 - Fix .htaccess for page load performance.

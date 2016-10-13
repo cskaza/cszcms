@@ -375,6 +375,7 @@ class Shop_model extends CI_Model {
         $this->db->set('order_detail', $order_detail);
         $this->db->set('user_agent', $this->input->user_agent());
         $this->db->set('ip_address', $this->input->ip_address());
+        $this->db->set('payment_status', 'Pending');
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('shop_payment');
