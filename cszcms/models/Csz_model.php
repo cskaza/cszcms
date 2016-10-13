@@ -986,6 +986,7 @@ class Csz_model extends CI_Model {
            @$fp=fsockopen($url_info['host'], $port, $errno, $errstr, 10);
        }
        if($fp) {
+           $headers = '';
            stream_set_timeout($fp, 10);
            $head = "HEAD ".@$url_info['path']."?".@$url_info['query'];
            $head .= " HTTP/1.0\r\nHost: ".@$url_info['host']."\r\n\r\n";
