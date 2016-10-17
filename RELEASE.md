@@ -1,6 +1,7 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.3
 x- Add forum plugin.
+- Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
 
 CSZ-CMS V.1.1.2

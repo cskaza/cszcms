@@ -324,7 +324,7 @@ class Shop_model extends CI_Model {
     public function rightCatMenu() {
         $this->load->library('cart');
         $maincat = $this->Csz_model->getValueArray('*', 'shop_category', "active = '1' AND shop_category_main_id = '0'", '', 0, 'name', 'ASC');
-        $html = '<div class="panel panel-primary">
+        $html = '<div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="' . BASE_URL . '/plugin/shop/cartView" style="text-decoration:none;"><div style="width:100%;"><b><span class="glyphicon glyphicon-shopping-cart"></span> &nbsp; ' . $this->Csz_model->getLabelLang('shop_cart_text') . ' &nbsp; <span class="badge" id="cart-count">' . $this->cart->total_items() . '</span></b></div></a>
                 </div>
