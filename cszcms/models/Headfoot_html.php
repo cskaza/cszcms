@@ -233,7 +233,7 @@ class Headfoot_html extends CI_Model {
             $html.= $this->admin_leftli($cur_page,'admin','admin',$this->lang->line('nav_dash'),'glyphicon-dashboard');
             $html.= '</ul><hr>';
             $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="'.base_url(uri_string()).'#" title="'.$this->lang->line('nav_content_menu').'" onclick="ChkHideShow(\'content_menu\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_content_menu').'</a></li>';
+            $html.= '<li><a href="#" title="'.$this->lang->line('nav_content_menu').'" onclick="ChkHideShow(\'content_menu\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_content_menu').'</a></li>';
             if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms'  || $cur_page == 'linkstats'){
                 $gel_settings_display = "";
             }else{
@@ -248,7 +248,7 @@ class Headfoot_html extends CI_Model {
             if($config->link_statistic_active) $html.= $this->admin_leftli($cur_page,'linkstats','admin/linkstats',$this->lang->line('linkstats_header'),'glyphicon-stats',TRUE);
             $html.= '</ul></ul><hr>';
             $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="'.base_url(uri_string()).'#" title="'.$this->lang->line('nav_gel_settings').'" onclick="ChkHideShow(\'gel_settings\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_gel_settings').'</a></li>';
+            $html.= '<li><a href="#" title="'.$this->lang->line('nav_gel_settings').'" onclick="ChkHideShow(\'gel_settings\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_gel_settings').'</a></li>';
             if($cur_page == 'users' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin'){
                 $gel_settings_display = "";
             }else{
@@ -267,7 +267,7 @@ class Headfoot_html extends CI_Model {
             $html.= '</ul></ul><hr>';
             
             $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="'.base_url(uri_string()).'#" title="'.$this->lang->line('pluginmgr_header').'" onclick="ChkHideShow(\'plugins\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('pluginmgr_header').'</a></li>';
+            $html.= '<li><a href="#" title="'.$this->lang->line('pluginmgr_header').'" onclick="ChkHideShow(\'plugins\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('pluginmgr_header').'</a></li>';
             $plugin_arr = $this->Csz_model->getValueArray('plugin_name,plugin_urlrewrite', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_active = '1'", '', 0);
             $plugin_menu = '';
             if($plugin_arr !== FALSE){

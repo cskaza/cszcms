@@ -204,6 +204,7 @@ $route['plugin'] = "home";
 
 $route['formsaction/:any'] = 'formsaction';
 $route['formsaction'] = 'formsaction';
+$route['linkstats/:any/:any'] = 'linkstats';
 $route['linkstats/:any'] = 'linkstats';
 $route['linkstats'] = 'linkstats';
 $route['lang/:any'] = "home/setLang";

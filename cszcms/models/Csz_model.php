@@ -400,8 +400,7 @@ class Csz_model extends CI_Model {
             array('name' => 'name', 'content' => $title, 'type' => 'itemprop'),
             array('name' => 'description', 'content' => $desc_txt, 'type' => 'itemprop')
         );
-        $return_meta = '<base href="'.BASE_URL.'/"/>'."\n";
-        $return_meta.= meta($meta);
+        $return_meta = meta($meta);
         return $return_meta;
     }
 
@@ -550,8 +549,8 @@ class Csz_model extends CI_Model {
             }
             if(!empty($link)){
                 foreach ($link as $val) {
-                    $content = str_replace('href="'.$val.'" linkstats="'.$k.'"', 'href="'.BASE_URL.'/linkstats?url='.$val.'" linkstats="'.$k.'"', $content);
-                    $content = str_replace('['.$k.']', '', $content);
+                    $content = str_replace('href="'.$val.'" linkstats="'.$k.'"', 'href="'.BASE_URL.'/linkstats/'.($k+1).'/'.str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($val)).'" linkstats="'.$k.'"', $content);
+                    /*$content = str_replace('['.$k.']', '', $content);*/
                     $k++;
                 }
             }
@@ -774,7 +773,6 @@ class Csz_model extends CI_Model {
     }
     
     public function saveLinkStats($link) {
-        $link = str_replace(BASE_URL.'/linkstats?url=', '', $link);
         $this->db->set('link', $link, TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
         $this->db->set('timestamp_create', 'NOW()', FALSE);

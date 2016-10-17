@@ -580,8 +580,7 @@ class Csz_admin_model extends CI_Model {
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
         );
-        $return_meta = '<base href="'.BASE_URL.'/"/>'."\n";
-        $return_meta.= meta($meta);
+        $return_meta = meta($meta);
         return $return_meta;
     }
 

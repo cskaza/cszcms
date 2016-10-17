@@ -1,4 +1,8 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.3
+x- Add forum plugin.
+- Fix linkstat url to base64.
+
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.
 - Update Font-awesome to 4.6.3.
