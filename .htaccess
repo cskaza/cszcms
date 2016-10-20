@@ -19,6 +19,8 @@ allow from all
 <IfModule mod_headers.c>
     Header set Connection keep-alive
     Header unset ETag
+    # Set XSS Protection header
+    Header set X-XSS-Protection "1; mode=block"
     <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|woff|woff2|svg)$">
             Header set Cache-Control "max-age=290304000, public"
     </FilesMatch>
