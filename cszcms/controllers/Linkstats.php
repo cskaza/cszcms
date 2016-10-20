@@ -12,9 +12,8 @@ class Linkstats extends CI_Controller {
     public function index() {
         $link1 = str_replace("'", "\'", base64_decode(str_replace(array('-', '_', '.'), array('+', '/', '='), $this->uri->segment(3))));
         $link = str_replace('['.($this->uri->segment(2)-1).']', '', $link1);
-        /*$link = str_replace(BASE_URL.'/linkstats?url=', '', $link);*/
         if ($link) {
-            echo 'Please wait. Redirect to '.$link;
+            echo '<center>Please wait......... ,Redirect to '.$link.'</center>';
             $this->Csz_model->saveLinkStats($link);
             echo '<meta http-equiv="refresh" content="0;url='.$link.'">';
             exit;          
