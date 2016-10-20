@@ -384,7 +384,7 @@ class Csz_model extends CI_Model {
     public function coreMetatags($desc_txt, $keywords, $title) {
         $config = $this->load_config();
         $meta = array(
-            array('name' => 'robots', 'content' => 'no-cache'),
+            array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),

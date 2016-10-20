@@ -572,7 +572,7 @@ class Csz_admin_model extends CI_Model {
 
     public function coreMetatags($desc_txt) {
         $meta = array(
-            array('name' => 'robots', 'content' => 'no-cache'),
+            array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
             array('name' => 'keywords', 'content' => $this->load_config()->keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
