@@ -13,7 +13,7 @@
         if($image !== FALSE){
             $i = 1;
             foreach ($image as $value) { ?>
-                <div class="col-md-2" style="padding-bottom:15px;">
+                <div class="col-md-2 text-center" style="padding-bottom:15px;">
                     <?php if($value['gallery_type'] == 'multiimages'){ ?>
                         <a href="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" data-toggle="lightbox" data-gallery="multiimages"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
                             <img class="img-responsive img-thumbnail" src="<?php echo ($value['file_upload']) ? BASE_URL.'/photo/plugin/gallery/'.$value['file_upload'] : BASE_URL.'/photo/no_image.png' ?>" alt="<?php echo $value['caption'] ?>">

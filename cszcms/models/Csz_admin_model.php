@@ -550,7 +550,7 @@ class Csz_admin_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';

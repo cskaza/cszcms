@@ -361,7 +361,7 @@ class Csz_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.10.2.min.js"></script>'."\n";
+        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>'."\n";
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>'."\n";        
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>'."\n";
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/ui-loader.js"></script>'."\n";
