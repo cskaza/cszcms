@@ -1,20 +1,26 @@
 # For Cloudflare allow IPs
 allow from all
 <IfModule mod_expires.c>
-        ExpiresActive On
-        ExpiresDefault "access plus 1 day"
-        ExpiresByType image/jpg "access plus 5 days"
-        ExpiresByType image/jpeg "access plus 5 days"
-        ExpiresByType image/gif "access plus 5 days"
-        ExpiresByType image/png "access plus 5 days"
+        ExpiresActive On        
+        ExpiresByType image/jpg "access plus 10 days"
+        ExpiresByType image/jpeg "access plus 10 days"
+        ExpiresByType image/gif "access plus 10 days"
+        ExpiresByType image/png "access plus 10 days"
         ExpiresByType text/css "access plus 1 month"
 	ExpiresByType text/javascript "access plus 1 month"
+        ExpiresByType application/js "access plus 1 month"
+        ExpiresByType application/javascript "access plus 1 month"
+        ExpiresByType application/x-javascript "access plus 1 month"
         ExpiresByType application/pdf "access plus 1 month"
         ExpiresByType text/x-javascript "access plus 1 month"
         ExpiresByType application/x-shockwave-flash "access plus 1 month"
+        ExpiresByType font/opentype "access plus 1 month"
+        ExpiresByType application/x-font-ttf "access plus 1 month"
         ExpiresByType image/x-icon "access plus 1 year"
-	ExpiresByType text/html "access plus 600 seconds"
+        ExpiresByType text/html "access plus 600 seconds"
+	ExpiresByType image/svg+xml "access plus 600 seconds"
 	ExpiresByType application/xhtml+xml "access plus 600 seconds"
+        ExpiresDefault "access plus 10 day"
 </IfModule>
 <IfModule mod_headers.c>
     Header set Connection keep-alive
@@ -25,7 +31,7 @@ allow from all
             Header set Cache-Control "max-age=290304000, public"
     </FilesMatch>
     <FilesMatch "\.(js|css)$">
-            Header set Cache-Control "max-age=360000, public, must-revalidate"
+            Header set Cache-Control "max-age=2592000, public"
     </FilesMatch>
     <FilesMatch "\.(xml|txt)$">
             Header set Cache-Control "max-age=3600, public, must-revalidate"

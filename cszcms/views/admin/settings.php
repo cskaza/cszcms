@@ -245,6 +245,25 @@
         <a href="<?php echo BASE_URL . '/admin/settings/gensitemap'?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_header')?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
         <b><?php echo $this->lang->line('settings_sitemap_lasttime')?>: </b><b><?php if($sitemaptime !== FALSE){ echo '<span class="success"><em>'.$sitemaptime.'</em></span>'; }else{ echo '<span class="error"><em>-</em></span>';} ?></b>
         <br><br><br>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('settings_member_header') ?></div>
+            <div class="control-group">										
+                <label class="form-control-static" for="member_confirm_enable">
+                <?php
+                if($settings->member_confirm_enable){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'member_confirm_enable',
+                    'id' => 'member_confirm_enable',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_member_confirm_active'); ?></label>
+            </div> <!-- /control-group -->
+        <br>       
         <div class="h2 sub-header"><?php echo  $this->lang->line('settings_email_header') ?></div>
             <div class="control-group">	
                 <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>

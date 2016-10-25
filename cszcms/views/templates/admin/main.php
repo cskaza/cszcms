@@ -62,6 +62,16 @@ $row = $this->Csz_admin_model->load_config();
                 </div>
             </div>
         <?php } else { ?>
+            <!-- Check upgrade version -->
+            <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
+                <div class="container">
+                    <div class="col-md-3 hidden-sm hidden-xs"></div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <a href="<?php echo BASE_URL?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade')?>"><div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $this->lang->line('upgrade_newlast_alert')?></div></a>
+                    </div>
+                    <div class="col-md-3 hidden-sm hidden-xs"></div>
+                </div>                        
+            <?php } ?>            
             <!-- Start For Content -->
             <?php echo $content; ?>
             <!-- End For Content -->

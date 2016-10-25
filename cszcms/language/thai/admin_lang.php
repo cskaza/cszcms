@@ -201,6 +201,8 @@ $lang['settings_sendmail_path']         = "Sendmail Path";
 $lang['settings_sitemap_header']        = "สร้างไฟล์ Sitemaps";
 $lang['settings_sitemap_runnow']        = "เริ่มเดี๋ยวนี้";
 $lang['settings_sitemap_lasttime']      = "อัพเดทล่าสุด";
+$lang['settings_member_header']          = "การตั้งค่าสมาชิก";
+$lang['settings_member_confirm_active']	= "เปิดใช้งานอีเมล์ยืนยันการสมัครสมาชิกใหม่";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

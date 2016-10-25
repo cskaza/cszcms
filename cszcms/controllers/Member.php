@@ -116,17 +116,21 @@ class Member extends CI_Controller {
         } else {
             $email = $this->input->post('email', TRUE);
             $md5_hash = $this->Csz_model->createMember();
-            //now we will send an email
-            # ---- set subject --#
-            $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
-            # ---- set from, to, bcc --#
-            $from_name = $row->site_name;
-            $from_email = 'no-reply@' . EMAIL_DOMAIN;
-            $to_email = $email;
-            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
-            @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
-            $this->template->setSub('chksts', 1);
-            $this->template->loadSub('frontpage/member/regist');
+            if($row->member_confirm_enable){
+                /* now we will send an email */
+                # ---- set subject --#
+                $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
+                # ---- set from, to, bcc --#
+                $from_name = $row->site_name;
+                $from_email = 'no-reply@' . EMAIL_DOMAIN;
+                $to_email = $email;
+                $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
+                @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
+                $this->template->setSub('chksts', 1);
+                $this->template->loadSub('frontpage/member/regist');
+            }else{
+                redirect(BASE_URL . '/member/confirm/' . $md5_hash, 'refresh');
+            }
         }
     }
 
@@ -135,7 +139,7 @@ class Member extends CI_Controller {
         $md5_hash = $this->uri->segment(3);
         $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
         if (!$user_rs) {
-            show_error('Sorry!!! Invalid Request!');
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Invalid Request!</div>');
         } else {
             $data = array(
                 'active' => 1,
@@ -146,8 +150,9 @@ class Member extends CI_Controller {
             $this->db->where('md5_hash', $md5_hash);
             $this->db->where('user_admin_id', $user_rs->user_admin_id);
             $this->db->update('user_admin', $data);
-            redirect('member', 'refresh');
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-success" role="alert">Success!</div>');
         }
+        redirect('member', 'refresh');
     }
 
     public function editMember() {

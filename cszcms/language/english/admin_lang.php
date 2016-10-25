@@ -201,6 +201,8 @@ $lang['settings_sendmail_path']         = "Sendmail Path";
 $lang['settings_sitemap_header']        = "Sitemaps Generator";
 $lang['settings_sitemap_runnow']        = "Start Now";
 $lang['settings_sitemap_lasttime']      = "Last updated";
+$lang['settings_member_header']          = "Member Settings";
+$lang['settings_member_confirm_active']	= "Member Register Confirmed Email Enable";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";

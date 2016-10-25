@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo $this->Headfoot_html->footer();?>
                         </div>
                         <div class="col-md-2 hidden-sm hidden-xs text-center">
-                            <a href="<?php echo base_url(uri_string()) ?>#top" title="To Top" style="text-decoration:none;">
+                            <a href="#top" title="To Top" style="text-decoration:none;">
                                 <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
                             </a><br><br>
                         </div>
@@ -85,7 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php echo $this->Headfoot_html->getSocial();?>
                         </div>
                         <div class="col-md-12 visible-sm visible-xs text-center">
-                            <a href="<?php echo base_url(uri_string()) ?>#top" title="To Top" style="text-decoration:none;">
+                            <a href="#top" title="To Top" style="text-decoration:none;">
                                 <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
                             </a><br><br>
                             <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
