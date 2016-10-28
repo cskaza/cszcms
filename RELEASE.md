@@ -2,7 +2,7 @@
 CSZ-CMS V.1.1.3
 x- Add forum plugin.
 - Add option member register for send confirmed email in settings.
-- Add option member register for close register in settings.
+- Add option to close member register in settings.
 - Update jQuery to 1.12.4.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
