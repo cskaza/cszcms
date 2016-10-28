@@ -263,6 +263,23 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_member_confirm_active'); ?></label>
             </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="form-control-static" for="member_close_regist">
+                <?php
+                if($settings->member_close_regist){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'member_close_regist',
+                    'id' => 'member_close_regist',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_member_close_regist'); ?></label>
+            </div> <!-- /control-group -->
         <br>       
         <div class="h2 sub-header"><?php echo  $this->lang->line('settings_email_header') ?></div>
             <div class="control-group">	

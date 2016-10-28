@@ -637,6 +637,7 @@ class Csz_admin_model extends CI_Model {
             'smtp_port' => $this->input->post('smtp_port', TRUE),
             'sendmail_path' => $this->input->post('sendmail_path', TRUE),
             'member_confirm_enable' => $this->input->post('member_confirm_enable', TRUE),
+            'member_close_regist' => $this->input->post('member_close_regist', TRUE),
         );
 
         if ($this->input->post('del_file')) {

@@ -853,20 +853,25 @@ class Csz_model extends CI_Model {
     
     public function createMember() {
         // Create the user account
-        $md5_hash = md5(time() + mt_rand(1, 99999999));
-        $data = array(
-            'name' => 'Member User',
-            'email' => $this->input->post('email', TRUE),
-            'password' => sha1(md5($this->input->post('password', TRUE))),
-            'user_type' => 'member',
-            'active' => 0,
-            'md5_hash' => $md5_hash,
-        );
-        $this->db->set('md5_lasttime', 'NOW()', FALSE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
-        $this->db->insert('user_admin', $data);
-        return $md5_hash;
+        $config = $this->Csz_model->load_config();
+        if($config->member_close_regist){
+            return FALSE;
+        }else{
+            $md5_hash = md5(time() + mt_rand(1, 99999999));
+            $data = array(
+                'name' => 'Member User',
+                'email' => $this->input->post('email', TRUE),
+                'password' => sha1(md5($this->input->post('password', TRUE))),
+                'user_type' => 'member',
+                'active' => 0,
+                'md5_hash' => $md5_hash,
+            );
+            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->insert('user_admin', $data);
+            return $md5_hash;
+        }
     }
     
     public function updateMember($id) {

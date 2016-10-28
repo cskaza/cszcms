@@ -48,6 +48,7 @@ class Member extends CI_Controller {
         Member_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
 
+        $this->template->setSub('config', $this->Csz_model->load_config());
         $this->template->setSub('error', '');
         $this->load->helper('form');
         $this->template->loadSub('frontpage/member/login');
@@ -90,16 +91,23 @@ class Member extends CI_Controller {
 
     public function registMember() {
         Member_helper::login_already($this->session->userdata('admin_email'));
-        //Load the form helper
-        $this->load->helper('form');
-        //Load the view
-        $this->template->setSub('chksts', 0);
-        $this->template->loadSub('frontpage/member/regist');
+        $config = $this->Csz_model->load_config();
+        if($config->member_close_regist){
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Member register is closed!</div>');
+            redirect(BASE_URL.'/member', 'refresh');
+            exit();
+        }else{
+            //Load the form helper
+            $this->load->helper('form');
+            //Load the view
+            $this->template->setSub('chksts', 0);
+            $this->template->loadSub('frontpage/member/regist');
+        }
     }
 
     public function saveMember() {
         Member_helper::login_already($this->session->userdata('admin_email'));
-        $row = $this->Csz_model->load_config();
+        $config = $this->Csz_model->load_config();
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -116,20 +124,27 @@ class Member extends CI_Controller {
         } else {
             $email = $this->input->post('email', TRUE);
             $md5_hash = $this->Csz_model->createMember();
-            if($row->member_confirm_enable){
-                /* now we will send an email */
-                # ---- set subject --#
-                $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
-                # ---- set from, to, bcc --#
-                $from_name = $row->site_name;
-                $from_email = 'no-reply@' . EMAIL_DOMAIN;
-                $to_email = $email;
-                $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
-                @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
-                $this->template->setSub('chksts', 1);
-                $this->template->loadSub('frontpage/member/regist');
+            if($md5_hash !== FALSE){
+                if($config->member_confirm_enable){
+                    /* now we will send an email */
+                    # ---- set subject --#
+                    $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
+                    # ---- set from, to, bcc --#
+                    $from_name = $config->site_name;
+                    $from_email = 'no-reply@' . EMAIL_DOMAIN;
+                    $to_email = $email;
+                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
+                    @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
+                    $this->template->setSub('chksts', 1);
+                    $this->template->loadSub('frontpage/member/regist');
+                }else{
+                    redirect(BASE_URL . '/member/confirm/' . $md5_hash, 'refresh');
+                    exit();
+                }
             }else{
-                redirect(BASE_URL . '/member/confirm/' . $md5_hash, 'refresh');
+                $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Member register is closed!</div>');
+                redirect('member', 'refresh');
+                exit();
             }
         }
     }
