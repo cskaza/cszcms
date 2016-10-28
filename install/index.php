@@ -37,32 +37,41 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
         $filename = 'cszcms_app_default.sql';
         $db->mysqli_multi_query_file($mysqli, $filename);
     }
-    
-    /* Prepare data for config.inc.php file */
-    $config_file = '../config.inc.php';
-    $config_txt = "<?php \n";
-    $config_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
-    $config_txt .= "/* Database DSN */ \n";
-    $config_txt .= "define('DB_DSN', ''); \n\n";
-    $config_txt .= "/* Database Host */ \n";
-    $config_txt .= "define('DB_HOST', '".$dbhost."'); \n\n";
-    $config_txt .= "/* Database Username */ \n";
-    $config_txt .= "define('DB_USERNAME', '".$dbuser."'); \n\n";
-    $config_txt .= "/* Database Password */ \n";
-    $config_txt .= "define('DB_PASS', '".$dbpass."'); \n\n";
-    $config_txt .= "/* Database Name */ \n";
-    $config_txt .= "define('DB_NAME', '".$dbname."'); \n\n";
-    $config_txt .= "/* Database Driver */ \n";
-    $config_txt .= "define('DB_DRIVER', 'mysqli'); \n\n";
-    $config_txt .= "/* Base URL */ \n";
-    $config_txt .= "define('BASE_URL', '".$baseurl."'); \n\n";
-    $config_txt .= "/* Email Domain */ \n";
-    $config_txt .= "define('EMAIL_DOMAIN', '".$email_domain."'); \n\n";
-    $config_txt .= "/* Time Zone */ \n";
-    $config_txt .= "define('TIME_ZONE', '".$_POST['timezone']."'); \n\n";
-    /* write config.inc.php file */
-    file_put_contents($config_file, $config_txt);
-    $success = 1;
+    $result = $mysqli->prepare("SELECT * FROM user_admin");
+    $result->execute();
+    $result->store_result();
+    if(!$result->num_rows){
+        $success = 0;
+        $db->closeDB();
+        echo '<div class="alert alert-danger text-center" role="alert">Can\'t insert the database into your MySQL server</div>';
+    }else{
+        /* Prepare data for config.inc.php file */
+        $config_file = '../config.inc.php';
+        $config_txt = "<?php \n";
+        $config_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
+        $config_txt .= "/* Database DSN */ \n";
+        $config_txt .= "define('DB_DSN', ''); \n\n";
+        $config_txt .= "/* Database Host */ \n";
+        $config_txt .= "define('DB_HOST', '".$dbhost."'); \n\n";
+        $config_txt .= "/* Database Username */ \n";
+        $config_txt .= "define('DB_USERNAME', '".$dbuser."'); \n\n";
+        $config_txt .= "/* Database Password */ \n";
+        $config_txt .= "define('DB_PASS', '".$dbpass."'); \n\n";
+        $config_txt .= "/* Database Name */ \n";
+        $config_txt .= "define('DB_NAME', '".$dbname."'); \n\n";
+        $config_txt .= "/* Database Driver */ \n";
+        $config_txt .= "define('DB_DRIVER', 'mysqli'); \n\n";
+        $config_txt .= "/* Base URL */ \n";
+        $config_txt .= "define('BASE_URL', '".$baseurl."'); \n\n";
+        $config_txt .= "/* Email Domain */ \n";
+        $config_txt .= "define('EMAIL_DOMAIN', '".$email_domain."'); \n\n";
+        $config_txt .= "/* Time Zone */ \n";
+        $config_txt .= "define('TIME_ZONE', '".$_POST['timezone']."'); \n\n";
+        /* write config.inc.php file */
+        file_put_contents($config_file, $config_txt);
+        $success = 1;
+        $db->closeDB();
+    }      
 }
 ?>
 <!DOCTYPE html>
@@ -160,8 +169,8 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                     <label for="dbname">Database Name*: </label>
                                     <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
                                     <br><span class="remark">
-                                        <b>Your PHP Version: <?php echo phpversion(); ?></b><br>
-                                        <b>* Required for MySQLi (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
+                                        <b>Your PHP Version: <u><?php echo phpversion(); ?></u></b><br>
+                                        <b>* Required for <u>MySQLi</u> (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
                                         <b>* Please create the database on your hosting control panel.</b><br><br>
                                         <b>When you have problem or question. Please contact us at</b><br>
                                         <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
