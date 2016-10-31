@@ -6,6 +6,7 @@ x- Add forum plugin.
 - Update jQuery to 1.12.4.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
+- Fix installer has system checking.
 
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.

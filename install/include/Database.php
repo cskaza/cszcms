@@ -31,6 +31,12 @@ class Database {
     public function connectDB() {
         return $this->_connection;
     }
+    
+    public function numrow($result) {
+        $result->execute();
+        $result->store_result();
+        return $result->num_rows;
+    }
 
     public function closeDB() {
         $this->_connection->close();

@@ -1,15 +1,16 @@
 <?php
 if (file_exists('../config.inc.php')) {
-  header("Location: ../");
-  exit();
+    header("Location: ../");
+    exit();
 }
 require './include/Database.php';
 $success = 0;
+$chk_pass = 0;
 if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbpass'] && $_POST['dbname']) {
     /* Prepare Input Data */
-    /*$dbdsn = $_POST['dbdsn'];*/
-    $url_replace = array('https://','http://');
-    $baseurl = $_POST['protocal'].str_replace($url_replace, '', $_POST['baseurl']);
+    /* $dbdsn = $_POST['dbdsn']; */
+    $url_replace = array('https://', 'http://');
+    $baseurl = $_POST['protocal'] . str_replace($url_replace, '', $_POST['baseurl']);
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
     $dbpass = $_POST['dbpass'];
@@ -18,33 +19,32 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     $domain = $find_arr['host'];
     $email_domain = str_replace('www.', '', $domain);
     $email = $_POST['email'];
-    
+
     /* Database Connect */
     $db = new Database($dbhost, $dbuser, $dbpass, $dbname);
     $mysqli = $db->connectDB();
-    
-    if($email && $_POST['password']){
+
+    if ($email && $_POST['password']) {
         /* Database Insert */
         $filename = 'cszcms_app.sql';
         $db->mysqli_multi_query_file($mysqli, $filename);
-        
-        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '".$email."', '".sha1(md5($_POST['password']))."', 'admin', 1, '".md5(time() + mt_rand(1, 99999999))."', NOW(), NOW(), NOW())";
+
+        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '" . $email . "', '" . sha1(md5($_POST['password'])) . "', 'admin', 1, '" . md5(time() + mt_rand(1, 99999999)) . "', NOW(), NOW(), NOW())";
         $mysqli->query($insert_user);
-        $update_sql = "UPDATE `settings` SET `default_email` = '".$email."' WHERE `settings_id` = 1";
+        $update_sql = "UPDATE `settings` SET `default_email` = '" . $email . "' WHERE `settings_id` = 1";
         $mysqli->query($update_sql);
-    }else{
+    } else {
         /* Database Insert */
         $filename = 'cszcms_app_default.sql';
         $db->mysqli_multi_query_file($mysqli, $filename);
     }
     $result = $mysqli->prepare("SELECT * FROM user_admin");
-    $result->execute();
-    $result->store_result();
-    if(!$result->num_rows){
+    $numrow = $db->numrow($result);
+    if (!$numrow) {
         $success = 0;
         $db->closeDB();
         echo '<div class="alert alert-danger text-center" role="alert">Can\'t insert the database into your MySQL server</div>';
-    }else{
+    } else {
         /* Prepare data for config.inc.php file */
         $config_file = '../config.inc.php';
         $config_txt = "<?php \n";
@@ -52,26 +52,26 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
         $config_txt .= "/* Database DSN */ \n";
         $config_txt .= "define('DB_DSN', ''); \n\n";
         $config_txt .= "/* Database Host */ \n";
-        $config_txt .= "define('DB_HOST', '".$dbhost."'); \n\n";
+        $config_txt .= "define('DB_HOST', '" . $dbhost . "'); \n\n";
         $config_txt .= "/* Database Username */ \n";
-        $config_txt .= "define('DB_USERNAME', '".$dbuser."'); \n\n";
+        $config_txt .= "define('DB_USERNAME', '" . $dbuser . "'); \n\n";
         $config_txt .= "/* Database Password */ \n";
-        $config_txt .= "define('DB_PASS', '".$dbpass."'); \n\n";
+        $config_txt .= "define('DB_PASS', '" . $dbpass . "'); \n\n";
         $config_txt .= "/* Database Name */ \n";
-        $config_txt .= "define('DB_NAME', '".$dbname."'); \n\n";
+        $config_txt .= "define('DB_NAME', '" . $dbname . "'); \n\n";
         $config_txt .= "/* Database Driver */ \n";
         $config_txt .= "define('DB_DRIVER', 'mysqli'); \n\n";
         $config_txt .= "/* Base URL */ \n";
-        $config_txt .= "define('BASE_URL', '".$baseurl."'); \n\n";
+        $config_txt .= "define('BASE_URL', '" . $baseurl . "'); \n\n";
         $config_txt .= "/* Email Domain */ \n";
-        $config_txt .= "define('EMAIL_DOMAIN', '".$email_domain."'); \n\n";
+        $config_txt .= "define('EMAIL_DOMAIN', '" . $email_domain . "'); \n\n";
         $config_txt .= "/* Time Zone */ \n";
-        $config_txt .= "define('TIME_ZONE', '".$_POST['timezone']."'); \n\n";
+        $config_txt .= "define('TIME_ZONE', '" . $_POST['timezone'] . "'); \n\n";
         /* write config.inc.php file */
         file_put_contents($config_file, $config_txt);
         $success = 1;
         $db->closeDB();
-    }      
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -114,9 +114,11 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     <body>
         <!-- Start For Content -->
         <div class="container">
-<?php if ($success) { 
-    $url_replace = array('https://','http://');
-    $baseurl = $_POST['protocal'].str_replace($url_replace, '', $_POST['baseurl']); ?>
+            <?php
+            if ($success) {
+                $url_replace = array('https://', 'http://');
+                $baseurl = $_POST['protocal'] . str_replace($url_replace, '', $_POST['baseurl']);
+                ?>
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
@@ -139,7 +141,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                         </div>
                     </div>
                 </div>
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
@@ -150,82 +152,127 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                         </div>
                     </div>
                 </div>
-                <form action="./" method="post" accept-charset="utf-8">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><b>Database Setup</b></h3>
-                                </div>
-                                <div class="panel-body">
-                                    <!--<label for="dbdsn">Database DSN: </label>
-                                    <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">-->
-                                    <label for="dbhost">Database Host*: </label>
-                                    <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
-                                    <label for="dbuser">Database Username*: </label>
-                                    <input id="dbuser" name="dbuser" type="text" class="form-control" placeholder="Username for DB" required>
-                                    <label for="dbpass">Database Password*: </label>
-                                    <input id="dbpass" name="dbpass" type="password" class="form-control" placeholder="Password for DB" required>
-                                    <label for="dbname">Database Name*: </label>
-                                    <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
-                                    <br><span class="remark">
-                                        <b>Your PHP Version: <u><?php echo phpversion(); ?></u></b><br>
-                                        <b>* Required for <u>MySQLi</u> (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
-                                        <b>* Please create the database on your hosting control panel.</b><br><br>
-                                        <b>When you have problem or question. Please contact us at</b><br>
-                                        <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><b>Website Setup</b></h3>
-                                </div>
-                                <div class="panel-body">
-                                    <label for="baseurl">Base URL*: </label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <select name="protocal">
-                                                <option value="http://">http://</option>
-                                                <option value="https://">https://</option>
-                                            </select>
-                                        </span>
-                                        <input id="baseurl" name="baseurl" type="text" class="form-control" placeholder="www.ex.com or www.ex.com/subdir" required>
-                                    </div><!-- /input-group -->
-                                    <span class="remark"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b> or <b>http://localhost/subdir</b> on localhost. subdir is directory when you extract file from zip file</em></span><br>
-                                    <label for="timezone">Time Zone*: </label>
-                                    <input id="timezone" name="timezone" type="text" class="form-control" placeholder="Asia/Bangkok" required>
-                                    <span class="remark"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span>
-                                </div>
-                            </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title"><b>Backend Login Setup</b></h3>
-                                </div>
-                                <div class="panel-body">
-                                    <label for="email">Email Address: </label>
-                                    <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login">
-                                    <label for="password">Password: </label>
-                                    <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login">
-                                    <span class="remark"><em>Please <b>blank</b>. If you want default backend login account<br>Email: <b>demo@cszcms.com</b> | Password: <b>123456</b></em></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                    <div class="row">
-                        <div class="col-md-12 text-right">
-                            <button class="btn btn-lg btn-primary" type="submit" id="submit">Install Now</button>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <b><u>System Checking</u></b><br><br>
+                        <b>
+                            PHP 5.3.7 or higher [<?php if (version_compare(phpversion(), '5.3.7', '>=')) {
+                                echo '<span class="success">PASS</span>';
+                                $php = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $php = 0;
+                            } ?>]<br>
+                                MySQLi Driver [<?php if (extension_loaded('mysqli')) {
+                                echo '<span class="success">PASS</span>';
+                                $sqli = 1;
+                            } else {
+                                '<span class="error">FAIL</span>';
+                                $sqli = 0;
+                            } ?>]<br>
+                                MOD_REWRITE Enable [<?php if (in_array('mod_rewrite', apache_get_modules())) {
+                                echo '<span class="success">PASS</span>';
+                                $modrw = 1;
+                            } else {
+                                '<span class="error">FAIL</span>';
+                                $modrw = 0;
+                            } ?>]<br>
+                                cURL Enable [<?php if (function_exists('curl_version')) {
+                                echo '<span class="success">PASS</span>';
+                                $curl = 1;
+                            } else {
+                                '<span class="error">FAIL</span>';
+                                $curl = 0;
+                            } ?>]
+                            <?php
+                            if ($sqli == 1 && $php == 1 && $modrw == 1 && $curl == 1) {
+                                $chk_pass = 1;
+                            }
+                            ?>
+                        </b>
+                        <hr>
                     </div>
-                </form>
-<?php } ?>
+                </div>
+                    <?php if ($chk_pass == 1) { ?> 
+                    <form action="./" method="post" accept-charset="utf-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><b>Database Setup</b></h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <!--<label for="dbdsn">Database DSN: </label>
+                                        <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">-->
+                                        <label for="dbhost">Database Host*: </label>
+                                        <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
+                                        <label for="dbuser">Database Username*: </label>
+                                        <input id="dbuser" name="dbuser" type="text" class="form-control" placeholder="Username for DB" required>
+                                        <label for="dbpass">Database Password*: </label>
+                                        <input id="dbpass" name="dbpass" type="password" class="form-control" placeholder="Password for DB" required>
+                                        <label for="dbname">Database Name*: </label>
+                                        <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
+                                        <br><span class="remark">
+                                            <b>Your PHP Version: <u><?php echo phpversion(); ?></u></b><br>
+                                            <b>* Required for <u>MySQLi</u> (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
+                                            <b>* Please create the database on your hosting control panel.</b><br><br>
+                                            <b>When you have problem or question. Please contact us at</b><br>
+                                            <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><b>Website Setup</b></h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <label for="baseurl">Base URL*: </label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <select name="protocal">
+                                                    <option value="http://">http://</option>
+                                                    <option value="https://">https://</option>
+                                                </select>
+                                            </span>
+                                            <input id="baseurl" name="baseurl" type="text" class="form-control" placeholder="www.ex.com or www.ex.com/subdir" required>
+                                        </div><!-- /input-group -->
+                                        <span class="remark"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b> or <b>http://localhost/subdir</b> on localhost. subdir is directory when you extract file from zip file</em></span><br>
+                                        <label for="timezone">Time Zone*: </label>
+                                        <input id="timezone" name="timezone" type="text" class="form-control" placeholder="Asia/Bangkok" required>
+                                        <span class="remark"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><b>Backend Login Setup</b></h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <label for="email">Email Address: </label>
+                                        <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login">
+                                        <label for="password">Password: </label>
+                                        <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login">
+                                        <span class="remark"><em>Please <b>blank</b>. If you want default backend login account<br>Email: <b>demo@cszcms.com</b> | Password: <b>123456</b></em></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <button class="btn btn-lg btn-primary" type="submit" id="submit">Install Now</button>
+                            </div>
+                        </div>
+                    </form>
+                    <?php }else{ ?>
+                        <div class="alert alert-danger"></div>
+                    <?php } ?>
+            <?php } ?>
         </div>
         <!-- End For Content -->
-        <?php
-        $version = new Version;
-        ?>
+<?php
+$version = new Version;
+?>
         <br><br><br>
         <div class="container">
             <footer>
