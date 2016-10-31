@@ -156,32 +156,32 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                     <div class="col-md-12">
                         <b><u>System Checking</u></b><br><br>
                         <b>
-                            PHP 5.3.7 or higher [<?php if (version_compare(phpversion(), '5.3.7', '>=')) {
+                            PHP 5.3.7 or higher [<?php if (version_compare(phpversion(), '5.3.7', '>=') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $php = 1;
                             } else {
                                 echo '<span class="error">FAIL</span>';
                                 $php = 0;
                             } ?>]<br>
-                                MySQLi Driver [<?php if (extension_loaded('mysqli')) {
+                                MySQLi Driver [<?php if (extension_loaded('mysqli') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $sqli = 1;
                             } else {
-                                '<span class="error">FAIL</span>';
+                                echo '<span class="error">FAIL</span>';
                                 $sqli = 0;
                             } ?>]<br>
-                                MOD_REWRITE Enable [<?php if (in_array('mod_rewrite', apache_get_modules())) {
+                                MOD_REWRITE Enable [<?php if (in_array('mod_rewrite', apache_get_modules()) !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $modrw = 1;
                             } else {
-                                '<span class="error">FAIL</span>';
+                                echo '<span class="error">FAIL</span>';
                                 $modrw = 0;
                             } ?>]<br>
-                                cURL Enable [<?php if (function_exists('curl_version')) {
+                                cURL Enable [<?php if (function_exists('curl_version') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $curl = 1;
                             } else {
-                                '<span class="error">FAIL</span>';
+                                echo '<span class="error">FAIL</span>';
                                 $curl = 0;
                             } ?>]
                             <?php
@@ -266,7 +266,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                     </form>
                     <?php }else{ ?>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 text-center">
                                 <div class="alert alert-danger" role="alert">Your system isn't compatible. Please check your system and reload this page again.</div>
                             </div>
                         </div>
