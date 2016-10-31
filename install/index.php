@@ -265,7 +265,11 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                         </div>
                     </form>
                     <?php }else{ ?>
-                        <div class="alert alert-danger"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger" role="alert">Your system isn't compatible. Please check your system and reload this page again.</div>
+                            </div>
+                        </div>
                     <?php } ?>
             <?php } ?>
         </div>
