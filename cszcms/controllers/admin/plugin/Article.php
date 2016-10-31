@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Article extends CI_Controller {
+
     function __construct() {
         parent::__construct();
         $this->load->helper('form');
@@ -30,16 +31,28 @@ class Article extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex('article'); /* Set index page when redirect after save */
+
+        //Get users from database
+        $this->template->setSub('total_cat', $this->Csz_model->countData('article_db', "active = '1' AND is_category = '1'"));
+        $this->template->setSub('total_art', $this->Csz_model->countData('article_db', "active = '1' AND is_category = '0'"));
+
+        //Load the view
+        $this->template->loadSub('admin/plugin/article_home');
+    }
+
+    public function article() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->csz_referrer->setIndex('article_art'); /* Set index page when redirect after save */
         $search_arr = ' 1=1 ';
-        if($this->input->get('search') || $this->input->get('category') || $this->input->get('lang')){
-            if($this->input->get('search')){
-                $search_arr.= " AND title LIKE '%".$this->input->get('search', TRUE)."%' OR short_desc LIKE '%".$this->input->get('search', TRUE)."%'";
+        if ($this->input->get('search') || $this->input->get('category') || $this->input->get('lang')) {
+            if ($this->input->get('search')) {
+                $search_arr.= " AND title LIKE '%" . $this->input->get('search', TRUE) . "%' OR short_desc LIKE '%" . $this->input->get('search', TRUE) . "%'";
             }
-            if($this->input->get('category')){
-                $search_arr.= " AND cat_id = '".$this->input->get('category', TRUE)."'";
+            if ($this->input->get('category')) {
+                $search_arr.= " AND cat_id = '" . $this->input->get('category', TRUE) . "'";
             }
-            if($this->input->get('lang')){
-                $search_arr.= " AND lang_iso = '".$this->input->get('lang', TRUE)."'";
+            if ($this->input->get('lang')) {
+                $search_arr.= " AND lang_iso = '" . $this->input->get('lang', TRUE) . "'";
             }
         }
         $search_arr.= " AND is_category = 0";
@@ -49,11 +62,11 @@ class Article extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('article_db', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/article/';
+        $base_url = BASE_URL . '/admin/plugin/article/article/';
 
         // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 4);
-        ($this->uri->segment(4)) ? $pagination = $this->uri->segment(4) : $pagination = 0;
+        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
+        ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
 
         //Get users from database
         $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
@@ -64,8 +77,46 @@ class Article extends CI_Controller {
         //Load the view
         $this->template->loadSub('admin/plugin/article_index');
     }
-    
-    public function add() {
+
+    public function category() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->csz_referrer->setIndex('article_cat'); /* Set index page when redirect after save */
+        $search_arr = ' 1=1 ';
+        if ($this->input->get('search') || $this->input->get('main_cat_id') || $this->input->get('lang')) {
+            if ($this->input->get('search')) {
+                $search_arr.= " AND category_name LIKE '%" . $this->input->get('search', TRUE) . "%'";
+            }
+            if ($this->input->get('main_cat_id')) {
+                $search_arr.= " AND main_cat_id = '" . $this->input->get('main_cat_id', TRUE) . "'";
+            }
+            if ($this->input->get('lang')) {
+                $search_arr.= " AND lang_iso = '" . $this->input->get('lang', TRUE) . "'";
+            }
+        }
+        $search_arr.= " AND is_category = 1";
+        $this->load->helper('form');
+        $this->load->library('pagination');
+        // Pages variable
+        $result_per_page = 20;
+        $total_row = $this->Csz_model->countData('article_db', $search_arr);
+        $num_link = 10;
+        $base_url = BASE_URL . '/admin/plugin/article/category';
+
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
+        ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
+
+        //Get users from database
+        $this->template->setSub('category', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+        $this->template->setSub('total_row', $total_row);
+        $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+
+        //Load the view
+        $this->template->loadSub('admin/plugin/article_category');
+    }
+
+    public function artadd() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
         $this->load->helper('form');
@@ -74,60 +125,76 @@ class Article extends CI_Controller {
         //Load the view
         $this->template->loadSub('admin/plugin/article_add');
     }
-    
-    public function addSave() {
-        admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        $is_category = $this->input->post('is_category', TRUE);
-        if(!$is_category){
-            //Load the form validation library
-            $this->load->library('form_validation');
-            //Set validation rules
-            $this->form_validation->set_rules('title', 'Title', 'required');
-            $this->form_validation->set_rules('short_desc', 'Short Description', 'required');
-            $this->form_validation->set_rules('cat_id', 'Category', 'required');
-            if ($this->form_validation->run() == FALSE) {
-                //Validation failed
-                $this->add();
-            } else {
-                //Validation passed
-                //Add the user
-                $this->Article_model->insert();
-                $this->db->cache_delete_all();
-                redirect($this->csz_referrer->getIndex('article'), 'refresh');
-            }
-        }else{
-            if($this->input->post('category_name', TRUE)){
-                $this->Article_model->insert();
-                $this->db->cache_delete_all();
-                redirect($this->csz_referrer->getIndex('article'), 'refresh');
-            }else{
-                redirect(BASE_URL.'/admin/plugin/article/add?is_category=1', 'refresh');
-            }
-        }
-    }
-    
-    public function edit() {
+
+    public function catadd() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
         $this->load->helper('form');
-        if($this->uri->segment(5)){
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+        $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+        //Load the view
+        $this->template->loadSub('admin/plugin/article_addcat');
+    }
+
+    public function addSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        //Load the form validation library
+        $this->load->library('form_validation');
+        //Set validation rules
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('short_desc', 'Short Description', 'required');
+        $this->form_validation->set_rules('cat_id', 'Category', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            //Validation failed
+            $this->artadd();
+        } else {
+            //Validation passed
+            //Add the user
+            $this->Article_model->insert();
+            $this->db->cache_delete_all();
+            redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+        }
+    }
+
+    public function addCatSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        //Load the form validation library
+        $this->load->library('form_validation');
+        //Set validation rules
+        $this->form_validation->set_rules('category_name', 'Category Name', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            //Validation failed
+            $this->catadd();
+        } else {
+            //Validation passed
+            //Add the user
+            $this->Article_model->insertCat();
+            $this->db->cache_delete_all();
+            redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+        }
+    }
+
+    public function artedit() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        //Load the form helper
+        $this->load->helper('form');
+        if ($this->uri->segment(5)) {
             $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
-            $this->template->loadSub('admin/plugin/article_edit');
-        }else{
-            redirect($this->csz_referrer->getIndex('article'), 'refresh');
-        } 
+            $this->template->loadSub('admin/plugin/article_artedit');
+        } else {
+            redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+        }
     }
-    
-    public function editSave() {
+
+    public function editArtSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        $is_category = $this->input->post('is_category', TRUE);
-        if($this->uri->segment(5)){
-            if(!$is_category){
+        if ($this->uri->segment(5)) {
                 //Load the form validation library
                 $this->load->library('form_validation');
                 //Set validation rules
@@ -136,38 +203,76 @@ class Article extends CI_Controller {
                 $this->form_validation->set_rules('cat_id', 'Category', 'required');
                 if ($this->form_validation->run() == FALSE) {
                     //Validation failed
-                    $this->edit();
+                    $this->artedit();
                 } else {
                     //Validation passed
                     //Add the user
-                    $this->Article_model->update($this->uri->segment(5));
+                    $this->Article_model->artupdate($this->uri->segment(5));
                     $this->db->cache_delete_all();
-                    redirect($this->csz_referrer->getIndex('article'), 'refresh');
+                    redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
                 }
-            }else{
-                if($this->input->post('category_name', TRUE)){
-                    $this->Article_model->update($this->uri->segment(5));
-                    $this->db->cache_delete_all();
-                    redirect($this->csz_referrer->getIndex('article'), 'refresh');
-                }else{
-                    redirect(BASE_URL.'/admin/plugin/article/edit/'.$this->uri->segment(5), 'refresh');
-                }
-            }
-        }else{
+        } else {
             redirect($this->csz_referrer->getIndex('article'), 'refresh');
         }
     }
     
-    public function delete() {
+    public function catedit() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        //Load the form helper
+        $this->load->helper('form');
+        if ($this->uri->segment(5)) {
+            $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+            $this->template->setSub('category', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
+            $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+            //Load the view
+            $this->template->loadSub('admin/plugin/article_catedit');
+        } else {
+            redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+        }
+    }
+    
+    public function editCatSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        if($this->uri->segment(5)){
+        if ($this->uri->segment(5)) {
+            $this->load->library('form_validation');
+            //Set validation rules
+            $this->form_validation->set_rules('category_name', 'Category Name', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                //Validation failed
+                $this->catedit();
+            } else {
+                $this->Article_model->catupdate($this->uri->segment(5));
+                $this->db->cache_delete_all();
+                redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+            }
+        } else {
+            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+        }
+    }
+
+    public function artdel() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
             $this->db->cache_delete_all();
-            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        redirect($this->csz_referrer->getIndex('article'), 'refresh');
+        redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+    }
+    
+    public function catdel() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        if ($this->uri->segment(5)) {
+            //Delete the data
+            $this->Article_model->delete($this->uri->segment(5));
+            $this->db->cache_delete_all();
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        }
+        redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
     }
 
 }

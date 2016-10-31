@@ -1,6 +1,6 @@
 <?php
 if ($page_rs !== FALSE) {
-    echo $content = $this->Csz_model->getHtmlContent($page_rs->content, $page, $this->uri->segment(2));
+    echo $content = $this->Csz_model->getHtmlContent($page_rs->content, $this->uri->segment(2));
 } else {
     ?>
     <div class="jumbotron">

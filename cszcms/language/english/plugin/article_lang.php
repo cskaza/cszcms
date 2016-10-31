@@ -7,6 +7,8 @@ $lang['article_author']                 = "Author";
 $lang['article_datetime']               = "Date/Time";
 $lang['category_header']		= "Category";
 $lang['article_widget_remark']		= "{language_iso} is the language code for frontend. You can see in 'Language' section on backend system.";
+$lang['article_total']                  = "Total Article";
+$lang['category_total']                  = "Total Category";
 
 //Article new/edit
 $lang['article_new_header']		= "New Article";

@@ -1,9 +1,12 @@
 <!-- Page Heading -->
 <div class="row">
     <div class="col-lg-12">
+        <!-- Start Admin Menu -->
+        <?php echo $this->Article_model->AdminMenu() ?>
+        <!-- End Admin Menu -->
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-edit"></span></i> <?php if($article->is_category){  echo  $this->lang->line('category_new_header');  }else{ echo  $this->lang->line('article_new_header'); } ?>
+                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo $this->lang->line('article_new_header'); ?>
             </li>
         </ol>
     </div>
@@ -11,43 +14,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php if($article->is_category){  echo  $this->lang->line('category_new_header');  }else{ echo  $this->lang->line('article_new_header'); } ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('article'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editsave/'.$this->uri->segment(5)); ?>
-        <input type="hidden" name="is_category" id="is_category" value="<?php echo $article->is_category; ?>">
-        <?php if($article->is_category){ ?>
-            <div class="control-group">	
-                <label class="control-label" for="category_name"><?php echo $this->lang->line('category_name'); ?>*</label>
-                <?php
-                $data = array(
-                    'name' => 'category_name',
-                    'id' => 'category_name',
-                    'required' => 'required',
-                    'autofocus' => 'true',
-                    'class' => 'form-control',
-                    'value' => set_value('category_name', $article->category_name, FALSE)
-                );
-                echo form_input($data);
-                ?>			
-            </div> <!-- /control-group -->
-            <div class="control-group">	
-                <label class="control-label" for="main_cat_id"><?php echo $this->lang->line('category_main'); ?></label>
-                <div class="controls">
-                    <?php
-                    $att = 'id="main_cat_id" class="form-control"';
-                    $data = array();
-                    $data[''] = $this->lang->line('option_choose');
-                    if(isset($category)){
-                        foreach ($category as $c) {
-                            if(!$c['main_cat_id'] && $c['article_db_id'] != $this->uri->segment(5)){
-                                $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
-                            }
-                        }
-                    }
-                    echo form_dropdown('main_cat_id', $data, $article->main_cat_id, $att);
-                    ?>
-                </div> <!-- /controls -->
-            </div> <!-- /control-group -->
-        <?php }else{ ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('article_new_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
+        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editArtSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
                 <?php echo form_error('title', '<div class="error">', '</div>'); ?>
                 <label class="control-label" for="title"><?php echo $this->lang->line('article_title'); ?>*</label>
@@ -140,7 +108,6 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <hr>
-        <?php } ?>
         <div class="control-group">	
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>
             <?php
@@ -181,7 +148,7 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('article'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('article_art'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
         <!-- /widget-content --> 

@@ -43,7 +43,7 @@
                         <?php } ?>
                     </div>
                     <br><br>
-                    <?php echo $product->full_desc ?>
+                    <?php echo $this->Csz_model->getHtmlContent($product->full_desc, $this->uri->segment(6)) ?>
                     <hr>
                     <?php if ($product->stock) { ?>
                         <?php echo form_open(BASE_URL . '/plugin/shop/addCart/'.$product->shop_product_id); ?>

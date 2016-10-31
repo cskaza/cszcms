@@ -452,12 +452,12 @@ class Csz_model extends CI_Model {
         return $val;
     }
     
-    public function getHtmlContent($ori_content, $page, $url_segment) { /* Calculate the HTML code */
+    public function getHtmlContent($ori_content, $url_segment) { /* Calculate the HTML code */
         $config = $this->load_config();
         if($config->link_statistic_active){
             $ori_content = $this->linkFromHtml($ori_content);
         }
-        $ori_content = $this->frmNameInHtml($ori_content, $page, $url_segment);
+        $ori_content = $this->frmNameInHtml($ori_content, $url_segment);
         $ori_content = $this->widgetInHtml($ori_content);
         return $ori_content;
     }
@@ -558,7 +558,7 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
-    public function frmNameInHtml($content, $page, $url_segment) { /* Find the form in content */
+    public function frmNameInHtml($content, $url_segment) { /* Find the form in content */
         $txt_nonhtml = strip_tags($content);
         if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
@@ -573,7 +573,7 @@ class Csz_model extends CI_Model {
                     if (strpos($val, '{=forms:') !== false) {
                         $rep_arr = array('{=forms:', '}');
                         $frm_name = str_replace($rep_arr, '', $val);
-                        $content = $this->addFrmToHtml($content, $frm_name, $page, $url_segment);
+                        $content = $this->addFrmToHtml($content, $frm_name, $url_segment);
                         break; /* Break for reCaptcha one form per page only */
                     }  
                 }
@@ -582,7 +582,7 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
-    public function addFrmToHtml($content, $frm_name, $cur_page = '', $status = '') { /* Add the form in content */
+    public function addFrmToHtml($content, $frm_name, $status = '') { /* Add the form in content */
         $row_config = $this->load_config();
         $where_arr = array('form_name', 'active');
         $val_arr = array($frm_name, 1);
@@ -590,17 +590,17 @@ class Csz_model extends CI_Model {
         if ($form_data) {
             $html_btn = '';
             if ($status == 1) {
-                $sts_msg = '<p class="text-center"><span class="success">' . $form_data->success_txt . '</span><br></p>';
+                $sts_msg = '<div class="text-center"><div class="alert alert-success" role="alert">' . $form_data->success_txt . '</div></div><br>';
             } else if ($status == 2) {
-                $sts_msg = '<p class="text-center"><span class="error">' . $form_data->captchaerror_txt . '</span><br></p>';
+                $sts_msg = '<div class="text-center"><div class="alert alert-danger" role="alert">' . $form_data->captchaerror_txt . '</div></div><br>';
             } else if ($status == 3) {
-                $sts_msg = '<p class="text-center"><span class="error">' . $form_data->error_txt . '</span><br></p>';
+                $sts_msg = '<div class="text-center"><div class="alert alert-danger" role="alert">' . $form_data->error_txt . '</div></div><br>';
             } else {
                 $sts_msg = '';
             }
             $html = $sts_msg;
             $html.= '<form action="' . BASE_URL . '/formsaction/' . $form_data->form_main_id . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
-            $html.= '<input type="hidden" name="cur_page" id="cur_page" value="' . $cur_page . '">';
+            $html.= '<input type="hidden" name="cur_url" id="cur_url" value="' . str_replace(BASE_URL.'/','',current_url()) . '">';
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
                 if ($field->field_required) {
@@ -1030,4 +1030,7 @@ class Csz_model extends CI_Model {
         }
     }
     
+    public function urlencode($url) {
+        return str_replace('%2F','/',urlencode($url));
+    }
 }

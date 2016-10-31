@@ -17,7 +17,7 @@
                     <?php if($article->main_picture){
                         echo '<center><img src="'.BASE_URL.'/photo/plugin/article/'.$article->main_picture.'" class="img-responsive img-thumbnail" alt="'.$article->title.'"></center><br>';
                     } ?>
-                    <?php echo $article->content ?>
+                    <?php echo $this->Csz_model->getHtmlContent($article->content, $this->uri->segment(6)) ?>
                 </div>
             </div>
         </div>

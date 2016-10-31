@@ -16,15 +16,15 @@ class Formsaction extends CI_Controller {
             $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
             if ($frm_rs->active) {
                 if($frm_rs->form_method == 'post'){
-                    $cur_page = $this->input->post('cur_page', TRUE);
+                    $cur_page = $this->input->post('cur_url', TRUE);
                 }elseif($frm_rs->form_method == 'get'){
-                    $cur_page = $this->input->get('cur_page', TRUE);
+                    $cur_page = $this->input->get('cur_url', TRUE);
                 }
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {
                     if ($this->Csz_model->chkCaptchaRes() == '') {
                         //Return to last page: Captcha invalid
-                        redirect(urlencode($cur_page) . '/2', 'refresh');
+                        redirect($this->Csz_model->urlencode($cur_page) . '/2', 'refresh');
                         exit;
                     }
                 }
@@ -33,13 +33,13 @@ class Formsaction extends CI_Controller {
                     if($frm_rs->form_method == 'post'){
                             if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
-                               redirect(urlencode($cur_page) . '/3', 'refresh'); 
+                               redirect($this->Csz_model->urlencode($cur_page) . '/3', 'refresh'); 
                                exit;
                             }
                     }elseif($frm_rs->form_method == 'get'){
                             if($f_val->field_required && !$this->input->get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
-                               redirect(urlencode($cur_page) . '/3', 'refresh'); 
+                               redirect($this->Csz_model->urlencode($cur_page) . '/3', 'refresh'); 
                                exit;
                             }
                     }
@@ -70,7 +70,7 @@ class Formsaction extends CI_Controller {
                     }
                 }
                 //Return to last page: Success
-                redirect(urlencode($cur_page) . '/1', 'refresh');
+                redirect($this->Csz_model->urlencode($cur_page) . '/1', 'refresh');
                 exit;
             } else {
                 //Return to home page

@@ -1,12 +1,15 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.3
 x- Add forum plugin.
+x- Add facebook comments plugin.
 - Add option member register for send confirmed email in settings.
 - Add option to close member register in settings.
 - Update jQuery to 1.12.4.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
 - Fix installer has system checking.
+- Fix formaction redirect for frontend.
+- Fix Article plugin to version 1.0.3 (Add dashboard and menu).
 
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.
