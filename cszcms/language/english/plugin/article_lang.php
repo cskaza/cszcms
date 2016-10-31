@@ -13,6 +13,8 @@ $lang['category_total']                  = "Total Category";
 //Article new/edit
 $lang['article_new_header']		= "New Article";
 $lang['category_new_header']		= "New Category";
+$lang['article_edit_header']		= "Edit Article";
+$lang['category_edit_header']		= "Edit Category";
 $lang['category_name']                  = "Category Name";
 $lang['category_main']                  = "Main Category";
 $lang['article_title']                  = "Title";

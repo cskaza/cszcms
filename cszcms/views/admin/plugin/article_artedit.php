@@ -6,7 +6,7 @@
         <!-- End Admin Menu -->
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo $this->lang->line('article_new_header'); ?>
+                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo $this->lang->line('article_edit_header'); ?>
             </li>
         </ol>
     </div>
@@ -14,7 +14,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('article_new_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('article_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
         <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editArtSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
                 <?php echo form_error('title', '<div class="error">', '</div>'); ?>

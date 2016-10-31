@@ -6,11 +6,7 @@
         <!-- End Admin Menu -->
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-edit"></span></i> <?php if ($this->input->get('is_category', TRUE)) {
-            echo $this->lang->line('category_new_header');
-        } else {
-            echo $this->lang->line('article_new_header');
-        } ?>
+                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo $this->lang->line('category_new_header');?>
             </li>
         </ol>
     </div>

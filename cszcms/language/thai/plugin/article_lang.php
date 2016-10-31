@@ -13,6 +13,8 @@ $lang['category_total']                  = "รวมหมวดหมู่ท
 //Article new/edit
 $lang['article_new_header']		= "บทความใหม่";
 $lang['category_new_header']		= "หมวดหมู่ใหม่";
+$lang['article_edit_header']		= "แก้ไขบทความ";
+$lang['category_edit_header']		= "แก้ไขหมวดหมู่";
 $lang['category_name']                  = "ชื่อหมวดหมู่";
 $lang['category_main']                  = "หมวดหมู่หลัก";
 $lang['article_title']                  = "หัวข้อ";
