@@ -336,10 +336,11 @@ class Csz_model extends CI_Model {
 
     public function coreCss($more_css = '') {
         $core_css = '<link rel="canonical" href="'.base_url(uri_string()).'" />'."\n";
-        $core_css.= link_tag('assets/css/bootstrap.min.css');
+        $core_css.= link_tag('assets/css/corecss.min.css');
+        /*$core_css.= link_tag('assets/css/bootstrap.min.css');*/
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
-        $core_css.= link_tag('assets/css/flag-icon.min.css');
-        $core_css.= link_tag('assets/css/full-slider.css');
+        /*$core_css.= link_tag('assets/css/flag-icon.min.css');
+        $core_css.= link_tag('assets/css/full-slider.css');*/
         $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
@@ -361,12 +362,13 @@ class Csz_model extends CI_Model {
         }else{
             $hl = '';
         }
-        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>'."\n";
+        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/corejs.min.js"></script>'."\n";
+        /*$core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>'."\n";
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>'."\n";        
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>'."\n";
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/ui-loader.js"></script>'."\n";
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/ui-loader.js"></script>'."\n";*/
         $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/scripts.js"></script>'."\n";
+        /*$core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/scripts.js"></script>'."\n";*/
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach ($more_js as $value) {
@@ -1030,6 +1032,14 @@ class Csz_model extends CI_Model {
         }
     }
     
+    /**
+    * urlencode
+    *
+    * Function for url encode
+    *
+    * @param	string	$url    url
+    * @return	string
+    */
     public function urlencode($url) {
         return str_replace('%2F','/',urlencode($url));
     }

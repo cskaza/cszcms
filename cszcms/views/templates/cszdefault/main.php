@@ -17,10 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <!-- Custom CSS -->
         <?php echo  link_tag('templates/cszdefault/css/cszdefault.min.css') ?>        
         <!-- Custom Fonts -->        
-        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Montserrat:400,700') ?>
-        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Kaushan+Script') ?>
-        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic') ?>
-        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700') ?>
+        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Montserrat:400,700|Kaushan+Script|Droid+Serif:400,700,400italic,700italic|Roboto+Slab:400,100,300,700') ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -31,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <?php echo $additional_metatag?>
         <?php } ?>
     </head>
-    <body id="page-top" class="index">        
+    <body id="page-top" class="index">
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
@@ -106,8 +103,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <?php echo $core_js?>
-        <script src="<?php echo base_url()?>/templates/cszdefault/js/classie.js"></script>
-        <script src="<?php echo base_url()?>/templates/cszdefault/js/cbpAnimatedHeader.js"></script>
+        <script src="<?php echo base_url()?>/templates/cszdefault/js/classie.min.js"></script>
+        <script src="<?php echo base_url()?>/templates/cszdefault/js/cbpAnimatedHeader.min.js"></script>
         <script type="text/javascript">
         // Highlight the top nav as scrolling occurs
         $('body').scrollspy({

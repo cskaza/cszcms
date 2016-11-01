@@ -1,12 +1,9 @@
 $(".keypress-number").keypress(function (e) {
-    //if the letter is not digit then display error and don't type anything 
     /* Number and dot only */
     if (e.which != 8 && e.which != 0 && (e.which < 46 || e.which > 57)) {
-        //display error message
         return false;
     }
 });
-
 $(function () {
     var dates = $('.form-datepicker').datepicker({
         dateFormat: "yy-mm-dd",
