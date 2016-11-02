@@ -61,7 +61,8 @@ class Home extends CI_Controller {
             $this->template->set('title', $title);
             $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc,$page_rs->page_keywords,$title));
             $this->template->set('cur_page', $page_rs->page_url);
-        } else {    
+        } else {
+            header("HTTP/1.0 404 Not Found");
             $title = '404 Page not Found | ' . $row->site_name;
             $this->template->set('title', $title);
             $this->template->set('meta_tags', $this->Csz_model->coreMetatags('404 Page not Found',$row->keywords,$title));
