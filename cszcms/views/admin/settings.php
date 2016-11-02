@@ -244,7 +244,7 @@
                 <label class="control-label" for="og_image"><?php echo $this->lang->line('settings_og_image'); ?></label>
                 <div class="controls">
                     <div><img src="<?php
-                              if ($settings->site_logo != "") {
+                              if ($settings->og_image != "") {
                                   echo BASE_URL . '/photo/logo/' . $settings->og_image;
                               }
                               ?>" id="logo_preloaded" <?php
