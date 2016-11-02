@@ -204,6 +204,10 @@ $lang['settings_sitemap_lasttime']      = "อัพเดทล่าสุด"
 $lang['settings_member_header']          = "การตั้งค่าสมาชิก";
 $lang['settings_member_confirm_active']	= "เปิดใช้งานอีเมล์ยืนยันการสมัครสมาชิกใหม่";
 $lang['settings_member_close_regist']	= "ปิดการสมัครสมาชิก";
+$lang['settings_og_image']		= "รูปภาพของ og metatag (og:image)";
+$lang['settings_fbappid_header']	= "การตั้งค่า Facebook";
+$lang['settings_fbapp_id']		= "FB App ID";
+$lang['settings_fbappid_remark']	= 'คุณสามารถรับ FB App ID ได้ที่ <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>';
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

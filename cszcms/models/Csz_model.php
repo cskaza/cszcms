@@ -385,6 +385,16 @@ class Csz_model extends CI_Model {
 
     public function coreMetatags($desc_txt, $keywords, $title) {
         $config = $this->load_config();
+        $og_image = '';
+        if($config->og_image){
+            $og_image = BASE_URL.'/photo/logo/'.$config->og_image;
+        }else{
+            if($config->site_logo){
+                $og_image = BASE_URL.'/photo/logo/'.$config->site_logo;
+            }else{
+                $og_image = BASE_URL.'/assets/images/logo.png';
+            }
+        }
         $meta = array(
             array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
@@ -398,11 +408,14 @@ class Csz_model extends CI_Model {
             array('name' => 'og:type', 'content' => 'website', 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
             array('name' => 'og:url', 'content' => BASE_URL.'/'.$this->uri->uri_string(), 'type' => 'property'),
-            array('name' => 'og:image', 'content' => BASE_URL.'/photo/logo/'.$config->site_logo, 'type' => 'property'),
+            array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
             array('name' => 'name', 'content' => $title, 'type' => 'itemprop'),
             array('name' => 'description', 'content' => $desc_txt, 'type' => 'itemprop')
         );
         $return_meta = meta($meta);
+        if($config->fbapp_id){
+            $return_meta.= '<meta property="fb:app_id" content="'.$config->fbapp_id.'" />'."\n";
+        }
         return $return_meta;
     }
 
@@ -887,7 +900,7 @@ class Csz_model extends CI_Model {
             }
             if ($this->input->post('del_file')) {
                 $upload_file = '';
-                unlink('photo/profile/' . $this->input->post('del_file', TRUE));
+                @unlink('photo/profile/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('picture');
                 if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
@@ -1000,7 +1013,7 @@ class Csz_model extends CI_Model {
                if($header=trim(fgets($fp, 1024))) {
                        $sc_pos = strpos( $header, ':' );
                        if( $sc_pos === false ) {
-                           $headers['status'] = $header;
+                           $headers["status"] = $header;
                        } else {
                            $label = substr( $header, 0, $sc_pos );
                            $value = substr( $header, $sc_pos+1 );
@@ -1025,7 +1038,7 @@ class Csz_model extends CI_Model {
     */
     public function is_url_exist($url){
         $headers = $this->my_get_headers($url);
-        if(stripos($headers['status'],'200') || stripos($headers['status'],'301') || stripos($headers['status'],'302')){
+        if(stripos($headers["status"],'200') || stripos($headers["status"],'301') || stripos($headers["status"],'302')){
             return TRUE;
         }else{
             return FALSE;

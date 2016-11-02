@@ -204,6 +204,10 @@ $lang['settings_sitemap_lasttime']      = "Last updated";
 $lang['settings_member_header']          = "Member Settings";
 $lang['settings_member_confirm_active']	= "Member Register Confirmed Email Enable";
 $lang['settings_member_close_regist']	= "Member Register Close";
+$lang['settings_og_image']		= "Image of og metatag (og:image)";
+$lang['settings_fbappid_header']	= "Facebook Settings";
+$lang['settings_fbapp_id']		= "FB App ID";
+$lang['settings_fbappid_remark']	= 'You can get FB App ID at <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>';
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";

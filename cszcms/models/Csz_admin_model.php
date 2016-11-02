@@ -372,7 +372,7 @@ class Csz_admin_model extends CI_Model {
             }
             if ($this->input->post('del_file')) {
                 $upload_file = '';
-                unlink('photo/profile/' . $this->input->post('del_file', TRUE));
+                @unlink('photo/profile/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('picture');
                 if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
@@ -638,11 +638,12 @@ class Csz_admin_model extends CI_Model {
             'sendmail_path' => $this->input->post('sendmail_path', TRUE),
             'member_confirm_enable' => $this->input->post('member_confirm_enable', TRUE),
             'member_close_regist' => $this->input->post('member_close_regist', TRUE),
+            'fbapp_id' => $this->input->post('fbapp_id', TRUE),
         );
 
         if ($this->input->post('del_file')) {
             $upload_file = '';
-            unlink('photo/logo/' . $this->input->post('del_file', TRUE));
+            @unlink('photo/logo/' . $this->input->post('del_file', TRUE));
         } else {
             $upload_file = $this->input->post('siteLogo');
             if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
@@ -655,6 +656,21 @@ class Csz_admin_model extends CI_Model {
             }
         }
         $data['site_logo'] = $upload_file;
+        if ($this->input->post('del_og_image')) {
+            $upload_file1 = '';
+            @unlink('photo/logo/' . $this->input->post('del_og_image', TRUE));
+        } else {
+            $upload_file1 = $this->input->post('ogImage');
+            if ($_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg') {
+                $paramiter = '_1';
+                $photo_id = time();
+                $uploaddir = 'photo/logo/';
+                $file_f = $_FILES['og_image']['tmp_name'];
+                $file_name = $_FILES['og_image']['name'];
+                $upload_file1 = $this->file_upload($file_f, $file_name, $this->input->post('ogImage', TRUE), $uploaddir, $photo_id, $paramiter);
+            }
+        }
+        $data['og_image'] = $upload_file1;
         if ($this->input->post('siteTitle') != "")
             $data['site_name'] = $this->input->post('siteTitle', TRUE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -692,7 +708,7 @@ class Csz_admin_model extends CI_Model {
                 }
                 if (@filesize($newfile) > (1024 * 1024 * 5)) {
                     $photo = "";
-                    unlink($newfile);
+                    @unlink($newfile);
                 } else {
                     list($w, $h) = getimagesize($newfile);
                     if (($w > $maxSizeR) || ($h > $maxSizeR) && (!strtoupper($ext[$ext_n]) == "GIF")) {
@@ -700,13 +716,13 @@ class Csz_admin_model extends CI_Model {
                         $small_filename = $photo_id . $paramiter . "." . $ext[$ext_n];
                         $this->imageToFile($im, $uploaddir . $year . $small_filename); //make image to file for resize
                         $photo = $year . $small_filename;
-                        unlink($newfile);
+                        @unlink($newfile);
                     } else {
                         $photo = $year . $org_filename;
                     }
                 }
                 if ($tmp_photo)
-                    unlink($uploaddir . $tmp_photo);
+                    @unlink($uploaddir . $tmp_photo);
             } else if (strtoupper($ext[$ext_n]) == "PDF" || strtoupper($ext[$ext_n]) == "DOC" || strtoupper($ext[$ext_n]) == "DOCX" || strtoupper($ext[$ext_n]) == "ODT" || strtoupper($ext[$ext_n]) == "TXT" || strtoupper($ext[$ext_n]) == "ODG" || strtoupper($ext[$ext_n]) == "ODP" || strtoupper($ext[$ext_n]) == "ODS" || strtoupper($ext[$ext_n]) == "ZIP" || strtoupper($ext[$ext_n]) == "RAR" || strtoupper($ext[$ext_n]) == "PSD" || strtoupper($ext[$ext_n]) == "CSV" || strtoupper($ext[$ext_n]) == "XLS" || strtoupper($ext[$ext_n]) == "XLSX" || strtoupper($ext[$ext_n]) == "PPT" || strtoupper($ext[$ext_n]) == "PPTX" || strtoupper($ext[$ext_n]) == "MP3" || strtoupper($ext[$ext_n]) == "WAV" || strtoupper($ext[$ext_n]) == "MP4" || strtoupper($ext[$ext_n]) == "FLV" || strtoupper($ext[$ext_n]) == "WMA" || strtoupper($ext[$ext_n]) == "AVI" || strtoupper($ext[$ext_n]) == "MOV" || strtoupper($ext[$ext_n]) == "M4V" || strtoupper($ext[$ext_n]) == "WMV" || strtoupper($ext[$ext_n]) == "M3U" || strtoupper($ext[$ext_n]) == "PLS") {
                 $final_filename = $photo_id . $paramiter . "." . $ext[$ext_n];
                 $newfile = $uploaddir . $year . $final_filename;
@@ -719,10 +735,10 @@ class Csz_admin_model extends CI_Model {
                 $photo = $year . $final_filename;
                 if (@filesize($newfile) > (1024 * 1024 * 100)) { // Limit 100 MB
                     $photo = "";
-                    unlink($newfile);
+                    @unlink($newfile);
                 }
                 if ($tmp_photo)
-                    unlink($uploaddir . $tmp_photo);
+                    @unlink($uploaddir . $tmp_photo);
             }else {
                 $photo = "";
             }

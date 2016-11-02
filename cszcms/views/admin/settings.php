@@ -238,6 +238,33 @@
                     <span class="remark"><em><?php echo $this->lang->line('settings_logo_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
+            <br>
+            <div class="control-group">		
+            <?php echo form_error('og_image', '<div class="error">', '</div>'); ?>									
+                <label class="control-label" for="og_image"><?php echo $this->lang->line('settings_og_image'); ?></label>
+                <div class="controls">
+                    <div><img src="<?php
+                              if ($settings->site_logo != "") {
+                                  echo BASE_URL . '/photo/logo/' . $settings->og_image;
+                              }
+                              ?>" id="logo_preloaded" <?php
+                    if ($settings->og_image == "") {
+                        echo "style='display:none;'";
+                    }
+                    ?>></div>
+                    <?php if ($settings->og_image != "") { ?><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image?>"> <span class="remark">Delete File</span></label><?php } ?>
+                    <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                    <?php
+                    $data = array(
+                        'name' => 'og_image',
+                        'id' => 'og_image',
+                        'class' => 'span5'
+                    );
+                    echo form_upload($data);
+                    ?>
+                    <input type="hidden" id="ogImage" name="ogImage" value="<?php echo $settings->og_image?>"/>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
                         
     </div>
     <div class="col-lg-6 col-md-6">
@@ -279,6 +306,23 @@
                 );
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_member_close_regist'); ?></label>
+            </div> <!-- /control-group -->
+        <br>       
+        <div class="h2 sub-header"><?php echo  $this->lang->line('settings_fbappid_header') ?></div>    
+            <div class="control-group">	
+                <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_fbapp_id'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'fbapp_id',
+                        'id' => 'fbapp_id',
+                        'class' => 'form-control',
+                        'value' => set_value('fbapp_id', $settings->fbapp_id, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_fbappid_remark'); ?></em></span>
+                </div> <!-- /controls -->				
             </div> <!-- /control-group -->
         <br>       
         <div class="h2 sub-header"><?php echo  $this->lang->line('settings_email_header') ?></div>
