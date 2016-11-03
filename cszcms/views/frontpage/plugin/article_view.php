@@ -25,4 +25,13 @@
             <?php echo $this->Article_model->categoryMenu($this->session->userdata('fronlang_iso')); ?>
         </div>
     </div>
+    <?php if($article->fb_comment_active){ ?>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <?php 
+            $fb_comment = $this->Csz_model->getFBComments(BASE_URL.'/plugin/article/view/'.$article->article_db_id.'/'.$article->url_rewrite, $article->fb_comment_limit, $article->fb_comment_sort, $this->session->userdata('fronlang_iso'));
+            if($fb_comment !== FALSE){ echo $fb_comment; } ?>
+        </div>
+    </div>
+    <?php } ?>
 </div>

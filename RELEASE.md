@@ -1,7 +1,7 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.3
 x- Add forum plugin.
-x- Add facebook comments into article plugin.
+- Add facebook comments into article plugin.
 - Add option member register for send confirmed email in settings.
 - Add option to close member register in settings.
 - Add og:image upload in settings.

@@ -162,6 +162,50 @@
             echo form_checkbox($data);
             ?> <?php echo $this->lang->line('lang_active'); ?></label>	
         </div> <!-- /control-group -->
+        <hr>
+        <div class="control-group">										
+            <label class="form-control-static" for="fb_comment_active">
+            <?php
+            $data = array(
+                'name' => 'fb_comment_active',
+                'id' => 'fb_comment_active',
+                'value' => '1',
+                'checked' => 'checked'
+            );
+            echo form_checkbox($data);
+            ?> <?php echo $this->lang->line('fb_comment_active'); ?></label>	
+        </div> <!-- /control-group -->
+        <div class="control-group">
+            <label class="control-label" for="fb_comment_limit"><?php echo $this->lang->line('fb_comment_limit'); ?></label>
+            <div class="controls">
+                <?php
+                $att = 'id="fb_comment_limit" class="form-control"';
+                $data = array();
+                $data[1] = 1;
+                $data[2] = 2;
+                $data[5] = 5;
+                $data[10] = 10;
+                $data[15] = 15;
+                $data[20] = 20;
+                $data[30] = 30;
+                $data[50] = 50;
+                echo form_dropdown('fb_comment_limit', $data, 5, $att);
+                ?>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <div class="control-group">
+            <label class="control-label" for="fb_comment_sort"><?php echo $this->lang->line('fb_comment_sort'); ?></label>
+            <div class="controls">
+                <?php
+                $att = 'id="fb_comment_sort" class="form-control"';
+                $data = array();
+                $data['reverse_time'] = $this->lang->line('fb_comment_sort_newest');
+                $data['social'] = $this->lang->line('fb_comment_sort_top');
+                $data['time'] = $this->lang->line('fb_comment_sort_oldest');
+                echo form_dropdown('fb_comment_sort', $data, '', $att);
+                ?>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
         <br><br>
         <div class="form-actions">
             <?php
@@ -173,7 +217,7 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('article'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('article_art'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
         <!-- /widget-content --> 

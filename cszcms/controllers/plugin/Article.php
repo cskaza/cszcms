@@ -154,7 +154,7 @@ class Article extends CI_Controller {
                 $this->output->cache($row->pagecache_time);
                 $title = $art_row->title.' | ' . $row->site_name;
                 $this->template->set('title', $title);
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword,$title));
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword,$title,$art_row->main_picture));
                 $this->template->set('cur_page', $this->page_url);
 
                 //Get users from database

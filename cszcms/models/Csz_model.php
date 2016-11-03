@@ -20,7 +20,7 @@ class Csz_model extends CI_Model {
     *
     * Function for get current version from xml url
     *
-    * @param	string	$xml_url    xml url file
+    * @param	string	$xml_url    xml url file or NULL
     * @return	string or FALSE
     */
     public function getVersion($xml_url = '') {
@@ -48,6 +48,15 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+    * downloadFile From url
+    *
+    * Function for download file from url
+    *
+    * @param	string	$url    url for file  download
+    * @param	string	$path    path for file save
+    * @return	FALSE if can't download
+    */
     public function downloadFile($url, $path) {
         $newfname = $path;
         $file = fopen($url, 'rb') or die("Can't open file");
@@ -66,6 +75,18 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+    * count data from table
+    *
+    * Function for count the data from table
+    *
+    * @param	string	$table   DB Table
+    * @param	string	$search_sql    For sql where Ex. "field1 = '1' AND field2 = '1'" or NULL
+    * @param	string	$groupby   Group by field or NULL
+    * @param	string	$orderby   Order by field or NULL (Default is timestamp_create)
+    * @param	string	$sort   asc or desc or NULL (Default is desc)
+    * @return	number or FALSE
+    */
     public function countData($table, $search_sql = '', $groupby = '', $orderby = 'timestamp_create', $sort = 'desc') {
         $this->db->select('*');
         if($search_sql){
@@ -89,6 +110,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+    * getCurPages
+    *
+    * Function for get current page
+    *
+    * @return	String
+    */
     public function getCurPages() {
         $totSegments = $this->uri->total_segments();
         if (!is_numeric($this->uri->segment($totSegments))) {
@@ -185,6 +213,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+    * load_config
+    *
+    * Function for get settings from settings table
+    *
+    * @return	Object or FALSE
+    */
     public function load_config() {
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
@@ -337,10 +372,7 @@ class Csz_model extends CI_Model {
     public function coreCss($more_css = '') {
         $core_css = '<link rel="canonical" href="'.base_url(uri_string()).'" />'."\n";
         $core_css.= link_tag('assets/css/corecss.min.css');
-        /*$core_css.= link_tag('assets/css/bootstrap.min.css');*/
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
-        /*$core_css.= link_tag('assets/css/flag-icon.min.css');
-        $core_css.= link_tag('assets/css/full-slider.css');*/
         $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
@@ -363,12 +395,7 @@ class Csz_model extends CI_Model {
             $hl = '';
         }
         $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/corejs.min.js"></script>'."\n";
-        /*$core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>'."\n";
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>'."\n";        
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>'."\n";
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/ui-loader.js"></script>'."\n";*/
         $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
-        /*$core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/scripts.js"></script>'."\n";*/
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach ($more_js as $value) {
@@ -383,18 +410,26 @@ class Csz_model extends CI_Model {
         return $core_js;
     }
 
-    public function coreMetatags($desc_txt, $keywords, $title) {
+    public function coreMetatags($desc_txt, $keywords, $title, $article_img = '') {
         $config = $this->load_config();
         $og_image = '';
-        if($config->og_image){
-            $og_image = BASE_URL.'/photo/logo/'.$config->og_image;
+        $og_type = '';
+        if($article_img){
+            $og_image = BASE_URL.'/photo/plugin/article/'.str_replace(BASE_URL.'/photo/plugin/article/', '', $article_img);
+            $og_type = 'article';
         }else{
-            if($config->site_logo){
-                $og_image = BASE_URL.'/photo/logo/'.$config->site_logo;
+            $og_type = 'website';
+            if($config->og_image){
+                $og_image = BASE_URL.'/photo/logo/'.$config->og_image;
             }else{
-                $og_image = BASE_URL.'/assets/images/logo.png';
+                if($config->site_logo){
+                    $og_image = BASE_URL.'/photo/logo/'.$config->site_logo;
+                }else{
+                    $og_image = BASE_URL.'/assets/images/logo.png';
+                }
             }
         }
+        
         $meta = array(
             array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
@@ -405,7 +440,7 @@ class Csz_model extends CI_Model {
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
-            array('name' => 'og:type', 'content' => 'website', 'type' => 'property'),
+            array('name' => 'og:type', 'content' => $og_type, 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
             array('name' => 'og:url', 'content' => BASE_URL.'/'.$this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
@@ -1055,5 +1090,35 @@ class Csz_model extends CI_Model {
     */
     public function urlencode($url) {
         return str_replace('%2F','/',urlencode($url));
+    }
+    
+    /**
+    * getFBComments
+    *
+    * Function for get facebook comments code from settings
+    *
+    * @param	string	$url    page url for show comment
+    * @param	int	$limit  comment show limit
+    * @param	string	$sort   comment sort ("social", "reverse_time", or "time".)
+    * @param	string	$lang   language code from session
+    * @return	string or FALSE if not have fbapp_id
+    */
+    public function getFBComments($url, $limit, $sort, $lang) {
+        $html = '';
+        $config = $this->load_config();
+        if($config->fbapp_id && $url && $limit && $sort && $lang){
+            $html.= '<div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/'.$lang.'_'.strtoupper($this->getCountryCode($lang)).'/sdk.js#xfbml=1&version=v2.8&appId='.$config->fbapp_id.'";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, \'script\', \'facebook-jssdk\'));</script>
+            <div class="fb-comments" data-href="'.$url.'" data-width="100%" data-numposts="'.$limit.'" data-order-by="'.$sort.'"></div>'."\n";
+            return $html;
+        }else{
+            return FALSE;
+        }
     }
 }

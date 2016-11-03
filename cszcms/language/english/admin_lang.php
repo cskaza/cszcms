@@ -399,3 +399,11 @@ $lang['widget_name']                 = "Widget Name";
 $lang['widget_xml_url']                 = "Widget XML URL";
 $lang['widget_limit_view']                 = "Show Limit";
 $lang['widget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see Widget Name<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+
+// Facebook Comments
+$lang['fb_comment_active']               = "Enable Facebook Comments";
+$lang['fb_comment_limit']               = "Comments Limit Display";
+$lang['fb_comment_sort']                = "Facebook Comments Sort";
+$lang['fb_comment_sort_top']                = "Top";
+$lang['fb_comment_sort_newest']                = "Newest";
+$lang['fb_comment_sort_oldest']                = "Oldest";

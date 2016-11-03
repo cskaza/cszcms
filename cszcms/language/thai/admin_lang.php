@@ -399,3 +399,11 @@ $lang['widget_name']                 = "ชื่อ Widget";
 $lang['widget_xml_url']                 = "Widget XML URL";
 $lang['widget_limit_view']                 = "จำกัดการแสดงผล";
 $lang['widget_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่ม widget ปลั๊กอินเข้าไปยังหน้าเนื้อหา. กรุณาดูที่ชื่อ widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+
+// Facebook Comments
+$lang['fb_comment_active']               = "เปิดใช้งาน Facebook Comments";
+$lang['fb_comment_limit']               = "จำกัด Comments ที่แสดง";
+$lang['fb_comment_sort']                = "การจัดเรียง Facebook Comment";
+$lang['fb_comment_sort_top']                = "ยอดนิยม";
+$lang['fb_comment_sort_newest']                = "ล่าสุด";
+$lang['fb_comment_sort_oldest']                = "เก่าสุด";

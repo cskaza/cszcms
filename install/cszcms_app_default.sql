@@ -157,6 +157,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `settings_id` int(11) NOT NULL AUTO_INCREMENT,
   `site_name` varchar(255) NOT NULL,
   `site_logo` varchar(255) NOT NULL,
+  `og_image` varchar(255) NOT NULL,
+  `fbapp_id` varchar(255) NOT NULL,
   `site_footer` text NOT NULL,
   `default_email` varchar(255) NOT NULL,
   `keywords` text NOT NULL,
@@ -181,8 +183,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '&copy; %YEAR CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `timestamp_update`) VALUES
+(1, 'CSZ-CMS Starter', '', '', '', '&copy; %YEAR CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -364,6 +366,9 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `cat_id` int(11) NOT NULL,
   `lang_iso` varchar(10) NOT NULL,
   `active` int(11) NOT NULL,
+  `fb_comment_active` int(11) NOT NULL,
+  `fb_comment_limit` int(11) NOT NULL,
+  `fb_comment_sort` varchar(20) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`article_db_id`)

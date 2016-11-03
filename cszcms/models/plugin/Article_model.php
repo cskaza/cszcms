@@ -12,6 +12,7 @@ class Article_model extends CI_Model {
     public function insert() {
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
         $upload_file = '';
         if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
             $paramiter = '_1';
@@ -34,6 +35,9 @@ class Article_model extends CI_Model {
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', 0);
         $this->db->set('active', $active);
+        $this->db->set('fb_comment_active', $fb_comment_active);
+        $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
+        $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -63,6 +67,7 @@ class Article_model extends CI_Model {
         $row = $this->Csz_model->getValue('is_category', 'article_db', 'article_db_id', $id, 1);
         if(!$row->is_category){
             ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+            ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
             if ($this->input->post('del_file')) {
                 $upload_file = '';
                 @unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
@@ -89,8 +94,10 @@ class Article_model extends CI_Model {
             $this->Csz_model->clear_uri_cache($this->config->item('base_url') . urldecode('plugin/article/view/' . $id . '/' . $this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1)->url_rewrite)); /* Clear Page Cache when update */
             $this->db->set('url_rewrite', $url_rewrite);
             $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
-            $this->db->set('is_category', 0);
             $this->db->set('active', $active);
+            $this->db->set('fb_comment_active', $fb_comment_active);
+            $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
+            $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("article_db_id", $id);
             $this->db->update('article_db', $data);
@@ -108,7 +115,6 @@ class Article_model extends CI_Model {
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('category_name', TRUE));
             $this->db->set('url_rewrite', $url_rewrite);
             $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
-            $this->db->set('is_category', 1);
             $this->db->set('active', $active);
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("article_db_id", $id);
