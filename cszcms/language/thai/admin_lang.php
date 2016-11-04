@@ -53,7 +53,7 @@ $lang['user_address']                   = "ที่อยู่";
 $lang['user_phone']                     = "โทรศัพท์";
 $lang['user_picture']                   = "รูปภาพ";
 $lang['user_backend_visitor']           = "ผู้เยี่ยมชมสำหรับระบบเบื้องหลัง";
-$lang['user_not_allow_txt']             = "คุณไม่ได้รับอนุญาตในโหมดผู้เข้าชมหรือโหมดตัวอย่าง!";
+$lang['user_not_allow_txt']             = "คุณอาจไม่ได้รับอนุญาตให้ใช้งานในส่วนนี้!";
 $lang['user_notapply_member']           = "ไม่สามารถใช้กับประเภทของ 'Member' ได้!";
 
 // COMMON BUTTONS
