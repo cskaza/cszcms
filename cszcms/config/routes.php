@@ -99,6 +99,7 @@ $route['admin/lang/edited/:any'] = "admin/languages/edited";
 $route['admin/lang/:num'] = "admin/languages";
 $route['admin/pages'] = "admin/pages";
 $route['admin/pages/new'] = "admin/pages/addPages";
+$route['admin/pages/asCopy'] = "admin/pages/asCopy";
 $route['admin/pages/insert'] = "admin/pages/insert";
 $route['admin/pages/delete'] = "admin/pages/delete";
 $route['admin/pages/delete/:any'] = "admin/pages/delete";

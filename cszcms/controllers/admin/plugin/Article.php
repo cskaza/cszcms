@@ -274,5 +274,30 @@ class Article extends CI_Controller {
         }
         redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
     }
+    
+    public function asCopy() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        if($this->uri->segment(5)){
+            $article = $this->Csz_model->getValue('*', 'article_db', "article_db_id = '".$this->uri->segment(5)."' AND is_category = '0'", '', 1);
+            if($article !== FALSE){
+                $data = array(
+                    'main_picture' => '',
+                    'title' => $article->title.'-copy',
+                    'url_rewrite' => $article->url_rewrite.'-copy',
+                    'keyword' => $article->keyword,
+                    'short_desc' => $article->short_desc,
+                    'content' => $article->content,
+                    'cat_id' => $article->cat_id,
+                    'lang_iso' => $article->lang_iso,
+                    'is_category' => 0,
+                    'active' => 0,
+                    'user_admin_id' => $this->session->userdata('user_admin_id'),
+                );
+                $this->Csz_model->insertAsCopy('article_db', $data);
+            }
+        }
+        redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+    }
 
 }

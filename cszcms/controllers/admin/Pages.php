@@ -144,4 +144,26 @@ class Pages extends CI_Controller {
         //Return to languages list
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
+    
+    public function asCopy() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        if($this->uri->segment(4)){
+            $page = $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1);
+            if($page !== FALSE){
+                $data = array(
+                    'page_name' => $page->page_name.'-copy',
+                    'page_url' => $page->page_url.'-copy',
+                    'lang_iso' => $page->lang_iso,
+                    'page_title' => $page->page_title,
+                    'page_keywords' => $page->page_keywords,
+                    'page_desc' => $page->page_desc,
+                    'content' => $page->content,
+                    'active' => 0,
+                );
+                $this->Csz_model->insertAsCopy('pages', $data);
+            }
+        }
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
 }

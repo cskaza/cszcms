@@ -2,7 +2,7 @@
 
 The MIT License (MIT)
 
-- by CSKAZA for [CSZ-CMS](http://www.cszcms.com)
+- by CSKAZA for [CSZ CMS](https://www.cszcms.com)
 - Copyright (c) 2016 by CSKAZA
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

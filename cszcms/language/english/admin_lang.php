@@ -75,6 +75,7 @@ $lang['id_col_table']		= "ID#";
 $lang['year_txt']		= "Year";
 $lang['month_txt']		= "Month";
 $lang['day_txt']		= "Day";
+$lang['btn_ascopy']		= "As Copy";
 
 //Login Page
 $lang['login_heading']		= "Backend System Login";

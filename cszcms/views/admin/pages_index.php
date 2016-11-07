@@ -30,10 +30,10 @@
                 <thead>
                     <tr>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="29%" class="text-center"><?php echo $this->lang->line('pages_name'); ?></th>
-                        <th width="35%" class="text-center"><?php echo $this->lang->line('pages_title'); ?></th>
+                        <th width="24%" class="text-center"><?php echo $this->lang->line('pages_name'); ?></th>
+                        <th width="34%" class="text-center"><?php echo $this->lang->line('pages_title'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
-                        <th width="20%"></th>
+                        <th width="26%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
                             echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
                             echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
                             echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
-                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center"><a onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')"  href="'.BASE_URL.'/admin/pages/asCopy/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                         

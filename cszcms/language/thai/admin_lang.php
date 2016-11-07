@@ -75,6 +75,7 @@ $lang['id_col_table']		= "ไอดี#";
 $lang['year_txt']		= "ปี";
 $lang['month_txt']		= "เดือน";
 $lang['day_txt']		= "วัน";
+$lang['btn_ascopy']		= "คัดลอกเป็น";
 
 //Login Page
 $lang['login_heading']		= "เข้าสู่ระบบเบื้องหลัง";

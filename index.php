@@ -3,17 +3,15 @@ if (!file_exists('config.inc.php')) {
 	header("Location: ./install");
 	exit();
 }
-if (function_exists('ini_set')) {
-    @ini_set('max_execution_time', 300);
-}
 /**
- * CodeIgniter
+ * CSZ CMS with CodeIgniter
  *
- * An open source application development framework for PHP
+ * An open source content management system application with development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2016 by CSKAZA for CSZ CMS
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,12 +31,14 @@ if (function_exists('ini_set')) {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
+ * @package	CSZCMS-CodeIgniter
+ * @author	CSKAZA Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
  * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
+ * @link	https://www.cszcms.com.com
  * @since	Version 1.0.0
  * @filesource
  *---------------------------------------------------------------
@@ -318,6 +318,10 @@ switch (ENVIRONMENT)
  */
 /** Config **/
 include FCPATH.'config.inc.php';
+if (function_exists('ini_set')) {
+    @ini_set('max_execution_time', 300);
+    @ini_set('date.timezone', TIME_ZONE);
+}
 @date_default_timezone_set(TIME_ZONE);
 include FCPATH.'proxy.inc.php';
 require_once BASEPATH.'core/CodeIgniter.php';

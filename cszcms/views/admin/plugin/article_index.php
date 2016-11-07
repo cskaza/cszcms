@@ -46,10 +46,10 @@
                 <thead>
                     <tr>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('article_mainpic'); ?></th>
-                        <th width="28%" class="text-center"><?php echo $this->lang->line('article_title'); ?></th>
-                        <th width="12%" class="text-center"><?php echo $this->lang->line('category_header'); ?></th>
-                        <th width="12%" class="text-center"><?php echo $this->lang->line('article_author'); ?></th>
-                        <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
+                        <th width="30%" class="text-center"><?php echo $this->lang->line('article_title'); ?></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('category_header'); ?></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('article_author'); ?></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
                         <th width="20%"></th>
                     </tr>
@@ -84,7 +84,7 @@
                             echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . ucfirst($this->Csz_admin_model->getUser($u['user_admin_id'])->name) . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
                             echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['timestamp_update'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/plugin/article/artedit/' . $u['article_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/artdel/'.$u['article_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center" style="vertical-align: middle;"><a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.BASE_URL.'/admin/plugin/article/asCopy/' . $u['article_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a><br><br><a href="'.BASE_URL.'/admin/plugin/article/artedit/' . $u['article_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/artdel/'.$u['article_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                     }

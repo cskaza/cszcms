@@ -5,6 +5,7 @@ x- Add forum plugin.
 - Add option member register for send confirmed email in settings.
 - Add option to close member register in settings.
 - Add og:image upload in settings.
+- Add create new content as copy button.
 - Update jQuery to 1.12.4.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
