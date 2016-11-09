@@ -1039,13 +1039,13 @@ class Csz_model extends CI_Model {
         $url_info = parse_url($url);
         if (isset($url_info['scheme']) && $url_info['scheme'] == 'https') {
             $port = 443;
-            @$fp = fsockopen('ssl://' . $url_info['host'], $port, $errno, $errstr, 10);
+            $fp = @fsockopen('ssl://' . $url_info['host'], $port, $errno, $errstr, 10);
         } else {
             $port = isset($url_info['port']) ? $url_info['port'] : 80;
-            @$fp = fsockopen($url_info['host'], $port, $errno, $errstr, 10);
+            $fp = @fsockopen($url_info['host'], $port, $errno, $errstr, 10);
         }
         if ($fp) {
-            $headers = '';
+            $headers = array();
             stream_set_timeout($fp, 10);
             $head = "HEAD " . @$url_info['path'] . "?" . @$url_info['query'];
             $head .= " HTTP/1.0\r\nHost: " . @$url_info['host'] . "\r\n\r\n";
@@ -1078,7 +1078,7 @@ class Csz_model extends CI_Model {
      */
     public function is_url_exist($url) {
         $headers = $this->my_get_headers($url);
-        if (stripos($headers["status"], '200') || stripos($headers["status"], '301') || stripos($headers["status"], '302')) {
+        if ($headers !== FALSE && (stripos($headers["status"], '200') || stripos($headers["status"], '301') || stripos($headers["status"], '302'))) {
             return TRUE;
         } else {
             return FALSE;
