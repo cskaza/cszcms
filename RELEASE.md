@@ -12,6 +12,8 @@ x- Add forum plugin.
 - Fix installer has system checking.
 - Fix formaction redirect for frontend.
 - Fix Article plugin to version 1.0.3 (Add dashboard and menu).
+- Fix current version display function.
+- Fix sitemap can generate gz file.
 
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.

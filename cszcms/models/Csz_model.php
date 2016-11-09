@@ -11,43 +11,35 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {
-
+    
+    private $version = '1.1.3'; /* For CMS Version */
+    private $release = 'beta'; /* For release or beta */
+            
     function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
     /**
-     * Get Version From url
+     * Get Current Version
      *
-     * Function for get current version from xml url
+     * Function for get current version
      *
-     * @param	string	$xml_url    xml url file or NULL
-     * @return	string or FALSE
+     * @param	string	$version_test    version to test or NULL
+     * @return	string
      */
-    public function getVersion($xml_url = '') {
-        if (!$xml_url) {
-            $xml_url = str_replace('https://', 'http://', BASE_URL) . '/version.xml';
-        }
-        if ($this->is_url_exist($xml_url) !== FALSE) {
-            $xml = @simplexml_load_file($xml_url);
-        } else {
-            if (file_exists(FCPATH . '/version.xml')) {
-                $xml = @simplexml_load_file(FCPATH . '/version.xml');
-            } else {
-                $xml = FALSE;
+    public function getVersion($version_test = '') {
+        $version = '';
+        if($version_test) {
+            $version = $version_test;               
+        }else{
+            if($this->release == 'beta'){
+                $version = $this->version.' Beta';
+            }else{
+                $version = $this->version;
             }
         }
-        if ($xml !== FALSE && $xml->version) {
-            if ($xml->release == 'beta') {
-                $beta = ' Beta';
-            } else {
-                $beta = '';
-            }
-            return $xml->version . $beta;
-        } else {
-            return FALSE;
-        }
+        return $version;
     }
 
     /**
@@ -440,7 +432,7 @@ class Csz_model extends CI_Model {
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
             array('name' => 'author', 'content' => $config->site_name),
-            array('name' => 'generator', 'content' => 'CSZ CMS | Open Source Content Management with responsive'),
+            array('name' => 'generator', 'content' => 'CSZ CMS | Version '.$this->Csz_model->getVersion()),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),

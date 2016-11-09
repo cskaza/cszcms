@@ -111,10 +111,18 @@ class Csz_sitemap extends CI_Model {
         }
         $sitemap_xml.= '</urlset>'."\n";
         if($sitemap_xml){
+            /* Gen sitemap.xml */
             $file_path = FCPATH."sitemap.xml";
             $fopen = fopen($file_path, 'wb') or die("can't open file");
             fwrite($fopen, $sitemap_xml);
             fclose($fopen);
+            /* Gen sitemap.xml.gz */
+            $gzdata = @gzencode($sitemap_xml, 9);
+            if($gzdata !== FALSE){
+                $fopen1 = fopen(FCPATH."sitemap.xml.gz", 'wb') or die("can't open file");
+                fwrite($fopen1, $gzdata);
+                fclose($fopen1);
+            }
 	}
     }
     

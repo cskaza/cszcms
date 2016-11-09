@@ -577,6 +577,7 @@ class Csz_admin_model extends CI_Model {
             array('name' => 'keywords', 'content' => $this->load_config()->keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
             array('name' => 'author', 'content' => 'CSKAZA'),
+            array('name' => 'generator', 'content' => 'CSZ CMS | Version '.$this->Csz_model->getVersion()),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
         );
