@@ -89,30 +89,17 @@ class Csz_admin_model extends CI_Model {
     *
     * Function for check version for update
     *
-    * @param	string	$cur_txt    current version
+    * @param	string	$cur_ver    current version
     * @param	string	$xml_url    xml url file
-    * @return	string or false
+    * @return	true or false
     */
-    public function chkVerUpdate($cur_txt, $xml_url = '') {
-        $cur_r = array();
-        $cur_xml = explode(' ', $cur_txt);
-        $xml_version = $this->setSessionLastVer($xml_url);
-        if ($xml_version) {
-            $cur_ver = str_replace(' ', '.', $cur_xml[0]);
-            $cur_r = explode('.', $cur_ver);
-            $ver_r = explode('.', $xml_version);
-            if(isset($cur_xml[1]) && ($cur_xml[1] == 'Beta' || $cur_xml[1] == 'beta')){
-                if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] == $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
-                    return $cur_xml[0];
-                } else {
-                    return FALSE;
-                }
+    public function chkVerUpdate($cur_ver, $xml_url = '') {
+        $last_ver = $this->setSessionLastVer($xml_url);
+        if ($last_ver) {
+            if(version_compare($cur_ver, $last_ver, '<') === TRUE){
+                return TRUE;
             }else{
-                if (($ver_r[0] == $cur_r[0] && $ver_r[1] == $cur_r[1] && $ver_r[2] > $cur_r[2]) || ($ver_r[0] == $cur_r[0] && $ver_r[1] > $cur_r[1]) || ($ver_r[0] > $cur_r[0])) {
-                    return $xml_version;
-                } else {
-                    return FALSE;
-                }
+                return FALSE;
             }
         } else {
             return FALSE;
