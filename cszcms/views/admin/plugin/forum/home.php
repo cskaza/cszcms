@@ -6,7 +6,7 @@
         <!-- End Admin Menu -->
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo  $this->lang->line('article_header') ?>
+                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo  $this->lang->line('forum_header') ?>
             </li>
         </ol>
     </div>

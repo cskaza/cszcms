@@ -7,6 +7,7 @@ x- Add forum plugin.
 - Add og:image upload in settings.
 - Add create new content as copy button.
 - Update jQuery to 1.12.4.
+- Update TinyMCE to 4.4.3.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
 - Fix installer has system checking.

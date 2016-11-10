@@ -2,10 +2,10 @@ function ChkAllDelete() {
     $('.CheckBoxDelete').attr('checked', 'checked');
 }
 $(".keypress-number").keypress(function (e) {
-    //if the letter is not digit then display error and don't type anything
+    /* if the letter is not digit then display error and don't type anything */
     /* Number and dot only */
     if (e.which != 8 && e.which != 0 && (e.which < 46 || e.which > 57)) {
-        //display error message
+        /* display error message */
         return false;
     }
 });
@@ -67,9 +67,10 @@ $(function () {
         convert_urls : false,
         extended_valid_elements : "*[*],script[charset|defer|language|src|type]",
         valid_elements: "*[*],script[charset|defer|language|src|type]",
-        plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert",
+        plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert",
         toolbar1: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage",
-        toolbar2: "forecolor backcolor emoticons | glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert",
+        toolbar2: "forecolor backcolor emoticons codesample glyphicons | b_button jumbotron row_cols boots_panels boot_alert form_insert",
+        image_advtab: true,
         style_formats: [
             { title: 'Text', items: [
                 {title: 'Muted text', inline: 'span', classes: 'text-muted'},
