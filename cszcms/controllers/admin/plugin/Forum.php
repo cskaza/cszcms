@@ -43,7 +43,10 @@ class Forum extends CI_Controller {
         admin_helper::is_not_admin($this->session->userdata('admin_type'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         
-        
+        $this->template->setSub('settings', $this->Csz_model->getValue('*', 'shop_config', 'shop_config_id', '1', 1));
+
+        //Load the view
+        $this->template->loadSub('admin/plugin/forum/config_index');
     }
 
 }

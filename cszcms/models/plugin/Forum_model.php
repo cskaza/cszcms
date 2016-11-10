@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Article_model extends CI_Model {
+class Forum_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
@@ -31,14 +31,13 @@ class Article_model extends CI_Model {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="' . BASE_URL . '/admin/plugin/article">' . $this->lang->line('nav_dash') . '</a>
+                    <a class="navbar-brand" href="' . BASE_URL . '/admin/plugin/forum">' . $this->lang->line('nav_dash') . '</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li' . $this->AdminMenuActive('category', $cur_page, 'cat') . '><a href="' . BASE_URL . '/admin/plugin/article/category">' . $this->lang->line('category_header') . '</a></li>
-                        <li' . $this->AdminMenuActive('article', $cur_page, 'art') . '><a href="' . BASE_URL . '/admin/plugin/article/article">' . $this->lang->line('article_header') . '</a></li>                      
+                        <li' . $this->AdminMenuActive('config', $cur_page) . '><a href="' . BASE_URL . '/admin/plugin/forum/config">' . $this->lang->line('forum_config') . '</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->

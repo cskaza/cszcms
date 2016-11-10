@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-12">
         <!-- Start Admin Menu -->
-        <?php echo $this->Article_model->AdminMenu() ?>
+        <?php echo $this->Forum_model->AdminMenu() ?>
         <!-- End Admin Menu -->
         <ol class="breadcrumb">
             <li class="active">
@@ -22,11 +22,11 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge"><?php echo $total_cat ?></div>
-                        <div><?php echo $this->lang->line('category_total') ?>!</div>
+                        <div>Topic Total<?php echo $this->lang->line('category_total') ?>!</div>
                     </div>
                 </div>
             </div>
-            <a href="<?php echo BASE_URL . '/admin/plugin/article/category' ?>">
+            <a href="#">
                 <div class="panel-footer">
                     <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                     <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -44,11 +44,11 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge"><?php echo $total_art ?></div>
-                        <div><?php echo $this->lang->line('article_total') ?>!</div>
+                        <div>Comment Total<?php echo $this->lang->line('article_total') ?>!</div>
                     </div>
                 </div>
             </div>
-            <a href="<?php echo BASE_URL . '/admin/plugin/article/article' ?>">
+            <a href="#">
                 <div class="panel-footer">
                     <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                     <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>

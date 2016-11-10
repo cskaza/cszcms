@@ -2,6 +2,7 @@
 /**
  * @package	Csz_admin_model
  * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -507,7 +508,15 @@ class Csz_admin_model extends CI_Model {
         
     }
 
+    /**
+     * cszCopyright
+     *
+     * Function for show website footer credit
+     * Please do not remove or change this fuction
+     *
+     */
     public function cszCopyright() {
+        /* Please do not remove or change this fuction */
         $csz_copyright = '<br><span class="copyright">Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> Version ' . $this->Csz_model->getVersion() . '</span>';
         return $csz_copyright;
     }

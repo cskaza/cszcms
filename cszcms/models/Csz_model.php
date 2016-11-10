@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package	Csz_model
  * @author	CSKAZA Dev Team
@@ -131,6 +130,20 @@ class Csz_model extends CI_Model {
         return $pageURL;
     }
 
+    /**
+     * getValue
+     *
+     * Function get value from table with object
+     *
+     * @param	string	$sel_field   DB field select
+     * @param	string	$table    DB table
+     * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
+     * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
+     * @param	string	$orderby   Order by field or NULL 
+     * @param	string	$sort   asc or desc or NULL 
+     * @param	string	$groupby   Group by field or NULL 
+     * @return	Object or FALSE
+     */
     public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
         if (is_array($where_field) && is_array($where_val)) {
@@ -166,6 +179,20 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getValueArray
+     *
+     * Function get value from table with array
+     *
+     * @param	string	$sel_field   DB field select
+     * @param	string	$table    DB table
+     * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
+     * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
+     * @param	string	$orderby   Order by field or NULL 
+     * @param	string	$sort   asc or desc or NULL 
+     * @param	string	$groupby   Group by field or NULL 
+     * @return	Array or FALSE
+     */
     public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
         if (is_array($where_field) && is_array($where_val)) {
@@ -196,6 +223,15 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getLastID
+     *
+     * Function for get last id from db
+     *
+     * @param	string	$table    db table name
+     * @param	string	$field_id    field id (primary key)
+     * @return	number
+     */
     public function getLastID($table, $field_id) {
         $this->db->select($field_id);
         $this->db->order_by($field_id, 'DESC');
@@ -227,6 +263,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getLang()
+     *
+     * Function for get admin language
+     *
+     * @return	String
+     */
     function getLang() {
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
@@ -236,6 +279,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getCountryCode
+     *
+     * Function for get country code from language code
+     *
+     * @param	string	$lang    language code
+     * @return	String
+     */
     public function getCountryCode($lang) {
         $this->db->limit(1, 0);
         $this->db->where("lang_iso", $lang);
@@ -246,6 +297,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getPageUrlFromID
+     *
+     * Function for get page url_rewrite from page id
+     *
+     * @param	string	$id    pages id
+     * @return	String
+     */
     public function getPageUrlFromID($id) {
         $this->db->limit(1, 0);
         $this->db->where("pages_id", $id);
@@ -256,6 +315,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getDefualtPage
+     *
+     * Function for get defualt page url_rewrite from language code
+     *
+     * @param	string	$lang    language code
+     * @return	String or FALSE if not found
+     */
     public function getDefualtPage($lang) {
         $this->db->where("lang_iso = '" . $lang . "' AND active = '1'", '');
         $this->db->limit(1, 0);
@@ -269,6 +336,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getDefualtLang
+     *
+     * Function for get defualt language code
+     *
+     * @return	String
+     */
     public function getDefualtLang() {
         $this->db->where('active', 1);
         $this->db->order_by("lang_iso_id", "asc");
@@ -280,6 +354,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * chkLangAlive
+     *
+     * Function for check language code is active
+     *
+     * @param	string	$lang_iso    language code
+     * @return	number
+     */
     public function chkLangAlive($lang_iso) {
         $this->db->where("lang_iso", $lang_iso);
         $this->db->where("active", 1);
@@ -287,6 +369,13 @@ class Csz_model extends CI_Model {
         return $query->num_rows();
     }
 
+    /**
+     * setSiteLang
+     *
+     * Function for set language code into session
+     *
+     * @param	string	$lang_iso    language code
+     */
     public function setSiteLang($lang_iso = '') {
         if (!$lang_iso) {
             $set_lang_iso = $this->getDefualtLang();
@@ -300,6 +389,14 @@ class Csz_model extends CI_Model {
         $this->session->set_userdata('fronlang_iso', $set_lang_iso);
     }
 
+    /**
+     * loadAllLang
+     *
+     * Function for load all language
+     *
+     * @param	int	$active    (1 = active only, 0 or null = all)
+     * @return	Object or FALSE id not found
+     */
     public function loadAllLang($active = 0) {
         $this->db->select("*");
         if ($active)
@@ -314,6 +411,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * load_page
+     *
+     * Function for load page data from page url_rewrite
+     *
+     * @param	string	$pageurl    page url_rewrite
+     * @return	Object or FALSE id not found
+     */
     public function load_page($pageurl) {
         $this->db->where("page_url", $pageurl);
         $this->db->where("active", 1);
@@ -327,6 +432,15 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * main_menu
+     *
+     * Function for load main menu
+     *
+     * @param	int	$drop_page_menu_id    1 = drop menu, 0 = main menu
+     * @param	string	$lang    language code
+     * @return	Object or FALSE id not found
+     */
     public function main_menu($drop_page_menu_id = 0, $lang) {
         if ($drop_page_menu_id) {
             $this->db->where("drop_page_menu_id", $drop_page_menu_id);
@@ -345,6 +459,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * getSocial
+     *
+     * Function for get social link
+     *
+     * @return	Object or FALSE id not found
+     */
     public function getSocial() {
         $this->db->select("*");
         $this->db->where("active", 1);
@@ -358,13 +479,28 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * cszCopyright
+     *
+     * Function for show website footer
+     * Please do not remove or change the fuction $this->Csz_admin_model->cszCopyright()
+     *
+     */
     public function cszCopyright() {
         $row = $this->Csz_model->load_config();
         $html = '<span class="copyright">' . str_replace(' %YEAR ', ' ' . date('Y') . ' ', $row->site_footer) . '</span>
-                <small style="color:gray;">' . $this->Csz_admin_model->cszCopyright() . '</small>';
+                <small style="color:gray;">' . $this->Csz_admin_model->cszCopyright() . '</small>'; /* Please do not remove or change the fuction $this->Csz_admin_model->cszCopyright() */
         return $html;
     }
 
+    /**
+     * coreCss
+     *
+     * Function for load core css
+     *
+     * @param	string	$more_css    additional css
+     * @return	String
+     */
     public function coreCss($more_css = '') {
         $core_css = '<link rel="canonical" href="' . base_url(uri_string()) . '" />' . "\n";
         $core_css.= link_tag('assets/css/corecss.min.css');
@@ -384,6 +520,14 @@ class Csz_model extends CI_Model {
         return $core_css;
     }
 
+    /**
+     * coreJs
+     *
+     * Function for load core js
+     *
+     * @param	string	$more_js    additional js
+     * @return	String
+     */
     public function coreJs($more_js = '') {
         if ($this->session->userdata('fronlang_iso')) {
             $hl = '?hl=' . $this->session->userdata('fronlang_iso');
@@ -406,6 +550,17 @@ class Csz_model extends CI_Model {
         return $core_js;
     }
 
+    /**
+     * coreMetatags
+     *
+     * Function for load core metatag
+     *
+     * @param	string	$desc_txt    page description
+     * @param	string	$keywords    page keyword
+     * @param	string	$title    page title
+     * @param	string	$article_img    page article image url
+     * @return	String
+     */
     public function coreMetatags($desc_txt, $keywords, $title, $article_img = '') {
         $config = $this->load_config();
         $og_image = '';
@@ -425,7 +580,6 @@ class Csz_model extends CI_Model {
                 }
             }
         }
-
         $meta = array(
             array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
@@ -450,6 +604,14 @@ class Csz_model extends CI_Model {
         return $return_meta;
     }
 
+    /**
+     * rw_link
+     *
+     * Function for url rewrite from string
+     *
+     * @param	string	$val    Title name or string
+     * @return	String
+     */
     public function rw_link($val) {
         $val = strip_tags($val);
         $val = strtolower($val);

@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package	Csz_sitemap
+ * @author	CSKAZA Dev Team
+ * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_sitemap extends CI_Model {

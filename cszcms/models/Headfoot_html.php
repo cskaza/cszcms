@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package	Headfoot_html
+ * @author	CSKAZA Dev Team
+ * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Headfoot_html extends CI_Model {
@@ -288,6 +296,7 @@ class Headfoot_html extends CI_Model {
     }
 
     public function admin_footer(){
+        /* Please do not remove or change this fuction */
         $html = '<footer>
                     <hr>
                     <div class="row">
