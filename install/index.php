@@ -30,10 +30,10 @@ if (file_exists('../config.inc.php')) {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CSZCMS-Installer
+ * @package	CSZCMS_Installer
  * @author	CSKAZA Dev Team
  * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
- * @link	https://www.cszcms.com.com
+ * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */
 require './include/Database.php';
@@ -189,7 +189,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                     <div class="col-md-12">
                         <b><u>System Checking</u></b><br><br>
                         <b>
-                            PHP 5.3.7 or higher [<?php if (version_compare(phpversion(), '5.3.7', '>=') !== FALSE) {
+                                PHP 5.3.7 or higher [<?php if (version_compare(phpversion(), '5.3.7', '>=') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $php = 1;
                             } else {
@@ -235,8 +235,6 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                         <h3 class="panel-title"><b>Database Setup</b></h3>
                                     </div>
                                     <div class="panel-body">
-                                        <!--<label for="dbdsn">Database DSN: </label>
-                                        <input id="dbdsn" name="dbdsn" type="text" class="form-control" placeholder="full DSN string describe a connection to the database.">-->
                                         <label for="dbhost">Database Host*: </label>
                                         <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
                                         <label for="dbuser">Database Username*: </label>
@@ -316,8 +314,8 @@ $version = new Version;
                 <hr>
                 <div class="row">
                     <div class="col-md-8 div-copyright">
-                        <span class="copyright">&copy; <?php echo date('Y'); ?> CSZ-CMS Installer</span>
-                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ-CMS V.<?php echo $version->getVersion('../version.xml'); ?></span></small>
+                        <span class="copyright">Copyright &copy; <?php echo date('Y'); ?> CSZ CMS Installer</span>
+                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ CMS Version <?php echo $version->getVersion(); ?></span></small>
                     </div>
                 </div>
             </footer>            
