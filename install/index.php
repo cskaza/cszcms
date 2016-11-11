@@ -1,4 +1,7 @@
 <?php
+header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
+header("Pragma: no-cache"); /* HTTP 1.0. */
+header("Expires: 0"); /* Proxies. */
 if (file_exists('../config.inc.php')) {
     header("Location: ../");
     exit();
@@ -155,7 +158,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><a href="<?php echo $baseurl; ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
+                        <div class="text-center"><a href="<?php echo $baseurl; ?>/?nocache=<?php echo time() ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
                             <div class="well"><h3 class="form-signin-heading success">Installation Completed!</h3></div>
@@ -169,7 +172,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 <h3 class="panel-title"><b>Please login to backend with your Email address and Password was setup.</b></h3>
                             </div>
                             <div class="panel-body">
-                                <a href="<?php echo $baseurl; ?>/admin" class="btn btn-lg btn-success">Go to Backend login</a>
+                                <a href="<?php echo $baseurl; ?>/admin?nocache=<?php echo time() ?>" class="btn btn-lg btn-success">Go to Backend login</a>
                             </div>
                         </div>
                     </div>
