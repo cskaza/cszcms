@@ -13,8 +13,9 @@
             echo '<center><h2>' . $this->Csz_model->getLabelLang('gallery_not_found') . '</h2></center>';
         }else{ ?>
             <div class="row">
-            <?php foreach ($gallery as $value) { 
-                $i = 1; ?>
+            <?php 
+            $i = 1;
+            foreach ($gallery as $value) { ?>
                 <div class="col-md-4">
                     <div class="thumbnail">
                         <?php $f_img = $this->Gallery_model->getFirstImgs($value['gallery_db_id']); ?>

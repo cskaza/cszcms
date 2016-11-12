@@ -28,11 +28,7 @@ class Upgrade extends CI_Controller {
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
         $this->cur_version = $this->Csz_model->getVersion();
-        if($this->Csz_admin_model->getLatestVersion() !== FALSE){
-            $this->last_version = $this->Csz_admin_model->getLatestVersion()->version;
-        }else{
-            $this->last_version = $this->Csz_model->getVersion();
-        }
+        $this->last_version = $this->Csz_admin_model->getLatestVersion();
     }
 
     public function index() {

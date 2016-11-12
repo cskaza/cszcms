@@ -215,7 +215,7 @@
             <?php echo form_error('file_upload', '<div class="error">', '</div>'); ?>									
                 <label class="control-label" for="file_upload"><?php echo $this->lang->line('settings_logo'); ?></label>
                 <div class="controls">
-                    <div><img src="<?php
+                    <div><img class="img-responsive img-thumbnail" src="<?php
                               if ($settings->site_logo != "") {
                                   echo BASE_URL . '/photo/logo/' . $settings->site_logo;
                               }
@@ -243,7 +243,7 @@
             <?php echo form_error('og_image', '<div class="error">', '</div>'); ?>									
                 <label class="control-label" for="og_image"><?php echo $this->lang->line('settings_og_image'); ?></label>
                 <div class="controls">
-                    <div><img src="<?php
+                    <div><img class="img-responsive img-thumbnail" src="<?php
                               if ($settings->og_image != "") {
                                   echo BASE_URL . '/photo/logo/' . $settings->og_image;
                               }

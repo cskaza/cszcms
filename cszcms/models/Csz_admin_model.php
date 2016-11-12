@@ -39,9 +39,10 @@ class Csz_admin_model extends CI_Model {
     * Get Latest Version From Server
     *
     * Function for get latest version from xml url
+    * Defualt url https://www.cszcms.com/downloads/lastest_version.xml
     *
     * @param	string	$xml_url    xml url file
-    * @return	array or FALSE
+    * @return	versoin string
     */
     public function getLatestVersion($xml_url = '') {
         if (!$xml_url){
@@ -53,36 +54,18 @@ class Csz_admin_model extends CI_Model {
             $xml = FALSE;
         }
         if($xml !== FALSE){
-            return $xml;
+            return $xml->version;
         }else{
-            return FALSE;
-        }
-    }
-    
-    /**
-    * Set session version
-    *
-    * Function for set version into session
-    *
-    * @param	string	$xml_url    xml url file
-    * @return	string
-    */
-    public function setSessionLastVer($xml_url) {
-        if(!$this->session->userdata('cszcms_lastver')){
-            $xml = $this->getLatestVersion($xml_url);
-            if ($xml !== FALSE && $xml->version) {
-                $data = array('cszcms_lastver' => (string)$xml->version,);
-                $this->session->set_userdata($data);
-                $xml_version = $xml->version;
+            $xml_cur = $this->Csz_model->getVersion();
+            if (strpos($xml_cur, 'Beta') !== false) {
+                $vercur = str_replace(' Beta', '', $xml_cur);
+                $cur_xml = explode('.', $vercur);
+                $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2]-1);
             }else{
-                $xml_cur = $this->Csz_model->getVersion();
-                $cur_xml = explode(' ', $xml_cur);
-                $xml_version = $cur_xml[0];
+                $xml_version = $xml_cur;
             }
-        }else{
-            $xml_version = $this->session->userdata('cszcms_lastver');
+            return $xml_version;
         }
-        return $xml_version;
     }
     
     /**
@@ -95,7 +78,7 @@ class Csz_admin_model extends CI_Model {
     * @return	true or false
     */
     public function chkVerUpdate($cur_ver, $xml_url = '') {
-        $last_ver = $this->setSessionLastVer($xml_url);
+        $last_ver = $this->getLatestVersion($xml_url);
         if ($last_ver) {
             if(version_compare($cur_ver, $last_ver, '<') === TRUE){
                 return TRUE;
@@ -120,8 +103,7 @@ class Csz_admin_model extends CI_Model {
         /* sub version is limit x.9.9 */
         $cur_r = array();
         $cur_xml = explode(' ', $cur_txt);
-        $xml_version = $this->setSessionLastVer($xml_url);
-        $last_ver = $xml_version;
+        $last_ver = $this->getLatestVersion($xml_url);
         if ($cur_xml[0] && $last_ver) {
             $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             $cur_r = explode('.', $cur_ver);
