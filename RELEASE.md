@@ -16,6 +16,7 @@ x- Add forum plugin.
 - Fix Article plugin to version 1.0.3 (Add dashboard and menu).
 - Fix current version display function.
 - Fix sitemap can generate sitemap.xml.gz file.
+- Fix Gallery plugin to version 1.0.3 (Can sort the album).
 
 CSZ-CMS V.1.1.2
 - Update Bootstrap to 3.3.7.

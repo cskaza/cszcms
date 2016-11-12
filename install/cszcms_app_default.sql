@@ -393,9 +393,10 @@ CREATE TABLE IF NOT EXISTS `gallery_db` (
   `album_name` varchar(255) NOT NULL,
   `url_rewrite` varchar(255) NOT NULL,
   `keyword` varchar(255) NOT NULL,
-  `short_desc` varchar(255) NOT NULL,
+  `short_desc` text NOT NULL,
   `lang_iso` varchar(10) NOT NULL,
   `active` int(11) NOT NULL,
+  `arrange` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`gallery_db_id`)

@@ -59,7 +59,7 @@ class Gallery extends CI_Controller {
         ($this->uri->segment(3)) ? $pagination = $this->uri->segment(3) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('gallery', $this->Csz_admin_model->getIndexData('gallery_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('gallery', $this->Csz_admin_model->getIndexData('gallery_db', $result_per_page, $pagination, 'arrange', 'asc', $search_arr));
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
@@ -119,7 +119,7 @@ class Gallery extends CI_Controller {
         $search_arr = " active = '1'";
         $limit = 20;
         // get article list
-        $gallery = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
+        $gallery = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'arrange', 'asc', $search_arr);
         // add posts to the feed
         if($gallery !== FALSE){
             foreach ($gallery as $a)

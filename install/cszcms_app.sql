@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Article', 'article', '1.0.2', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
+(2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (3, 'Shopping', 'shop', '1.0.1', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `article_db` (
@@ -390,9 +390,10 @@ CREATE TABLE IF NOT EXISTS `gallery_db` (
   `album_name` varchar(255) NOT NULL,
   `url_rewrite` varchar(255) NOT NULL,
   `keyword` varchar(255) NOT NULL,
-  `short_desc` varchar(255) NOT NULL,
+  `short_desc` text NOT NULL,
   `lang_iso` varchar(10) NOT NULL,
   `active` int(11) NOT NULL,
+  `arrange` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`gallery_db_id`)

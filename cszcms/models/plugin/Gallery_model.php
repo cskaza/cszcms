@@ -10,6 +10,7 @@ class Gallery_model extends CI_Model {
     
     public function insert() {
         // Create the new lang
+        $arrange = $this->Csz_model->getLastID('gallery_db', 'arrange');
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('album_name', TRUE));
         $this->db->set('album_name', $this->input->post('album_name', TRUE));
@@ -18,6 +19,7 @@ class Gallery_model extends CI_Model {
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('arrange', ($arrange)+1);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('gallery_db');

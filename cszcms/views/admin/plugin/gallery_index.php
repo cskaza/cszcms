@@ -16,7 +16,6 @@
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('search'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label> &nbsp;&nbsp;&nbsp; 
                 <label class="control-label" for="lang"><?php echo  $this->lang->line('lang_header') ?>: <select name="lang" id="lang">
-                        <option value=""><?php echo  $this->lang->line('option_all') ?></option>
                         <?php foreach ($lang as $lg) { ?>
                             <option value="<?php echo $lg->lang_iso?>"<?php echo ($this->input->get('lang') == $lg->lang_iso)?' selected="selected"':''?>><?php echo $lg->lang_name?></option>
                         <?php } ?>
@@ -25,20 +24,22 @@
             </div>
         </form>
         <br><br>
+        <?php echo form_open(BASE_URL . '/admin/plugin/gallery/albumIndexSave'); ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
+                        <th width="2%" class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-sort"></i></th>
                         <th width="55%" class="text-center"><?php echo $this->lang->line('gallery_album'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
-                        <th width="20%" class="text-center"><?php echo $this->lang->line('gallery_datetime'); ?></th>
+                        <th width="18%" class="text-center"><?php echo $this->lang->line('gallery_datetime'); ?></th>
                         <th width="17%"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="ui-sortable">
                     <?php if ($gallery === FALSE) { ?>
                         <tr>
-                            <td colspan="4" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
@@ -48,7 +49,11 @@
                             }else{
                                 $inactive = '';
                             }
-                            echo '<tr>';
+                            echo '<tr class="ui-state-default">';
+                            echo '<td class="text-center" style="vertical-align:middle;">
+                                    <i class="glyphicon glyphicon-resize-vertical"></i>
+                                    <input type="hidden" name="gallery_db_id[]" value="'.$u['gallery_db_id'].'">
+                                </td>';
                             echo '<td'.$inactive.'>';
                             echo '<b>'.$u['album_name'].'</b><br>';
                             echo '<span style="color:red;"><small><em>'.$u['keyword'].'</em></small></span><br>';
@@ -64,7 +69,25 @@
                 </tbody>
             </table>
         </div>
-        <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-lg btn-primary',
+                    'value' => $this->lang->line('btn_save'),
+                    'onclick' => "return confirm('".$this->lang->line('delete_message')."');",
+                );
+                echo form_submit($data);
+                ?>
+                <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            </div>
+        </div>
+        <?php echo  form_close(); ?>
+        <!-- /widget-content --> 
+        <br><br>
+        <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
         <!-- /widget-content --> 
     </div>
 </div>

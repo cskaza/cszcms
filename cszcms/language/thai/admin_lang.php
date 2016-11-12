@@ -276,7 +276,7 @@ $lang['uploadfile_urlpath']           = "ที่อยู่ไฟล์:";
 $lang['uploadfile_uploadtime']           = "วันที่/เวลา อัพโหลด";
 $lang['uploadfile_uploadtools']           = "เครื่องมืออัพโหลด";
 $lang['uploadfile_add_file']           = "เพิ่มไฟล์";
-$lang['uploadfile_fileallow']           = "สำหรับไฟล์ (jpg, jpeg, png, gif, pdf, doc, docx, odt, txt, odg, odp, ods, zip, rar, psv, xls, xlsx, ppt, pptx, mp3, wav, mp4, wma, flv, avi, mov, m4v, wmv, m3u, pls) เท่านั้นจะได้รับอนุญาต.";
+$lang['uploadfile_fileallow']           = "สำหรับไฟล์ (jpg, jpeg, png, gif, pdf, doc, docx, odt, txt, odg, odp, ods, zip, rar, psv, xls, xlsx, ppt, pptx, mp3, wav, mp4, wma, flv, avi, mov, m4v, wmv, m3u, pls) เท่านั้นจะได้รับอนุญาต. ขนาดของภาพไม่เกิน 1900px กับความกว้างหรือความสูง.";
 
 //Forms Builder Index
 $lang['forms_header']                   = "สร้างแบบฟอร์ม";

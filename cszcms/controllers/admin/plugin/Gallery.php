@@ -31,29 +31,20 @@ class Gallery extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex('gallery'); /* Set index page when redirect after save */
-        $search_arr = ' 1=1 ';
-        if ($this->input->get('search') || $this->input->get('lang')) {
-            if ($this->input->get('search')) {
-                $search_arr.= " AND album_name LIKE '%" . $this->input->get('search', TRUE) . "%' OR short_desc LIKE '%" . $this->input->get('search', TRUE) . "%'";
-            }
-            if ($this->input->get('lang')) {
-                $search_arr.= " AND lang_iso = '" . $this->input->get('lang', TRUE) . "'";
-            }
+        $search_arr = "gallery_db_id != '' ";
+        if ($this->input->get('search')) {
+            $search_arr.= " AND album_name LIKE '%" . $this->input->get('search', TRUE) . "%' OR short_desc LIKE '%" . $this->input->get('search', TRUE) . "%'";          
+        }
+        if (!$this->input->get('lang')) {
+            $search_arr.= " AND lang_iso = '" . $this->Csz_model->getDefualtLang() . "'";
+        }else if($this->input->get('lang')){
+            $search_arr.= " AND lang_iso = '" . $this->input->get('lang', TRUE) . "'";
         }
         $this->load->helper('form');
-        $this->load->library('pagination');
-        // Pages variable
-        $result_per_page = 20;
+        
         $total_row = $this->Csz_model->countData('gallery_db', $search_arr);
-        $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/gallery/';
-
-        // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 4);
-        ($this->uri->segment(4)) ? $pagination = $this->uri->segment(4) : $pagination = 0;
-
         //Get users from database
-        $this->template->setSub('gallery', $this->Csz_admin_model->getIndexData('gallery_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('gallery', $this->Csz_model->getValueArray('*', 'gallery_db', $search_arr, '', 0, 'arrange', 'asc'));
         $this->template->setSub('total_row', $total_row);
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
@@ -227,6 +218,29 @@ class Gallery extends CI_Controller {
         $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
+    }
+    
+    public function albumIndexSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        $i = 0;
+        $arrange = 1;
+        $gallery_db_id = $this->input->post('gallery_db_id', TRUE);
+        if (!empty($gallery_db_id)) {
+            while ($i < count($gallery_db_id)) {
+                if ($gallery_db_id[$i]) {
+                    $this->db->set('arrange', $arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("gallery_db_id", $gallery_db_id[$i]);
+                    $this->db->update('gallery_db');
+                    $arrange++;
+                }
+                $i++;
+            }
+        }
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
     }
 
     public function delete() {

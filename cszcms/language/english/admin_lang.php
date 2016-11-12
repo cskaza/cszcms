@@ -276,7 +276,7 @@ $lang['uploadfile_urlpath']           = "URL Path:";
 $lang['uploadfile_uploadtime']           = "Upload Date/Time";
 $lang['uploadfile_uploadtools']           = "Upload Tools";
 $lang['uploadfile_add_file']           = "Add Files";
-$lang['uploadfile_fileallow']           = "Only files (jpg, jpeg, png, gif, pdf, doc, docx, odt, txt, odg, odp, ods, zip, rar, psv, xls, xlsx, ppt, pptx, mp3, wav, mp4, wma, flv, avi, mov, m4v, wmv, m3u, pls) are allowed.";
+$lang['uploadfile_fileallow']           = "Only files (jpg, jpeg, png, gif, pdf, doc, docx, odt, txt, odg, odp, ods, zip, rar, psv, xls, xlsx, ppt, pptx, mp3, wav, mp4, wma, flv, avi, mov, m4v, wmv, m3u, pls) are allowed. Image size is not over 1900px on width or height.";
 
 //Forms Builder Index
 $lang['forms_header']                   = "Forms Builder";

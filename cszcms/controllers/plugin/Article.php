@@ -184,10 +184,8 @@ class Article extends CI_Controller {
         $feed->title = $row->site_name;
         $feed->description = 'Article | ' . $row->site_name;
         $feed->link = BASE_URL.'/plugin/article';
-        $lang = $this->session->userdata('fronlang_iso');
-        $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$lang."'";
+        $search_arr = " is_category = '0' AND active = '1'";
         $limit = 20;
-        $feed->lang = $lang;
         // get article list
         $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
         // add posts to the feed
