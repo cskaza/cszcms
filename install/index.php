@@ -3,7 +3,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
 header("Pragma: no-cache"); /* HTTP 1.0. */
 header("Expires: 0"); /* Proxies. */
 if (file_exists('../config.inc.php')) {
-    header("Location: ../");
+    header("Location: ../?nocache=".time());
     exit();
 }
 /**
@@ -230,7 +230,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                     </div>
                 </div>
                     <?php if ($chk_pass == 1) { ?> 
-                    <form action="./" method="post" accept-charset="utf-8">
+                    <form action="./index.php" method="post" accept-charset="utf-8">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="panel panel-default">
