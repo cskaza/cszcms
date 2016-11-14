@@ -71,6 +71,13 @@ $(function () {
         toolbar1: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage codesample",
         toolbar2: "forecolor backcolor emoticons glyphicons fontawesome | b_button jumbotron row_cols boots_panels boot_alert form_insert",
         image_advtab: true,
+        image_class_list: [
+            {title: 'None', value: ''},
+            {title: 'Responsive', value: 'img-responsive'},
+            {title: 'Rounded & Responsive', value: 'img-responsive img-rounded'},
+            {title: 'Circle & Responsive', value: 'img-responsive img-circle'},
+            {title: 'Thumbnail & Responsive', value: 'img-responsive img-thumbnail'}
+        ],
         style_formats: [
             { title: 'Text', items: [
                 {title: 'Muted text', inline: 'span', classes: 'text-muted'},

@@ -59,15 +59,3 @@
     </div>
 </div>
 <!-- /.row -->
-<div class="row">
-    <div class="col-lg-12" style="word-wrap:break-word;">
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('widget_xml_url') ?></h3></div>
-            <div class="panel-body">
-                <h5><b><?php echo $this->lang->line('article_header') ?>:</b> <?php echo BASE_URL.'/plugin/article/getWidget' ?>/{language_iso}</h5>
-                <span class="remark"><em><?php echo $this->lang->line('article_widget_remark') ?></em></span>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /.row -->
