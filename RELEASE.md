@@ -1,6 +1,5 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.3
-x- Add forum plugin.
 - Add facebook comments into article plugin.
 - Add option member register for send confirmed email in settings.
 - Add option to close member register in settings.
@@ -11,7 +10,7 @@ x- Add forum plugin.
 - Update TinyMCE to 4.4.3.
 - Fix left side menu for shopping cart - Shop plugin.
 - Fix linkstat url to base64.
-- Fix installer has system checking.
+- Fix installer bug.
 - Fix formaction redirect for frontend.
 - Fix Article plugin to version 1.0.3 (Add dashboard and menu).
 - Fix current version display function.

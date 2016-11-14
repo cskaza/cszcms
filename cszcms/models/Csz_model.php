@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Csz_model extends CI_Model {
     
     private $version = '1.1.3'; /* For CMS Version */
-    private $release = 'beta'; /* For release or beta */
+    private $release = 'release'; /* For release or beta */
             
     function __construct() {
         parent::__construct();
