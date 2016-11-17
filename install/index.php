@@ -104,7 +104,9 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
         $config_txt .= "/* Time Zone */ \n";
         $config_txt .= "define('TIME_ZONE', '" . $_POST['timezone'] . "'); \n\n";
         /* write config.inc.php file */
-        file_put_contents($config_file, $config_txt);
+        $fopen = fopen($config_file, 'wb') or die("can't open file");
+        fwrite($fopen, $config_txt);
+        fclose($fopen);
         $success = 1;
         $db->closeDB();
     }
@@ -219,9 +221,37 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                             } else {
                                 echo '<span class="error">FAIL</span>';
                                 $curl = 0;
+                            } ?>]<br>
+                                Config Write Permission [<?php if (is_writable('../config_example.inc.php')) {
+                                echo '<span class="success">PASS</span>';
+                                $config_per = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $config_per = 0;
+                            } ?>]<br>
+                                ci_session Write Permission [<?php if (is_writable('../ci_session/index.html')) {
+                                echo '<span class="success">PASS</span>';
+                                $sess_per = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $sess_per = 0;
+                            } ?>]<br>
+                                Cache Write Permission [<?php if (is_writable('../cszcms/cache/index.html')) {
+                                echo '<span class="success">PASS</span>';
+                                $cache_per = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $cache_per = 0;
+                            } ?>]<br>
+                                DB_Cache Write Permission [<?php if (is_writable('../cszcms/db_cache/index.html')) {
+                                echo '<span class="success">PASS</span>';
+                                $dbcache_per = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $dbcache_per = 0;
                             } ?>]
                             <?php
-                            if ($sqli == 1 && $php == 1 && $modrw == 1 && $curl == 1) {
+                            if ($sqli == 1 && $php == 1 && $modrw == 1 && $curl == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
                                 $chk_pass = 1;
                             }
                             ?>
