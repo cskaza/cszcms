@@ -753,13 +753,25 @@ class Csz_model extends CI_Model {
             }
             if (!empty($ori_link)) {
                 foreach ($ori_link as $val) {
-                    $content = str_replace('href="' . $val . '" linkstats="' . $j . '"', 'href="' . $val . '[' . $j . ']" linkstats="' . $j . '"', $content);
+                    $patterns = array();
+                    $patterns[0] = 'href="' . $val . '"';
+                    $patterns[1] = 'linkstats="' . $j . '"';
+                    $replacements = array();
+                    $replacements[1] = 'href="' . $val . '[' . $j . ']"';
+                    $replacements[0] = 'linkstats="' . $j . '"';
+                    $content = str_replace($patterns, $replacements, $content);
                     $j++;
                 }
             }
             if (!empty($link)) {
                 foreach ($link as $val) {
-                    $content = str_replace('href="' . $val . '" linkstats="' . $k . '"', 'href="' . BASE_URL . '/linkstats/' . ($k + 1) . '/' . str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($val)) . '" linkstats="' . $k . '"', $content);
+                    $patterns = array();
+                    $patterns[0] = 'href="' . $val . '"';
+                    $patterns[1] = 'linkstats="' . $k . '"';
+                    $replacements = array();
+                    $replacements[1] = 'href="' . BASE_URL . '/linkstats/' . ($k + 1) . '/' . str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($val)) . '"';
+                    $replacements[0] = 'linkstats="' . $k . '"';
+                    $content = str_replace($patterns, $replacements, $content);
                     /* $content = str_replace('['.$k.']', '', $content); */
                     $k++;
                 }

@@ -142,8 +142,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
 		onlyText = isOnlyTextSelected();
 
-		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: 'text'});
-		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
+		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: 'text'});		
 
 		if (anchorElm) {
 			data.target = dom.getAttrib(anchorElm, 'target');
@@ -166,6 +165,8 @@ tinymce.PluginManager.add('b_button', function(editor) {
 		if ((value = dom.getAttrib(anchorElm, 'title'))) {
 			data.title = value;
 		}
+                
+                data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
                 
                 if ((value = dom.getAttrib(anchorElm, 'linkstats'))) {
 			data.linkstats = value;
@@ -327,13 +328,13 @@ tinymce.PluginManager.add('b_button', function(editor) {
 
 				function insertLink() {
 					var linkAttrs = {
-						href: href,
-                                                linkstats: data.linkstats ? data.linkstats : null,
 						target: data.target ? data.target : null,
 						rel: data.rel ? data.rel : null,
 						class: data.btn_class + data.size_class,
 						title: data.title ? data.title : null,
-                                                role: "button"
+                                                role: "button",
+                                                href: href,
+                                                linkstats: data.linkstats ? data.linkstats : null,
 					};
 
 					if (anchorElm) {

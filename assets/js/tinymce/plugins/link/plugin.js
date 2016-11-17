@@ -150,8 +150,7 @@ tinymce.PluginManager.add('link', function(editor) {
 		onlyText = isOnlyTextSelected();
 
 		data.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: 'text'});
-		data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-
+		
 		if (anchorElm) {
 			data.target = dom.getAttrib(anchorElm, 'target');
 		} else if (editor.settings.default_link_target) {
@@ -170,6 +169,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			data.title = value;
 		}
                 
+                data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
                 if ((value = dom.getAttrib(anchorElm, 'linkstats'))) {
 			data.linkstats = value;
 		}
@@ -311,12 +311,12 @@ tinymce.PluginManager.add('link', function(editor) {
 
 				function insertLink() {
 					var linkAttrs = {
-						href: href,
-                                                linkstats: data.linkstats ? data.linkstats : null,
 						target: data.target ? data.target : null,
 						rel: data.rel ? data.rel : null,
 						"class": data["class"] ? data["class"] : null,
-						title: data.title ? data.title : null
+						title: data.title ? data.title : null,
+                                                href: href,
+                                                linkstats: data.linkstats ? data.linkstats : null,
 					};
 
 					if (anchorElm) {
