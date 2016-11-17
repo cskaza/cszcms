@@ -40,6 +40,7 @@ class Csz_admin_model extends CI_Model {
     *
     * Function for get latest version from xml url
     * Defualt url https://www.cszcms.com/downloads/lastest_version.xml
+    * Backup url https://cszcms-d99bf.firebaseapp.com/lastest_version.xml
     *
     * @param	string	$xml_url    xml url file
     * @return	versoin string
@@ -48,8 +49,11 @@ class Csz_admin_model extends CI_Model {
         if (!$xml_url){
             $xml_url = 'https://www.cszcms.com/downloads/lastest_version.xml';
         }
+        $xml_url_bak = 'https://cszcms-d99bf.firebaseapp.com/lastest_version.xml';
         if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
             $xml = @simplexml_load_file($xml_url);
+        }else if($this->Csz_model->is_url_exist($xml_url) === FALSE && $this->Csz_model->is_url_exist($xml_url_bak) !== FALSE){
+            $xml = @simplexml_load_file($xml_url_bak);
         }else{
             $xml = FALSE;
         }

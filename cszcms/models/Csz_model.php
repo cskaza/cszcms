@@ -660,6 +660,15 @@ class Csz_model extends CI_Model {
         return $val;
     }
 
+    /**
+     * getHtmlContent
+     *
+     * Function for convert HTML for form linkstats and widget
+     *
+     * @param	string	$ori_content    Original content
+     * @param	string	$url_segment    Form status paramiter return
+     * @return	string
+     */
     public function getHtmlContent($ori_content, $url_segment) { /* Calculate the HTML code */
         $config = $this->load_config();
         if ($config->link_statistic_active) {
@@ -670,6 +679,14 @@ class Csz_model extends CI_Model {
         return $ori_content;
     }
 
+    /**
+     * widgetInHtml
+     *
+     * Function for find widget tag
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
     public function widgetInHtml($content) { /* Find the widget in content */
         $txt_nonhtml = strip_tags($content);
         if (strpos($txt_nonhtml, '[?]{=widget:') !== false) {
@@ -693,6 +710,15 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
+    /**
+     * addWidgetToHTML
+     *
+     * Function for add widget into html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$wid_name   Widget name
+     * @return	string
+     */
     public function addWidgetToHTML($content, $wid_name) {
         $getWidget = $this->getValue('*', 'widget_xml', "active = '1' AND widget_name = '" . $wid_name . "' AND xml_url != '' AND limit_view != '0'", '', 1);
         if ($getWidget !== FALSE) {
@@ -726,7 +752,11 @@ class Csz_model extends CI_Model {
                     }
                     $html.= '</div>
                     <div class="panel-footer text-right"><a href="' . $xml->plugin[0]->main_url . '" class="btn btn-primary btn-sm">' . $this->getLabelLang('article_readmore_text') . '</a></div>';
+                }else{
+                    $html.= '</div>';
                 }
+            }else{
+                $html.= '</div>';
             }
             $html.= '</div>';
             $content = str_replace('[?]{=widget:' . $getWidget->widget_name . '}[?]', $html, $content);
@@ -734,6 +764,14 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
+    /**
+     * linkFromHtml
+     *
+     * Function for find link stats from html
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
     public function linkFromHtml($content) { /* Find and replace a tag in content */
         if (strpos($content, ' href="') !== false && strpos($content, '</a>') !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $content);
@@ -780,6 +818,15 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
+    /**
+     * frmNameInHtml
+     *
+     * Function for find form tag from html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$url_segment   Form status paramiter return
+     * @return	string
+     */
     public function frmNameInHtml($content, $url_segment) { /* Find the form in content */
         $txt_nonhtml = strip_tags($content);
         if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
@@ -804,6 +851,16 @@ class Csz_model extends CI_Model {
         return $content;
     }
 
+    /**
+     * addFrmToHtml
+     *
+     * Function for add form into html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$frm_name   Form name
+     * @param	string	$status     Form status paramiter return
+     * @return	string
+     */
     public function addFrmToHtml($content, $frm_name, $status = '') { /* Add the form in content */
         $row_config = $this->load_config();
         $where_arr = array('form_name', 'active');
