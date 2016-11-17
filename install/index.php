@@ -208,13 +208,6 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 echo '<span class="error">FAIL</span>';
                                 $sqli = 0;
                             } ?>]<br>
-                                MOD_REWRITE Enable [<?php if (in_array('mod_rewrite', apache_get_modules()) !== FALSE) {
-                                echo '<span class="success">PASS</span>';
-                                $modrw = 1;
-                            } else {
-                                echo '<span class="error">FAIL</span>';
-                                $modrw = 0;
-                            } ?>]<br>
                                 cURL Enable [<?php if (function_exists('curl_version') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $curl = 1;
@@ -251,7 +244,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 $dbcache_per = 0;
                             } ?>]
                             <?php
-                            if ($sqli == 1 && $php == 1 && $modrw == 1 && $curl == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
+                            if ($sqli == 1 && $php == 1 && $curl == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
                                 $chk_pass = 1;
                             }
                             ?>
