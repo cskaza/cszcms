@@ -1,0 +1,19 @@
+{
+	"description": "CSZ CMS is a content management system. This should make your website fully responsive with ease",
+	"name": "CSZ CMS",
+	"type": "project",
+	"homepage": "https://www.cszcms.com",
+	"license": "MIT",
+	"support": {
+		"docs": "https://www.cszcms.com/docs/",
+		"source": "https://github.com/cskaza/cszcms"
+	},
+	"require": {
+		"php": ">=5.3.7"
+	},
+	"authors": {
+            "name": "Chinawut Phongphasook (Cskaza)",
+            "email": "cskaza@gmail.com",
+            "role": "Founder"
+        }
+}
