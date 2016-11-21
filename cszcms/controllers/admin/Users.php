@@ -21,6 +21,7 @@ class Users extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
     }
 
     public function index() {
@@ -85,6 +86,7 @@ class Users extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Csz_admin_model->createUser();
+            $this->db->cache_delete_all();
             //Return to user list
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -137,6 +139,7 @@ class Users extends CI_Controller {
             $rs = $this->Csz_admin_model->updateUser($this->uri->segment(4));
             if($rs !== FALSE){
                 //Return to user list
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
             }else{
@@ -167,6 +170,7 @@ class Users extends CI_Controller {
             if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
                 //Delete the user account
                 $this->Csz_admin_model->removeUser($this->uri->segment(4));
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             } else {
                 $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('user_delete_myacc').'</div>');
@@ -200,6 +204,7 @@ class Users extends CI_Controller {
             $this->db->where('email', $email);
             $this->db->where("user_type != 'member'");
             $this->db->update('user_admin');
+            $this->db->cache_delete_all();
             $this->load->helper('string');
             $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
             $md5_hash = $user_rs->md5_hash;
@@ -265,6 +270,7 @@ class Users extends CI_Controller {
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
                     $this->db->update('user_admin', $data);
+                    $this->db->cache_delete_all();
                     
                     $this->template->setSub('success_chk', 1);
                     $this->template->loadSub('admin/resetform');

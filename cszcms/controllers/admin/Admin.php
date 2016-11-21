@@ -21,6 +21,7 @@ class Admin extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
     }
 
     public function index() {
@@ -43,6 +44,7 @@ class Admin extends CI_Controller {
         //Delete the languages
         if($this->uri->segment(4)) {
             $this->Csz_admin_model->removeData('email_logs', 'email_logs_id', $this->uri->segment(4));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         //Return to languages list
@@ -56,6 +58,7 @@ class Admin extends CI_Controller {
         //Delete the languages
         if($this->uri->segment(4)) {
             $this->Csz_admin_model->removeData('login_logs', 'login_logs_id', $this->uri->segment(4));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         //Return to languages list
@@ -245,6 +248,7 @@ class Admin extends CI_Controller {
                 }
             }
         }
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
@@ -270,7 +274,8 @@ class Admin extends CI_Controller {
                     $this->Csz_admin_model->insertFileUpload($year, $file_id1);
                 }
             }
-        }  
+        }
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }

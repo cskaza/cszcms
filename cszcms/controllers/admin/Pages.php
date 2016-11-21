@@ -21,6 +21,7 @@ class Pages extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
     }
 
     public function index() {
@@ -162,6 +163,7 @@ class Pages extends CI_Controller {
                     'active' => 0,
                 );
                 $this->Csz_model->insertAsCopy('pages', $data);
+                $this->db->cache_delete_all();
             }
         }
         redirect($this->csz_referrer->getIndex(), 'refresh');

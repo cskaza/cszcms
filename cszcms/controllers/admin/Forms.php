@@ -21,6 +21,7 @@ class Forms extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
     }
 
     public function index() {
@@ -183,6 +184,7 @@ class Forms extends CI_Controller {
         if($this->uri->segment(4) && $this->uri->segment(6)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
             $this->Csz_admin_model->removeData('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $this->uri->segment(6));
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         

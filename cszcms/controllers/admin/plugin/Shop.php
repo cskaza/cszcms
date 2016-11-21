@@ -26,6 +26,7 @@ class Shop extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $row->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
         $this->template->set('cur_page', $pageURL);
+        if($row->pagecache_time != 0){ $this->db->cache_on(); }
     }
 
     public function index() {
@@ -60,6 +61,7 @@ class Shop extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         //Save Config
         $this->Shop_model->configSave();
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
     }
@@ -110,6 +112,7 @@ class Shop extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Shop_model->catInsert();
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('shop'), 'refresh');
         }
@@ -145,6 +148,7 @@ class Shop extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Shop_model->catUpdate($this->uri->segment(5));
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex('shop'), 'refresh');
             }
@@ -158,6 +162,7 @@ class Shop extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $this->Shop_model->delete($this->uri->segment(5), 'shop_category');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
@@ -230,6 +235,7 @@ class Shop extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Shop_model->productInsert();
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('shop'), 'refresh');
         }
@@ -274,6 +280,7 @@ class Shop extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Shop_model->productUpdate($this->uri->segment(5));
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex('shop'), 'refresh');
             }
@@ -287,6 +294,7 @@ class Shop extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $this->Shop_model->delete($this->uri->segment(5), 'shop_product');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
@@ -297,6 +305,7 @@ class Shop extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $this->Shop_model->delete($this->uri->segment(5), 'shop_product_option');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop_edit'), 'refresh');
@@ -320,6 +329,7 @@ class Shop extends CI_Controller {
                     }
                 }
             }
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('shop_edit'), 'refresh');
         } else {
@@ -370,6 +380,7 @@ class Shop extends CI_Controller {
                 }
             }
         }
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('shop_edit'), 'refresh');
     }
@@ -412,6 +423,7 @@ class Shop extends CI_Controller {
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
             $this->Shop_model->delete($this->uri->segment(5), 'shop_payment');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
@@ -425,6 +437,7 @@ class Shop extends CI_Controller {
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Completed' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');
+            $this->db->cache_delete_all();
             $row = $this->Csz_model->load_config();
             $shop_config = $this->Shop_model->load_config();
             $payment = $this->Csz_model->getValue('*', 'shop_payment', "shop_payment_id", $this->uri->segment(5), 1);
@@ -453,6 +466,7 @@ class Shop extends CI_Controller {
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Pending' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
@@ -479,6 +493,7 @@ class Shop extends CI_Controller {
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Completed' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');
@@ -517,6 +532,7 @@ class Shop extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Shop_model->shippingInsert();
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect(BASE_URL . '/admin/plugin/shop/shipping', 'refresh');
         }
@@ -584,6 +600,7 @@ class Shop extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Shop_model->shippingUpdate($this->uri->segment(5));
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex('shop'), 'refresh');
             }
@@ -601,6 +618,7 @@ class Shop extends CI_Controller {
             $this->db->where("inv_id = '" . $this->uri->segment(6) . "' AND payment_status = 'Completed'", '');
             $this->db->update('shop_payment');
             $this->Shop_model->delete($this->uri->segment(5), 'shop_shipping');
+            $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         redirect($this->csz_referrer->getIndex('shop'), 'refresh');

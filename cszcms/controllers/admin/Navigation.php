@@ -20,6 +20,7 @@ class Navigation extends CI_Controller {
             $this->template->set('title', 'Backend System | ' . $row->site_name);
             $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
             $this->template->set('cur_page', $pageURL);
+            if($row->pagecache_time != 0){ $this->db->cache_on(); }
         }
 	
 	public function index(){
@@ -43,6 +44,7 @@ class Navigation extends CI_Controller {
                 admin_helper::is_logged_in($this->session->userdata('admin_email'));
                 admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
                 $this->Csz_admin_model->sortNav();
+                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
         }

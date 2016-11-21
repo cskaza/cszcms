@@ -297,7 +297,7 @@ class Member extends CI_Controller {
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
                     $this->db->update('user_admin', $data);
-
+                    
                     $this->template->setSub('success_chk', 1);
                     $this->template->loadSub('frontpage/member/resetform');
                 }
