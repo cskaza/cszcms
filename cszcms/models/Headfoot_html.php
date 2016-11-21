@@ -320,7 +320,11 @@ class Headfoot_html extends CI_Model {
         if($this->session->flashdata('f_error_message') != ''){ 
             $html.= $this->session->flashdata('f_error_message');
         }
-        if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+        if(!$this->session->userdata('cszcms_chkver')){
+            $data = array('cszcms_chkver' => $this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()));
+            $this->session->set_userdata($data);
+        }
+        if($this->session->userdata('cszcms_chkver') !== FALSE){
             $html.= '<div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->lang->line('upgrade_newlast_alert').'</div>';
         }
         return $html;

@@ -77,7 +77,7 @@ class MY_Session extends CI_Session
             }
         }
         // Set expiration, path, and domain
-        $expire = 7200;
+        $expire = 3600; /* Defualt set expire to 1 hr */
         $path = '/';
         $domain = '';
         $secure = (bool) $this->_config['cookie_secure'];
