@@ -69,7 +69,7 @@ $lang['shop_products_addnew']             = "Add Product";
 $lang['shop_products_edit']             = "Edit Product";
 $lang['shop_products_remark']           = "Upload the picture and add product options. Please edit this product after add new product.";
 $lang['shop_products_upload']                = "Photo Upload";
-$lang['shop_products_fileallow']              = "Only files (jpg, jpeg, png, gif) are allowed.";
+$lang['shop_products_fileallow']              = "Only files (jpg, jpeg, png, gif) are allowed. Image size is not over 1900px on width or height.";
 $lang['shop_products_caption']                = "Caption";
 $lang['shop_products_options']                = "Product Options";
 

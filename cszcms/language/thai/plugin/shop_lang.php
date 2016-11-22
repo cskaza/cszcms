@@ -69,7 +69,7 @@ $lang['shop_products_addnew']             = "เพิ่มสินค้า";
 $lang['shop_products_edit']             = "แก้ไขสินค้า";
 $lang['shop_products_remark']           = "อัพโหลดรูปภาพและเพิ่มตัวเลือกของสินค้า. กรุณาแก้ไขสินค้านี้หลังจากเพิ่มสินค้าใหม่.";
 $lang['shop_products_upload']                = "อัพโหลดรูปภาพ";
-$lang['shop_products_fileallow']              = "สำหรับไฟล์ (jpg, jpeg, png, gif) เท่านั้นจะได้รับอนุญาต.";
+$lang['shop_products_fileallow']              = "สำหรับไฟล์ (jpg, jpeg, png, gif) เท่านั้นจะได้รับอนุญาต. ขนาดของภาพไม่เกิน 1900px กับความกว้างหรือความสูง.";
 $lang['shop_products_caption']                = "คำอธิบายภาพ";
 $lang['shop_products_options']                = "ตัวเลือกสินค้า";
 

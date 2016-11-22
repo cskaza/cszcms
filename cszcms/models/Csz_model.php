@@ -862,6 +862,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function addFrmToHtml($content, $frm_name, $status = '') { /* Add the form in content */
+        $CI =& get_instance();
         $row_config = $this->load_config();
         $where_arr = array('form_name', 'active');
         $val_arr = array($frm_name, 1);
@@ -878,7 +879,12 @@ class Csz_model extends CI_Model {
                 $sts_msg = '';
             }
             $html = $sts_msg;
-            $html.= '<form action="' . BASE_URL . '/formsaction/' . $form_data->form_main_id . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
+            $action_url = BASE_URL . '/formsaction/' . $form_data->form_main_id;
+            $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
+            if ($CI->config->item('csrf_protection') === TRUE && strpos($action_url, $CI->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get'))
+		{
+                    $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
+		}
             $html.= '<input type="hidden" name="cur_url" id="cur_url" value="' . str_replace(BASE_URL . '/', '', current_url()) . '">';
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
@@ -947,6 +953,12 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * clear_all_error_log
+     *
+     * Function for clear all log file
+     *
+     */
     public function clear_all_error_log() {
         $CI = & get_instance();
         $path = $CI->config->item('log_path');
@@ -963,6 +975,12 @@ class Csz_model extends CI_Model {
         closedir($handle);
     }
 
+    /**
+     * clear_all_session
+     *
+     * Function for clear all session file
+     *
+     */
     public function clear_all_session() {
         $CI = & get_instance();
         $path = $CI->config->item('sess_save_path');
@@ -979,6 +997,12 @@ class Csz_model extends CI_Model {
         closedir($handle);
     }
 
+    /**
+     * clear_all_cache
+     *
+     * Function for clear all cache file
+     *
+     */
     public function clear_all_cache() {
         $CI = & get_instance();
         $path = $CI->config->item('cache_path');
@@ -995,6 +1019,13 @@ class Csz_model extends CI_Model {
         closedir($handle);
     }
 
+    /**
+     * clear_uri_cache
+     *
+     * Function for clear uri cache file
+     *
+     * @param	string	$uri    page uri
+     */
     public function clear_uri_cache($uri) {
         $CI = & get_instance();
         $path = $CI->config->item('cache_path');
@@ -1002,7 +1033,15 @@ class Csz_model extends CI_Model {
         @unlink($cache_path . '/' . md5($uri));
     }
 
-    public function getCurlreCaptData($url) {
+    /**
+     * getCurlreCaptData
+     *
+     * Function for get the reCaptcha respone data from json
+     *
+     * @param	string	$url    reCaptcha json respone url
+     * @return	string or FALSE if reCaptcha wrong
+     */
+    private function getCurlreCaptData($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1018,6 +1057,13 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * chkCaptchaRes
+     *
+     * Function for check the reCaptcha
+     *
+     * @return	string
+     */
     public function chkCaptchaRes() {
         $config = $this->load_config();
         $respone = '';
@@ -1042,6 +1088,13 @@ class Csz_model extends CI_Model {
         return $respone;
     }
 
+    /**
+     * showCaptcha
+     *
+     * Function for show the reCaptcha
+     *
+     * @return	string
+     */
     public function showCaptcha() {
         $config = $this->load_config();
         $html = '';
@@ -1051,6 +1104,13 @@ class Csz_model extends CI_Model {
         return $html;
     }
 
+    /**
+     * saveLinkStats
+     *
+     * Function for save link stats
+     *
+     * @param	string	$link    url for save into database
+     */
     public function saveLinkStats($link) {
         $this->db->set('link', $link, TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
@@ -1058,6 +1118,15 @@ class Csz_model extends CI_Model {
         $this->db->insert('link_statistic');
     }
 
+    /**
+     * chkPassword
+     *
+     * Function for check the email and password
+     *
+     * @param	string	$email    email address
+     * @param	string	$password    password
+     * @return	object
+     */
     public function chkPassword($email, $password) {
         $this->db->select("*");
         $this->db->where("email", $email);
@@ -1067,6 +1136,15 @@ class Csz_model extends CI_Model {
         return $this->db->get("user_admin");
     }
 
+    /**
+     * memberLogin
+     *
+     * Function for check the email and password
+     *
+     * @param	string	$email    email address
+     * @param	string	$password    password
+     * @return	string
+     */
     public function memberLogin($email, $password) {
         if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
@@ -1096,6 +1174,15 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * saveLogs
+     *
+     * Function for save the login log into database
+     *
+     * @param	string	$email    email address
+     * @param	string	$note    note text
+     * @param	string	$result    result text
+     */
     public function saveLogs($email, $note = '', $result = '') {
         $data = array(
             'email_login' => $email,
@@ -1108,6 +1195,14 @@ class Csz_model extends CI_Model {
         $this->db->insert('login_logs', $data);
     }
 
+    /**
+     * getLabelLang
+     *
+     * Function for get the label language for frontend
+     *
+     * @param	string	$name    label name
+     * @return	string or FALSE
+     */
     public function getLabelLang($name) {
         if (!$this->session->userdata('fronlang_iso')) {
             $this->setSiteLang();
@@ -1132,6 +1227,11 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * createMember
+     *
+     * Function for create new member
+     */
     public function createMember() {
         // Create the user account
         $config = $this->Csz_model->load_config();
@@ -1155,6 +1255,14 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * updateMember
+     *
+     * Function for update the member
+     *
+     * @param	string	$id    member id
+     * @return	TRUE or FALSE
+     */
     public function updateMember($id) {
         $query = $this->chkPassword($this->session->userdata('admin_email'), sha1(md5($this->input->post('cur_password', TRUE))));
         if ($query->num_rows() > 0) {
@@ -1201,6 +1309,21 @@ class Csz_model extends CI_Model {
         }
     }
 
+    /**
+     * sendEmail
+     *
+     * Function for send the email (effect with settings on backend)
+     *
+     * @param	string	$to_email    to email address
+     * @param	string	$subject     email subject
+     * @param	string	$message    email body message
+     * @param	string	$from_email    from email address
+     * @param	string	$from_name    from name
+     * @param	string	$bcc    bcc to email address
+     * @param	string	$alt_message    alternate message when html not working
+     * @param	array	$attach_file    attach files with array
+     * @return	string
+     */
     public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $bcc = '', $alt_message = '', $attach_file = array()) {
         $this->load->library('email');
         $load_conf = $this->load_config();
