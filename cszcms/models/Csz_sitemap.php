@@ -17,6 +17,11 @@ class Csz_sitemap extends CI_Model {
         $this->load->helper('file');
     }
     
+    /**
+     * runSitemap
+     *
+     * Function for run the sitemap generator
+     */
     public function runSitemap() {
         $this->genSitemapXML();
         $this->genSitemapHTML();
@@ -25,6 +30,13 @@ class Csz_sitemap extends CI_Model {
         $this->genRobotTXT();
     }
     
+    /**
+     * getFileTime
+     *
+     * Function for update the widget
+     *
+     * @return	string	or FALSE
+     */
     public function getFileTime() {
         /* filemtime — Gets file modification time */
         $xmlfile = FCPATH."sitemap.xml";

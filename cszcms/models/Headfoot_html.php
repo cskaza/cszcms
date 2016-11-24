@@ -17,6 +17,13 @@ class Headfoot_html extends CI_Model {
             $this->lang->load('admin', $this->Csz_admin_model->getLang());
     }
     
+    /**
+     * getLogo
+     *
+     * Function for get the logo on frontend
+     *
+     * @return  string
+     */
     public function getLogo(){
         $row = $this->Csz_model->load_config();
         $logo = '';
@@ -28,6 +35,14 @@ class Headfoot_html extends CI_Model {
         return $logo;
     }
 
+    /**
+     * topmenu
+     *
+     * Function for get the top menu on frontend
+     *
+     * @param	string	$cur_page    current page
+     * @return  string
+     */
     public function topmenu($cur_page){
         $menu_list = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
@@ -106,6 +121,13 @@ class Headfoot_html extends CI_Model {
         return $menu_list;
     }
     
+    /**
+     * getSocial
+     *
+     * Function for get social
+     *
+     * @return  string
+     */
     public function getSocial(){
         $social_list = '';
         if($this->Csz_model->getSocial()){
@@ -126,6 +148,14 @@ class Headfoot_html extends CI_Model {
         return $html;
     }
     
+    /**
+     * langMenu
+     *
+     * Function for language menu
+     *
+     * @param	string	$type    language menu type 1=Show flag only, 2=Show flag and Language, 3=Show flag and Country or null=Show Full detail
+     * @return  string
+     */
     public function langMenu($type = ''){
         $lang_list = '';
         $i = 0;
@@ -146,11 +176,25 @@ class Headfoot_html extends CI_Model {
         return $html;
     }
 
+    /**
+     * footer
+     *
+     * Function for footer
+     *
+     * @return  string
+     */
     public function footer(){
         $html = $this->Csz_model->cszCopyright();
         return $html;
     }
     
+    /**
+     * admin_topmenu
+     *
+     * Function for top menu on backend
+     *
+     * @return  string
+     */
     public function admin_topmenu(){
         if(admin_helper::is_a_member($this->session->userdata('admin_type')) === FALSE){
             $config = $this->Csz_admin_model->load_config();
@@ -217,6 +261,19 @@ class Headfoot_html extends CI_Model {
         }
     }
     
+    /**
+     * admin_leftli
+     *
+     * Function for left menu on backend <li></li>
+     *
+     * @param	string	$cur_page   Current page
+     * @param	string	$page_chk   Page check
+     * @param	string	$url   Url
+     * @param	string	$menu_name   Menu label
+     * @param	string	$icon   bootstrap glyphicon class
+     * @param	string	$submenu   Submenu (TRUE or FALSE)
+     * @return  string
+     */
     private function admin_leftli($cur_page,$page_chk,$url,$menu_name,$icon,$submenu = FALSE){
         $active = '';
         $glyp_icon = '';
@@ -234,6 +291,14 @@ class Headfoot_html extends CI_Model {
         return $html;
     }
 
+    /**
+     * admin_leftmenu
+     *
+     * Function for left menu on backend
+     *
+     * @param	string	$cur_page   Current page
+     * @return  string
+     */
     public function admin_leftmenu($cur_page){
         if(admin_helper::is_a_member($this->session->userdata('admin_type')) === FALSE){
             $config = $this->Csz_admin_model->load_config();
@@ -295,8 +360,15 @@ class Headfoot_html extends CI_Model {
         }
     }
 
+    /**
+     * admin_footer
+     *
+     * Function for footer on backend
+     *
+     * @return  string
+     */
     public function admin_footer(){
-        /* Please do not remove or change this fuction */
+        /* Please do not remove or change this function */
         $html = '<footer>
                     <hr>
                     <div class="row">
@@ -308,6 +380,13 @@ class Headfoot_html extends CI_Model {
         return $html;
     }
     
+    /**
+     * getLastVerAlert
+     *
+     * Function for show alert nofity on frontend
+     *
+     * @return  string
+     */
     public function getLastVerAlert() {
         if(!$this->session->userdata('fronlang_iso')) {
             $lang_iso = 'en';
@@ -330,6 +409,13 @@ class Headfoot_html extends CI_Model {
         return $html;
     }
     
+    /**
+     * memberleftMenu
+     *
+     * Function for left menu on member page
+     *
+     * @return  string
+     */
     public function memberleftMenu() {
         $html = '<div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->Csz_model->getLabelLang('member_menu').'</b></div>
