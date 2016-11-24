@@ -3,6 +3,7 @@
 $lang['gallery_header']			= "แกลเลอรี";
 $lang['gallery_album']                  = "อัลบั้ม/รายละเอียด";
 $lang['gallery_datetime']               = "วัน/เวลา";
+$lang['gallery_widget_remark']		= "{language_iso} เป็นต่อย่อภาษาสำหรับหน้าเว็บ. คุณสามารถดูได้ในส่วนของ 'ภาษา' บนระบบเบื้องหลัง";
 
 //Article new/edit
 $lang['gallery_remark']                 = "อัปโหลดภาพ โปรดแก้ไขอัลบั้มนี้";

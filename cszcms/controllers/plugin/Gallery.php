@@ -114,8 +114,8 @@ class Gallery extends CI_Controller {
         $feed = new Feed();
         // set your feed's title, description, link, pubdate and language
         $feed->title = $row->site_name;
-        $feed->description = 'Article | ' . $row->site_name;
-        $feed->link = BASE_URL.'/plugin/article';
+        $feed->description = 'Gallery | ' . $row->site_name;
+        $feed->link = BASE_URL.'/plugin/gallery';
         $search_arr = " active = '1'";
         $limit = 20;
         // get article list
@@ -131,6 +131,47 @@ class Gallery extends CI_Controller {
         }
         // show your feed (options: 'atom' (recommended) or 'rss')
         $feed->render('rss');
+    }
+    
+    public function getWidget() {
+        // For New Category
+        $this->load->library('Xml_writer');
+        // Initiate class
+        $xml = new Xml_writer;
+        $xml->setRootName('csz_widget');
+        $xml->initiate();
+        // Start Main branch
+        $xml->startBranch('plugin'); 
+        $xml->addNode('main_url', BASE_URL.'/plugin/gallery');
+        // Get article 10 items
+        if ($this->uri->segment(4)) {
+            $search_arr = " active = '1' AND lang_iso = '".$this->uri->segment(4)."'";
+        }else{
+            $search_arr = " active = '1'";
+        }
+        $limit = 20;
+        $article = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'arrange', 'asc', $search_arr);
+        if($article !== FALSE){
+            $xml->addNode('null', '0'); // For check item is not empty
+            foreach ($article as $row) {
+                // start sub branch
+                $xml->startBranch('item', array('id' => $row['gallery_db_id'])); 
+                $xml->addNode('sub_url', BASE_URL.'/plugin/gallery/view/'.$row['gallery_db_id'].'/'.$row['url_rewrite']);
+                $xml->addNode('title', $row['album_name']);
+                $xml->addNode('short_desc', $row['short_desc']);
+                $f_img = $this->Gallery_model->getFirstImgs($row['gallery_db_id']);
+                $xml->addNode('photo', $f_img);
+                // End sub branch
+                $xml->endBranch();
+            }
+        }else{
+            $xml->addNode('null', '1'); // For check item is empty
+        }
+        // End Main branch 
+        $xml->endBranch();
+        // Print the XML to screen
+        $xml->getXml(true);
+        exit();
     }
 
 }

@@ -3,6 +3,7 @@
 $lang['gallery_header']			= "Gallery";
 $lang['gallery_album']                  = "Album/Description";
 $lang['gallery_datetime']               = "Date/Time";
+$lang['gallery_widget_remark']		= "{language_iso} is the language code for frontend. You can see in 'Language' section on backend system.";
 
 //Article new/edit
 $lang['gallery_remark']                 = "Upload the picture. Please edit this album.";
