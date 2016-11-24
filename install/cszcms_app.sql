@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS `form_main` (
   `captcha` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`form_main_id`)
+  PRIMARY KEY (`form_main_id`),
+  KEY `form_name` (`form_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
@@ -122,7 +123,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `active` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`pages_id`)
+  PRIMARY KEY (`pages_id`),
+  KEY `page_url` (`page_url`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_title`, `page_keywords`, `page_desc`, `content`, `active`, `timestamp_create`, `timestamp_update`) VALUES
@@ -216,7 +218,8 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `md5_lasttime` datetime NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`user_admin_id`)
+  PRIMARY KEY (`user_admin_id`),
+  KEY `email` (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `link_statistic` (
@@ -224,7 +227,8 @@ CREATE TABLE IF NOT EXISTS `link_statistic` (
   `link` varchar(255) NOT NULL,
   `ip_address` varchar(255) NOT NULL,
   `timestamp_create` datetime NOT NULL,
-  PRIMARY KEY (`link_statistic_id`)
+  PRIMARY KEY (`link_statistic_id`),
+  KEY `link` (`link`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `general_label` (
@@ -233,7 +237,8 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `remark` text NOT NULL,
   `lang_en` text NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`general_label_id`)
+  PRIMARY KEY (`general_label_id`),
+  KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
@@ -368,7 +373,8 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `fb_comment_sort` varchar(20) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`article_db_id`)
+  PRIMARY KEY (`article_db_id`),
+  KEY `url_rewrite` (`url_rewrite`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `email_logs` (
@@ -396,7 +402,8 @@ CREATE TABLE IF NOT EXISTS `gallery_db` (
   `arrange` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`gallery_db_id`)
+  PRIMARY KEY (`gallery_db_id`),
+  KEY `url_rewrite` (`url_rewrite`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `gallery_picture` (
@@ -545,5 +552,6 @@ CREATE TABLE IF NOT EXISTS `widget_xml` (
   `active` int(11) NOT NULL,
   `timestamp_create` datetime NOT NULL,
   `timestamp_update` datetime NOT NULL,
-  PRIMARY KEY (`widget_xml_id`)
+  PRIMARY KEY (`widget_xml_id`),
+  KEY `widget_name` (`widget_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

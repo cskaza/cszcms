@@ -133,7 +133,7 @@ class Database{
 
 class Version{
     private $version = '1.1.3'; /* For CMS Version */
-    private $release = 'beta'; /* For release or beta */
+    private $release = 'release'; /* For release or beta */
 
     public function getVersion(){
         $version = '';
