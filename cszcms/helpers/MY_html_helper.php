@@ -24,15 +24,15 @@ if ( ! function_exists('meta'))
 	 */
 	function meta($name = '', $content = '', $type = 'name', $newline = "\n")
 	{
-		// Since we allow the data to be passes as a string, a simple array
-		// or a multidimensional one, we need to do a little prepping.
+		/* Since we allow the data to be passes as a string, a simple array */
+		/* or a multidimensional one, we need to do a little prepping.*/
 		if ( ! is_array($name))
 		{
 			$name = array(array('name' => $name, 'content' => $content, 'type' => $type, 'newline' => $newline));
 		}
 		elseif (isset($name['name']))
 		{
-			// Turn single array into multidimensional
+			/* Turn single array into multidimensional*/
 			$name = array($name);
 		}
 
@@ -58,5 +58,3 @@ if ( ! function_exists('meta'))
 		return $str;
 	}
 }
-
-// ------------------------------------------------------------------------
