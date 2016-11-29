@@ -42,6 +42,7 @@ allow from all
 </IfModule>
 # BEGIN Compress files
 <ifModule mod_deflate.c>
+    <ifModule mod_filter.c>
     # Insert filters / compress text, html, javascript, css, xml:
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -77,6 +78,7 @@ allow from all
 
     # Make sure proxies don't deliver the wrong content
     Header append Vary User-Agent env=!dont-vary
+    </ifModule>
 </ifModule>
 <ifModule mod_gzip.c>
 	mod_gzip_on Yes
