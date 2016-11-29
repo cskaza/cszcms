@@ -46,7 +46,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     /* Prepare Input Data */
     /* $dbdsn = $_POST['dbdsn']; */
     $url_replace = array('https://', 'http://');
-    $baseurl = $_POST['protocal'] . str_replace($url_replace, '', $_POST['baseurl']);
+    $baseurl = $_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/"));
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
     $dbpass = $_POST['dbpass'];
@@ -155,7 +155,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
             <?php
             if ($success) {
                 $url_replace = array('https://', 'http://');
-                $baseurl = $_POST['protocal'] . str_replace($url_replace, '', $_POST['baseurl']);
+                $baseurl = $_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/"));
                 ?>
                 <div class="row">
                     <div class="col-md-12">
