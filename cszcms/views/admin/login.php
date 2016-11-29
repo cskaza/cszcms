@@ -48,7 +48,8 @@
                         'class' => 'form-control',
                         'required' => 'required',
                         'value' => set_value('password'),
-                        'placeholder' => $this->lang->line('login_password')
+                        'placeholder' => $this->lang->line('login_password'),
+                        'autocomplete' => 'off' 
                     );
                     echo form_password($data);
                     ?>
