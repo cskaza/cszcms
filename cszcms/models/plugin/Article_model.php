@@ -185,6 +185,16 @@ class Article_model extends CI_Model {
     public function categoryMenu($lang_iso) {
         $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '0' AND lang_iso = '" . $lang_iso . "'", '', 0, 'category_name', 'ASC');
         $html = '<div class="panel panel-primary">
+                <div class="panel-body">
+                    <form action="' . BASE_URL . '/plugin/article/search" name="searchfrm" id="searchfrm" method="get" style="margin:0px; padding:0px;">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-search"></i></span>
+                        <input type="text" class="form-control" placeholder="' . $this->Csz_model->getLabelLang('article_search_txt') . '" name="p" value="'.$this->input->get('p' ,TRUE).'">
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> ' . $this->Csz_model->getLabelLang('article_category_menu') . '</b></div>
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">';

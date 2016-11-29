@@ -102,6 +102,37 @@ class Article extends CI_Controller {
         }
     }
     
+    public function search() {
+        if ($this->input->get('p', TRUE)) {
+            $row = $this->Csz_model->load_config();
+            $title = 'Article Search | ' . $row->site_name;
+            $this->template->set('title', $title);
+            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title, $row->keywords, $title));
+            $this->template->set('cur_page', $this->page_url);
+            $search_arr = " is_category = 0 AND active = '1' AND lang_iso = '".$this->session->userdata('fronlang_iso')."' AND (title LIKE '%" . $this->input->get('p', TRUE) . "%' OR keyword LIKE '%" . $this->input->get('p', TRUE) . "%')";
+            $this->load->library('pagination');
+            // Pages variable
+            $result_per_page = 15;
+            $total_row = $this->Csz_model->countData('article_db', $search_arr);
+            $num_link = 10;
+            $base_url = BASE_URL . '/plugin/article/search/';
+
+            // Pageination config
+            $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 4);
+            ($this->uri->segment(4)) ? $pagination = $this->uri->segment(4) : $pagination = 0;
+
+            //Get users from database
+            $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+            $this->template->setSub('total_row', $total_row);
+            $this->template->setSub('category_name', $this->input->get('p', TRUE));
+
+            //Load the view
+            $this->template->loadSub('frontpage/plugin/article_search');
+        } else {
+            redirect(BASE_URL . '/plugin/article', 'refresh');
+        }
+    }
+    
     public function archive() {
         if($this->uri->segment(4)){
             $year_arr = array();
@@ -243,6 +274,6 @@ class Article extends CI_Controller {
         // Print the XML to screen
         $xml->getXml(true);
         exit();
-    }
+    }   
 
 }
