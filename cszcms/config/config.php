@@ -379,7 +379,7 @@ $config['sess_regenerate_destroy'] = TRUE;
 |
 */
 $config['cookie_prefix']	= 'cszcookie';
-$config['cookie_domain']	= '.'.EMAIL_DOMAIN;
+$config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;

@@ -1,4 +1,7 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.4
+- Fix CSRF Token bug when submit forms.
+
 CSZ-CMS V.1.1.3
 - Add facebook comments into article plugin.
 - Add option member register for send confirmed email in settings.
