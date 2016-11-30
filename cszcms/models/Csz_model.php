@@ -1532,7 +1532,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanEmailFormat($email){
-        $search = array('&','/',';','\\');
+        $search = array('&','/',';','\\',' ');
         $email = str_replace($search, '', $email);
         return $email;
     }
