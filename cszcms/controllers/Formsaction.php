@@ -15,11 +15,7 @@ class Formsaction extends CI_Controller {
             //Get form data
             $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
             if ($frm_rs->active) {
-                if($frm_rs->form_method == 'post'){
-                    $cur_page = $this->input->post('cur_url', TRUE);
-                }elseif($frm_rs->form_method == 'get'){
-                    $cur_page = $this->input->get('cur_url', TRUE);
-                }
+                $cur_page = $this->session->userdata('cszfrm_cururl');
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {
                     if ($this->Csz_model->chkCaptchaRes() == '') {

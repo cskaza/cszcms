@@ -25,9 +25,10 @@ allow from all
 <IfModule mod_headers.c>
     Header set Connection keep-alive
     Header unset ETag
-    # Set XSS Protection header and X-Frame-Option Protection
-    Header set X-XSS-Protection "1; mode=block"
-    Header always append X-Frame-Options SAMEORIGIN
+    # Set X-XSS-Protection header and X-Frame-Options header and X-Content-Type-Options header for Apache
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
     <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|woff|woff2|svg)$">
             Header set Cache-Control "max-age=290304000, public"
     </FilesMatch>

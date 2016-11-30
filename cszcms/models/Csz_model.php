@@ -907,7 +907,8 @@ class Csz_model extends CI_Model {
             $html = $sts_msg;
             $action_url = BASE_URL . '/formsaction/' . $form_data->form_main_id;
             $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
-            $html.= '<input type="hidden" name="cur_url" id="cur_url" value="' . str_replace(BASE_URL . '/', '', current_url()) . '">';
+            $sess_data = array('cszfrm_cururl' => str_replace(BASE_URL . '/', '', current_url()));
+            $this->session->set_userdata($sess_data);            
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
                 if ($field->field_required) {
@@ -1430,7 +1431,7 @@ class Csz_model extends CI_Model {
                 if ($header = trim(fgets($fp, 1024))) {
                     $sc_pos = strpos($header, ':');
                     if ($sc_pos === false) {
-                        $headers["status"] = $header;
+                        $headers['status'] = $header;
                     } else {
                         $label = substr($header, 0, $sc_pos);
                         $value = substr($header, $sc_pos + 1);
@@ -1454,9 +1455,13 @@ class Csz_model extends CI_Model {
      */
     public function is_url_exist($url) {
         $headers = $this->my_get_headers($url);
-        if ($headers !== FALSE && (stripos($headers["status"], '200') || stripos($headers["status"], '301') || stripos($headers["status"], '302'))) {
-            return TRUE;
-        } else {
+        if(isset($headers["status"])){
+            if ($headers !== FALSE && (@stripos($headers["status"], '200') || stripos($headers["status"], '301') || stripos($headers["status"], '302'))) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }else{
             return FALSE;
         }
     }

@@ -2,9 +2,10 @@
 CSZ-CMS V.1.1.4
 - Fix Article plugin to version 1.0.4 (Add article search on frontend).
 - Fix for disable autocomplete the password field for security.
-- Fix X-Frame-Options Header set on htaccess.
+- Fix htaccess for more security.
 - Fix Parent Directory access for assets and template directory.
 - Fix Cookie set HttpOnly for security.
+- Fix forms return current url for security.
 
 CSZ-CMS V.1.1.3
 - Add facebook comments into article plugin.
