@@ -907,10 +907,6 @@ class Csz_model extends CI_Model {
             $html = $sts_msg;
             $action_url = BASE_URL . '/formsaction/' . $form_data->form_main_id;
             $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
-            if ($CI->config->item('csrf_protection') === TRUE && strpos($action_url, $CI->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get'))
-		{
-                    $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
-		}
             $html.= '<input type="hidden" name="cur_url" id="cur_url" value="' . str_replace(BASE_URL . '/', '', current_url()) . '">';
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
@@ -1525,6 +1521,20 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
+    }
+    
+    /**
+     * cleanEmailFormat
+     *
+     * Function for clean email format
+     *
+     * @param	string	$email  for database table
+     * @return	string
+     */
+    public function cleanEmailFormat($email){
+        $search = array('&','/',';','\\');
+        $email = str_replace($search, '', $email);
+        return $email;
     }
 
 }

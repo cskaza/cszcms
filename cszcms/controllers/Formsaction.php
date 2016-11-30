@@ -45,9 +45,17 @@ class Formsaction extends CI_Controller {
                     }
                     if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label') {      
                         if($frm_rs->form_method == 'post'){
-                            $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
+                            if($f_val->field_type == 'email'){
+                                $data[$f_val->field_name] = $this->Csz_model->cleanEmailFormat($this->input->post($f_val->field_name, TRUE));
+                            }else{
+                                $data[$f_val->field_name] = $this->input->post($f_val->field_name, TRUE);
+                            }
                         }elseif($frm_rs->form_method == 'get'){
-                            $data[$f_val->field_name] = $this->input->get($f_val->field_name, TRUE);
+                            if($f_val->field_type == 'email'){
+                                $data[$f_val->field_name] = $this->Csz_model->cleanEmailFormat($this->input->get($f_val->field_name, TRUE));
+                            }else{
+                                $data[$f_val->field_name] = $this->input->get($f_val->field_name, TRUE);
+                            }
                         }
                     }                    
                 }
@@ -61,9 +69,9 @@ class Formsaction extends CI_Controller {
                     $visit_field = $this->Csz_model->getValue('field_name', 'form_field', 'form_field_id', $frm_rs->email_field_id, 1);
                     if($visit_field->field_name && $frm_rs->visitor_subject){
                         if($frm_rs->form_method == 'post'){
-                            $visit_email = $this->input->post($visit_field->field_name, TRUE);
+                            $visit_email = $this->Csz_model->cleanEmailFormat($this->input->post($visit_field->field_name, TRUE));
                         }elseif($frm_rs->form_method == 'get'){
-                            $visit_email = $this->input->get($visit_field->field_name, TRUE);
+                            $visit_email = $this->Csz_model->cleanEmailFormat($this->input->get($visit_field->field_name, TRUE));
                         }
                         $webconfig = $this->Csz_admin_model->load_config();
                         @$this->Csz_model->sendEmail($visit_email, $frm_rs->visitor_subject, $frm_rs->visitor_body, $email_from, $webconfig->site_name);
@@ -91,7 +99,7 @@ class Formsaction extends CI_Controller {
             $from_name = $webconfig->site_name;
             $from_email = $email_from;
             if($email_to){
-                $to_email = $email_to;
+                $to_email = $this->Csz_model->cleanEmailFormat($email_to);
             }else{
                 $to_email = $webconfig->default_email;
             }            
@@ -109,9 +117,17 @@ class Formsaction extends CI_Controller {
                             }
                         }else{
                             if($form_method == 'post'){
-                                $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name, TRUE) . '<br>';
+                                if($val->field_type == 'email'){
+                                    $message_html.= '<b>' . $field_label . ':</b> ' . $this->Csz_model->cleanEmailFormat($this->input->post($val->field_name, TRUE)) . '<br>';
+                                }else{
+                                    $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->post($val->field_name, TRUE) . '<br>';
+                                }
                             }elseif($form_method == 'get'){
-                                $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->get($val->field_name, TRUE) . '<br>';
+                                if($val->field_type == 'email'){
+                                    $message_html.= '<b>' . $field_label . ':</b> ' . $this->Csz_model->cleanEmailFormat($this->input->get($val->field_name, TRUE)) . '<br>';
+                                }else{
+                                    $message_html.= '<b>' . $field_label . ':</b> ' . $this->input->get($val->field_name, TRUE) . '<br>';
+                                }
                             }                           
                         } 
                     }
