@@ -59,7 +59,8 @@
                                     'name' => 'password',
                                     'id' => 'password',
                                     'class' => 'form-control',
-                                    'value' => set_value('password')
+                                    'value' => set_value('password'),
+                                    'autocomplete' => 'off'
                                 );
                                 echo form_password($data);
                                 ?>			
@@ -73,7 +74,8 @@
                                     'name' => 'con_password',
                                     'id' => 'con_password',
                                     'class' => 'form-control',
-                                    'value' => set_value('con_password')
+                                    'value' => set_value('con_password'),
+                                    'autocomplete' => 'off'
                                 );
                                 echo form_password($data);
                                 ?>			
@@ -202,7 +204,8 @@
                             'id' => 'cur_password',
                             'class' => 'form-control',
                             'required' => 'required',
-                            'value' => set_value('cur_password')
+                            'value' => set_value('cur_password'),
+                            'autocomplete' => 'off'
                         );
                         echo form_password($data);
                         ?>			

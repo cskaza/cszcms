@@ -35,7 +35,8 @@
                                 'required' => 'required',
                                 'autofocus' => 'true',
                                 'class' => 'form-control',
-                                'value' => set_value('password', '', FALSE)
+                                'value' => set_value('password', '', FALSE),
+                                'autocomplete' => 'off'
                             );
                             echo form_password($data);
                             ?>			
@@ -51,7 +52,8 @@
                                 'required' => 'required',
                                 'autofocus' => 'true',
                                 'class' => 'form-control',
-                                'value' => set_value('con_password', '', FALSE)
+                                'value' => set_value('con_password', '', FALSE),
+                                'autocomplete' => 'off'
                             );
                             echo form_password($data);
                             ?>			

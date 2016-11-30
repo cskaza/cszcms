@@ -2,6 +2,7 @@
 CSZ-CMS V.1.1.4
 - Fix CSRF Token bug when submit forms.
 - Fix Article plugin to version 1.0.4 (Add article search on frontend).
+- Fix for disable autocomplete the password field for security.
 
 CSZ-CMS V.1.1.3
 - Add facebook comments into article plugin.

@@ -44,7 +44,8 @@
                         'class' => 'form-control',
                         'required' => 'required',
                         'value' => set_value('password'),
-                        'placeholder' => $this->Csz_model->getLabelLang('login_password')
+                        'placeholder' => $this->Csz_model->getLabelLang('login_password'),
+                        'autocomplete' => 'off'
                     );
                     echo form_password($data);
                     ?>
