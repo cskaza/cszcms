@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '', '', '&copy; %YEAR CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 30, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
+(1, 'CSZ-CMS Starter', '', '', '', '&copy; %YEAR CSZ-CMS Starter', 'demo@cszcms.com', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 30, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
 
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `timestamp_update` datetime NOT NULL,
   PRIMARY KEY (`general_label_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
@@ -336,7 +336,8 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (89, 'shop_special_price', 'For special price text', 'Special Price', '2016-09-25 19:51:06'),
 (90, 'shop_cancel_order_txt', 'For order cancel text', 'We are sorry! Your last transaction was cancelled.', '2016-09-26 10:53:09'),
 (91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09'),
-(92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09');
+(92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09'),
+(93, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09');
 
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -352,8 +353,8 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Article', 'article', '1.0.2', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.2', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
+(1, 'Article', 'article', '1.0.4', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
+(2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (3, 'Shopping', 'shop', '1.0.1', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `article_db` (

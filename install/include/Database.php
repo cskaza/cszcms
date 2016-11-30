@@ -145,4 +145,12 @@ class Version{
         }
         return $version;
     }
+    
+    public function setTimezone($timezone){
+        if(!$timezone) $timezone = 'Asia/Bangkok';
+        if (function_exists('ini_set')) {
+            ini_set('max_execution_time', 300);
+            ini_set('date.timezone', $timezone);
+        }
+    }
 }

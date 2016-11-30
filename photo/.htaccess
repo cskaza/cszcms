@@ -1,2 +1,1 @@
-IndexOptions -FancyIndexing
-IndexIgnore *.jpg *.jpeg *.png *.gif *.pdf *.doc *.docx *.odt *.txt *.odg *.odp *.ods *.zip *.rar *.psv *.xls *.xlsx *.ppt *.pptx *.mp3 *.wav *.mp4 *.wma *.flv *.avi *.mov *.m4v *.wmv *.m3u *.pls
+Options -Indexes

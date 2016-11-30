@@ -340,6 +340,7 @@ $version = new Version;
                 <hr>
                 <div class="row">
                     <div class="col-md-8 div-copyright">
+                        <?php $version->setTimezone('Asia/Bangkok'); ?>
                         <span class="copyright">Copyright &copy; <?php echo date('Y'); ?> CSZ CMS Installer</span>
                         <small style="color:gray;"><br><span class="copyright">Installer for CSZ CMS Version <?php echo $version->getVersion(); ?></span></small>
                     </div>
