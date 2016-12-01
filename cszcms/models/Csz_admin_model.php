@@ -706,17 +706,11 @@ class Csz_admin_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '') {
-        if(LANG){
-            $hl = '?hl='.$this->getLangISOfromName(LANG);
-        }else{
-            $hl = '';
-        }
         $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>';
+        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';       
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach ($more_js as $value) {

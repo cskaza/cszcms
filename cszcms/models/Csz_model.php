@@ -555,13 +555,7 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '') {
-        if ($this->session->userdata('fronlang_iso')) {
-            $hl = '?hl=' . $this->session->userdata('fronlang_iso');
-        } else {
-            $hl = '';
-        }
         $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/corejs.min.js"></script>' . "\n";
-        $core_js.= '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js' . $hl . '"></script>' . "\n";
         if (!empty($more_js)) {
             if (is_array($more_js)) {
                 foreach ($more_js as $value) {
@@ -1122,7 +1116,18 @@ class Csz_model extends CI_Model {
         $config = $this->load_config();
         $html = '';
         if ($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey) {
-            $html = '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+            $hl = '';
+            if($this->uri->segment(1) == 'admin'){
+                if($this->Csz_admin_model->getLang()){
+                    $hl = '?hl='.$this->Csz_admin_model->getLangISOfromName($this->Csz_admin_model->getLang());
+                }
+            }else{
+                if($this->session->userdata('fronlang_iso')){
+                    $hl = '?hl=' . $this->session->userdata('fronlang_iso');
+                }
+            }
+            $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
+            $html.= '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
         }
         return $html;
     }
