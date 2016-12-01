@@ -75,7 +75,7 @@ class Database{
     }
 
     public function mysqli_multi_query_file($mysqli, $filename){
-        error_reporting(E_ERROR | E_PARSE);
+        /*error_reporting(E_ERROR | E_PARSE);*/
         $sql = file_get_contents($filename);
         // remove comments
         $sql = preg_replace('#/\*.*?\*/#s', '', $sql);
