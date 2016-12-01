@@ -849,7 +849,7 @@ class Csz_model extends CI_Model {
      */
     public function frmNameInHtml($content, $url_segment) { /* Find the form in content */
         $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
+        if ($this->findFrmTag($content) !== false) {
             $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
             $array = explode("[?]", $txt_nonline);
             if (!empty($array)) {
@@ -901,6 +901,9 @@ class Csz_model extends CI_Model {
             $html = $sts_msg;
             $action_url = BASE_URL . '/formsaction/' . $form_data->form_main_id;
             $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
+            if ($CI->config->item('csrf_protection') === TRUE && strpos($action_url, $CI->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get')) {
+                $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
+            }
             $sess_data = array('cszfrm_cururl' => str_replace(BASE_URL . '/', '', current_url()));
             $this->session->set_userdata($sess_data);            
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
@@ -1559,6 +1562,23 @@ class Csz_model extends CI_Model {
         $search = array('&','/',';','\\','"','|');
         $string = str_replace($search, '', $string);
         return $string;
+    }
+    
+    /**
+     * findFormsTag
+     *
+     * Function for find forms tag from content html
+     *
+     * @param	string	$content  for content html
+     * @return	TRUE or FALSE
+     */
+    public function findFrmTag($content) {
+        $txt_nonhtml = strip_tags($content);
+        if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
+            return TRUE;
+        }else{
+            return FALSE;
+        }
     }
 
 }

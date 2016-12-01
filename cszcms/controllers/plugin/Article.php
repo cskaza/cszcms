@@ -183,6 +183,10 @@ class Article extends CI_Controller {
             $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."' AND url_rewrite = '".$this->uri->segment(5)."'", '', 1);
             if($art_row !== FALSE){
                 $row = $this->Csz_model->load_config();
+                if ($this->Csz_model->findFrmTag($art_row->content) !== false) {
+                    $row->pagecache_time = 0;
+                    $this->db->cache_off();
+                }
                 $this->output->cache($row->pagecache_time);
                 $title = $art_row->title.' | ' . $row->site_name;
                 $this->template->set('title', $title);

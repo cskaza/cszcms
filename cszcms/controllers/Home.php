@@ -70,10 +70,14 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        if($this->page_rs === FALSE){
-            header("HTTP/1.0 404 Not Found");
-        }
         $config = $this->Csz_model->load_config();
+        if($this->page_rs === FALSE){
+            set_status_header(404);
+        }else{
+            if ($this->Csz_model->findFrmTag($this->page_rs->content) !== false) {
+                $config->pagecache_time = 0;
+            }
+        }
         //Get pages from database
         if($config->pagecache_time != 0){ $this->db->cache_on(); }
         $this->template->setSub('page', $this->page_url);
