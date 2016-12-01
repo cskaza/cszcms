@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-9">
             <div class="panel panel-primary">
-                <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_search_txt').': '.$category_name ?></b></div>
+                <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('article_search_txt').': '.$searchtxt ?></b></div>
                 <div class="panel-body">
                     <?php
                     if ($article === FALSE) {

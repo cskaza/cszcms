@@ -281,14 +281,15 @@ class Shop extends CI_Controller {
     }
 
     public function search() {
-        if ($this->input->get('p', TRUE)) {
+        $p = $this->Csz_model->cleanOSCommand($this->input->get('p', TRUE));
+        if ($p) {
             $row = $this->Csz_model->load_config();
             $shop_config = $this->Shop_model->load_config();
             $title = 'Shopping online products search | ' . $row->site_name;
             $this->template->set('title', $title);
             $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title, $row->keywords, $title));
             $this->template->set('cur_page', $this->page_url);
-            $search_arr = " active = '1' AND (product_name LIKE '%" . $this->input->get('p', TRUE) . "%' OR keyword LIKE '%" . $this->input->get('p', TRUE) . "%' OR product_code LIKE '%" . $this->input->get('p', TRUE) . "%')";
+            $search_arr = " active = '1' AND (product_name LIKE '%" . $p . "%' OR keyword LIKE '%" . $p . "%' OR product_code LIKE '%" . $p . "%')";
             $this->load->library('pagination');
             // Pages variable
             $result_per_page = 15;
@@ -304,6 +305,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('shop_config', $shop_config);
             $this->template->setSub('product', $this->Csz_admin_model->getIndexData('shop_product', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
             $this->template->setSub('total_row', $total_row);
+            $this->template->setSub('searchtxt', $p);
 
             //Load the view
             $this->template->loadSub('frontpage/plugin/shop/shop_search');

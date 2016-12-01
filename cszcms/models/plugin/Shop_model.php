@@ -334,7 +334,7 @@ class Shop_model extends CI_Model {
                     <form action="' . BASE_URL . '/plugin/shop/search" name="searchfrm" id="searchfrm" method="get" style="margin:0px; padding:0px;">
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-search"></i></span>
-                        <input type="text" class="form-control" placeholder="' . $this->Csz_model->getLabelLang('shop_product_search_txt') . '" name="p" value="'.$this->input->get('p' ,TRUE).'">
+                        <input type="text" class="form-control" placeholder="' . $this->Csz_model->getLabelLang('shop_product_search_txt') . '" name="p" value="' . $this->Csz_model->cleanOSCommand($this->input->get('p' ,TRUE)) . '">
                     </div>
                     </form>
                 </div>

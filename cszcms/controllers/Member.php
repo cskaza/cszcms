@@ -56,8 +56,8 @@ class Member extends CI_Controller {
 
     public function loginCheck() {
         Member_helper::login_already($this->session->userdata('admin_email'));
-        $email = $this->input->post('email');
-        $password = sha1(md5($this->input->post('password')));
+        $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
+        $password = sha1(md5($this->input->post('password', TRUE)));
         $result = $this->Csz_model->memberLogin($email, $password);
         if ($result == 'SUCCESS') {
             $this->Csz_model->saveLogs($email, 'Member Login Successful!', $result);
@@ -122,7 +122,7 @@ class Member extends CI_Controller {
             $this->template->setSub('chksts', 0);
             $this->template->loadSub('frontpage/member/regist');
         } else {
-            $email = $this->input->post('email', TRUE);
+            $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $md5_hash = $this->Csz_model->createMember();
             if($md5_hash !== FALSE){
                 if($config->member_confirm_enable){
@@ -233,7 +233,7 @@ class Member extends CI_Controller {
             $this->template->setSub('error_chk', 1);
             $this->template->loadSub('frontpage/member/email_forgot');
         } else {
-            $email = $this->input->post('email');
+            $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
@@ -291,7 +291,7 @@ class Member extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => sha1(md5($this->input->post('password'))),
+                        'password' => sha1(md5($this->input->post('password', TRUE))),
                         'md5_hash' => md5(time() + mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);

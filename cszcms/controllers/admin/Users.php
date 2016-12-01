@@ -198,7 +198,7 @@ class Users extends CI_Controller {
             $this->template->setSub('error_chk', 1);
             $this->template->loadSub('admin/email_forgot');
         } else {
-            $email = $this->input->post('email');
+            $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $this->db->set('md5_hash', md5(time()+mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('email', $email);
@@ -264,7 +264,7 @@ class Users extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => sha1(md5($this->input->post('password'))),
+                        'password' => sha1(md5($this->input->post('password', TRUE))),
                         'md5_hash' => md5(time()+mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);

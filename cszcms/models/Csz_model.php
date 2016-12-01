@@ -1264,7 +1264,7 @@ class Csz_model extends CI_Model {
             $md5_hash = md5(time() + mt_rand(1, 99999999));
             $data = array(
                 'name' => 'Member User',
-                'email' => $this->input->post('email', TRUE),
+                'email' => $this->cleanEmailFormat($this->input->post('email', TRUE)),
                 'password' => sha1(md5($this->input->post('password', TRUE))),
                 'user_type' => 'member',
                 'active' => 0,
@@ -1310,7 +1310,7 @@ class Csz_model extends CI_Model {
                 }
             }
             $this->db->set('name', $this->input->post("name", TRUE), TRUE);
-            $this->db->set('email', $this->input->post('email', TRUE), TRUE);
+            $this->db->set('email', $this->cleanEmailFormat($this->input->post('email', TRUE)), TRUE);
             if ($this->input->post('password') != '') {
                 $this->db->set('password', sha1(md5($this->input->post('password', TRUE))), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
@@ -1533,13 +1533,27 @@ class Csz_model extends CI_Model {
      *
      * Function for clean email format
      *
-     * @param	string	$email  for database table
+     * @param	string	$email  for email address input
      * @return	string
      */
     public function cleanEmailFormat($email){
-        $search = array('&','/',';','\\',' ');
+        $search = array('&','/',';','\\','"',"'",' ');
         $email = str_replace($search, '', $email);
         return $email;
+    }
+    
+    /**
+     * cleanOSCommand
+     *
+     * Function for clean any string with security (OS Command injection)
+     *
+     * @param	string	$string  for any string
+     * @return	string
+     */
+    public function cleanOSCommand($string){
+        $search = array('&','/',';','\\','"','|');
+        $string = str_replace($search, '', $string);
+        return $string;
     }
 
 }

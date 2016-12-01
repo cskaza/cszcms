@@ -88,7 +88,7 @@ class Admin extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->login();
         }else{
-            $email = $this->input->post('email', TRUE);
+            $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $password = sha1(md5($this->input->post('password', TRUE)));
             $result = $this->Csz_admin_model->login($email, $password);
             if ($result == 'SUCCESS') {
