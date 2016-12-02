@@ -143,7 +143,12 @@ class Csz_sitemap extends CI_Model {
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
                 $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], "active = '1' AND url_rewrite != ''", '', 0, 'timestamp_update', 'DESC');
+                if($plugin_db[0] == 'article_db'){
+                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
+                }else{
+                    $where = "active = '1' AND url_rewrite != ''";
+                }
+                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
                 if($plugindb !== FALSE){
                     foreach ($plugindb as $rs) {
                         $sitemap_xml.= '<url>
@@ -246,7 +251,12 @@ class Csz_sitemap extends CI_Model {
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
                 $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], "active = '1' AND url_rewrite != ''", '', 0, 'timestamp_update', 'DESC');
+                if($plugin_db[0] == 'article_db'){
+                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
+                }else{
+                    $where = "active = '1' AND url_rewrite != ''";
+                }
+                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
                 if($plugindb !== FALSE){
                     $i = 0;
                     foreach ($plugindb as $rs) {
@@ -313,7 +323,12 @@ class Csz_sitemap extends CI_Model {
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
                 $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], "active = '1' AND url_rewrite != ''", '', 0, 'timestamp_update', 'DESC');
+                if($plugin_db[0] == 'article_db'){
+                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
+                }else{
+                    $where = "active = '1' AND url_rewrite != ''";
+                }
+                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
                 if($plugindb !== FALSE){
                     foreach ($plugindb as $rs) {
                         $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].''."\n";
@@ -378,7 +393,12 @@ class Csz_sitemap extends CI_Model {
             foreach ($plugin as $row) {
                 $sitemap_html.= '<h3>'.$row['plugin_urlrewrite'].'</h3>';
                 $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], "active = '1' AND url_rewrite != ''", '', 0, 'timestamp_update', 'DESC');
+                if($plugin_db[0] == 'article_db'){
+                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
+                }else{
+                    $where = "active = '1' AND url_rewrite != ''";
+                }
+                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
                 if($plugindb !== FALSE){
                     foreach ($plugindb as $rs) {
                         $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].'" title="'.str_replace('-', ' ', $rs['url_rewrite']).'">'.str_replace('-', ' ', $rs['url_rewrite']).'</a></h4>';  
