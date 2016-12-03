@@ -1,6 +1,6 @@
 <?php
 if (!file_exists('config.inc.php')) {
-	header("Location: ./install/index.php?nocache=".time());
+	header("Location: install/index.php?nocache=".time());
 	exit();
 }
 /**

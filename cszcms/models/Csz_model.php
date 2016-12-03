@@ -1181,8 +1181,9 @@ class Csz_model extends CI_Model {
             return 'CAPTCHA_WRONG';
         } else {
             $query = $this->chkPassword($email, $password);
-            if ($query->num_rows() > 0) {
-                foreach ($query->result() as $rows) {
+            if ($query->num_rows() == 1) {
+                $rows = $query->row();
+                if (!empty($rows)) {
                     $session_id = session_id();
                     $this->db->set('session_id', $session_id, TRUE);
                     $this->db->where('user_admin_id', $rows->user_admin_id);
@@ -1198,6 +1199,8 @@ class Csz_model extends CI_Model {
                     );
                     $this->session->set_userdata($data);
                     return 'SUCCESS';
+                }else{
+                    return 'INVALID';
                 }
             } else {
                 return 'INVALID';

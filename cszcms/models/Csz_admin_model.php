@@ -575,7 +575,7 @@ class Csz_admin_model extends CI_Model {
             $this->db->where("session_id", $this->session->userdata('session_id'));
             $this->db->limit(1, 0);
             $query = $this->db->get('user_admin');
-            if ($query->num_rows() > 0) {
+            if ($query->num_rows() == 1) {
                 return TRUE;
             } else {
                 return FALSE;
@@ -597,8 +597,9 @@ class Csz_admin_model extends CI_Model {
             return 'CAPTCHA_WRONG';
         } else {
             $query = $this->Csz_model->chkPassword($email, $password);
-            if ($query->num_rows() > 0) {
-                foreach ($query->result() as $rows) {
+            if ($query->num_rows() == 1) {
+                $rows = $query->row();
+                if (!empty($rows)) {
                     $session_id = session_id();
                     $this->db->set('session_id', $session_id, TRUE);
                     $this->db->where('user_admin_id', $rows->user_admin_id);
@@ -614,6 +615,8 @@ class Csz_admin_model extends CI_Model {
                     );
                     $this->session->set_userdata($data);
                     return 'SUCCESS';
+                }else{
+                    return 'INVALID';
                 }
             } else {
                 return 'INVALID';
