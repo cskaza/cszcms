@@ -994,7 +994,7 @@ class Csz_admin_model extends CI_Model {
      * $quality is only used for jpegs.
      * Author: mthorn.net
      */
-    private function imageToFile($im, $fileName, $quality = 80) {
+    private function imageToFile($im, $fileName, $quality = 75) {
         if (!$im || file_exists($fileName)) {
             return false;
         }

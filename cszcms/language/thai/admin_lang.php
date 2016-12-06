@@ -164,6 +164,7 @@ $lang['social_stackoverflow']           = "Stack Overflow";
 $lang['social_persona']			= "Mozilla Persona";
 $lang['social_odnoklassniki']		= "Odnoklassniki";
 $lang['social_vk']                      = "VKontakte";
+$lang['social_gitlab']                  = "GitLab";
 $lang['social_table_title']		= "เว็บไซต์สังคมออนไลน์";
 $lang['social_table_link']		= "ลิงค์ของหน้าโปรไฟล์ของคุณ";
 $lang['social_table_active']            = "เปิดใช้งาน";
