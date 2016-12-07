@@ -133,7 +133,7 @@ class Member extends CI_Controller {
                     $from_name = $config->site_name;
                     $from_email = 'no-reply@' . EMAIL_DOMAIN;
                     $to_email = $email;
-                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $config->site_name . '</b></a>';
+                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a> <br> <br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $config->site_name . '</b></a>';
                     @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
                     $this->template->setSub('chksts', 1);
                     $this->template->loadSub('frontpage/member/regist');
