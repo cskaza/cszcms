@@ -570,12 +570,10 @@ class Csz_admin_model extends CI_Model {
     * @return	TRUE or FALSE
     */
     public function sessionLoginChk() {
+        $numcount = 0;
         if($this->session->userdata('session_id')){
-            $this->db->select("session_id");
-            $this->db->where("session_id", $this->session->userdata('session_id'));
-            $this->db->limit(1, 0);
-            $query = $this->db->get('user_admin');
-            if ($query->num_rows() == 1) {
+            $numcount = $this->Csz_model->countData('user_admin', "session_id = '".$this->session->userdata('session_id')."'");
+            if ($numcount == 1) {
                 return TRUE;
             } else {
                 return FALSE;
