@@ -109,6 +109,7 @@ class MX_Router extends CI_Router
 	/** Locate the controller **/
 	public function locate($segments)
 	{
+                $this->directory=NULL;
 		$this->located = 0;
 		$ext = $this->config->item('controller_suffix').EXT;
 
