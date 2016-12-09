@@ -572,8 +572,8 @@ class Csz_admin_model extends CI_Model {
     public function sessionLoginChk() {
         $numcount = 0;
         if($this->session->userdata('session_id')){
-            $numcount = $this->Csz_model->countData('user_admin', "session_id = '".$this->session->userdata('session_id')."'");
-            if ($numcount == 1) {
+            $numcount = $this->Csz_model->countData('user_admin', "session_id = '".$this->session->userdata('session_id')."' AND email = '".$this->session->userdata('admin_email')."'");
+            if ($numcount !== FALSE && $numcount > 0) {
                 return TRUE;
             } else {
                 return FALSE;

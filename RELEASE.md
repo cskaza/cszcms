@@ -7,6 +7,8 @@ CSZ-CMS V.1.1.4
 - Fix Parent Directory access for assets and template directory.
 - Fix Cookie set HttpOnly for security.
 - Fix forms return current url for security.
+- Fix member register bug.
+- Fix installer bug.
 
 CSZ-CMS V.1.1.3
 - Add facebook comments into article plugin.
