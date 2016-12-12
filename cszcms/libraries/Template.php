@@ -1,6 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * CSZ CMS
+ *
+ * An open source content management system
+ *
+ * Copyright (c) 2016, Astian Foundation
+ *
+ * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @license	https://astian.org/APL/1.0/	APL License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
+
 class Template {
     var $template_data = array();
     var $data_sub = array();
@@ -8,7 +22,12 @@ class Template {
     var $use_template  = '';
 
     /**
-     * Set variable for using in the templates views (main file)
+     * set
+     *
+     * Set variable for using in templates views file (main file)
+     *
+     * @param	string	$name    Variable name for use in main file
+     * @param	string	$value   Value of variable
      */
     function set($name, $value)
     {
@@ -16,7 +35,12 @@ class Template {
     }
     
     /**
-     * Set variable for using in the views (views file)
+     * setSub
+     *
+     * Set variable for using in views file (views file)
+     *
+     * @param	string	$name    Variable name for use in view file
+     * @param	string	$value   Value of variable
      */
     function setSub($name, $value)
     {
@@ -24,7 +48,12 @@ class Template {
     }
 
     /**
+     * set_template
+     *
      * Set template name
+     *
+     * @param	string	$name    Template name for use
+     * @param	string	$file   Template file name Defualt is main
      */
     function set_template($name, $file = 'main')
     {
@@ -33,18 +62,19 @@ class Template {
     }
 
     /**
+     * loadSub
+     *
      * Load view with sub views
-    */
+     *
+     * @param	string	$view    View file for load
+     */
     function loadSub($view = '')
     {
         $this->CI =& get_instance();
         return $this->load($view, $this->data_sub);
     }
     
-    /**
-     * Load view
-     */
-    function load($view = '' , $view_data = array(), $template = '', $return = FALSE)
+    private function load($view = '' , $view_data = array(), $template = '', $return = FALSE)
     {
         $this->CI =& get_instance();
 

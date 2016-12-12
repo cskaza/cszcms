@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `footer_social`;
 CREATE TABLE IF NOT EXISTS `footer_social` (
   `footer_social_id` int(11) AUTO_INCREMENT,
   `social_name` varchar(255),
@@ -35,6 +36,7 @@ INSERT INTO `footer_social` (`footer_social_id`, `social_name`, `social_url`, `a
 (25, 'vk', '', 0, '2016-05-06 15:50:59'),
 (26, 'gitlab', '', 0, '2016-05-06 15:50:59');
 
+DROP TABLE IF EXISTS `form_contactus_en`;
 CREATE TABLE IF NOT EXISTS `form_contactus_en` (
   `form_contactus_en_id` int(11) AUTO_INCREMENT,
   `name` varchar(255),
@@ -46,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `form_contactus_en` (
   PRIMARY KEY (`form_contactus_en_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `form_field`;
 CREATE TABLE IF NOT EXISTS `form_field` (
   `form_field_id` int(11) AUTO_INCREMENT,
   `form_main_id` int(11),
@@ -71,6 +74,7 @@ INSERT INTO `form_field` (`form_field_id`, `form_main_id`, `field_type`, `field_
 (5, 1, 'submit', 'submit', 'submit', 'btn btn-primary', '', 'Send now', '', '', 0, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
 (6, 1, 'reset', 'reset', 'reset', 'btn btn-default', '', 'Reset', '', '', 0, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
 
+DROP TABLE IF EXISTS `form_main`;
 CREATE TABLE IF NOT EXISTS `form_main` (
   `form_main_id` int(11) AUTO_INCREMENT,
   `form_name` varchar(255),
@@ -97,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `form_main` (
 INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
 
+DROP TABLE IF EXISTS `lang_iso`;
 CREATE TABLE IF NOT EXISTS `lang_iso` (
   `lang_iso_id` int(11) AUTO_INCREMENT,
   `lang_name` varchar(255),
@@ -112,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `lang_iso` (
 INSERT INTO `lang_iso` (`lang_iso_id`, `lang_name`, `lang_iso`, `country`, `country_iso`, `active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'English', 'en', 'United Kingdom', 'gb', 1, '2016-03-29 15:16:23', '2016-03-31 15:28:58');
 
+DROP TABLE IF EXISTS `pages`;
 CREATE TABLE IF NOT EXISTS `pages` (
   `pages_id` int(11) AUTO_INCREMENT,
   `page_name` varchar(255),
@@ -133,6 +139,7 @@ INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_titl
 (2, 'About Us', 'about-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
 (3, 'Contact Us', 'contact-us', 'en', 'CSZ-CMS Contact us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, contact us', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>Contact us!</h1>\r\n<p>If you want to contact us please use this form below. Or send the email to <a href="mailto:info@cszcms.com">info@cszcms.com</a></p>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<h2>Google Map</h2>\r\n<p><iframe width="100%" height="315" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.168282092751!2d98.37285931425068!3d7.877454308128998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zN8KwNTInMzguOCJOIDk4wrAyMiczMC4yIkU!5e0!3m2!1sen!2sth!4v1462104596003" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>\r\n</div>\r\n<div class="col-md-6">\r\n<h2>Contact Form</h2>\r\n<p>If you have any question please send this from.</p>\r\n<p>[?]{=forms:contactus_en}[?]</p>\r\n</div>\r\n</div>\r\n</div>\r\n<p></p>\r\n<p></p>', 1, '2016-04-30 16:57:16', '2016-05-12 17:59:41');
 
+DROP TABLE IF EXISTS `page_menu`;
 CREATE TABLE IF NOT EXISTS `page_menu` (
   `page_menu_id` int(11) AUTO_INCREMENT,
   `menu_name` varchar(255),
@@ -156,6 +163,7 @@ INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `o
 (4, 'Drop Menu', 'en', 0, '', '', 1, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
 (5, 'CSZ-CMS Website', 'en', 0, 'http://www.cszcms.com', '', 0, 4, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
 
+DROP TABLE IF EXISTS `settings`;
 CREATE TABLE IF NOT EXISTS `settings` (
   `settings_id` int(11) AUTO_INCREMENT,
   `site_name` varchar(255),
@@ -189,6 +197,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `timestamp_update`) VALUES
 (1, 'CSZ-CMS Starter', '', '', '', '&copy; %YEAR CSZ-CMS Starter', 'demo@cszcms.com', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
 
+DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
   `upload_file_id` int(11) AUTO_INCREMENT,
   `year` varchar(10),
@@ -199,6 +208,7 @@ CREATE TABLE IF NOT EXISTS `upload_file` (
   PRIMARY KEY (`upload_file_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `user_admin`;
 CREATE TABLE IF NOT EXISTS `user_admin` (
   `user_admin_id` int(11) AUTO_INCREMENT,
   `name` varchar(255),
@@ -226,6 +236,7 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
 INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES 
 (1, 'Admin User', 'demo@cszcms.com', '10470c3b4b1fed12c3baac014be15fac67c6e815', 'admin', 1, '11fbf7460f6c7e9d03602195b88f54b1', NOW(), NOW(), NOW());
 
+DROP TABLE IF EXISTS `link_statistic`;
 CREATE TABLE IF NOT EXISTS `link_statistic` (
   `link_statistic_id` int(11) AUTO_INCREMENT,
   `link` varchar(255),
@@ -235,6 +246,7 @@ CREATE TABLE IF NOT EXISTS `link_statistic` (
   KEY `link` (`link`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `general_label`;
 CREATE TABLE IF NOT EXISTS `general_label` (
   `general_label_id` int(11) AUTO_INCREMENT,
   `name` varchar(255),
@@ -340,6 +352,7 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09'),
 (93, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09');
 
+DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) AUTO_INCREMENT,
   `plugin_name` varchar(255),
@@ -358,6 +371,7 @@ INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrew
 (2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (3, 'Shopping', 'shop', '1.0.1', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
+DROP TABLE IF EXISTS `article_db`;
 CREATE TABLE IF NOT EXISTS `article_db` (
   `article_db_id` int(11) AUTO_INCREMENT,
   `url_rewrite` varchar(255),
@@ -382,6 +396,7 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   KEY `url_rewrite` (`url_rewrite`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `email_logs`;
 CREATE TABLE IF NOT EXISTS `email_logs` (
   `email_logs_id` int(11) AUTO_INCREMENT,
   `to_email` varchar(255),
@@ -396,6 +411,7 @@ CREATE TABLE IF NOT EXISTS `email_logs` (
   PRIMARY KEY (`email_logs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `gallery_db`;
 CREATE TABLE IF NOT EXISTS `gallery_db` (
   `gallery_db_id` int(11) AUTO_INCREMENT,
   `album_name` varchar(255),
@@ -411,6 +427,7 @@ CREATE TABLE IF NOT EXISTS `gallery_db` (
   KEY `url_rewrite` (`url_rewrite`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `gallery_picture`;
 CREATE TABLE IF NOT EXISTS `gallery_picture` (
   `gallery_picture_id` int(11) AUTO_INCREMENT,
   `gallery_db_id` int(11),
@@ -424,6 +441,7 @@ CREATE TABLE IF NOT EXISTS `gallery_picture` (
   PRIMARY KEY (`gallery_picture_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `login_logs`;
 CREATE TABLE IF NOT EXISTS `login_logs` (
   `login_logs_id` int(11) AUTO_INCREMENT,
   `email_login` varchar(255),
@@ -435,6 +453,7 @@ CREATE TABLE IF NOT EXISTS `login_logs` (
   PRIMARY KEY (`login_logs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_category`;
 CREATE TABLE IF NOT EXISTS `shop_category` (
   `shop_category_id` int(11) AUTO_INCREMENT,
   `shop_category_main_id` int(11),
@@ -448,6 +467,7 @@ CREATE TABLE IF NOT EXISTS `shop_category` (
   PRIMARY KEY (`shop_category_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_config`;
 CREATE TABLE IF NOT EXISTS `shop_config` (
   `shop_config_id` int(11) AUTO_INCREMENT,
   `stat_new_show` int(11),
@@ -474,6 +494,7 @@ CREATE TABLE IF NOT EXISTS `shop_config` (
 INSERT IGNORE INTO `shop_config` (`shop_config_id`, `stat_new_show`, `stat_hot_show`, `stat_bestseller_show`, `stat_soldout_show`, `paypal_active`, `sanbox_active`, `paypal_email`, `paysbuy_active`, `paysbuy_email`, `bank_detail`, `currency_code`, `seller_email`, `order_subject`, `order_body`, `payment_subject`, `payment_body`, `signature`, `timestamp_update`) VALUES
 (1, 1, 1, 1, 0, 0, 0, '', 0, '', '<h2>Bank Detail:</h2><h4><strong>Example Bank (Test Branch)</strong></h4><p><strong>ACC ID :</strong> 857-1531-19-9<br /> <strong>ACC Name :</strong> Example Tester</p><p><em>After transfer the payment. Please send the payslip to test@example.com</em></p>', 'USD', '', 'Thank you for your order!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you very much for your order. After payment successed. Your order is being processed and will be shipped to you.</p><p><strong></strong></p>', 'Your payment has now been confirmed!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you for your order. Your payment has now been confirmed. Your order is already being processed and will be shipped to you.</p>', '<p><strong>Regards,</strong></p><p><strong>Shopping Web Team</strong><br /><strong>Tel: (001) 234 567 8910</strong><br /><strong>Email: test@example.com</strong></p>', '2016-09-27 12:59:09');
 
+DROP TABLE IF EXISTS `shop_payment`;
 CREATE TABLE IF NOT EXISTS `shop_payment` (
   `shop_payment_id` int(11) AUTO_INCREMENT,
   `sha1_hash` varchar(255),
@@ -494,6 +515,7 @@ CREATE TABLE IF NOT EXISTS `shop_payment` (
   PRIMARY KEY (`shop_payment_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_product`;
 CREATE TABLE IF NOT EXISTS `shop_product` (
   `shop_product_id` int(11) AUTO_INCREMENT,
   `product_name` varchar(255),
@@ -513,6 +535,7 @@ CREATE TABLE IF NOT EXISTS `shop_product` (
   PRIMARY KEY (`shop_product_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_product_imgs`;
 CREATE TABLE IF NOT EXISTS `shop_product_imgs` (
   `shop_product_imgs_id` int(11) AUTO_INCREMENT,
   `shop_product_id` int(11),
@@ -524,6 +547,7 @@ CREATE TABLE IF NOT EXISTS `shop_product_imgs` (
   PRIMARY KEY (`shop_product_imgs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_product_option`;
 CREATE TABLE IF NOT EXISTS `shop_product_option` (
   `shop_product_option_id` int(11) AUTO_INCREMENT,
   `shop_product_id` int(11),
@@ -538,6 +562,7 @@ CREATE TABLE IF NOT EXISTS `shop_product_option` (
   PRIMARY KEY (`shop_product_option_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `shop_shipping`;
 CREATE TABLE IF NOT EXISTS `shop_shipping` (
   `shop_shipping_id` int(11) AUTO_INCREMENT,
   `inv_id` varchar(100),
@@ -549,6 +574,7 @@ CREATE TABLE IF NOT EXISTS `shop_shipping` (
   PRIMARY KEY (`shop_shipping_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+DROP TABLE IF EXISTS `widget_xml`;
 CREATE TABLE IF NOT EXISTS `widget_xml` (
   `widget_xml_id` int(11) AUTO_INCREMENT,
   `widget_name` varchar(255),

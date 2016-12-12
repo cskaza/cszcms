@@ -1,12 +1,27 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * For page redirect to index when after save.
+ *
+ * Copyright (c) 2016, Astian Foundation
+ *
+ * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @license	https://astian.org/APL/1.0/	APL License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
+
 class Csz_referrer {
     
     /**
-     * For page redirect to index when after save.
+     * setIndex
+     *
+     * Function for set the session for page when redirect after save
+     *
+     * @param	string	$index    Session name
      */
-    
     public function setIndex($index = '') {
         if(!$index){
             $key = 'referred_index';
@@ -22,6 +37,14 @@ class Csz_referrer {
         $_SESSION[$key] = current_url().$param;
     }
     
+    /**
+     * getIndex
+     *
+     * Function for get page from session
+     *
+     * @param	string	$index    session name
+     * @return	string
+     */
     public function getIndex($index = '') {
         if(!$index){
             $key = 'referred_index';

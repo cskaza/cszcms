@@ -1,6 +1,26 @@
 <?php  defined('BASEPATH') OR exit('No direct script access allowed');
  
+/**
+ * CodeIgniter HTML Helpers
+ *
+ * Copyright (c) 2016, Astian Foundation
+ *
+ * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @license	https://astian.org/APL/1.0/	APL License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
+ */
+
 class Member_helper{
+    
+    /**
+    * is_logged_in
+    *
+    * Function for check login or not. If login already this function has to check session_id is true
+    *
+    * @param	string	$email    Email Address from session
+    */
     static function is_logged_in($email){
         if(!$email || !$_SESSION['admin_logged_in']){
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -19,6 +39,13 @@ class Member_helper{
         }
     }
     
+    /**
+    * login_already
+    *
+    * Function for check login already for login page
+    *
+    * @param	string	$email_session    Email Address from session
+    */
     static function login_already($email_session){
         if($email_session && $_SESSION['admin_logged_in']){
             $redirect= BASE_URL.'/member';
@@ -27,6 +54,13 @@ class Member_helper{
         }
     }
     
+    /**
+    * plugin_not_active
+    *
+    * Function for check the plugin active (frontend use)
+    *
+    * @param	string	$plugin_urlrewrite    Plugin url_rewrite
+    */
     static function plugin_not_active($plugin_urlrewrite){
         $CI =& get_instance();
         $CI->load->model('Csz_admin_model');
@@ -38,6 +72,13 @@ class Member_helper{
         }
     }
     
+    /**
+    * chkVisitor
+    *
+    * Function for check user is visitor mode
+    *
+    * @param	string	$user_admin_id    User id from session
+    */
     static function chkVisitor($user_admin_id) {
         $CI =& get_instance();
         $CI->load->model('Csz_admin_model');

@@ -3,7 +3,7 @@
 	"name": "CSZ CMS",
 	"type": "project",
 	"homepage": "https://www.cszcms.com",
-	"license": "MIT",
+	"license": "APL",
 	"support": {
 		"docs": "https://www.cszcms.com/docs/",
 		"source": "https://github.com/cskaza/cszcms"
@@ -12,7 +12,7 @@
 		"php": ">=5.3.7"
 	},
 	"authors": {
-            "name": "Chinawut Phongphasook (Cskaza)",
+            "name": "Cskaza",
             "email": "cskaza@gmail.com",
             "role": "Founder"
         }

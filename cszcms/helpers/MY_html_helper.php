@@ -4,11 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * CodeIgniter HTML Helpers
  *
- * @package	CodeIgniter
- * @subpackage	Helpers (Fix Metatag)
- * @category	Helpers (Fix Metatag)
- * @author	EllisLab Dev Team (Fix by CSKAZA)
- * @link	https://codeigniter.com/user_guide/helpers/html_helper.html
+ * Copyright (c) 2016, Astian Foundation
+ *
+ * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @license	https://astian.org/APL/1.0/	APL License
+ * @link	https://www.cszcms.com
+ * @since	Version 1.0.0
  */
  
 if ( ! function_exists('meta'))
