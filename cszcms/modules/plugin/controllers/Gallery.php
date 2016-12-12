@@ -63,7 +63,7 @@ class Gallery extends CI_Controller {
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/gallery_index');
+        $this->template->loadSub('gallery/gallery_index');
     }
     
     public function view() {
@@ -95,7 +95,7 @@ class Gallery extends CI_Controller {
                 $this->template->setSub('total_row', $total_row);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/gallery_view');
+                $this->template->loadSub('gallery/gallery_view');
             }else{
                 redirect(BASE_URL.'/plugin/gallery', 'refresh');
             }

@@ -62,7 +62,7 @@ class Article extends CI_Controller {
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/article_index');
+        $this->template->loadSub('article/article_index');
     }
     
     public function category() {
@@ -93,7 +93,7 @@ class Article extends CI_Controller {
                 $this->template->setSub('category_name', $cat_row->category_name);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/article_category');
+                $this->template->loadSub('article/article_category');
             }else{
                 redirect(BASE_URL.'/plugin/article', 'refresh');
             }
@@ -128,7 +128,7 @@ class Article extends CI_Controller {
             $this->template->setSub('searchtxt', $p);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/article_search');
+            $this->template->loadSub('article/article_search');
         } else {
             redirect(BASE_URL . '/plugin/article', 'refresh');
         }
@@ -169,7 +169,7 @@ class Article extends CI_Controller {
                 
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/article_archive');
+                $this->template->loadSub('article/article_archive');
             }else{
                 redirect(BASE_URL.'/plugin/article', 'refresh');
             }
@@ -199,7 +199,7 @@ class Article extends CI_Controller {
                 $this->template->setSub('category_name', $cat_row->category_name);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/article_view');
+                $this->template->loadSub('article/article_view');
             }else{
                 redirect(BASE_URL.'/plugin/article', 'refresh');
             }

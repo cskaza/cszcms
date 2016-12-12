@@ -72,7 +72,7 @@ class Shop extends CI_Controller {
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/shop/shop_index');
+        $this->template->loadSub('shop/shop_index');
     }
 
     public function hotProduct() {
@@ -103,7 +103,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('total_row', $total_row);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/shop/shop_hot');
+            $this->template->loadSub('shop/shop_hot');
         } else {
             redirect(BASE_URL . '/plugin/shop');
         }
@@ -137,7 +137,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('total_row', $total_row);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/shop/shop_best');
+            $this->template->loadSub('shop/shop_best');
         } else {
             redirect(BASE_URL . '/plugin/shop');
         }
@@ -171,7 +171,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('total_row', $total_row);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/shop/shop_new');
+            $this->template->loadSub('shop/shop_new');
         } else {
             redirect(BASE_URL . '/plugin/shop');
         }
@@ -205,7 +205,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('total_row', $total_row);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/shop/shop_soldout');
+            $this->template->loadSub('shop/shop_soldout');
         } else {
             redirect(BASE_URL . '/plugin/shop');
         }
@@ -241,7 +241,7 @@ class Shop extends CI_Controller {
                 $this->template->setSub('category_name', $cat_row->name);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/shop/shop_category');
+                $this->template->loadSub('shop/shop_category');
             } else {
                 redirect(BASE_URL . '/plugin/shop', 'refresh');
             }
@@ -271,7 +271,7 @@ class Shop extends CI_Controller {
                 $this->template->setSub('form_option', $this->Csz_model->getValueArray('*', 'shop_product_option', "shop_product_id", $art_row->shop_product_id, 0, 'shop_product_option_id', 'asc'));
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/shop/shop_view');
+                $this->template->loadSub('shop/shop_view');
             } else {
                 redirect(BASE_URL . '/plugin/shop', 'refresh');
             }
@@ -308,7 +308,7 @@ class Shop extends CI_Controller {
             $this->template->setSub('searchtxt', $p);
 
             //Load the view
-            $this->template->loadSub('frontpage/plugin/shop/shop_search');
+            $this->template->loadSub('shop/shop_search');
         } else {
             redirect(BASE_URL . '/plugin/shop', 'refresh');
         }
@@ -363,7 +363,7 @@ class Shop extends CI_Controller {
         $this->template->setSub('cart_check', $this->cart->contents());
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/shop/shop_cart');
+        $this->template->loadSub('shop/shop_cart');
     }
 
     public function removeCartItem() {
@@ -399,7 +399,7 @@ class Shop extends CI_Controller {
         }
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/shop/shop_order');
+        $this->template->loadSub('shop/shop_order');
     }
 
     public function paymentNow() {
@@ -547,7 +547,7 @@ class Shop extends CI_Controller {
                 $this->template->setSub('payment', $payment);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/shop/shop_banktransfer');
+                $this->template->loadSub('shop/shop_banktransfer');
             } else {
                 redirect(BASE_URL . '/plugin/shop', 'refresh');
             }
@@ -596,7 +596,7 @@ class Shop extends CI_Controller {
                 $this->template->setSub('payment', $payment);
 
                 //Load the view
-                $this->template->loadSub('frontpage/plugin/shop/shop_success');
+                $this->template->loadSub('shop/shop_success');
             } else {
                 redirect(BASE_URL . '/plugin/shop', 'refresh');
             }
@@ -629,7 +629,7 @@ class Shop extends CI_Controller {
         }
 
         //Load the view
-        $this->template->loadSub('frontpage/plugin/shop/shop_cancel');
+        $this->template->loadSub('shop/shop_cancel');
     }
 
     public function paypalIPN() {
