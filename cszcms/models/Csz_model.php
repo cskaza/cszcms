@@ -4,11 +4,17 @@
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation
+ * Copyright (c) 2016, Astian Foundation.
  *
+ * Astian Develop Public License (ADPL)
+ * 
+ * This Source Code Form is subject to the terms of the Astian Develop Public
+ * License, v. 1.0. If a copy of the APL was not distributed with this
+ * file, You can obtain one at http://astian.org/about-ADPL
+ * 
  * @author	CSKAZA
  * @copyright   Copyright (c) 2016, Astian Foundation.
- * @license	https://astian.org/APL/1.0/	APL License
+ * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */

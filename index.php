@@ -4,14 +4,29 @@ if (!file_exists('config.inc.php')) {
 	exit();
 }
 /**
- * CSZ CMS with CodeIgniter
+ * CSZ CMS
  *
- * An open source content management system application with development framework for PHP
+ * An open source content management system
  *
+ * Copyright (c) 2016, Astian Foundation.
+ *
+ * Astian Develop Public License (ADPL)
+ * 
+ * This Source Code Form is subject to the terms of the Astian Develop Public
+ * License, v. 1.0. If a copy of the APL was not distributed with this
+ * file, You can obtain one at http://astian.org/about-ADPL
+ * 
+ * @author	CSKAZA
+ * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @license	http://astian.org/about-ADPL	ADPL License
+ * @link	https://www.cszcms.com
+ * 
+ * 
+ * CodeIgniter
+ * 
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
- * Copyright (c) 2016 by CSKAZA for CSZ CMS
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,14 +46,10 @@ if (!file_exists('config.inc.php')) {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CSZCMS-CodeIgniter
- * @author	CSKAZA Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
  * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
- * @copyright   Copyright (c) 2016, CSKAZA for CSZ CMS. (https://www.cszcms.com)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
- * @link	https://www.cszcms.com.com
  * @since	Version 1.0.0
  * @filesource
  *---------------------------------------------------------------

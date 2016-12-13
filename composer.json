@@ -3,7 +3,7 @@
 	"name": "CSZ CMS",
 	"type": "project",
 	"homepage": "https://www.cszcms.com",
-	"license": "APL",
+	"license": "ADPL",
 	"support": {
 		"docs": "https://www.cszcms.com/docs/",
 		"source": "https://github.com/cskaza/cszcms"
