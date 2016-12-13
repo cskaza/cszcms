@@ -19,7 +19,7 @@ if (!file_exists('config.inc.php')) {
  * @author	CSKAZA
  * @copyright   Copyright (c) 2016, Astian Foundation.
  * @license	http://astian.org/about-ADPL	ADPL License
- * @link	https://www.cszcms.com
+ * @link        https://www.cszcms.com
  * 
  * 
  * CodeIgniter
