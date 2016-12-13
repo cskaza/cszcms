@@ -204,16 +204,16 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_type` varchar(255) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `birthday` date NOT NULL,
-  `gender` varchar(10) NOT NULL,
-  `address` text NOT NULL,
-  `phone` varchar(100) NOT NULL,
-  `picture` varchar(255) NOT NULL,
-  `backend_visitor` int(11) NOT NULL,
+  `first_name` varchar(255) NULL,
+  `last_name` varchar(255) NULL,
+  `birthday` date NULL,
+  `gender` varchar(10) NULL,
+  `address` text NULL,
+  `phone` varchar(100) NULL,
+  `picture` varchar(255) NULL,
+  `backend_visitor` int(11) NULL,
   `active` int(11) NOT NULL,
-  `session_id` varchar(255) NOT NULL,
+  `session_id` varchar(255) NULL,
   `md5_hash` varchar(255) NOT NULL,
   `md5_lasttime` datetime NOT NULL,
   `timestamp_create` datetime NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES 
+INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `first_name`, `last_name`, `birthday`, `gender`, `address`, `phone`, `picture`, `backend_visitor`, `active`, `session_id`,  `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES 
 (1, 'Admin User', 'demo@cszcms.com', '10470c3b4b1fed12c3baac014be15fac67c6e815', 'admin', 1, '11fbf7460f6c7e9d03602195b88f54b1', NOW(), NOW(), NOW());
 
 CREATE TABLE IF NOT EXISTS `link_statistic` (
