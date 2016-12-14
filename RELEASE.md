@@ -1,6 +1,7 @@
 #### RELEASE NOTES
 CSZ-CMS V.1.1.4
 - Add support for architecture HMVC.
+- Change the license to ADPL.
 - Fix Article plugin to version 1.0.4 (Add article search on frontend).
 - Fix for disable autocomplete the password field for security.
 - Fix htaccess for more security.
