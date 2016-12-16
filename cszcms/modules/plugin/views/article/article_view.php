@@ -26,6 +26,7 @@
         </div>
     </div>
     <?php if($article->fb_comment_active){ ?>
+    <!-- Facebook Comments -->
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <?php 
@@ -33,5 +34,6 @@
             if($fb_comment !== FALSE){ echo $fb_comment; } ?>
         </div>
     </div>
+    <!-- Facebook Comments -->
     <?php } ?>
 </div>

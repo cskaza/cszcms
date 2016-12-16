@@ -2,7 +2,9 @@
 CSZ-CMS V.1.1.4
 - Add support for architecture HMVC.
 - Change the license to ADPL.
-- Fix Article plugin to version 1.0.4 (Add article search on frontend).
+- Move plugin frontend to HMVC.
+- Fix shopping plugin to 1.0.2 (Add facebook comments into product view)
+- Fix Article plugin to version 1.0.4 (Add article search on frontend, Can sort the category).
 - Fix for disable autocomplete the password field for security.
 - Fix htaccess for more security.
 - Fix Parent Directory access for assets and template directory.

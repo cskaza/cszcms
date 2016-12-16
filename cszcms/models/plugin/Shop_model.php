@@ -69,6 +69,7 @@ class Shop_model extends CI_Model {
 
     public function catInsert() {
         // Create the new lang
+        $arrange = $this->Csz_model->getLastID('shop_category', 'arrange');
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('name', TRUE));
         $this->db->set('shop_category_main_id', $this->input->post('shop_category_main_id', TRUE));
@@ -77,6 +78,7 @@ class Shop_model extends CI_Model {
         $this->db->set('keyword', $this->input->post('keyword', TRUE));
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('arrange', ($arrange)+1);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('shop_category');
@@ -100,6 +102,7 @@ class Shop_model extends CI_Model {
     public function productInsert() {
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('product_name', TRUE));
         $this->db->set('product_name', $this->input->post('product_name', TRUE));
         $this->db->set('url_rewrite', $url_rewrite);
@@ -113,6 +116,9 @@ class Shop_model extends CI_Model {
         $this->db->set('product_code', $this->input->post('product_code', TRUE));
         $this->db->set('product_status', $this->input->post('product_status', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('fb_comment_active', $fb_comment_active);
+        $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
+        $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('shop_product');
@@ -120,6 +126,7 @@ class Shop_model extends CI_Model {
 
     public function productUpdate($id) {
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('product_name', TRUE));
         $this->db->set('product_name', $this->input->post('product_name', TRUE));
         $this->db->set('url_rewrite', $url_rewrite);
@@ -133,6 +140,9 @@ class Shop_model extends CI_Model {
         $this->db->set('product_code', $this->input->post('product_code', TRUE));
         $this->db->set('product_status', $this->input->post('product_status', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('fb_comment_active', $fb_comment_active);
+        $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
+        $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('shop_product_id', $id);
         $this->db->update('shop_product');
@@ -343,7 +353,7 @@ class Shop_model extends CI_Model {
 
     public function rightCatMenu() {
         $this->load->library('cart');
-        $maincat = $this->Csz_model->getValueArray('*', 'shop_category', "active = '1' AND shop_category_main_id = '0'", '', 0, 'name', 'ASC');
+        $maincat = $this->Csz_model->getValueArray('*', 'shop_category', "active = '1' AND shop_category_main_id = '0'", '', 0, 'arrange', 'ASC');
         $html = '<div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="' . BASE_URL . '/plugin/shop/cartView" style="text-decoration:none;"><div style="width:100%;"><b><span class="glyphicon glyphicon-shopping-cart"></span> &nbsp; ' . $this->Csz_model->getLabelLang('shop_cart_text') . ' &nbsp; <span class="badge" id="cart-count">' . $this->cart->total_items() . '</span></b></div></a>
@@ -369,7 +379,7 @@ class Shop_model extends CI_Model {
         } else {
             foreach ($maincat as $mc) {
                 $html.= '<li role="presentation" class="text-left"><a href="' . BASE_URL . '/plugin/shop/category/' . $mc['url_rewrite'] . '"><b><i class="glyphicon glyphicon-triangle-right"></i> ' . $mc['name'] . '</b></a></li>';
-                $subcat = $this->Csz_model->getValueArray('*', 'shop_category', "active = '1' AND shop_category_main_id = '" . $mc['shop_category_id'] . "'", '', 0, 'name', 'ASC');
+                $subcat = $this->Csz_model->getValueArray('*', 'shop_category', "active = '1' AND shop_category_main_id = '" . $mc['shop_category_id'] . "'", '', 0, 'arrange', 'ASC');
                 if (!empty($subcat)) {
                     foreach ($subcat as $sc) {
                         $html.= '<li role="presentation" class="text-left" style="padding-left:30px;"><a href="' . BASE_URL . '/plugin/shop/category/' . $sc['url_rewrite'] . '">' . $sc['name'] . '</a></li>';

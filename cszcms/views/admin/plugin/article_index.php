@@ -45,8 +45,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="10%" class="text-center"><?php echo $this->lang->line('article_mainpic'); ?></th>
-                        <th width="30%" class="text-center"><?php echo $this->lang->line('article_title'); ?></th>
+                        <th width="40%" class="text-center"><?php echo $this->lang->line('article_title'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('category_header'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('article_author'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
@@ -68,13 +67,6 @@
                                 $inactive = '';
                             }
                             echo '<tr>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">';
-                            if($u["main_picture"]){
-                                echo '<img src="'.BASE_URL.'/photo/plugin/article/'.$u["main_picture"].'" width="85">';
-                            }else{
-                                echo '<img src="'.BASE_URL.'/photo/no_image.png" width="85">';
-                            }
-                            echo '</td>';
                             echo '<td'.$inactive.'>';
                             echo '<b>'.$u['title'].'</b><br>';
                             echo '<span style="color:red;"><small><em>'.$u['keyword'].'</em></small></span><br>';

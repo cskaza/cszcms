@@ -157,12 +157,14 @@ class Csz_model extends CI_Model {
      */
     public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
-        if (is_array($where_field) && is_array($where_val)) {
-            for ($i = 0; $i < count($where_field); $i++) {
-                $this->db->where($where_field[$i], $where_val[$i]);
+        if($where_field || $where_val){
+            if (is_array($where_field) && is_array($where_val)) {
+                for ($i = 0; $i < count($where_field); $i++) {
+                    $this->db->where($where_field[$i], $where_val[$i]);
+                }
+            } else {
+                $this->db->where($where_field, $where_val);
             }
-        } else {
-            $this->db->where($where_field, $where_val);
         }
         if ($groupby) {
             $this->db->group_by($groupby);
@@ -206,12 +208,14 @@ class Csz_model extends CI_Model {
      */
     public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '') {
         $this->db->select($sel_field);
-        if (is_array($where_field) && is_array($where_val)) {
-            for ($i = 0; $i < count($where_field); $i++) {
-                $this->db->where($where_field[$i], $where_val[$i]);
+        if($where_field || $where_val){
+            if (is_array($where_field) && is_array($where_val)) {
+                for ($i = 0; $i < count($where_field); $i++) {
+                    $this->db->where($where_field[$i], $where_val[$i]);
+                }
+            } else {
+                $this->db->where($where_field, $where_val);
             }
-        } else {
-            $this->db->where($where_field, $where_val);
         }
         if ($groupby) {
             $this->db->group_by($groupby);
@@ -243,8 +247,19 @@ class Csz_model extends CI_Model {
      * @param	string	$field_id    field id (primary key)
      * @return	number
      */
-    public function getLastID($table, $field_id) {
+    public function getLastID($table, $field_id, $search_sql = '') {
         $this->db->select($field_id);
+        if ($search_sql) {
+            if (is_array($search_sql)) {
+                /* $search = array('field'=>'value') */
+                foreach ($search_sql as $key => $value) {
+                    $this->db->where($key, $value);
+                }
+            } else {
+                /* $search = "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%'") */
+                $this->db->where($search_sql);
+            }
+        }
         $this->db->order_by($field_id, 'DESC');
         $this->db->limit(1, 0);
         $query = $this->db->get($table);

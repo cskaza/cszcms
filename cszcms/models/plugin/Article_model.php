@@ -67,7 +67,7 @@ class Article_model extends CI_Model {
     public function insertCat() {
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-
+        $arrange = $this->Csz_model->getLastID('article_db', 'arrange', "is_category = '1'");
         $data = array(
             'category_name' => $this->input->post('category_name', TRUE),
             'main_cat_id' => $this->input->post('main_cat_id', TRUE),
@@ -78,6 +78,7 @@ class Article_model extends CI_Model {
         $this->db->set('is_category', 1);
         $this->db->set('active', $active);
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
+        $this->db->set('arrange', ($arrange)+1);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('article_db', $data);
@@ -203,7 +204,7 @@ class Article_model extends CI_Model {
     }
 
     public function categoryMenu($lang_iso) {
-        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '0' AND lang_iso = '" . $lang_iso . "'", '', 0, 'category_name', 'ASC');
+        $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '0' AND lang_iso = '" . $lang_iso . "'", '', 0, 'arrange', 'ASC');
         $html = '<div class="panel panel-primary">
                 <div class="panel-body">
                     <form action="' . BASE_URL . '/plugin/article/search" name="searchfrm" id="searchfrm" method="get" style="margin:0px; padding:0px;">
@@ -224,7 +225,7 @@ class Article_model extends CI_Model {
         } else {
             foreach ($maincat as $mc) {
                 $html.= '<li role="presentation" class="text-left"><a href="' . BASE_URL . '/plugin/article/category/' . $mc['url_rewrite'] . '"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $mc['category_name'] . '</b></a></li>';
-                $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '" . $mc['article_db_id'] . "'", '', 0, 'category_name', 'ASC');
+                $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '" . $mc['article_db_id'] . "'", '', 0, 'arrange', 'ASC');
                 if (!empty($subcat)) {
                     foreach ($subcat as $sc) {
                         $html.= '<li role="presentation" class="text-left" style="margin-left:40px;line-height:8px;"><a href="' . BASE_URL . '/plugin/article/category/' . $sc['url_rewrite'] . '">' . $sc['category_name'] . '</a></li>';
@@ -264,6 +265,16 @@ class Article_model extends CI_Model {
             </div>
             </div>';
         return $html;
+    }
+    
+    public function getCatNameFromID($id){
+        $cat = $this->Csz_model->getValue('category_name', 'article_db', "article_db_id", $id, 1);
+        if(!empty($cat) && $cat->category_name){
+            return $cat->category_name;
+        }else{
+            return $id;
+        }
+        
     }
 
 }

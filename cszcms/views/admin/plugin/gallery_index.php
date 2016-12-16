@@ -62,18 +62,18 @@
                                 $inactive = '';
                             }
                             echo '<tr class="ui-state-default">';
-                            echo '<td class="text-center" style="vertical-align:middle;">
+                            echo '<td class="text-center" style="vertical-align:middle;" width="2%">
                                     <i class="glyphicon glyphicon-resize-vertical"></i>
                                     <input type="hidden" name="gallery_db_id[]" value="'.$u['gallery_db_id'].'">
                                 </td>';
-                            echo '<td'.$inactive.'>';
+                            echo '<td'.$inactive.' width="55%">';
                             echo '<b>'.$u['album_name'].'</b><br>';
                             echo '<span style="color:red;"><small><em>'.$u['keyword'].'</em></small></span><br>';
                             echo $u['short_desc'];
                             echo '</td>';
-                            echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['timestamp_update'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/plugin/gallery/edit/' . $u['gallery_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/gallery/delete/'.$u['gallery_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;" width="8%"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;" width="18%">' . $u['timestamp_update'] . '</td>';
+                            echo '<td class="text-center" style="vertical-align: middle;" width="17%"><a href="'.BASE_URL.'/admin/plugin/gallery/edit/' . $u['gallery_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/gallery/delete/'.$u['gallery_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                     }

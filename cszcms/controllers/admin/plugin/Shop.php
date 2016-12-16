@@ -86,23 +86,38 @@ class Shop extends CI_Controller {
     public function category() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex('shop'); /* Set index page when redirect after save */
-        $this->load->library('pagination');
-        // Pages variable
-        $result_per_page = 20;
+       
         $total_row = $this->Csz_model->countData('shop_category');
-        $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/shop/category/';
-
-        // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
-        ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
-
+      
         //Get users from database
-        $this->template->setSub('category', $this->Csz_admin_model->getIndexData('shop_category', $result_per_page, $pagination, 'timestamp_create', 'desc'));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'shop_category', '', '', 0, 'arrange', 'asc'));
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
         $this->template->loadSub('admin/plugin/shop/category_index');
+    }
+    
+    public function catIndexSave(){
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        $i = 0;
+        $arrange = 1;
+        $shop_category_id = $this->input->post('shop_category_id', TRUE);
+        if (!empty($shop_category_id)) {
+            while ($i < count($shop_category_id)) {
+                if ($shop_category_id[$i]) {
+                    $this->db->set('arrange', $arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("shop_category_id", $shop_category_id[$i]);
+                    $this->db->update('shop_category');
+                    $arrange++;
+                }
+                $i++;
+            }
+        }
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        redirect($this->csz_referrer->getIndex('shop'), 'refresh');
     }
 
     public function catNew() {

@@ -390,6 +390,7 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `fb_comment_active` int(11),
   `fb_comment_limit` int(11),
   `fb_comment_sort` varchar(20),
+  `arrange` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`article_db_id`),
@@ -462,6 +463,7 @@ CREATE TABLE IF NOT EXISTS `shop_category` (
   `keyword` varchar(255),
   `short_desc` varchar(255),
   `active` int(11),
+  `arrange` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`shop_category_id`)
@@ -530,6 +532,9 @@ CREATE TABLE IF NOT EXISTS `shop_product` (
   `product_code` varchar(100),
   `product_status` varchar(255),
   `active` int(11),
+  `fb_comment_active` int(11),
+  `fb_comment_limit` int(11),
+  `fb_comment_sort` varchar(20),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`shop_product_id`)

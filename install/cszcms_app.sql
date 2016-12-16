@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Article', 'article', '1.0.4', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(3, 'Shopping', 'shop', '1.0.1', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
+(3, 'Shopping', 'shop', '1.0.2', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 DROP TABLE IF EXISTS `article_db`;
 CREATE TABLE IF NOT EXISTS `article_db` (
@@ -387,6 +387,7 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `fb_comment_active` int(11),
   `fb_comment_limit` int(11),
   `fb_comment_sort` varchar(20),
+  `arrange` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`article_db_id`),
@@ -459,6 +460,7 @@ CREATE TABLE IF NOT EXISTS `shop_category` (
   `keyword` varchar(255),
   `short_desc` varchar(255),
   `active` int(11),
+  `arrange` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`shop_category_id`)
@@ -527,6 +529,9 @@ CREATE TABLE IF NOT EXISTS `shop_product` (
   `product_code` varchar(100),
   `product_status` varchar(255),
   `active` int(11),
+  `fb_comment_active` int(11),
+  `fb_comment_limit` int(11),
+  `fb_comment_sort` varchar(20),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`shop_product_id`)

@@ -41,22 +41,23 @@
             </div>
         </form>
         <br><br>
+        <?php echo  form_open(BASE_URL . '/admin/plugin/article/catIndexSave'); ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="10%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="10%" class="text-center"><?php echo $this->lang->line('category_main'); ?></th>
+                        <th width="2%" class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-sort"></i></th>
+                        <th width="18%" class="text-center"><?php echo $this->lang->line('category_main'); ?></th>
                         <th width="42%" class="text-center"><?php echo $this->lang->line('category_name'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('article_datetime'); ?></th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="ui-sortable">
                     <?php if ($category === FALSE) { ?>
                         <tr>
-                            <td colspan="6" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="7" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
@@ -67,17 +68,20 @@
                                 $inactive = '';
                             }
                             if($c['main_cat_id']){
-                                $main_cat = '<b>['.$this->lang->line('id_col_table').' '.$c['main_cat_id'].']</b>';
+                                $main_cat = '<b>'.$this->Article_model->getCatNameFromID($c['main_cat_id']).'</b>';
                             }else{
                                 $main_cat = '<i class="glyphicon glyphicon-ok"></i>';
                             }
-                            echo '<tr>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $c['article_db_id'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $main_cat . '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $c['category_name'] . '</td>';
-                            echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($c['lang_iso']).'"></i></td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $c['timestamp_update'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/plugin/article/catedit/' . $c['article_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/catdel/'.$c['article_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<tr class="ui-state-default">';
+                            echo '<td class="text-center" style="vertical-align:middle;" width="2%">
+                                    <i class="glyphicon glyphicon-resize-vertical"></i>
+                                    <input type="hidden" name="article_db_id[]" value="'.$c['article_db_id'].'">
+                                </td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;" width="18%">' . $main_cat . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;" width="42%">' . $c['category_name'] . '</td>';
+                            echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;" width="8%"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($c['lang_iso']).'"></i></td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;" width="10%">' . $c['timestamp_update'] . '</td>';
+                            echo '<td class="text-center" style="vertical-align: middle;" width="20%"><a href="'.BASE_URL.'/admin/plugin/article/catedit/' . $c['article_db_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/article/catdel/'.$c['article_db_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                     }
@@ -85,7 +89,22 @@
                 </tbody>
             </table>
         </div>
-        <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <hr>
+                <?php $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-primary',
+                    'value' => $this->lang->line('btn_save'),
+                );
+                echo form_submit($data);
+                ?>
+            </div>
+        </div>
+        <?php echo form_close();?>
+        <!-- /widget-content -->
+        <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
         <!-- /widget-content --> 
     </div>
 </div>

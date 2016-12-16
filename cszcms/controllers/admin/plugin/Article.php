@@ -99,7 +99,7 @@ class Article extends CI_Controller {
     public function category() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex('article_cat'); /* Set index page when redirect after save */
-        $search_arr = ' 1=1 ';
+        $search_arr = "is_category = '1'";
         if ($this->input->get('search') || $this->input->get('main_cat_id') || $this->input->get('lang')) {
             if ($this->input->get('search')) {
                 $search_arr.= " AND category_name LIKE '%" . $this->input->get('search', TRUE) . "%'";
@@ -111,27 +111,40 @@ class Article extends CI_Controller {
                 $search_arr.= " AND lang_iso = '" . $this->input->get('lang', TRUE) . "'";
             }
         }
-        $search_arr.= " AND is_category = 1";
         $this->load->helper('form');
-        $this->load->library('pagination');
-        // Pages variable
-        $result_per_page = 20;
         $total_row = $this->Csz_model->countData('article_db', $search_arr);
-        $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/article/category';
-
-        // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
-        ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
-
+        
         //Get users from database
-        $this->template->setSub('category', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', $search_arr, '', 0, 'arrange', 'asc'));
         $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
         $this->template->setSub('total_row', $total_row);
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
         //Load the view
         $this->template->loadSub('admin/plugin/article_category');
+    }
+    
+    public function catIndexSave(){
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        $i = 0;
+        $arrange = 1;
+        $article_db_id = $this->input->post('article_db_id', TRUE);
+        if (!empty($article_db_id)) {
+            while ($i < count($article_db_id)) {
+                if ($article_db_id[$i]) {
+                    $this->db->set('arrange', $arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("article_db_id", $article_db_id[$i]);
+                    $this->db->update('article_db');
+                    $arrange++;
+                }
+                $i++;
+            }
+        }
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
     }
 
     public function artadd() {
