@@ -1,4 +1,8 @@
-<a href='https://gemnasium.com/github.com/cskaza/cszcms'><img src="https://gemnasium.com/badges/github.com/cskaza/cszcms.svg" alt="Dependency Status" /></a>
+Build Status
+---------------------
+Travis-CI: [![Build Status](https://travis-ci.org/cskaza/cszcms.svg?branch=master)](https://travis-ci.org/cskaza/cszcms)
+Gemnasium: [![Dependency Status](https://gemnasium.com/badges/github.com/cskaza/cszcms.svg)](https://gemnasium.com/github.com/cskaza/cszcms)
+
 
 #### CSZ CMS
 
