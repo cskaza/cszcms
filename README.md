@@ -1,6 +1,5 @@
-Build Status
+Dependency Status
 ---------------------
-Travis-CI: [![Build Status](https://travis-ci.org/cskaza/cszcms.svg?branch=master)](https://travis-ci.org/cskaza/cszcms)
 Gemnasium: [![Dependency Status](https://gemnasium.com/badges/github.com/cskaza/cszcms.svg)](https://gemnasium.com/github.com/cskaza/cszcms)
 
 
