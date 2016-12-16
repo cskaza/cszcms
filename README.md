@@ -1,3 +1,5 @@
+!https://gemnasium.com/badges/github.com/cskaza/cszcms.svg(Dependency Status)!:https://gemnasium.com/github.com/cskaza/cszcms
+
 #### CSZ CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
