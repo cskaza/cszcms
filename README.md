@@ -1,4 +1,4 @@
-!https://gemnasium.com/badges/github.com/cskaza/cszcms.svg(Dependency Status)!:https://gemnasium.com/github.com/cskaza/cszcms
+<a href='https://gemnasium.com/github.com/cskaza/cszcms'><img src="https://gemnasium.com/badges/github.com/cskaza/cszcms.svg" alt="Dependency Status" /></a>
 
 #### CSZ CMS
 
