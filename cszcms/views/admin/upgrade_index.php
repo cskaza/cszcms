@@ -82,19 +82,8 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
             </li>
         </ol>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllErrLog'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-danger',
-            'value' => $this->lang->line('btn_clear_logs'),
-            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
-        );
-        echo form_submit($data);
-        ?>
-        <?php echo form_close(); ?>
-        <br>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllErrLog' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clear_logs') ?></a>
+        <br><br>
         <?php echo form_open(BASE_URL . '/admin/upgrade/downloadErrLog'); ?>
         <?php
         $att = 'id="errlogfile" class="form-control-static"';

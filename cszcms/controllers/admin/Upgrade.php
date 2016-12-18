@@ -137,12 +137,12 @@ class Upgrade extends CI_Controller {
                 $newfname = FCPATH . $file_name;
                 if (file_exists($newfname)) {
                     @$this->unzip->extract($newfname, FCPATH);
-                    if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
+                    if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) { /* for sql upgrade  */
                         $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
                         delete_files(FCPATH . 'upgrade_sql', TRUE);
                         rmdir(FCPATH . 'upgrade_sql');
                     }
-                    if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
+                    if (file_exists(FCPATH . 'plugin_sql/install.sql')) { /* for sql plugin install or upgrade  */
                         $this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
                         delete_files(FCPATH . 'plugin_sql', TRUE);
                         rmdir(FCPATH . 'plugin_sql');
