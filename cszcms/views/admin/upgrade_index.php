@@ -38,45 +38,12 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('maintenance_header') ?>
             </li>
         </ol>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllCache'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-danger',
-            'value' => $this->lang->line('btn_clearallcache'),
-            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
-        );
-        echo form_submit($data);
-        ?>
-        <?php echo form_close(); ?>
-        <br>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllDBCache'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-danger',
-            'value' => $this->lang->line('btn_clearalldbcache'),
-            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
-        );
-        echo form_submit($data);
-        ?>
-        <?php echo form_close(); ?>
-        <br>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/clearAllSession'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-danger',
-            'value' => $this->lang->line('btn_clear_sess'),
-            'onclick' => "return confirm('" . $this->lang->line('clear_sess_message') . "');",
-        );
-        echo form_submit($data);
-        ?>
-        <?php echo form_close(); ?>
-        <br>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a>
+        <br><br>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllDBCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a>
+        <br><br>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllSession' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a>
+        <br><br>
         <ol class="breadcrumb">
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
@@ -129,18 +96,7 @@
         </div>
         <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>
         <br><br>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/download'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-primary',
-            'value' => $this->lang->line('btn_upgrade'),
-            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
-        );
-        echo form_submit($data);
-        ?>   
-        <?php echo form_close(); ?>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/download' ?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_upgrade') ?></a>
         <br><br>
     </div>
     <div class="col-lg-6 col-md-6">
@@ -149,18 +105,8 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('database_maintain_header') ?>
             </li>
         </ol>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/optimize'); ?>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-primary',
-            'value' => $this->lang->line('btn_optimize_db'),
-        );
-        echo form_submit($data);
-        ?>   
-        <?php echo form_close(); ?>
-        <br><a href="<?php echo BASE_URL . '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
+        <a href="<?php echo BASE_URL . '/admin/upgrade/optimize' ?>" class="btn btn-primary"><?php echo $this->lang->line('btn_optimize_db') ?></a>
+        <br><br><a href="<?php echo BASE_URL . '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
         <br><br>
     </div>
 </div>
