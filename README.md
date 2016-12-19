@@ -1,6 +1,7 @@
 Dependency Status
 ---------------------
 Gemnasium: [![Dependency Status](https://gemnasium.com/badges/github.com/cskaza/cszcms.svg)](https://gemnasium.com/github.com/cskaza/cszcms)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/566/badge)](https://bestpractices.coreinfrastructure.org/projects/566)
 
 
 #### CSZ CMS
