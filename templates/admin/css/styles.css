@@ -335,7 +335,7 @@ html>body .ui-sortable li { height: 34px; }
 }
 
 .navbar-fixed-bottom, .navbar-fixed-top{
-    z-index:2 !important;
+    z-index:3 !important;
 }
 /* Fixes for IE < 8 */
 @media screen\9 {
