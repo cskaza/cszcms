@@ -579,7 +579,7 @@ class Csz_admin_model extends CI_Model {
         if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
-            $query = $this->Csz_model->chkPassword($email, $password);
+            $query = $this->Csz_model->chkPassword($email, $password, "user_type != 'member'");
             if ($query->num_rows() == 1) {
                 $rows = $query->row();
                 if (!empty($rows)) {

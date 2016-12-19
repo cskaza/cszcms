@@ -1156,13 +1156,17 @@ class Csz_model extends CI_Model {
      *
      * @param	string	$email    email address
      * @param	string	$password    password
+     * @param	string	$typecondition   User type sql condition for WHERE. Default is NULL
      * @return	object
      */
-    public function chkPassword($email, $password) {
+    public function chkPassword($email, $password, $typecondition = '') {
         $this->db->select("*");
         $this->db->where("email", $email);
         $this->db->where("password", $password);
         $this->db->where("active", '1');
+        if($typecondition){
+            $this->db->where($typecondition);
+        }
         $this->db->limit(1, 0);
         return $this->db->get("user_admin");
     }
