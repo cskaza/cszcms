@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <!-- Custom CSS -->
         <?php echo  link_tag('templates/cszdefault/css/cszdefault.min.css') ?>        
         <!-- Custom Fonts -->        
-        <?php echo  link_tag('https://fonts.googleapis.com/css?family=Montserrat:400,700|Kaushan+Script|Droid+Serif:400,700,400italic,700italic|Roboto+Slab:400,100,300,700') ?>
+        <?php echo  link_tag('https://code.cdn.mozilla.net/fonts/fira.css') ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
