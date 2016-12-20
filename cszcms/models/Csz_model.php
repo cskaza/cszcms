@@ -21,10 +21,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {
-    
-    private $version = '1.1.4'; /* For CMS Version */
-    private $release = 'release'; /* For release or beta */
-            
+             
     function __construct() {
         parent::__construct();
         $this->load->database();
@@ -39,14 +36,16 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function getVersion($version_test = '') {
+        $con_version = $this->config->item('csz_version'); /* For CMS Version */
+        $con_release = $this->config->item('csz_release'); /* For release or beta */
         $version = '';
         if($version_test) {
             $version = $version_test;               
         }else{
-            if($this->release == 'beta'){
-                $version = $this->version.' Beta';
+            if($con_release == 'beta'){
+                $version = $con_version.' Beta';
             }else{
-                $version = $this->version;
+                $version = $con_version;
             }
         }
         return $version;

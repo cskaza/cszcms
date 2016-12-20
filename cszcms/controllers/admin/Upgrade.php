@@ -69,8 +69,8 @@ class Upgrade extends CI_Controller {
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion($this->cur_version);
-            $url1 = "https://github.com/cskaza/cszcms/releases/download/v" . $nextversion . "-Releases/upgrade-to-" . $nextversion . ".zip";
-            $url2 = "https://www.cszcms.com/downloads/upgrade/upgrade-to-" . $nextversion . ".zip";
+            $url1 = $this->config->item('csz_upgrade_server_1') . "upgrade-to-" . $nextversion . ".zip";
+            $url2 = $this->config->item('csz_upgrade_server_2') . "upgrade-to-" . $nextversion . ".zip";
             if($this->Csz_model->is_url_exist($url1) !== FALSE){
                 $url = &$url1; /* Main Link */
             }else if($this->Csz_model->is_url_exist($url1) === FALSE && $this->Csz_model->is_url_exist($url2) !== FALSE){

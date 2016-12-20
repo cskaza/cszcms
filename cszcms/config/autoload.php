@@ -104,7 +104,7 @@ $autoload['helper'] = array('url', 'html', 'admin_helper', 'member_helper');
 |
 */
 
-$autoload['config'] = array('template');
+$autoload['config'] = array('template','systemconfig');
 
 
 /*
