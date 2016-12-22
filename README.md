@@ -1,3 +1,6 @@
+After Version 1.1.4 We move git to gitLab
+https://gitlab.com/cszcms/cszcms
+
 Dependency Status
 ---------------------
 Gemnasium: [![Dependency Status](https://gemnasium.com/badges/github.com/cskaza/cszcms.svg)](https://gemnasium.com/github.com/cskaza/cszcms)
