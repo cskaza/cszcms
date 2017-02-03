@@ -57,18 +57,16 @@ class Csz_model extends CI_Model {
      * Function for download file from url
      *
      * @param	string	$url    url for file  download
-     * @param	string	$path    path for file save
+     * @param	string	$newfname    path for file save
      * @return	FALSE if can't download
      */
-    public function downloadFile($url, $path) {
-        $newfname = $path;
+    public function downloadFile($url, $newfname) {
         $file = fopen($url, 'rb') or die("Can't open file");
         if (!$file) {
             fclose($file);
             return FALSE;
         } else {
             $newf = fopen($newfname, 'wb') or die("Can't create file");
-            ;
             if ($newf) {
                 while (!feof($file)) {
                     fwrite($newf, fread($file, 1024 * 1024 * 10), 1024 * 1024 * 10); /* 10MB */
@@ -87,11 +85,11 @@ class Csz_model extends CI_Model {
      * @param	string	$table   DB Table
      * @param	string	$search_sql    For sql where Ex. "field1 = '1' AND field2 = '1'" or NULL
      * @param	string	$groupby   Group by field or NULL
-     * @param	string	$orderby   Order by field or NULL (Default is timestamp_create)
-     * @param	string	$sort   asc or desc or NULL (Default is desc)
+     * @param	string	$orderby   Order by field or NULL
+     * @param	string	$sort   asc or desc or NULL
      * @return	number or FALSE
      */
-    public function countData($table, $search_sql = '', $groupby = '', $orderby = 'timestamp_create', $sort = 'desc') {
+    public function countData($table, $search_sql = '', $groupby = '', $orderby = '', $sort = '') {
         $this->db->select('*');
         if ($search_sql) {
             if (is_array($search_sql)) {
@@ -104,9 +102,12 @@ class Csz_model extends CI_Model {
                 $this->db->where($search_sql);
             }
         }
-        if ($groupby)
+        if ($groupby){
             $this->db->group_by($groupby);
-        $this->db->order_by($orderby, $sort);
+        }
+        if($orderby && $sort){
+            $this->db->order_by($orderby, $sort);
+        }
         $query = $this->db->get($table);
         if (!empty($query)) {
             return $query->num_rows();
@@ -176,10 +177,10 @@ class Csz_model extends CI_Model {
         }
         $query = $this->db->get($table);
         if (!empty($query)) {
-            if ($query->num_rows() > 0) {
-                if ($query->num_rows() == 1) {
-                    $row = $query->row();
-                } else if ($query->num_rows() > 1) {
+            if ($query->num_rows() !== 0) {
+                if ($query->num_rows() === 1) {
+                    $row = $query->first_row();
+                } else {
                     $row = $query->result();
                 }
                 return $row;
@@ -227,7 +228,7 @@ class Csz_model extends CI_Model {
         }
         $query = $this->db->get($table);
         if (!empty($query)) {
-            if ($query->num_rows() > 0) {
+            if ($query->num_rows() !== 0) {
                 return $query->result_array();
             } else {
                 return FALSE;
@@ -262,7 +263,7 @@ class Csz_model extends CI_Model {
         $this->db->order_by($field_id, 'DESC');
         $this->db->limit(1, 0);
         $query = $this->db->get($table);
-        if (!empty($query) && $query->num_rows() > 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->row();
             return $row->$field_id;
         } else {
@@ -280,7 +281,7 @@ class Csz_model extends CI_Model {
     public function load_config() {
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row;
         } else {
@@ -298,7 +299,7 @@ class Csz_model extends CI_Model {
     function getLang() {
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row->admin_lang;
         }
@@ -316,7 +317,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("lang_iso", $lang);
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row->country_iso;
         }
@@ -334,7 +335,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("pages_id", $id);
         $query = $this->db->get('pages');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row->page_url;
         }
@@ -353,7 +354,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->order_by('pages_id ASC');
         $query = $this->db->get('pages');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row->page_url;
         } else {
@@ -373,7 +374,7 @@ class Csz_model extends CI_Model {
         $this->db->order_by("lang_iso_id", "asc");
         $this->db->limit(1, 0);
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row->lang_iso;
         }
@@ -428,7 +429,7 @@ class Csz_model extends CI_Model {
             $this->db->where("active", 1);
         $this->db->order_by("lang_iso_id", "asc");
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -449,7 +450,7 @@ class Csz_model extends CI_Model {
         $this->db->where("active", 1);
         $this->db->limit(1, 0);
         $query = $this->db->get('pages');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row;
         } else {
@@ -476,7 +477,7 @@ class Csz_model extends CI_Model {
         $this->db->where("active", 1);
         $this->db->order_by("arrange", "asc");
         $query = $this->db->get('page_menu');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -496,7 +497,7 @@ class Csz_model extends CI_Model {
         $this->db->where("active", 1);
         $this->db->order_by("social_name", "asc");
         $query = $this->db->get('footer_social');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -608,6 +609,7 @@ class Csz_model extends CI_Model {
             array('name' => 'generator', 'content' => 'CSZ CMS | Version '.$this->Csz_model->getVersion()),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
+            array('name' => 'og:site_name', 'content' => $config->site_name, 'type' => 'property'),
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
             array('name' => 'og:type', 'content' => $og_type, 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
@@ -632,50 +634,11 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function rw_link($val) {
-        $val = strip_tags($val);
-        $val = strtolower($val);
-        $val = trim($val);
-        $val = trim($val);
-        $val = trim($val);
+        $val = trim(strtolower(strip_tags($val)));    
         $val = str_replace('&amp', 'and', $val);
-        $val = str_replace('–', '-', $val);
-        $val = str_replace(' ', '-', $val);
-        $val = str_replace("'s-", '-', $val);
-        $val = str_replace("’s-", '-', $val);
-        $val = str_replace('!', '-', $val);
-        $val = str_replace('@', '-', $val);
-        $val = str_replace('#', '-', $val);
-        $val = str_replace('$', '-', $val);
-        $val = str_replace('%', '-', $val);
-        $val = str_replace('^', '-', $val);
-        $val = str_replace('&', '-', $val);
-        $val = str_replace('*', '-', $val);
-        $val = str_replace('(', '-', $val);
-        $val = str_replace(')', '-', $val);
-        $val = str_replace('_', '-', $val);
-        $val = str_replace('+', '-', $val);
-        $val = str_replace('|', '-', $val);
-        $val = str_replace('{', '-', $val);
-        $val = str_replace('}', '-', $val);
-        $val = str_replace(':', '-', $val);
-        $val = str_replace('"', '', $val);
-        $val = str_replace('‘', '', $val);
-        $val = str_replace('’', '', $val);
-        $val = str_replace('<', '-', $val);
-        $val = str_replace('>', '-', $val);
-        $val = str_replace('?', '-', $val);
-        $val = str_replace('/', '-', $val);
-        $val = str_replace('.', '-', $val);
-        $val = str_replace(',', '-', $val);
-        $val = str_replace("'", '', $val);
-        $val = str_replace(';', '-', $val);
-        $val = str_replace(']', '-', $val);
-        $val = str_replace('[', '-', $val);
-        $val = str_replace('=', '-', $val);
-        $val = str_replace('----', '-', $val);
-        $val = str_replace('---', '-', $val);
-        $val = str_replace('--', '-', $val);
-        $val = str_replace('--', '-', $val);
+        $val_arr = array('–',' ',"'s-","’s-",'!','@','#','$','%','^','&','*','(',')','_','+','|','{','}',':','"','‘','’','<','>','?','/','.',',',"'",';',']','[','=','----','---','--');
+        $val = str_replace($val_arr, '-', $val);
+        $val = strip_tags(iconv_substr($val,0,255,'UTF-8')); /* cut char limit 255 char */
         return $val;
     }
 
@@ -826,7 +789,7 @@ class Csz_model extends CI_Model {
                     $patterns[0] = 'href="' . $val . '"';
                     $patterns[1] = 'linkstats="' . $k . '"';
                     $replacements = array();
-                    $replacements[1] = 'href="' . BASE_URL . '/linkstats/' . ($k + 1) . '/' . str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($val)) . '"';
+                    $replacements[1] = 'href="' . BASE_URL . '/linkstats/' . ($k + 1) . '/' . $this->encodeURL($val) . '"';
                     $replacements[0] = 'linkstats="' . $k . '"';
                     $content = str_replace($patterns, $replacements, $content);
                     /* $content = str_replace('['.$k.']', '', $content); */
@@ -904,11 +867,11 @@ class Csz_model extends CI_Model {
                 $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
             }
             $sess_data = array('cszfrm_cururl' => str_replace(BASE_URL . '/', '', current_url()));
-            $this->session->set_userdata($sess_data);            
+            $this->session->set_userdata($sess_data);
             $field_data = $this->getValue('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
             foreach ($field_data as $field) {
                 if ($field->field_required) {
-                    $f_req = ' required="required" autofocus="true"';
+                    $f_req = ' required="required"';
                     $star_req = ' <i style="color:red;">*</i>';
                 } else {
                     $f_req = '';
@@ -970,6 +933,32 @@ class Csz_model extends CI_Model {
         } else {
             return $content;
         }
+    }
+    
+    /**
+     * encodeURL
+     *
+     * Function for encode the url
+     *
+     * @param	string	$val    Original url
+     * @return	string
+     */
+    public function encodeURL($val) {
+        $return = str_replace(array('+', '/', '='), array('-', '_', '.'), base64_encode($val));
+        return $return;
+    }
+    
+    /**
+     * decodeURL
+     *
+     * Function for decode the url
+     *
+     * @param	string	$val    Encode url
+     * @return	string
+     */
+    public function decodeURL($val) {
+        $return = base64_decode(str_replace(array('-', '_', '.'), array('+', '/', '='), $val));
+        return $this->security->xss_clean($return);
     }
 
     /**
@@ -1183,30 +1172,34 @@ class Csz_model extends CI_Model {
         if ($this->Csz_model->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
-            $query = $this->chkPassword($email, $password);
-            if ($query->num_rows() == 1) {
-                $rows = $query->row();
-                if (!empty($rows)) {
-                    $session_id = session_id();
-                    $this->db->set('session_id', $session_id, TRUE);
-                    $this->db->where('user_admin_id', $rows->user_admin_id);
-                    $this->db->update('user_admin');
-                    $data = array(
-                        'user_admin_id' => $rows->user_admin_id,
-                        'admin_name' => $rows->name,
-                        'admin_email' => $rows->email,
-                        'admin_type' => $rows->user_type,
-                        'admin_visitor' => $rows->backend_visitor,
-                        'session_id' => $session_id,
-                        'admin_logged_in' => TRUE,
-                    );
-                    $this->session->set_userdata($data);
-                    return 'SUCCESS';
-                }else{
+            if($this->chkIPBaned($email) === FALSE){
+                $query = $this->chkPassword($email, $password);
+                if ($query->num_rows() == 1) {
+                    $rows = $query->row();
+                    if (!empty($rows)) {
+                        $session_id = session_id();
+                        $this->db->set('session_id', $session_id, TRUE);
+                        $this->db->where('user_admin_id', $rows->user_admin_id);
+                        $this->db->update('user_admin');
+                        $data = array(
+                            'user_admin_id' => $rows->user_admin_id,
+                            'admin_name' => $rows->name,
+                            'admin_email' => $rows->email,
+                            'admin_type' => $rows->user_type,
+                            'admin_visitor' => $rows->backend_visitor,
+                            'session_id' => $session_id,
+                            'admin_logged_in' => TRUE,
+                        );
+                        $this->session->set_userdata($data);
+                        return 'SUCCESS';
+                    }else{
+                        return 'INVALID';
+                    }
+                } else {
                     return 'INVALID';
                 }
-            } else {
-                return 'INVALID';
+            }else{
+                return 'IP_BANNED';
             }
         }
     }
@@ -1221,15 +1214,17 @@ class Csz_model extends CI_Model {
      * @param	string	$result    result text
      */
     public function saveLogs($email, $note = '', $result = '') {
-        $data = array(
-            'email_login' => $email,
-            'note' => $note,
-            'result' => $result,
-        );
-        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
-        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->insert('login_logs', $data);
+        if($result != 'IP_BANNED'){
+            $data = array(
+                'email_login' => $email,
+                'note' => $note,
+                'result' => $result,
+            );
+            $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+            $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->insert('login_logs', $data);
+        }
     }
 
     /**
@@ -1251,7 +1246,7 @@ class Csz_model extends CI_Model {
             $this->db->where("name", $name);
             $this->db->limit(1, 0);
             $query = $this->db->get("general_label");
-            if ($query && $query->num_rows() > 0) {
+            if ($query && $query->num_rows() !== 0) {
                 if ($query->row()->$sel_name)
                     return $query->row()->$sel_name;
                 else
@@ -1302,7 +1297,7 @@ class Csz_model extends CI_Model {
      */
     public function updateMember($id) {
         $query = $this->chkPassword($this->session->userdata('admin_email'), sha1(md5($this->input->post('cur_password', TRUE))));
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             // update the user account
             if ($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)) {
                 $birthday = $this->input->post('year', TRUE) . '-' . $this->input->post('month', TRUE) . '-' . $this->input->post('day', TRUE);
@@ -1440,7 +1435,7 @@ class Csz_model extends CI_Model {
             stream_set_timeout($fp, 10);
             $head = "HEAD " . @$url_info['path'] . "?" . @$url_info['query'];
             $head .= " HTTP/1.0\r\nHost: " . @$url_info['host'] . "\r\n\r\n";
-            fputs($fp, $head);
+            @fputs($fp, $head);
             while (!feof($fp)) {
                 if ($header = trim(fgets($fp, 1024))) {
                     $sc_pos = strpos($header, ':');
@@ -1551,9 +1546,9 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanEmailFormat($email){
-        $search = array('&','/',';','\\','"',"'",' ');
+        $search = array('&','/',';','\\','"',"'",'|',' ','{','}');
         $email = str_replace($search, '', $email);
-        return $email;
+        return $this->security->xss_clean($email);
     }
     
     /**
@@ -1565,9 +1560,9 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanOSCommand($string){
-        $search = array('&','/',';','\\','"','|');
+        $search = array('&','/',';','\\','"','|',"'",'{','}');
         $string = str_replace($search, '', $string);
-        return $string;
+        return $this->security->xss_clean($string);
     }
     
     /**
@@ -1581,6 +1576,108 @@ class Csz_model extends CI_Model {
     public function findFrmTag($content) {
         $txt_nonhtml = strip_tags($content);
         if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * load_bf_config
+     *
+     * Function for get settings from brute force login protection setting
+     *
+     * @return	Object or FALSE
+     */
+    public function load_bf_config() {
+        $this->db->limit(1, 0);
+        $query = $this->db->get('login_security_config');
+        if ($query->num_rows() !== 0) {
+            $row = $query->row();
+            return $row;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * chkBFwhitelistIP
+     *
+     * Function for check the IP from whitelist
+     *
+     * @param	string	$ip_address  for ip address
+     * @return	TRUE or FALSE
+     */
+    public function chkBFwhitelistIP($ip_address) {
+        $ip_count = $this->countData('whitelist_ip', "ip_address = '".$ip_address."'");
+        if($ip_count !== FALSE && $ip_count !== 0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * chkBFblacklistIP
+     *
+     * Function for check the IP from whitelist
+     *
+     * @param	string	$ip_address  for ip address
+     * @return	TRUE or FALSE
+     */
+    public function chkBFblacklistIP($ip_address) {
+        $ip_count = $this->countData('blacklist_ip', "ip_address = '".$ip_address."'");
+        if($ip_count !== FALSE && $ip_count !== 0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * saveBFloginIP
+     *
+     * Function for automatic add the IP blacklist from brute force login protection
+     * 
+     * @param	string	$ip_address  for ip address
+     * @param	string	$email  for email address
+     */
+    public function saveBFloginIP($ip_address, $email) {
+        if(!$ip_address) $ip_address = $this->input->ip_address();
+        $config = $this->load_bf_config();
+        if($this->chkBFwhitelistIP($ip_address) === FALSE){
+            $search_sql = "ip_address = '".$ip_address."' AND result = 'INVALID' AND timestamp_create >= DATE_SUB(NOW(),INTERVAL ".$config->bf_protect_period." MINUTE)";
+            $ip_count = $this->countData('login_logs', $search_sql);
+            if($ip_count !== FALSE  && $ip_count !== 0 && $ip_count > ($config->max_failure-1) && $this->chkBFblacklistIP($ip_address) === FALSE){
+                $this->db->set('ip_address', $ip_address, TRUE);
+                $this->db->set('note', 'Automatic add this IP from brute force', TRUE);
+                $this->db->set('timestamp_create', 'NOW()', FALSE);
+                $this->db->insert('blacklist_ip');
+                $data = array(
+                    'email_login' => $email,
+                    'note' => 'Automatic add this IP from brute force',
+                    'result' => 'IP_BANNED',
+                );
+                $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+                $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+                $this->db->set('timestamp_create', 'NOW()', FALSE);
+                $this->db->insert('login_logs', $data);
+            }
+        }
+    }
+    
+    /**
+     * chkIPBaned
+     *
+     * Function for check the IP from blacklist
+     *
+     * @param	string	$email  for email address or NULL
+     * @return	TRUE or FALSE
+     */
+    public function chkIPBaned($email = '') {
+        $cur_ip = $this->input->ip_address();
+        $this->saveBFloginIP($cur_ip, $email);
+        if($this->chkBFblacklistIP($cur_ip) === TRUE){
             return TRUE;
         }else{
             return FALSE;

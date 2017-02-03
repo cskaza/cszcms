@@ -22,6 +22,7 @@
                         'name' => 'siteTitle',
                         'id' => 'siteTitle',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('siteTitle', $settings->site_name, FALSE)
                     );
                     echo form_input($data);
@@ -57,17 +58,19 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <div class="control-group">
-                <label class="control-label" for="themes"><?php echo $this->lang->line('settings_theme'); ?></label>
+                <label class="control-label" for="siteTheme"><?php echo $this->lang->line('settings_theme'); ?></label>
                 <div class="controls">
                     <?php
                     $att = 'id="siteTheme" class="form-control"';
                     $data = array();
-                    foreach ($themesdir as $t) {
-                        if (!is_dir($t)) {
-                            $t = str_replace("\\", "", $t);
-                            $t = str_replace("/", "", $t);
-                            if (($t != "index.html") && ($t != "admin")) {
-                                $data[$t] = $t;
+                    if(!empty($themesdir)){
+                        foreach ($themesdir as $t) {
+                            if (!is_dir($t)) {
+                                $t = str_replace("\\", "", $t);
+                                $t = str_replace("/", "", $t);
+                                if (($t != "index.html") && ($t != "admin") && (strpos($t, 'admin') === false)) {
+                                    $data[$t] = $t;
+                                }
                             }
                         }
                     }
@@ -76,17 +79,19 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <div class="control-group">
-                <label class="control-label" for="themes"><?php echo $this->lang->line('settings_lang'); ?></label>
+                <label class="control-label" for="siteLang"><?php echo $this->lang->line('settings_lang'); ?></label>
                 <div class="controls">
                     <?php
                     $att = 'id="siteLang" class="form-control"';
                     $data = array();
-                    foreach ($langdir as $l) {
-                        if (!is_dir($l)) {
-                            $l = str_replace("\\", "", $l);
-                            $l = str_replace("/", "", $l);
-                            if ($l != "index.html") {
-                                $data[$l] = $l;
+                    if(!empty($langdir)){
+                        foreach ($langdir as $l) {
+                            if (!is_dir($l)) {
+                                $l = str_replace("\\", "", $l);
+                                $l = str_replace("/", "", $l);
+                                if ($l != "index.html") {
+                                    $data[$l] = $l;
+                                }
                             }
                         }
                     }
@@ -120,52 +125,6 @@
                     echo form_textarea($data, $settings->additional_js);
                     ?>
                     <span class="remark"><em><?php echo $this->lang->line('settings_add_js_remark'); ?></em></span>
-                </div> <!-- /controls -->				
-            </div> <!-- /control-group -->
-            <div class="control-group">										
-                <label class="form-control-static" for="googlecapt_active">
-                <?php
-                if($settings->googlecapt_active){
-                    $checked = 'checked';
-                }else{
-                    $checked = '';
-                }
-                $data = array(
-                    'name' => 'googlecapt_active',
-                    'id' => 'googlecapt_active',
-                    'value' => '1',
-                    'checked' => $checked
-                );
-                echo form_checkbox($data);
-                ?> <?php echo $this->lang->line('settings_googlecapt_active'); ?></label>	
-            </div> <!-- /control-group -->
-            <div class="control-group">	
-                <label class="control-label" for="googlecapt_sitekey"><?php echo $this->lang->line('settings_googlecapt_sitekey'); ?></label>
-                <div class="controls">
-                    <?php
-                    $data = array(
-                        'name' => 'googlecapt_sitekey',
-                        'id' => 'googlecapt_sitekey',
-                        'class' => 'form-control',
-                        'value' => set_value('googlecapt_sitekey', $settings->googlecapt_sitekey, FALSE)
-                    );
-                    echo form_input($data);
-                    ?>
-                </div> <!-- /controls -->				
-            </div> <!-- /control-group -->
-            <div class="control-group">	
-                <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_googlecapt_secretkey'); ?></label>
-                <div class="controls">
-                    <?php
-                    $data = array(
-                        'name' => 'googlecapt_secretkey',
-                        'id' => 'googlecapt_secretkey',
-                        'class' => 'form-control',
-                        'value' => set_value('googlecapt_secretkey', $settings->googlecapt_secretkey, FALSE)
-                    );
-                    echo form_input($data);
-                    ?>
-                    <span class="remark"><em><?php echo $this->lang->line('settings_googlecapt_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <div class="control-group">										
@@ -216,16 +175,15 @@
                 <label class="control-label" for="file_upload"><?php echo $this->lang->line('settings_logo'); ?></label>
                 <div class="controls">
                     <div><img class="img-responsive img-thumbnail" src="<?php
-                              if ($settings->site_logo != "") {
+                              if ($settings->site_logo != "" && $settings->site_logo != NULL) {
                                   echo BASE_URL . '/photo/logo/' . $settings->site_logo;
                               }
                               ?>" id="logo_preloaded" <?php
-                    if ($settings->site_logo == "") {
+                    if ($settings->site_logo == "" || $settings->site_logo == NULL) {
                         echo "style='display:none;'";
                     }
                     ?>></div>
-                    <?php if ($settings->site_logo != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo?>"> <span class="remark">Delete File</span></label><?php } ?>
-                    <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                    <?php if ($settings->site_logo != "" && $settings->site_logo != NULL) { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo?>"> <span class="remark">Delete File</span></label><?php } ?>                   
                     <?php
                     $data = array(
                         'name' => 'file_upload',
@@ -244,16 +202,15 @@
                 <label class="control-label" for="og_image"><?php echo $this->lang->line('settings_og_image'); ?></label>
                 <div class="controls">
                     <div><img class="img-responsive img-thumbnail" src="<?php
-                              if ($settings->og_image != "") {
+                              if ($settings->og_image != "" && $settings->og_image != NULL) {
                                   echo BASE_URL . '/photo/logo/' . $settings->og_image;
                               }
                               ?>" id="logo_preloaded" <?php
-                    if ($settings->og_image == "") {
+                    if ($settings->og_image == "" || $settings->og_image == NULL) {
                         echo "style='display:none;'";
                     }
                     ?>></div>
-                    <?php if ($settings->og_image != "") { ?><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image?>"> <span class="remark">Delete File</span></label><?php } ?>
-                    <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                    <?php if ($settings->og_image != "" && $settings->og_image != NULL) { ?><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image?>"> <span class="remark">Delete File</span></label><?php } ?>                    
                     <?php
                     $data = array(
                         'name' => 'og_image',
@@ -317,6 +274,7 @@
                         'name' => 'fbapp_id',
                         'id' => 'fbapp_id',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('fbapp_id', $settings->fbapp_id, FALSE)
                     );
                     echo form_input($data);
@@ -334,6 +292,7 @@
                         'name' => 'siteEmail',
                         'id' => 'siteEmail',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('siteEmail', $settings->default_email, FALSE)
                     );
                     echo form_input($data);
@@ -359,6 +318,7 @@
                         'name' => 'smtp_host',
                         'id' => 'smtp_host',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('smtp_host', $settings->smtp_host, FALSE)
                     );
                     echo form_input($data);
@@ -373,6 +333,7 @@
                         'name' => 'smtp_user',
                         'id' => 'smtp_user',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('smtp_user', $settings->smtp_user, FALSE)
                     );
                     echo form_input($data);
@@ -387,6 +348,7 @@
                         'name' => 'smtp_pass',
                         'id' => 'smtp_pass',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('smtp_pass', $settings->smtp_pass, FALSE)
                     );
                     echo form_password($data);
@@ -416,10 +378,93 @@
                         'name' => 'sendmail_path',
                         'id' => 'sendmail_path',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('sendmail_path', $settings->sendmail_path, FALSE)
                     );
                     echo form_input($data);
                     ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+        <br>
+        <div class="h2 sub-header"><?php echo $this->lang->line('settings_google_config')?></div>
+        <div class="control-group">										
+                <label class="form-control-static" for="googlecapt_active">
+                <?php
+                if($settings->googlecapt_active){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'googlecapt_active',
+                    'id' => 'googlecapt_active',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_googlecapt_active'); ?></label>	
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="googlecapt_sitekey"><?php echo $this->lang->line('settings_googlecapt_sitekey'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'googlecapt_sitekey',
+                        'id' => 'googlecapt_sitekey',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('googlecapt_sitekey', $settings->googlecapt_sitekey, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_googlecapt_secretkey'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'googlecapt_secretkey',
+                        'id' => 'googlecapt_secretkey',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('googlecapt_secretkey', $settings->googlecapt_secretkey, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_googlecapt_remark'); ?></em></span>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="ga_client_id"><?php echo $this->lang->line('settings_ga_client_id'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'ga_client_id',
+                        'id' => 'ga_client_id',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('ga_client_id', $settings->ga_client_id, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_ga_client_id_remark'); ?></em></span>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
+            <div class="control-group">	
+                <label class="control-label" for="ga_view_id"><?php echo $this->lang->line('settings_ga_view_id'); ?></label>
+                <div class="controls">
+                    <?php
+                    $data = array(
+                        'name' => 'ga_view_id',
+                        'id' => 'ga_view_id',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('ga_view_id', $settings->ga_view_id, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                    <span class="remark"><em><?php echo $this->lang->line('settings_ga_view_id_remark'); ?></em></span>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
     </div>

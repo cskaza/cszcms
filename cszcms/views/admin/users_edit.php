@@ -22,6 +22,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('name', $users->name)
             );
             echo form_input($data);
@@ -42,6 +43,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('email', $users->email)
             );
             echo form_input($data);
@@ -57,6 +59,7 @@
                 'id' => 'password',
                 'class' => 'form-control',
                 'value' => set_value('password'),
+                'maxlength' => '255',
                 'autocomplete' => 'off'
             );
             echo form_password($data);
@@ -72,6 +75,7 @@
                 'id' => 'con_password',
                 'class' => 'form-control',
                 'value' => set_value('con_password'),
+                'maxlength' => '255',
                 'autocomplete' => 'off'
             );
             echo form_password($data);
@@ -141,6 +145,7 @@
                 'name' => 'first_name',
                 'id' => 'first_name',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('first_name', $users->first_name, FALSE)
             );
             echo form_input($data);
@@ -153,6 +158,7 @@
                 'name' => 'last_name',
                 'id' => 'last_name',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('last_name', $users->last_name, FALSE)
             );
             echo form_input($data);
@@ -161,6 +167,7 @@
         <div class="control-group">										
             <label class="control-label" for="birthday"><?php echo $this->lang->line('user_birthday'); ?></label><br>
             <?php
+                if($users->birthday === NULL) $users->birthday = '0000-00-00';
                 list($year,$month,$day) = explode('-', $users->birthday);
                 $att = 'id="year" class="form-control-static" ';
                 $data = array();
@@ -223,17 +230,16 @@
         <div class="control-group">											
             <label class="control-label" for="picture"><?php echo $this->lang->line('user_picture'); ?></label>
             <div class="controls">
-                <div><img src="<?php
-                              if ($users->picture != "") {
+                <div><img class="img-thumbnail img-responsive" src="<?php
+                              if ($users->picture != "" && $users->picture != NULL) {
                                   echo BASE_URL . '/photo/profile/' . $users->picture;
                               }
-                              ?>" id="logo_preloaded" <?php
-                    if ($users->picture == "") {
+                              ?>" <?php
+                    if ($users->picture == "" || $users->picture == NULL) {
                         echo "style='display:none;'";
                     }
                     ?> width="50%"></div>
-                    <?php if ($users->picture != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $users->picture?>"> <span class="remark">Delete File</span></label><?php } ?>
-                    <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                    <?php if ($users->picture != "" && $users->picture != NULL) { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $users->picture?>"> <span class="remark">Delete File</span></label><?php } ?>
                     <?php
                     $data = array(
                         'name' => 'file_upload',

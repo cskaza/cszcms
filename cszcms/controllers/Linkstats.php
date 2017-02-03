@@ -28,7 +28,7 @@ class Linkstats extends CI_Controller {
     }
 
     public function index() {
-        $link1 = str_replace("'", "\'", base64_decode(str_replace(array('-', '_', '.'), array('+', '/', '='), $this->uri->segment(3))));
+        $link1 = str_replace("'", "\'", $this->Csz_model->decodeURL($this->uri->segment(3)));
         $link = str_replace('['.($this->uri->segment(2)-1).']', '', $link1);
         if ($link) {
             echo '<html><head>';

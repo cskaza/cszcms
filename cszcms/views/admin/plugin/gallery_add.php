@@ -23,6 +23,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('album_name', '', FALSE)
             );
             echo form_input($data);
@@ -35,6 +36,7 @@
                 'name' => 'keyword',
                 'id' => 'keyword',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('keyword', '', FALSE)
             );
             echo form_input($data);
@@ -50,7 +52,6 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'maxlength' => '255',
                 'value' => set_value('short_desc', '', FALSE)
             );
             echo form_input($data);

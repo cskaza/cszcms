@@ -420,7 +420,7 @@ class Shop extends CI_Controller {
     public function order() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex('shop'); /* Set index page when redirect after save */
-        $search_arr = ' shipping = 0 ';
+        $search_arr = "shipping IS NULL ";
         if ($this->input->get('search') || $this->input->get('payment_status')) {
             if ($this->input->get('search')) {
                 $search_arr.= " AND inv_id LIKE '%" . $this->input->get('search', TRUE) . "%' OR email LIKE '%" . $this->input->get('search', TRUE) . "%' OR name LIKE '%" . $this->input->get('search', TRUE) . "%' OR phone LIKE '%" . $this->input->get('search', TRUE) . "%' OR address LIKE '%" . $this->input->get('search', TRUE) . "%'";
@@ -465,7 +465,7 @@ class Shop extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
-            $this->db->set('payment_status', 'Completed');
+            $this->db->set('payment_status', "Completed");
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Completed' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');
@@ -494,7 +494,7 @@ class Shop extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
-            $this->db->set('payment_status', 'Pending');
+            $this->db->set('payment_status', "Pending");
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Pending' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');
@@ -508,7 +508,7 @@ class Shop extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
-            $this->db->set('payment_status', 'Refunded');
+            $this->db->set('payment_status', "Refunded");
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status = 'Completed'", '');
             $this->db->update('shop_payment');
@@ -521,7 +521,7 @@ class Shop extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
         if ($this->uri->segment(5)) {
-            $this->db->set('payment_status', 'Canceled');
+            $this->db->set('payment_status', "Canceled");
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("shop_payment_id = '" . $this->uri->segment(5) . "' AND payment_status != 'Completed' AND payment_status != 'Refunded' AND payment_status != 'Canceled'", '');
             $this->db->update('shop_payment');

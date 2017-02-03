@@ -15,32 +15,36 @@
         <?php echo  $this->lang->line('social_message') ?><br>
         <?php echo  $this->lang->line('social_enable') ?>
         <?php echo form_open(BASE_URL . '/admin/social/update'); ?>
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th width="20%"><?php echo $this->lang->line('social_table_title'); ?></th>
-                    <th width="70%"><?php echo $this->lang->line('social_table_link'); ?></th>
-                    <th width="10%" class="text-center"><?php echo $this->lang->line('social_table_active'); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($social as $s) { ?>
+        <div class="box box-body table-responsive no-padding">
+            <table class="table table-striped table-bordered">
+                <thead>
                     <tr>
-                        <td><?php echo $this->lang->line('social_' . $s->social_name); ?></td>
-                        <td><?php
-                            $data = array(
-                                'name' => $s->social_name,
-                                'id' => $s->social_name,
-                                'class' => 'form-control ',
-                                'value' => set_value($s->social_name, $s->social_url, FALSE)
-                            );
-                            echo form_input($data);
-                            ?></td>
-                        <td class="text-center"><input type="checkbox" value="1" name="checkbox<?php echo $s->social_name; ?>" <?php if ($s->active == 1) { echo " checked "; } ?>></td>
+                        <th width="20%"><?php echo $this->lang->line('social_table_title'); ?></th>
+                        <th width="70%"><?php echo $this->lang->line('social_table_link'); ?></th>
+                        <th width="10%" class="text-center"><?php echo $this->lang->line('social_table_active'); ?></th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if(!empty($social)){
+                    foreach ($social as $s) { ?>
+                        <tr>
+                            <td><?php echo $this->lang->line('social_' . $s->social_name); ?></td>
+                            <td><?php
+                                $data = array(
+                                    'name' => $s->social_name,
+                                    'id' => $s->social_name,
+                                    'class' => 'form-control ',
+                                    'value' => set_value($s->social_name, $s->social_url, FALSE)
+                                );
+                                echo form_input($data);
+                                ?></td>
+                            <td class="text-center"><input type="checkbox" value="1" name="checkbox<?php echo $s->social_name; ?>" <?php if ($s->active == 1) { echo " checked "; } ?>></td>
+                        </tr>
+                    <?php } 
+                    }?>
+                </tbody>
+            </table>
+        </div>
         <?php 	$data = array(
 		'name'        => 'submit',
 		'id'          => 'submit',

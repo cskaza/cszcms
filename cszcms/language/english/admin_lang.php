@@ -9,9 +9,9 @@ $lang['dashboard_totalmember']	= "Total Members";
 $lang['dashboard_viewdetail']	= "View Details";
 $lang['dashboard_linkrecent']	= "20 Recent Link Statistic";
 $lang['dashboard_emailrecent']	= "10 Recent Email Logs";
-$lang['dashboard_loginrecent']	= "20 Recent Login Logs";
 $lang['dashboard_toemail']	= "To";
 $lang['dashboard_fromemail']	= "From";
+$lang['dashboard_rssnews']	= "6 Recent CSZ CMS News";
 
 //Navigation Bar
 $lang['nav_dash']		= "Dashboard";
@@ -22,6 +22,16 @@ $lang['nav_admin_users']	= "Users";
 $lang['nav_nav_header']         = "Navigation";
 $lang['nav_logout']		= "Logout";
 $lang['nav_gel_settings']	= "General Menu";
+$lang['nav_analytics']		= "Analytics";
+
+// Google Analytics
+$lang['ga_last30']		= "Google Analytics Last 30 Days";
+$lang['ga_maps']		= "Google Analytics Maps";
+$lang['ga_sessions']            = "Google Analytics Sessions";
+$lang['ga_devices']		= "Google Analytics Devices";
+$lang['ga_sources']		= "Google Analytics Sources";
+$lang['ga_refer']               = "Google Analytics Referrer";
+$lang['ga_no_settings']         = 'Google Analytics not config on <a href="'.base_url().'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
 
 //Users - All Users
 $lang['user_header']			= "All Users";
@@ -95,9 +105,10 @@ $lang['forgot_btn']		= "Reset";
 $lang['forgot_check_email']	= "Please check your email inbox and click the link to reset your password.";
 
 //Dashboard
-$lang['dash_welcome']		= "Welcome to CSZ-CMS Backend";
+$lang['dash_welcome']		= "Welcome to CSZ CMS Backend";
 $lang['dash_cur_time']		= "Current Date/Time:";
-$lang['dash_message']		= "This is a management system for administrators, to manage all content and settings on the site. Systems Web was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease.";
+$lang['dash_message']		= "This is an open source web application that allows to manage all content and settings on the websites. It was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease. And based on the server side script language PHP and uses a MySQL or MariaDB database for data storage.<br><br>This is open-source Content Management System. And all is free under the Astian Develop Public License (ADPL).";
+$lang['dash_cszcms_link']	= "The official of CSZ CMS website";
 
 // EMAILS FORGET PASSWORD
 $lang['email_reset_subject']    = "Reset your password CSZ-CMS";
@@ -210,6 +221,11 @@ $lang['settings_og_image']		= "Image of og metatag (og:image)";
 $lang['settings_fbappid_header']	= "Facebook Settings";
 $lang['settings_fbapp_id']		= "FB App ID";
 $lang['settings_fbappid_remark']	= 'You can get FB App ID at <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>';
+$lang['settings_google_config']		= "Google API Settings";
+$lang['settings_ga_client_id']		= "Google API Client ID";
+$lang['settings_ga_client_id_remark']	= 'How to Creating a Google API Console project and client ID? <a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank"><b>See here</b></a>';
+$lang['settings_ga_view_id']		= "Google Analytics View ID";
+$lang['settings_ga_view_id_remark']	= 'You can see view ID at <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>Click Here</b></a>. After you "Access Google Analytics" and choose your site analytics. Please see your view ID at "ids"';
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
@@ -409,3 +425,16 @@ $lang['fb_comment_sort']                = "Facebook Comments Sort";
 $lang['fb_comment_sort_top']                = "Top";
 $lang['fb_comment_sort_newest']                = "Newest";
 $lang['fb_comment_sort_oldest']                = "Oldest";
+
+// Brute force login protection
+$lang['bf_protection_header']                = "Brute Force Protection";
+$lang['bf_period_time']                = "Brute Force Protection Period (in minutes)";
+$lang['bf_max_fail']                    = "Maximum Login Failures (in period)";
+$lang['bf_white_list']                    = "Whitelist IP Address";
+$lang['bf_black_list']                    = "Blacklist IP Address";
+$lang['bf_note']                    = "Note";
+$lang['bf_ip_banned_alert']           = "Your IP Address been banned!";
+$lang['bf_settings']                    = "Protection Settings";
+$lang['loginlogs_header']               = "Login Logs";
+$lang['loginlogs_result']                    = "Result";
+$lang['emaillogs_header']               = "Email Logs";

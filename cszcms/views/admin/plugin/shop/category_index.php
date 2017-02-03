@@ -16,7 +16,7 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('shop_category_header') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/plugin/shop/catNew" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('shop_category_addnew') ?></a></div>
         <?php echo  form_open(BASE_URL . '/admin/plugin/shop/catIndexSave'); ?>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>

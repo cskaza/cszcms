@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.1.4'; /* For CMS Version */
+$config['csz_version'] = '1.1.5'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 
@@ -41,3 +41,9 @@ $config['csz_chkverxmlurl_backup'] = 'https://cszcms-d99bf.firebaseapp.com/laste
  */
 $config['csz_upgrade_server_1'] = 'http://jaist.dl.sourceforge.net/project/cszcms/upgrade/';
 $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
+
+/* 
+ * For CSZ CMS Official Website News RSS Feed URL on Backend Dashboard
+ * Defualt Url https://www.cszcms.com/plugin/article/rss
+ */
+$config['csz_backend_feed_url'] = 'https://www.cszcms.com/plugin/article/rss';

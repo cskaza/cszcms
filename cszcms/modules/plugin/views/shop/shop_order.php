@@ -67,69 +67,106 @@
                     </div>                  
                 </div>
                 <div class="panel-footer">
-                    <?php echo form_open(BASE_URL . '/plugin/shop/paymentNow'); ?>
+                    <?php if(!$shop_config->bank_disable || $shop_config->paypal_active || $shop_config->paysbuy_active) { ?>
+                    <?php if((!$shop_config->only_member || $this->session->userdata('user_admin_id')) && $this->session->userdata('admin_type') == 'member') echo form_open(BASE_URL . '/plugin/shop/paymentNow'); ?>
                     <br><br>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h4><?php echo $this->Csz_model->getLabelLang('login_heading')?>:</h4>
                             <?php if(!$this->session->userdata('user_admin_id')){ ?>
-                                <a role="button" class="btn btn-primary" href="<?php echo BASE_URL . '/member/login?url_return='.BASE_URL.'/plugin/shop/placeOrder'?>"><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('login_signin')?></a>
+                                <a role="button" class="btn btn-primary" href="<?php echo BASE_URL . '/member/login/'.$this->Csz_model->encodeURL(BASE_URL.'/plugin/shop/placeOrder'); ?>"><i class="glyphicon glyphicon-user"></i> <?php echo $this->Csz_model->getLabelLang('login_signin')?></a>
                                 <br><br>
-                                <h4><?php echo $this->Csz_model->getLabelLang('shop_contact_detail_txt')?>:</h4>
-                                <div class="control-group">	
-                                    <?php echo form_error('email', '<div class="error">', '</div>'); ?>
-                                    <label class="control-label" for="email"><?php echo $this->Csz_model->getLabelLang('email_address'); ?> <i style="color:red;">*</i></label>
-                                    <?php
-                                    $data = array(
-                                        'name' => 'email',
-                                        'id' => 'email',
-                                        'type' => 'email',
-                                        'required' => 'required',
-                                        'autofocus' => 'true',
-                                        'class' => 'form-control',
-                                        'value' => set_value('email', '', FALSE)
-                                    );
-                                    echo form_input($data);
-                                    ?>
-                                </div> <!-- /control-group -->
-                                <div class="control-group">	
-                                    <?php echo form_error('name', '<div class="error">', '</div>'); ?>
-                                    <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('first_name').' - '.$this->Csz_model->getLabelLang('last_name'); ?> <i style="color:red;">*</i></label>
-                                    <?php
-                                    $data = array(
-                                        'name' => 'name',
-                                        'id' => 'name',
-                                        'required' => 'required',
-                                        'autofocus' => 'true',
-                                        'class' => 'form-control',
-                                        'value' => set_value('name', '', FALSE)
-                                    );
-                                    echo form_input($data);
-                                    ?>
-                                </div> <!-- /control-group -->
-                                <div class="control-group">	
-                                    <?php echo form_error('phone', '<div class="error">', '</div>'); ?>
-                                    <label class="control-label" for="phone"><?php echo $this->Csz_model->getLabelLang('phone'); ?> <i style="color:red;">*</i></label>
-                                    <?php
-                                    $data = array(
-                                        'name' => 'phone',
-                                        'id' => 'phone',
-                                        'required' => 'required',
-                                        'autofocus' => 'true',
-                                        'class' => 'form-control',
-                                        'value' => set_value('phone', '', FALSE)
-                                    );
-                                    echo form_input($data);
-                                    ?>
-                                </div> <!-- /control-group -->
-                                <div class="control-group">
-                                    <label class="control-label" for="address"><?php echo $this->Csz_model->getLabelLang('address'); ?> <i style="color:red;">*</i></label>
-                                    <div class="controls">
-                                        <textarea name="address" id="address" class="form-control" required="required" autofocus="true" rows="4"></textarea>
-                                    </div>
-                                </div> <!-- /control-group -->
+                                <?php if(!$shop_config->only_member){ ?>
+                                    <h4><?php echo $this->Csz_model->getLabelLang('shop_contact_detail_txt')?>:</h4>
+                                    <div class="control-group">	
+                                        <?php echo form_error('email', '<div class="error">', '</div>'); ?>
+                                        <label class="control-label" for="email"><?php echo $this->Csz_model->getLabelLang('email_address'); ?> <i style="color:red;">*</i></label>
+                                        <?php
+                                        $data = array(
+                                            'name' => 'email',
+                                            'id' => 'email',
+                                            'type' => 'email',
+                                            'required' => 'required',
+                                            'autofocus' => 'true',
+                                            'class' => 'form-control',
+                                            'value' => set_value('email', '', FALSE)
+                                        );
+                                        echo form_input($data);
+                                        ?>
+                                    </div> <!-- /control-group -->
+                                    <div class="control-group">	
+                                        <?php echo form_error('name', '<div class="error">', '</div>'); ?>
+                                        <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('first_name').' - '.$this->Csz_model->getLabelLang('last_name'); ?> <i style="color:red;">*</i></label>
+                                        <?php
+                                        $data = array(
+                                            'name' => 'name',
+                                            'id' => 'name',
+                                            'required' => 'required',
+                                            'autofocus' => 'true',
+                                            'class' => 'form-control',
+                                            'value' => set_value('name', '', FALSE)
+                                        );
+                                        echo form_input($data);
+                                        ?>
+                                    </div> <!-- /control-group -->
+                                    <div class="control-group">	
+                                        <?php echo form_error('phone', '<div class="error">', '</div>'); ?>
+                                        <label class="control-label" for="phone"><?php echo $this->Csz_model->getLabelLang('phone'); ?> <i style="color:red;">*</i></label>
+                                        <?php
+                                        $data = array(
+                                            'name' => 'phone',
+                                            'id' => 'phone',
+                                            'required' => 'required',
+                                            'autofocus' => 'true',
+                                            'class' => 'form-control',
+                                            'value' => set_value('phone', '', FALSE)
+                                        );
+                                        echo form_input($data);
+                                        ?>
+                                    </div> <!-- /control-group -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="address"><?php echo $this->Csz_model->getLabelLang('address'); ?> <i style="color:red;">*</i></label>
+                                        <div class="controls">
+                                            <textarea name="address" id="address" class="form-control" required="required" autofocus="true" rows="4"></textarea>
+                                        </div>
+                                    </div> <!-- /control-group -->
+                                    <div class="control-group">										
+                                        <label class="control-label" for="payment_methods"><?php echo $this->Csz_model->getLabelLang('shop_payment_methods'); ?> <i style="color:red;">*</i></label>
+                                        <?php
+                                            $att = 'id="payment_methods" class="form-control" required="required"';
+                                            $data = array();
+                                            if($shop_config->paypal_active){
+                                                $data['paypal'] = 'Paypal';
+                                            }
+                                            if($shop_config->paysbuy_active){
+                                                $data['paysbuy'] = 'Paysbuy';
+                                            }
+                                            if(!$shop_config->bank_disable){
+                                                $data['banktransfer'] = $this->Csz_model->getLabelLang('shop_bank_transfer');
+                                            }
+                                            echo form_dropdown('payment_methods', $data, '', $att);
+                                        ?>	
+                                    </div> <!-- /control-group -->
+                                    <br><br>
+                                    <div class="form-actions">
+                                        <?php
+                                        $data = array(
+                                            'name' => 'submit',
+                                            'id' => 'submit',
+                                            'class' => 'btn btn-lg btn-primary',
+                                            'value' => $this->Csz_model->getLabelLang('shop_payment_btn'),
+                                        );
+                                        echo form_submit($data);
+                                        ?> 
+                                    </div> <!-- /form-actions -->
+                                <?php } ?>
                             <?php }else{ ?>
                                 <div class="alert alert-success" role="alert"><?php echo $this->Csz_model->getLabelLang('shop_your_email_login').' <b>['.$user->email.']</b>'; ?></div>
+                                <ul class="nav nav-pills">
+                                    <li role="presentation"><a href="<?php echo BASE_URL ?>/member/edit"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></b></a></li>
+                                    <li role="presentation"><a href="<?php echo BASE_URL ?>/member/logout"><b><i class="glyphicon glyphicon-log-out"></i> <?php echo $this->Csz_model->getLabelLang('log_out') ?></b></a></li>
+                                </ul><br>
+                                <?php if($this->session->userdata('admin_type') == 'member'){ ?>
                                 <h4><?php echo $this->Csz_model->getLabelLang('shop_contact_detail_txt')?>:</h4>
                                 <div class="control-group">	
                                     <?php echo form_error('email', '<div class="error">', '</div>'); ?>
@@ -188,37 +225,43 @@
                                         <textarea name="address" id="address" class="form-control" required="required" autofocus="true" rows="4"><?php echo $user->address ?></textarea>
                                     </div>
                                 </div> <!-- /control-group -->
+                                <div class="control-group">										
+                                    <label class="control-label" for="payment_methods"><?php echo $this->Csz_model->getLabelLang('shop_payment_methods'); ?> <i style="color:red;">*</i></label>
+                                    <?php
+                                        $att = 'id="payment_methods" class="form-control" required="required"';
+                                        $data = array();
+                                        if($shop_config->paypal_active){
+                                            $data['paypal'] = 'Paypal';
+                                        }
+                                        if($shop_config->paysbuy_active){
+                                            $data['paysbuy'] = 'Paysbuy';
+                                        }
+                                        if(!$shop_config->bank_disable){
+                                            $data['banktransfer'] = $this->Csz_model->getLabelLang('shop_bank_transfer');
+                                        }
+                                        echo form_dropdown('payment_methods', $data, '', $att);
+                                    ?>	
+                                </div> <!-- /control-group -->
+                                <br><br>
+                                <div class="form-actions">
+                                    <?php
+                                    $data = array(
+                                        'name' => 'submit',
+                                        'id' => 'submit',
+                                        'class' => 'btn btn-lg btn-primary',
+                                        'value' => $this->Csz_model->getLabelLang('shop_payment_btn'),
+                                    );
+                                    echo form_submit($data);
+                                    ?> 
+                                </div> <!-- /form-actions -->
+                                <?php } ?>
                             <?php } ?>
-                            <div class="control-group">										
-                                <label class="control-label" for="payment_methods"><?php echo $this->Csz_model->getLabelLang('shop_payment_methods'); ?></label>
-                                <?php
-                                    $att = 'id="payment_methods" class="form-control" ';
-                                    $data = array();
-                                    if($shop_config->paypal_active){
-                                        $data['paypal'] = 'Paypal';
-                                    }
-                                    if($shop_config->paysbuy_active){
-                                        $data['paysbuy'] = 'Paysbuy';
-                                    }
-                                    $data['banktransfer'] = $this->Csz_model->getLabelLang('shop_bank_transfer');
-                                    echo form_dropdown('payment_methods', $data, '', $att);
-                                ?>	
-                            </div> <!-- /control-group -->
                         </div>
                     </div>
-                    <br><br>
-                    <div class="form-actions">
-                        <?php
-                        $data = array(
-                            'name' => 'submit',
-                            'id' => 'submit',
-                            'class' => 'btn btn-lg btn-primary',
-                            'value' => $this->Csz_model->getLabelLang('shop_payment_btn'),
-                        );
-                        echo form_submit($data);
-                        ?> 
-                    </div> <!-- /form-actions -->
-                    <?php echo form_close(); ?>
+                    <?php if((!$shop_config->only_member || $this->session->userdata('user_admin_id')) && $this->session->userdata('admin_type') == 'member') echo form_close(); ?>
+                    <?php }else{ ?>
+                        <center><div class="h3 error"><?php echo $this->Csz_model->getLabelLang('shop_payment_disable') ?></div></center>
+                    <?php } ?>
                 </div>
             </div>
         </div>

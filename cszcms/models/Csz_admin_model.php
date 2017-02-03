@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CSZ CMS
  *
@@ -20,42 +21,42 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Csz_admin_model extends CI_Model {
+class Csz_admin_model extends CI_Model{
 
-    function __construct() {
+    function __construct(){
         parent::__construct();
         $this->load->model('Csz_model');
         $this->load->database();
     }
-    
+
     /**
-    * load_config
-    *
-    * Function for load settings from database
-    *
-    * @return	object or FALSE
-    */
-    public function load_config() {
+     * load_config
+     *
+     * Function for load settings from database
+     *
+     * @return	object or FALSE
+     */
+    public function load_config(){
         $this->db->limit(1, 0);
         $query = $this->db->get('settings');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             $row = $query->row();
             return $row;
-        } else {
+        }else{
             return FALSE;
         }
     }
-    
+
     /**
-    * getLatestVersion
-    *
-    * Function for get latest version from xml url
-    *
-    * @param	string	$xml_url    xml url file
-    * @return	versoin string
-    */
-    public function getLatestVersion($xml_url = '') {
-        if (!$xml_url){
+     * getLatestVersion
+     *
+     * Function for get latest version from xml url
+     *
+     * @param	string	$xml_url    xml url file
+     * @return	versoin string
+     */
+    public function getLatestVersion($xml_url = ''){
+        if(!$xml_url){
             $xml_url = $this->config->item('csz_chkverxmlurl_main');
         }
         $xml_url_bak = $this->config->item('csz_chkverxmlurl_backup');
@@ -70,54 +71,54 @@ class Csz_admin_model extends CI_Model {
             return $xml->version;
         }else{
             $xml_cur = $this->Csz_model->getVersion();
-            if (strpos($xml_cur, 'Beta') !== false) {
+            if(strpos($xml_cur, 'Beta') !== false){
                 $vercur = str_replace(' Beta', '', $xml_cur);
                 $cur_xml = explode('.', $vercur);
-                $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2]-1);
+                $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2] - 1);
             }else{
                 $xml_version = $xml_cur;
             }
             return $xml_version;
         }
     }
-    
+
     /**
-    * chkVerUpdate
-    *
-    * Function for check version for update
-    *
-    * @param	string	$cur_ver    current version
-    * @param	string	$xml_url    xml url file
-    * @return	true or false
-    */
-    public function chkVerUpdate($cur_ver, $xml_url = '') {
+     * chkVerUpdate
+     *
+     * Function for check version for update
+     *
+     * @param	string	$cur_ver    current version
+     * @param	string	$xml_url    xml url file
+     * @return	true or false
+     */
+    public function chkVerUpdate($cur_ver, $xml_url = ''){
         $last_ver = $this->getLatestVersion($xml_url);
-        if ($last_ver) {
+        if($last_ver){
             if(version_compare($cur_ver, $last_ver, '<') === TRUE){
                 return TRUE;
             }else{
                 return FALSE;
             }
-        } else {
+        }else{
             return FALSE;
         }
     }
-    
+
     /**
-    * findNextVersion
-    *
-    * Function for check version for update
-    *
-    * @param	string	$cur_txt    current version
-    * @param	string	$xml_url    xml url file
-    * @return	string or false
-    */
-    public function findNextVersion($cur_txt, $xml_url = '') {
+     * findNextVersion
+     *
+     * Function for check version for update
+     *
+     * @param	string	$cur_txt    current version
+     * @param	string	$xml_url    xml url file
+     * @return	string or false
+     */
+    public function findNextVersion($cur_txt, $xml_url = ''){
         /* sub version is limit x.9.9 */
         $cur_r = array();
         $cur_xml = explode(' ', $cur_txt);
         $last_ver = $this->getLatestVersion($xml_url);
-        if ($cur_xml[0] && $last_ver) {
+        if($cur_xml[0] && $last_ver){
             $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             $cur_r = explode('.', $cur_ver);
             if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
@@ -127,83 +128,86 @@ class Csz_admin_model extends CI_Model {
                     return $last_ver;
                 }else{
                     if($cur_r[1] <= 9 && $cur_r[2] < 9){
-                        return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+                        return $cur_r[0].'.'.$cur_r[1].'.'.($cur_r[2] + 1);
                     }else if($cur_r[1] < 9 && $cur_r[2] == 9){
-                        return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+                        return $cur_r[0].'.'.($cur_r[1] + 1).'.0';
                     }else if($cur_r[1] == 9 && $cur_r[2] == 9){
-                        return ($cur_r[0] + 1) . '.0.0';
+                        return ($cur_r[0] + 1).'.0.0';
                     }else{
                         return FALSE;
                     }
                 }
             }
-        } else {
+        }else{
             return FALSE;
         }
     }
-    
+
     /**
-    * getLang
-    *
-    * Function for get backend language
-    *
-    * @return	string
-    */
-    public function getLang() {
+     * getLang
+     *
+     * Function for get backend language
+     *
+     * @return	string
+     */
+    public function getLang(){
         /* Get Lang for Admin */
         $row = $this->load_config();
         return $row->admin_lang;
     }
 
     /**
-    * getCurPages
-    *
-    * Function for count in the tableget current for backend
-    *
-    * @return	string
-    */
-    public function getCurPages() {
+     * getCurPages
+     *
+     * Function for count in the tableget current for backend
+     *
+     * @return	string
+     */
+    public function getCurPages(){
         $totSegments = $this->uri->total_segments();
-        if (!is_numeric($this->uri->segment($totSegments)) && $this->uri->segment($totSegments) != 'new' && $this->uri->segment($totSegments) != 'add') {
+        if(!is_numeric($this->uri->segment($totSegments)) && $this->uri->segment($totSegments) != 'new' && $this->uri->segment($totSegments) != 'add'){
             $pageURL = $this->uri->segment($totSegments);
-        } else if (is_numeric($this->uri->segment($totSegments)) || $this->uri->segment($totSegments) == 'new' || $this->uri->segment($totSegments) == 'add') {
-            if ($this->uri->segment($totSegments - 1) == 'edit' || $this->uri->segment($totSegments - 1) == 'view') {
+        }else if(is_numeric($this->uri->segment($totSegments)) || $this->uri->segment($totSegments) == 'new' || $this->uri->segment($totSegments) == 'add'){
+            if($this->uri->segment($totSegments - 1) == 'edit' || $this->uri->segment($totSegments - 1) == 'view'){
                 $pageURL = $this->uri->segment($totSegments - 2);
-            } else {
+            }else{
                 $pageURL = $this->uri->segment($totSegments - 1);
             }
         }
-        if ($pageURL == "") {
+        if($pageURL == ""){
             $pageURL = "admin";
         }
         return $pageURL;
     }
 
     /**
-    * countTable
-    *
-    * Function for count in the table
-    *
-    * @param	string	$table    DB table
-    * @return	int
-    */
-    public function countTable($table) {
-        return $this->db->count_all($table);
+     * countTable
+     *
+     * Function for count in the table
+     *
+     * @param	string	$table    DB table
+     * @param	string	$search_sql    DB condition
+     * @return	int
+     */
+    public function countTable($table, $search_sql = ''){
+        //return $this->db->count_all($table);
+        return $this->Csz_model->countData($table, $search_sql);
     }
 
     /**
-    * pageSetting
-    *
-    * Function for pagination settings
-    *
-    * @param	string	$base_url    Base url for link
-    * @param	string	$total_row   Total result
-    * @param	string	$result_per_page    result limit per page
-    * @param	string	$num_link    Number for show the page exclude ...
-    * @param	string	$uri_segment    Uri secment for use pageination
-    */
-    public function pageSetting($base_url, $total_row, $result_per_page, $num_link, $uri_segment = '') {
-        if(!$uri_segment) $uri_segment = 3;
+     * pageSetting
+     *
+     * Function for pagination settings
+     *
+     * @param	string	$base_url    Base url for link
+     * @param	string	$total_row   Total result
+     * @param	string	$result_per_page    result limit per page
+     * @param	string	$num_link    Number for show the page exclude ...
+     * @param	string	$uri_segment    Uri secment for use pageination
+     */
+    public function pageSetting($base_url, $total_row, $result_per_page, $num_link, $uri_segment = ''){
+        if(!$uri_segment)
+            $uri_segment = 3;
         $this->load->library('pagination');
         $config = array();
         $config["base_url"] = $base_url;
@@ -211,7 +215,7 @@ class Csz_admin_model extends CI_Model {
         $config["per_page"] = $result_per_page;
         $config['use_page_numbers'] = TRUE;
         $config['page_query_string'] = FALSE;
-        $config['reuse_query_string'] = TRUE;
+        $config['reuse_query_string'] = FALSE;
         $config['num_links'] = $num_link;
         $config['full_tag_open'] = '<nav><ul class="pagination">';
         $config['full_tag_close'] = '</ul></nav>';
@@ -236,25 +240,27 @@ class Csz_admin_model extends CI_Model {
     }
 
     /**
-    * getIndexData
-    *
-    * Function for get data for index page (support pageination)
-    *
-    * @param	string	$table    DB table
-    * @param	string	$limit    DB limit
-    * @param	string	$offset   DB offset
-    * @param	string	$orderby  DB order by field. Default is 'timestamp_create'
-    * @param	string	$sort     DB sort by asc or desc. Default is 'desc'
-    * @param	string	$search_sql    DB where condition. NULL if not need. Example "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%" for string. And array('field'=>'value') for array
-    * @param	string	$groupby    DB group by field. NULL if not need
-    * @return	array
-    */
-    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc', $search_sql = '', $groupby = '') {
+     * getIndexData
+     *
+     * Function for get data for index page (support pageination)
+     *
+     * @param	string	$table    DB table
+     * @param	string	$limit    DB limit
+     * @param	string	$offset   DB offset
+     * @param	string	$orderby  DB order by field. Default is 'timestamp_create'
+     * @param	string	$sort     DB sort by asc or desc. Default is 'desc'
+     * @param	string	$search_sql    DB where condition. NULL if not need. Example "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%" for string. And array('field'=>'value') for array
+     * @param	string	$groupby    DB group by field. NULL if not need
+     * @return	array
+     */
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc', $search_sql = '', $groupby = ''){
         // Get a list of all user accounts
+        $count = $this->Csz_model->countData($table, $search_sql, $groupby, $orderby, $sort);
+        if($offset > ceil(($count / $limit))) $offset = ceil(($count / $limit));
         $this->db->select('*');
         if($search_sql){
             if(is_array($search_sql)){
-                foreach ($search_sql as $key => $value) {
+                foreach($search_sql as $key => $value){
                     $this->db->where($key, $value);
                 }
             }else{
@@ -262,18 +268,19 @@ class Csz_admin_model extends CI_Model {
             }
         }
         $this->db->order_by($orderby, $sort);
-        if ($groupby) $this->db->group_by($groupby);
-        if ($limit){
-            if(!$offset) $offset = 1;
-            $start = (($offset) * $limit) - $limit;
+        if($groupby)
+            $this->db->group_by($groupby);
+        if($limit && $limit != 0){
+            $start = ($offset * $limit) - $limit;
+            if($start < 0) $start = 0;
             $this->db->limit($limit, $start);
-        }       
+        }
         $query = $this->db->get($table);
         if(!empty($query)){
-            if ($query->num_rows() > 0) {
+            if($query->num_rows() !== 0){
                 $row = $query->result_array();
                 return $row;
-            } else {
+            }else{
                 return FALSE;
             }
         }else{
@@ -282,57 +289,57 @@ class Csz_admin_model extends CI_Model {
     }
 
     /**
-    * getUser
-    *
-    * Function for get member data
-    *
-    * @param	string	$id    member id
-    * @return	object or FALSE
-    */
-    public function getUser($id) {
+     * getUser
+     *
+     * Function for get member data
+     *
+     * @param	string	$id    member id
+     * @return	object or FALSE
+     */
+    public function getUser($id){
         // Get the user details
         $this->db->select("*");
         $this->db->where("user_admin_id", $id);
         $this->db->limit(1, 0);
         $query = $this->db->get('user_admin');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             $row = $query->row();
             return $row;
-        } else {
+        }else{
             return FALSE;
         }
     }
 
     /**
-    * getUserEmail
-    *
-    * Function for get member email
-    *
-    * @param	string	$id    member id
-    * @return	string
-    */
-    public function getUserEmail($id) {
+     * getUserEmail
+     *
+     * Function for get member email
+     *
+     * @param	string	$id    member id
+     * @return	string
+     */
+    public function getUserEmail($id){
         // Get the user email address
         $this->db->select("email");
         $this->db->where("user_admin_id", $id);
         $query = $this->db->get('user_admin');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $rows) {
+        if($query->num_rows() !== 0){
+            foreach($query->result() as $rows){
                 $email = $rows->email;
                 return $email;
             }
         }
     }
-    
+
     /**
-    * chkVisitorUser
-    *
-    * Function for check user is visitor status
-    *
-    * @param	string	$id    member id
-    * @return	int or FALSE
-    */
-    public function chkVisitorUser($id) {
+     * chkVisitorUser
+     *
+     * Function for check user is visitor status
+     *
+     * @param	string	$id    member id
+     * @return	int or FALSE
+     */
+    public function chkVisitorUser($id){
         $this->db->select("backend_visitor");
         $this->db->where("user_admin_id", $id);
         $this->db->limit(1, 0);
@@ -347,20 +354,20 @@ class Csz_admin_model extends CI_Model {
     }
 
     /**
-    * createUser
-    *
-    * Function for create the new user
-    */
-    public function createUser() {
+     * createUser
+     *
+     * Function for create the new user
+     */
+    public function createUser(){
         // Create the user account
-        if ($this->input->post('active')) {
+        if($this->input->post('active')){
             $active = $this->input->post('active', TRUE);
-        } else {
+        }else{
             $active = 0;
         }
-        if ($this->input->post('backend_visitor')) {
+        if($this->input->post('backend_visitor')){
             $backend_visitor = $this->input->post('backend_visitor', TRUE);
-        } else {
+        }else{
             $backend_visitor = 0;
         }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
@@ -369,13 +376,13 @@ class Csz_admin_model extends CI_Model {
             $birthday = '';
         }
         $upload_file = '';
-        if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
-                $paramiter = '_1';
-                $photo_id = time();
-                $uploaddir = 'photo/profile/';
-                $file_f = $_FILES['file_upload']['tmp_name'];
-                $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+        if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+            $paramiter = '_1';
+            $photo_id = time();
+            $uploaddir = 'photo/profile/';
+            $file_f = $_FILES['file_upload']['tmp_name'];
+            $file_name = $_FILES['file_upload']['name'];
+            $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
         }
         $data = array(
             'name' => $this->input->post('name', TRUE),
@@ -400,25 +407,25 @@ class Csz_admin_model extends CI_Model {
     }
 
     /**
-    * updateUser
-    *
-    * Function for update the user
-    *
-    * @param	string	$id    member id
-    * @return	TRUE or FALSE
-    */
-    public function updateUser($id) {
+     * updateUser
+     *
+     * Function for update the user
+     *
+     * @param	string	$id    member id
+     * @return	TRUE or FALSE
+     */
+    public function updateUser($id){
         $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), sha1(md5($this->input->post('cur_password', TRUE))));
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             // update the user account
-            if ($this->input->post('active')) {
+            if($this->input->post('active')){
                 $active = $this->input->post('active', TRUE);
-            } else {
+            }else{
                 $active = 0;
             }
-            if ($this->input->post('backend_visitor') && $this->input->post('user_type') != 'member') {
+            if($this->input->post('backend_visitor') && $this->input->post('user_type') != 'member'){
                 $backend_visitor = $this->input->post('backend_visitor', TRUE);
-            } else {
+            }else{
                 $backend_visitor = 0;
             }
             if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
@@ -426,12 +433,12 @@ class Csz_admin_model extends CI_Model {
             }else{
                 $birthday = '';
             }
-            if ($this->input->post('del_file')) {
+            if($this->input->post('del_file')){
                 $upload_file = '';
-                @unlink('photo/profile/' . $this->input->post('del_file', TRUE));
-            } else {
+                @unlink('photo/profile/'.$this->input->post('del_file', TRUE));
+            }else{
                 $upload_file = $this->input->post('picture');
-                if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
                     $paramiter = '_1';
                     $photo_id = time();
                     $uploaddir = 'photo/profile/';
@@ -442,7 +449,7 @@ class Csz_admin_model extends CI_Model {
             }
             $this->db->set('name', $this->input->post("name", TRUE), TRUE);
             $this->db->set('email', $this->input->post('email', TRUE), TRUE);
-            if ($this->input->post('password') != '') {
+            if($this->input->post('password') != ''){
                 $this->db->set('password', sha1(md5($this->input->post('password', TRUE))), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
                 $this->db->set('md5_lasttime', 'NOW()', FALSE);
@@ -471,164 +478,169 @@ class Csz_admin_model extends CI_Model {
     }
 
     /**
-    * removeUser
-    *
-    * Function for remove the user
-    *
-    * @param	string	$id    member id
-    */
-    public function removeUser($id) {
+     * removeUser
+     *
+     * Function for remove the user
+     *
+     * @param	string	$id    member id
+     */
+    public function removeUser($id){
         // Delete a user account
-        if ($id != 1) {
+        if($id != 1){
             $this->db->delete('user_admin', array('user_admin_id' => $id));
         }
     }
 
     /**
-    * removeData
-    *
-    * Function for remove the user
-    *
-    * @param	string	$table    DB table
-    * @param	string	$id_field    DB id field
-    * @param	string	$id_val    DB id value
-    */
-    public function removeData($table, $id_field, $id_val) {
-        if ($table && $id_field && $id_val) {
+     * removeData
+     *
+     * Function for remove the user
+     *
+     * @param	string	$table    DB table
+     * @param	string	$id_field    DB id field
+     * @param	string	$id_val    DB id value
+     */
+    public function removeData($table, $id_field, $id_val){
+        if($table && $id_field && $id_val){
             // Delete a data from table
             $this->db->delete($table, array($id_field => $id_val));
-        } else {
+        }else{
             return FALSE;
         }
     }
 
     /**
-    * dropTable
-    *
-    * Function for drop the DB table
-    *
-    * @param	string	$table_name    DB table
-    */
-    public function dropTable($table_name) {
+     * dropTable
+     *
+     * Function for drop the DB table
+     *
+     * @param	string	$table_name    DB table
+     */
+    public function dropTable($table_name){
         $this->load->dbforge();
-        if ($table_name) {
+        if($table_name){
             $this->dbforge->drop_table($table_name, TRUE);
-        } else {
+        }else{
             return FALSE;
         }
     }
 
     /**
-    * chkMd5Time
-    *
-    * Function for check the user md5 time for forgot the password link
-    *
-    * @param	string	$md5    md5 from user DB
-    * @param	string	$table    DB table
-    * @return	TRUE or FALSE
-    */
-    public function chkMd5Time($md5, $table = '') {
-        if(!$table) $table = 'user_admin';
+     * chkMd5Time
+     *
+     * Function for check the user md5 time for forgot the password link
+     *
+     * @param	string	$md5    md5 from user DB
+     * @param	string	$table    DB table
+     * @return	TRUE or FALSE
+     */
+    public function chkMd5Time($md5, $table = ''){
+        if(!$table)
+            $table = 'user_admin';
         $this->db->select("*");
         $this->db->where("md5_hash", $md5);
         $this->db->where("md5_lasttime < DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
         $this->db->limit(1, 0);
         $query = $this->db->get($table);
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->where('md5_hash', $md5);
             $this->db->update($table);
             return TRUE;
-        } else {
+        }else{
             return FALSE;
         }
     }
-    
+
     /**
-    * sessionLoginChk
-    *
-    * Function for check the session from client browser
-    *
-    * @return	TRUE or FALSE
-    */
-    public function sessionLoginChk() {
+     * sessionLoginChk
+     *
+     * Function for check the session from client browser
+     *
+     * @return	TRUE or FALSE
+     */
+    public function sessionLoginChk(){
         $numcount = 0;
         if($this->session->userdata('session_id')){
             $numcount = $this->Csz_model->countData('user_admin', "session_id = '".$this->session->userdata('session_id')."' AND email = '".$this->session->userdata('admin_email')."'");
-            if ($numcount !== FALSE && $numcount > 0) {
+            if($numcount !== FALSE && $numcount > 0){
                 return TRUE;
-            } else {
+            }else{
                 return FALSE;
             }
         }
     }
 
     /**
-    * login
-    *
-    * Function for check the email and password login
-    *
-    * @param	string	$email    Email Address
-    * @param	string	$password    Password
-    * @return	string
-    */
-    public function login($email, $password) {
-        if ($this->Csz_model->chkCaptchaRes() == '') {
+     * login
+     *
+     * Function for check the email and password login
+     *
+     * @param	string	$email    Email Address
+     * @param	string	$password    Password
+     * @return	string
+     */
+    public function login($email, $password){
+        if($this->Csz_model->chkCaptchaRes() == ''){
             return 'CAPTCHA_WRONG';
-        } else {
-            $query = $this->Csz_model->chkPassword($email, $password, "user_type != 'member'");
-            if ($query->num_rows() == 1) {
-                $rows = $query->row();
-                if (!empty($rows)) {
-                    $session_id = session_id();
-                    $this->db->set('session_id', $session_id, TRUE);
-                    $this->db->where('user_admin_id', $rows->user_admin_id);
-                    $this->db->update('user_admin');
-                    $data = array(
-                        'user_admin_id' => $rows->user_admin_id,
-                        'admin_name' => $rows->name,
-                        'admin_email' => $rows->email,
-                        'admin_type' => $rows->user_type,
-                        'admin_visitor' => $rows->backend_visitor,
-                        'session_id' => $session_id,
-                        'admin_logged_in' => TRUE,
-                    );
-                    $this->session->set_userdata($data);
-                    return 'SUCCESS';
+        }else{
+            if($this->Csz_model->chkIPBaned($email) === FALSE){
+                $query = $this->Csz_model->chkPassword($email, $password, "user_type != 'member'");
+                if($query->num_rows() == 1){
+                    $rows = $query->row();
+                    if(!empty($rows)){
+                        $session_id = session_id();
+                        $this->db->set('session_id', $session_id, TRUE);
+                        $this->db->where('user_admin_id', $rows->user_admin_id);
+                        $this->db->update('user_admin');
+                        $data = array(
+                            'user_admin_id' => $rows->user_admin_id,
+                            'admin_name' => $rows->name,
+                            'admin_email' => $rows->email,
+                            'admin_type' => $rows->user_type,
+                            'admin_visitor' => $rows->backend_visitor,
+                            'session_id' => $session_id,
+                            'admin_logged_in' => TRUE,
+                        );
+                        $this->session->set_userdata($data);
+                        return 'SUCCESS';
+                    }else{
+                        return 'INVALID';
+                    }
                 }else{
                     return 'INVALID';
                 }
-            } else {
-                return 'INVALID';
+            }else{
+                return 'IP_BANNED';
             }
         }
     }
-    
+
     /**
-    * getLangISOfromName
-    *
-    * Function for get the language code from name
-    *
-    * @param	string	$lang_name    Language name
-    * @return	string
-    */
-    public function getLangISOfromName($lang_name) {
+     * getLangISOfromName
+     *
+     * Function for get the language code from name
+     *
+     * @param	string	$lang_name    Language name
+     * @return	string
+     */
+    public function getLangISOfromName($lang_name){
         /* Get Language ISO from language config file (for backend system) */
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
         return $lang_config[$lang_name];
     }
-    
+
     /**
-    * getLangNamefromISO
-    *
-    * Function for get the language name from code
-    *
-    * @param	string	$lang_iso    Language code
-    * @return	string
-    */
-    public function getLangNamefromISO($lang_iso) {
+     * getLangNamefromISO
+     *
+     * Function for get the language name from code
+     *
+     * @param	string	$lang_iso    Language code
+     * @return	string
+     */
+    public function getLangNamefromISO($lang_iso){
         /* Get Language ISO from language config file (for backend system) */
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
@@ -638,7 +650,6 @@ class Csz_admin_model extends CI_Model {
         }else{
             return 'english';
         }
-        
     }
 
     /**
@@ -648,9 +659,9 @@ class Csz_admin_model extends CI_Model {
      * Please do not remove or change this fuction
      *
      */
-    public function cszCopyright() {
+    public function cszCopyright(){
         /* Please do not remove or change this function */
-        $csz_copyright = '<br><span class="copyright">Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> Version ' . $this->Csz_model->getVersion() . '</span>';
+        $csz_copyright = '<br><span class="copyright">Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> Version '.$this->Csz_model->getVersion().'</span>';
         return $csz_copyright;
     }
 
@@ -662,14 +673,14 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$more_css    additional css
      * @return	String
      */
-    public function coreCss($more_css = '') {
+    public function coreCss($more_css = ''){
         $core_css = link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag('assets/css/flag-icon.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
-                foreach ($more_css as $value) {
+                foreach($more_css as $value){
                     if($value){
                         $core_css.= link_tag($value);
                     }
@@ -689,20 +700,20 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$more_js    additional js
      * @return	String
      */
-    public function coreJs($more_js = '') {
-        $core_js = '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-1.12.4.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery-ui.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/jquery.ui.touch-punch.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . BASE_URL . '/assets/js/tinymce/tinymce.min.js"></script>';       
+    public function coreJs($more_js = ''){
+        $core_js = '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery-1.12.4.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/bootstrap.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery-ui.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery.ui.touch-punch.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/tinymce/tinymce.min.js"></script>';
         if(!empty($more_js)){
             if(is_array($more_js)){
-                foreach ($more_js as $value) {
+                foreach($more_js as $value){
                     if($value){
                         $core_js.= '<script type="text/javascript" src="'.$value.'"></script>';
                     }
                 }
-            }else{     
+            }else{
                 $core_js.= '<script type="text/javascript" src="'.$more_js.'"></script>';
             }
         }
@@ -715,9 +726,10 @@ class Csz_admin_model extends CI_Model {
      * Function for load core metatag
      *
      * @param	string	$desc_txt    page description
+     * @param	string	$more_metatags    additional meta tags text
      * @return	String
      */
-    public function coreMetatags($desc_txt) {
+    public function coreMetatags($desc_txt, $more_metatags = ''){
         $meta = array(
             array('name' => 'robots', 'content' => 'no-cache, no-cache'),
             array('name' => 'description', 'content' => $desc_txt),
@@ -729,6 +741,17 @@ class Csz_admin_model extends CI_Model {
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
         );
         $return_meta = meta($meta);
+        if(!empty($more_metatags)){
+            if(is_array($more_metatags)){
+                foreach($more_metatags as $value){
+                    if($value){
+                        $return_meta.= $value;
+                    }
+                }
+            }else{
+                $return_meta.= $more_metatags;
+            }
+        }
         return $return_meta;
     }
 
@@ -739,14 +762,14 @@ class Csz_admin_model extends CI_Model {
      *
      * @return	object or FALSE
      */
-    public function getSocial() {
+    public function getSocial(){
         $this->db->select("*");
         $this->db->order_by("footer_social_id", "asc");
         $query = $this->db->get('footer_social');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             $row = $query->result();
             return $row;
-        } else {
+        }else{
             return FALSE;
         }
     }
@@ -756,16 +779,16 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for update the social
      */
-    public function updateSocial() {
+    public function updateSocial(){
         $this->db->select("*");
         $query = $this->db->get("footer_social");
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $rows) {
+        if($query->num_rows() !== 0){
+            foreach($query->result() as $rows){
                 $data = array();
                 $data['social_url'] = $this->input->post($rows->social_name, TRUE);
-                if (isset($_POST['checkbox' . $rows->social_name])) {
-                    $data['active'] = $this->input->post('checkbox' . $rows->social_name, TRUE);
-                } else {
+                if(isset($_POST['checkbox'.$rows->social_name])){
+                    $data['active'] = $this->input->post('checkbox'.$rows->social_name, TRUE);
+                }else{
                     $data['active'] = 0;
                 }
                 $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -780,8 +803,8 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for update the settings
      */
-    public function updateSettings() {
-        $additional_js = str_replace('<script', '</script><script', str_replace('</script>','',$this->input->post('additional_js')));
+    public function updateSettings(){
+        $additional_js = str_replace('<script', '</script><script', str_replace('</script>', '', $this->input->post('additional_js')));
         $data = array(
             'themes_config' => $this->input->post('siteTheme', TRUE),
             'admin_lang' => $this->input->post('siteLang', TRUE),
@@ -803,15 +826,17 @@ class Csz_admin_model extends CI_Model {
             'sendmail_path' => $this->input->post('sendmail_path', TRUE),
             'member_confirm_enable' => $this->input->post('member_confirm_enable', TRUE),
             'member_close_regist' => $this->input->post('member_close_regist', TRUE),
+            'ga_client_id' => $this->input->post('ga_client_id', TRUE),
+            'ga_view_id' => $this->input->post('ga_view_id', TRUE),
             'fbapp_id' => $this->input->post('fbapp_id', TRUE),
         );
 
-        if ($this->input->post('del_file')) {
+        if($this->input->post('del_file')){
             $upload_file = '';
-            @unlink('photo/logo/' . $this->input->post('del_file', TRUE));
-        } else {
+            @unlink('photo/logo/'.$this->input->post('del_file', TRUE));
+        }else{
             $upload_file = $this->input->post('siteLogo');
-            if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
+            if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg'){
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/logo/';
@@ -821,12 +846,12 @@ class Csz_admin_model extends CI_Model {
             }
         }
         $data['site_logo'] = $upload_file;
-        if ($this->input->post('del_og_image')) {
+        if($this->input->post('del_og_image')){
             $upload_file1 = '';
-            @unlink('photo/logo/' . $this->input->post('del_og_image', TRUE));
-        } else {
+            @unlink('photo/logo/'.$this->input->post('del_og_image', TRUE));
+        }else{
             $upload_file1 = $this->input->post('ogImage');
-            if ($_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg') {
+            if($_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg'){
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/logo/';
@@ -836,7 +861,7 @@ class Csz_admin_model extends CI_Model {
             }
         }
         $data['og_image'] = $upload_file1;
-        if ($this->input->post('siteTitle') != "")
+        if($this->input->post('siteTitle') != "")
             $data['site_name'] = $this->input->post('siteTitle', TRUE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("settings_id", 1);
@@ -849,7 +874,7 @@ class Csz_admin_model extends CI_Model {
      * Function for upload file
      *
      * @param	string	$photo    File from $_FILE['tmp_name']
-     * @param	string	$photo_name    File name from $_FILE['name']
+     * @param	string	$photo_name1    File name from $_FILE['name']
      * @param	string	$tmp_photo    Temp file. Can null if noting
      * @param	string	$uploaddir    Path to save the file
      * @param	string	$photo_id    New file name
@@ -858,68 +883,67 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$maxSizeR    Max the photo size (pixel). For image file only. Default 1900px
      * @return	String (New filename)
      */
-    public function file_upload($photo, $photo_name, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1900) {
-        if ($yearR) {
-            $year = $yearR . "/";
-        } else {
-            $year = date("Y") . "/";
+    public function file_upload($photo, $photo_name1, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1900){
+        $photo_name = $this->security->sanitize_filename($photo_name1);
+        if($yearR){
+            $year = $yearR."/";
+        }else{
+            $year = date("Y")."/";
         }
-
-        if ($uploaddir) {
-            if (file_exists($uploaddir) === FALSE) {
+        if($uploaddir){
+            if(file_exists($uploaddir) === FALSE){
                 mkdir($uploaddir, 0777);
             }
-            if (file_exists($uploaddir . $year) === FALSE) {
-                mkdir($uploaddir . $year, 0777);
+            if(file_exists($uploaddir.$year) === FALSE){
+                mkdir($uploaddir.$year, 0777);
             }
         }
-        if (!$photo) {
+        if(!$photo){
             $photo = $tmp_photo;
-        } else {
+        }else{
             $ext = explode(".", $photo_name);
             $ext_n = count($ext) - 1;
-            if (strtoupper($ext[$ext_n]) == "JPG" || strtoupper($ext[$ext_n]) == "JPEG" || strtoupper($ext[$ext_n]) == "PNG" || strtoupper($ext[$ext_n]) == "GIF") {
-                $org_filename = $photo_id . $paramiter . "-org." . $ext[$ext_n];
-                $newfile = $uploaddir . $year . $org_filename;
-                if (is_uploaded_file($photo)) { // upload original image
-                    if (!copy($photo, "$newfile")) {
-                        echo "<script>alert('Error: not copy');</script>";
+            if(strtoupper($ext[$ext_n]) == "JPG" || strtoupper($ext[$ext_n]) == "JPEG" || strtoupper($ext[$ext_n]) == "PNG" || strtoupper($ext[$ext_n]) == "GIF"){
+                $org_filename = $photo_id.$paramiter."-org.".$ext[$ext_n];
+                $newfile = $uploaddir.$year.$org_filename;
+                if(is_uploaded_file($photo)){ // upload original image
+                    if(!copy($photo, "$newfile")){
+                        echo "<script>alert('Error: File not uploaded!');</script>";
                     }
                 }
-                if (@filesize($newfile) > (1024 * 1024 * 5)) {
+                if(@filesize($newfile) > (1024 * 1024 * 5)){
                     $photo = "";
                     @unlink($newfile);
-                } else {
-                    list($w, $h) = getimagesize($newfile);
-                    if (($w > $maxSizeR) || ($h > $maxSizeR) && (!strtoupper($ext[$ext_n]) == "GIF")) {
-                        $im = $this->thumbnail($org_filename, $uploaddir . $year, $maxSizeR); //resize image
-                        $small_filename = $photo_id . $paramiter . "." . $ext[$ext_n];
-                        $this->imageToFile($im, $uploaddir . $year . $small_filename); //make image to file for resize
-                        $photo = $year . $small_filename;
+                }else{
+                    list($w, $h) = @getimagesize($newfile);
+                    if(($w > $maxSizeR) || ($h > $maxSizeR) && (!strtoupper($ext[$ext_n]) == "GIF")){
+                        $im = $this->thumbnail($org_filename, $uploaddir.$year, $maxSizeR); //resize image
+                        $small_filename = $photo_id.$paramiter.".".$ext[$ext_n];
+                        $this->imageToFile($im, $uploaddir.$year.$small_filename); //make image to file for resize
+                        $photo = $year.$small_filename;
                         @unlink($newfile);
-                    } else {
-                        $photo = $year . $org_filename;
+                    }else{
+                        $photo = $year.$org_filename;
                     }
                 }
-                if ($tmp_photo)
-                    @unlink($uploaddir . $tmp_photo);
-            } else if (strtoupper($ext[$ext_n]) == "PDF" || strtoupper($ext[$ext_n]) == "DOC" || strtoupper($ext[$ext_n]) == "DOCX" || strtoupper($ext[$ext_n]) == "ODT" || strtoupper($ext[$ext_n]) == "TXT" || strtoupper($ext[$ext_n]) == "ODG" || strtoupper($ext[$ext_n]) == "ODP" || strtoupper($ext[$ext_n]) == "ODS" || strtoupper($ext[$ext_n]) == "ZIP" || strtoupper($ext[$ext_n]) == "RAR" || strtoupper($ext[$ext_n]) == "PSD" || strtoupper($ext[$ext_n]) == "CSV" || strtoupper($ext[$ext_n]) == "XLS" || strtoupper($ext[$ext_n]) == "XLSX" || strtoupper($ext[$ext_n]) == "PPT" || strtoupper($ext[$ext_n]) == "PPTX" || strtoupper($ext[$ext_n]) == "MP3" || strtoupper($ext[$ext_n]) == "WAV" || strtoupper($ext[$ext_n]) == "MP4" || strtoupper($ext[$ext_n]) == "FLV" || strtoupper($ext[$ext_n]) == "WMA" || strtoupper($ext[$ext_n]) == "AVI" || strtoupper($ext[$ext_n]) == "MOV" || strtoupper($ext[$ext_n]) == "M4V" || strtoupper($ext[$ext_n]) == "WMV" || strtoupper($ext[$ext_n]) == "M3U" || strtoupper($ext[$ext_n]) == "PLS") {
-                $final_filename = $photo_id . $paramiter . "." . $ext[$ext_n];
-                $newfile = $uploaddir . $year . $final_filename;
-                if (is_uploaded_file($photo)) {
-                    if (!copy($photo, "$newfile")) {
-                        print "Error Uploading File.";
-                        exit();
+                if($tmp_photo)
+                    @unlink($uploaddir.$tmp_photo);
+            } else if(strtoupper($ext[$ext_n]) == "PDF" || strtoupper($ext[$ext_n]) == "DOC" || strtoupper($ext[$ext_n]) == "DOCX" || strtoupper($ext[$ext_n]) == "ODT" || strtoupper($ext[$ext_n]) == "TXT" || strtoupper($ext[$ext_n]) == "ODG" || strtoupper($ext[$ext_n]) == "ODP" || strtoupper($ext[$ext_n]) == "ODS" || strtoupper($ext[$ext_n]) == "ZIP" || strtoupper($ext[$ext_n]) == "RAR" || strtoupper($ext[$ext_n]) == "PSD" || strtoupper($ext[$ext_n]) == "CSV" || strtoupper($ext[$ext_n]) == "XLS" || strtoupper($ext[$ext_n]) == "XLSX" || strtoupper($ext[$ext_n]) == "PPT" || strtoupper($ext[$ext_n]) == "PPTX" || strtoupper($ext[$ext_n]) == "MP3" || strtoupper($ext[$ext_n]) == "WAV" || strtoupper($ext[$ext_n]) == "MP4" || strtoupper($ext[$ext_n]) == "FLV" || strtoupper($ext[$ext_n]) == "WMA" || strtoupper($ext[$ext_n]) == "AVI" || strtoupper($ext[$ext_n]) == "MOV" || strtoupper($ext[$ext_n]) == "M4V" || strtoupper($ext[$ext_n]) == "WMV" || strtoupper($ext[$ext_n]) == "M3U" || strtoupper($ext[$ext_n]) == "PLS"){
+                $final_filename = $photo_id.$paramiter.".".$ext[$ext_n];
+                $newfile = $uploaddir.$year.$final_filename;
+                if(is_uploaded_file($photo)){
+                    if(!copy($photo, "$newfile")){
+                        echo "<script>alert('Error: File not uploaded!');</script>";
                     }
                 }
-                $photo = $year . $final_filename;
-                if (@filesize($newfile) > (1024 * 1024 * 100)) { // Limit 100 MB
+                $photo = $year.$final_filename;
+                if(@filesize($newfile) > (1024 * 1024 * 100)){ // Limit 100 MB
                     $photo = "";
                     @unlink($newfile);
                 }
-                if ($tmp_photo)
-                    @unlink($uploaddir . $tmp_photo);
-            }else {
+                if($tmp_photo)
+                    @unlink($uploaddir.$tmp_photo);
+            }else{
                 $photo = "";
             }
         }
@@ -931,11 +955,11 @@ class Csz_admin_model extends CI_Model {
      * $maxSize. Returns the new image resource or false on error.
      * Author: mthorn.net
      */
-    private function thumbnail($inputFileName, $uploaddir, $maxSize = 500) {
-        $info = @getimagesize($uploaddir . $inputFileName);
+    private function thumbnail($inputFileName, $uploaddir, $maxSize = 500){
+        $info = @getimagesize($uploaddir.$inputFileName);
         $type = isset($info['type']) ? $info['type'] : $info[2];
         // Check support of file type
-        if (!(imagetypes() & $type)) {
+        if(!(imagetypes() & $type)){
             // Server does not support file type
             return false;
         }
@@ -945,22 +969,22 @@ class Csz_admin_model extends CI_Model {
         $wRatio = $maxSize / $width;
         $hRatio = $maxSize / $height;
         // Using imagecreatefromstring will automatically detect the file type
-        $sourceImage = imagecreatefromstring(file_get_contents($uploaddir . $inputFileName));
+        $sourceImage = imagecreatefromstring(file_get_contents($uploaddir.$inputFileName));
         // Calculate a proportional width and height no larger than the max size.
-        if (($width <= $maxSize) && ($height <= $maxSize)) {
+        if(($width <= $maxSize) && ($height <= $maxSize)){
             // Input is smaller than thumbnail, do nothing
             return $sourceImage;
-        } elseif (($wRatio * $height) < $maxSize) {
+        }elseif(($wRatio * $height) < $maxSize){
             // Image is horizontal
             $tHeight = ceil($wRatio * $height);
             $tWidth = $maxSize;
-        } else {
+        }else{
             // Image is vertical
             $tWidth = ceil($hRatio * $width);
             $tHeight = $maxSize;
         }
         $thumb = imagecreatetruecolor($tWidth, $tHeight);
-        if ($sourceImage === false) {
+        if($sourceImage === false){
             // Could not load image
             return false;
         }
@@ -975,12 +999,12 @@ class Csz_admin_model extends CI_Model {
      * $quality is only used for jpegs.
      * Author: mthorn.net
      */
-    private function imageToFile($im, $fileName, $quality = 75) {
-        if (!$im || file_exists($fileName)) {
+    private function imageToFile($im, $fileName, $quality = 75){
+        if(!$im || file_exists($fileName)){
             return false;
         }
         $ext = strtolower(substr($fileName, strrpos($fileName, '.')));
-        switch ($ext) {
+        switch($ext){
             case '.gif':
                 imagegif($im, $fileName);
                 break;
@@ -1005,13 +1029,13 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for save the navigation by sort
      */
-    public function sortNav() {
+    public function sortNav(){
         $i = 0;
         $main_arrange = 1;
         $menu_id = $this->input->post('menu_id', TRUE);
-        if (!empty($menu_id)) {
-            while ($i < count($menu_id)) {
-                if ($menu_id[$i]) {
+        if(!empty($menu_id)){
+            while($i < count($menu_id)){
+                if($menu_id[$i]){
                     $this->db->set('arrange', $main_arrange, FALSE);
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->where("page_menu_id", $menu_id[$i]);
@@ -1022,11 +1046,11 @@ class Csz_admin_model extends CI_Model {
             }
         }
         $menusub_id = $this->input->post('menusub_id', TRUE);
-        if (!empty($menusub_id)) {
-            foreach (array_keys($menusub_id) as $key) {
+        if(!empty($menusub_id)){
+            foreach(array_keys($menusub_id) as $key){
                 $sub_arrange = 1;
-                for ($i = 0; $i < count($menusub_id[$key]); $i++) {
-                    if ($menusub_id[$key][$i]) {
+                for($i = 0; $i < count($menusub_id[$key]); $i++){
+                    if($menusub_id[$key][$i]){
                         $this->db->set('arrange', $sub_arrange, FALSE);
                         $this->db->set('timestamp_update', 'NOW()', FALSE);
                         $this->db->where("page_menu_id", $menusub_id[$key][$i]);
@@ -1046,15 +1070,15 @@ class Csz_admin_model extends CI_Model {
      *
      * @return	array
      */
-    public function getPagesAll() {
+    public function getPagesAll(){
         $this->db->select("*");
         $query = $this->db->get('pages');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             return $query->result_array();
         }
         return array();
     }
-    
+
     /**
      * getPluginAll
      *
@@ -1062,12 +1086,12 @@ class Csz_admin_model extends CI_Model {
      *
      * @return	array
      */
-    public function getPluginAll() {
+    public function getPluginAll(){
         $this->db->select("*");
         $this->db->where("plugin_active", 1);
         $this->db->order_by("plugin_name", "asc");
         $query = $this->db->get('plugin_manager');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             return $query->result_array();
         }
         return array();
@@ -1082,19 +1106,19 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$lang    language code
      * @return	object or FALSE
      */
-    public function getAllMenu($drop_page_menu_id = 0, $lang) {
-        if ($drop_page_menu_id) {
+    public function getAllMenu($drop_page_menu_id = 0, $lang){
+        if($drop_page_menu_id){
             $this->db->where("drop_page_menu_id", $drop_page_menu_id);
-        } else {
+        }else{
             $this->db->where("drop_page_menu_id", 0);
         }
         $this->db->where("lang_iso", $lang);
         $this->db->order_by("arrange", "asc");
         $query = $this->db->get('page_menu');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             $row = $query->result();
             return $row;
-        } else {
+        }else{
             return FALSE;
         }
     }
@@ -1106,11 +1130,11 @@ class Csz_admin_model extends CI_Model {
      *
      * @return	array
      */
-    public function getDropMenuAll() {
+    public function getDropMenuAll(){
         $this->db->select("*");
         $this->db->where('drop_menu', 1);
         $query = $this->db->get('page_menu');
-        if ($query->num_rows() > 0) {
+        if($query->num_rows() !== 0){
             return $query->result_array();
         }
         return array();
@@ -1124,9 +1148,9 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$mainmenu_id    for main menu. Default is 0
      * @return	int
      */
-    public function getMenuArrange($mainmenu_id = 0) {
+    public function getMenuArrange($mainmenu_id = 0){
         $this->db->select("*");
-        if ($mainmenu_id) {
+        if($mainmenu_id){
             $this->db->where('drop_menu', 0);
         }
         $this->db->where('drop_page_menu_id', $mainmenu_id);
@@ -1139,14 +1163,18 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for insert new menu
      */
-    public function insertMenu() {
+    public function insertMenu(){
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
         $o_link_input = $this->input->post('url_link', TRUE);
-        $replace_arr = array('https://','http://');
-        $other_link = str_replace($replace_arr, '', $o_link_input);
+        if (substr($o_link_input, 0, 1) === '#') {
+            $other_link = substr($o_link_input, 1);
+        }else{
+            $replace_arr = array('https://', 'http://');
+            $other_link = str_replace($replace_arr, '', $o_link_input);
+        }
         $protocal = $this->input->post('protocal', TRUE);
         if(!$other_link){
             $protocal = '';
@@ -1174,7 +1202,7 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    Menu id
      */
-    public function updateMenu($id) {
+    public function updateMenu($id){
         // Update the menu
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
@@ -1183,8 +1211,12 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
         $o_link_input = $this->input->post('url_link', TRUE);
-        $replace_arr = array('https://','http://');
-        $other_link = str_replace($replace_arr, '', $o_link_input);
+        if (substr($o_link_input, 0, 1) === '#') {
+            $other_link = substr($o_link_input, 1);
+        }else{
+            $replace_arr = array('https://', 'http://');
+            $other_link = str_replace($replace_arr, '', $o_link_input);
+        }
         $protocal = $this->input->post('protocal', TRUE);
         if(!$other_link){
             $protocal = '';
@@ -1206,19 +1238,19 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$lang_iso    language code
      */
-    public function findLangDataUpdate($lang_iso) {
-        $query = $this->db->get_where($table = 'pages', 'lang_iso = \'' . $lang_iso . '\'');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $rows) {
+    public function findLangDataUpdate($lang_iso){
+        $query = $this->db->get_where($table = 'pages', 'lang_iso = \''.$lang_iso.'\'');
+        if($query->num_rows() !== 0){
+            foreach($query->result() as $rows){
                 $this->db->set('lang_iso', $this->Csz_model->getDefualtLang(), TRUE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);
                 $this->db->where("pages_id", $rows->pages_id);
                 $this->db->update('pages');
             }
         }
-        $query = $this->db->get_where($table = 'page_menu', 'lang_iso = \'' . $lang_iso . '\'');
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $rows) {
+        $query = $this->db->get_where($table = 'page_menu', 'lang_iso = \''.$lang_iso.'\'');
+        if($query->num_rows() !== 0){
+            foreach($query->result() as $rows){
                 $this->db->set('lang_iso', $this->Csz_model->getDefualtLang(), TRUE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);
                 $this->db->where("page_menu_id", $rows->page_menu_id);
@@ -1234,7 +1266,7 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for create new language
      */
-    public function insertLang() {
+    public function insertLang(){
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $data = array(
             'lang_name' => $this->input->post('lang_name', TRUE),
@@ -1260,15 +1292,15 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    language id
      */
-    public function updateLang($id) {
+    public function updateLang($id){
         $old_lang = $this->Csz_model->getValue('lang_iso', 'lang_iso', 'lang_iso_id', $id, 1);
         if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label') && $old_lang->lang_iso != $this->input->post("lang_iso", TRUE)){
             $this->load->dbforge();
             $fields = array(
                 'lang_'.$old_lang->lang_iso => array(
-                        'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
-                        'type' => 'TEXT',
-                        'null' => FALSE,
+                    'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
+                    'type' => 'TEXT',
+                    'null' => FALSE,
                 ),
             );
             $this->dbforge->modify_column('general_label', $fields);
@@ -1283,30 +1315,30 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('lang_iso', $old_lang->lang_iso);
         $this->db->update('pages');
-        
+
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $this->db->set('lang_name', $this->input->post("lang_name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('country', $this->input->post('country', TRUE), TRUE);
         $this->db->set('country_iso', $this->input->post('country_iso', TRUE), TRUE);
-        if ($id != 1) {
+        if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('lang_iso_id', $id);
         $this->db->update('lang_iso');
     }
-    
+
     /**
      * syncLabelLang
      *
      * Function for synchronize the language with general label for frontend
      */
-    public function syncLabelLang() {
+    public function syncLabelLang(){
         $this->load->dbforge();
         $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
         $count_lang = $this->countTable('lang_iso');
-        foreach ($lang as $value) {
+        foreach($lang as $value){
             if($count_lang > 1){
                 if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
                     $fields = array('lang_'.$value['lang_iso'] => array('type' => 'TEXT', 'null' => FALSE));
@@ -1316,7 +1348,7 @@ class Csz_admin_model extends CI_Model {
                 if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
                     $fields = array(
                         'lang_en' => array(
-                                'name' => 'lang_'.$value['lang_iso'],'type' => 'TEXT','null' => FALSE,
+                            'name' => 'lang_'.$value['lang_iso'], 'type' => 'TEXT', 'null' => FALSE,
                         ),
                     );
                     $this->dbforge->modify_column('general_label', $fields);
@@ -1324,7 +1356,7 @@ class Csz_admin_model extends CI_Model {
             }
         }
     }
-    
+
     /**
      * updateLabel
      *
@@ -1332,9 +1364,9 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    general label id
      */
-    public function updateLabel($id) {
+    public function updateLabel($id){
         $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
-        foreach ($lang as $value) {
+        foreach($lang as $value){
             $this->db->set('lang_'.$value['lang_iso'], $this->input->post("lang_".$value['lang_iso'], TRUE), TRUE);
         }
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -1347,13 +1379,13 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for create new page
      */
-    public function insertPage() {
+    public function insertPage(){
         $page_name_input = $this->input->post('page_name', TRUE);
-        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
                 $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin') {
-            $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
+                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin'){
+            $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
@@ -1382,14 +1414,14 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    page id
      */
-    public function updatePage($id) {
+    public function updatePage($id){
         // Update the page
         $page_name_input = $this->input->post('page_name', TRUE);
-        if ($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
                 $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin') {
-            $page_name_input = 'pages_' . $this->input->post('page_name', TRUE);
+                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin'){
+            $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
         }
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
@@ -1403,7 +1435,7 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('page_keywords', $this->input->post('page_keywords', TRUE), TRUE);
         $this->db->set('page_desc', $this->input->post('page_desc', TRUE), TRUE);
         $this->db->set('content', $content, TRUE);
-        if ($id != 1) {
+        if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -1420,7 +1452,7 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$year    year
      * @param	string	$fileupload    file name from file_upload function
      */
-    public function insertFileUpload($year, $fileupload) {
+    public function insertFileUpload($year, $fileupload){
         $data = array(
             'year' => $year,
             'file_upload' => $fileupload,
@@ -1435,7 +1467,7 @@ class Csz_admin_model extends CI_Model {
      *
      * Function for insert the forms
      */
-    public function insertForms() {
+    public function insertForms(){
         $this->load->dbforge();
         // Create the new forms
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
@@ -1473,16 +1505,16 @@ class Csz_admin_model extends CI_Model {
         $sel_option_val = $this->input->post('sel_option_val', TRUE);
         $field_required = $this->input->post('field_required', TRUE);
         $fields = array(
-            'form_' . $form_name . '_id' => array(
+            'form_'.$form_name.'_id' => array(
                 'type' => 'INT',
                 'constraint' => 11,
                 'auto_increment' => TRUE
             ),
         );
         $this->dbforge->add_field($fields);
-        if (count($field_name) > 0) {
-            for ($i = 0; $i < count($field_name); $i++) {
-                if ($field_name[$i]) {
+        if(count($field_name) > 0){
+            for($i = 0; $i < count($field_name); $i++){
+                if($field_name[$i]){
                     $data = array(
                         'form_main_id' => $form_main_id,
                         'field_type' => $field_type[$i],
@@ -1513,9 +1545,9 @@ class Csz_admin_model extends CI_Model {
             ),
         );
         $this->dbforge->add_field($fields);
-        $this->dbforge->add_key('form_' . $form_name . '_id', TRUE);
+        $this->dbforge->add_key('form_'.$form_name.'_id', TRUE);
         $attributes = array('ENGINE' => 'MyISAM', 'CHARACTER SET' => 'utf8', 'COLLATE' => 'utf8_general_ci', ' AUTO_INCREMENT' => '1');
-        $this->dbforge->create_table('form_' . $form_name, TRUE, $attributes);
+        $this->dbforge->create_table('form_'.$form_name, TRUE, $attributes);
     }
 
     /**
@@ -1525,7 +1557,7 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    form id
      */
-    public function updateForms($id) {
+    public function updateForms($id){
         $this->load->dbforge();
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
@@ -1557,6 +1589,7 @@ class Csz_admin_model extends CI_Model {
         $form_field_id = $this->input->post('form_field_id', TRUE);
         $field_name1 = $this->input->post('field_name1', TRUE);
         $field_oldname = $this->input->post('field_oldname', TRUE);
+        $field_oldtype = $this->input->post('field_oldtype', TRUE);
         $field_type1 = $this->input->post('field_type1', TRUE);
         $field_id1 = $this->input->post('field_id1', TRUE);
         $field_class1 = $this->input->post('field_class1', TRUE);
@@ -1565,9 +1598,9 @@ class Csz_admin_model extends CI_Model {
         $field_label1 = $this->input->post('field_label1', TRUE);
         $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
         $field_required1 = $this->input->post('field_required1', TRUE);
-        if (count($field_oldname) > 0) {
-            for ($i = 0; $i < count($field_oldname); $i++) {
-                if ($field_oldname[$i]) {
+        if(count($field_oldname) > 0){
+            for($i = 0; $i < count($field_oldname); $i++){
+                if($field_oldname[$i]){
                     $data = array(
                         'form_main_id' => $id,
                         'field_type' => $field_type1[$i],
@@ -1583,12 +1616,19 @@ class Csz_admin_model extends CI_Model {
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->where('form_field_id', $form_field_id[$i]);
                     $this->db->update('form_field', $data);
-                    if ($field_oldname[$i] != $field_name1[$i]) {
-                        $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
-                        $mod_field = $this->dbforge->modify_column('form_' . $form_name, $fields);
-                        if($mod_field === FALSE){
-                            $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
-                            $this->dbforge->add_column('form_' . $form_name, $fields);
+                    if($field_oldname[$i] != $field_name1[$i]){
+                        if($field_oldtype[$i] != 'button' && $field_oldtype[$i] != 'reset' && $field_oldtype[$i] != 'submit' && $field_oldtype[$i] != 'label'){
+                            if($field_type1[$i] == 'button' || $field_type1[$i] == 'reset' || $field_type1[$i] == 'submit' || $field_type1[$i] == 'label'){
+                                $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);
+                            }else{
+                                $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
+                                $this->dbforge->modify_column('form_'.$form_name, $fields);
+                            }
+                        }else{
+                            if($field_type1[$i] != 'button' && $field_type1[$i] != 'reset' && $field_type1[$i] != 'submit' && $field_type1[$i] != 'label'){
+                                $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
+                                $this->dbforge->add_column('form_'.$form_name, $fields);
+                            }
                         }
                     }
                 }
@@ -1605,9 +1645,9 @@ class Csz_admin_model extends CI_Model {
         $field_label = $this->input->post('field_label', TRUE);
         $sel_option_val = $this->input->post('sel_option_val', TRUE);
         $field_required = $this->input->post('field_required', TRUE);
-        if (count($field_name) > 0) {
-            for ($i = 0; $i < count($field_name); $i++) {
-                if ($field_name[$i]) {
+        if(count($field_name) > 0){
+            for($i = 0; $i < count($field_name); $i++){
+                if($field_name[$i]){
                     $data = array(
                         'form_main_id' => $id,
                         'field_type' => $field_type[$i],
@@ -1624,7 +1664,7 @@ class Csz_admin_model extends CI_Model {
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->insert('form_field', $data);
                     $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
-                    $this->dbforge->add_column('form_' . $form_name, $fields);
+                    $this->dbforge->add_column('form_'.$form_name, $fields);
                 }
             }
         }
@@ -1640,13 +1680,14 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$name    field name
      * @return  array
      */
-    public function preTypeFields($type, $name) {
+    public function preTypeFields($type, $name){
         $fields = array();
-        switch ($type) {
+        switch($type){
             case 'checkbox':
                 $fields = array(
                     $name => array(
                         'type' => 'INT',
+                        'null' => TRUE,
                         'constraint' => 11
                     ),
                 );
@@ -1655,6 +1696,7 @@ class Csz_admin_model extends CI_Model {
                 $fields = array(
                     $name => array(
                         'type' => 'DATE',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1667,6 +1709,7 @@ class Csz_admin_model extends CI_Model {
                     $name => array(
                         'type' => 'VARCHAR',
                         'constraint' => '255',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1674,6 +1717,7 @@ class Csz_admin_model extends CI_Model {
                 $fields = array(
                     $name => array(
                         'type' => 'TEXT',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1693,14 +1737,15 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$newname   new field name
      * @return  array
      */
-    public function renameFields($type, $oldname, $newname) {
+    public function renameFields($type, $oldname, $newname){
         $fields = array();
-        switch ($type) {
+        switch($type){
             case 'checkbox':
                 $fields = array(
                     $oldname => array(
                         'name' => $newname,
                         'type' => 'INT',
+                        'null' => TRUE,
                         'constraint' => 11
                     ),
                 );
@@ -1710,6 +1755,7 @@ class Csz_admin_model extends CI_Model {
                     $oldname => array(
                         'name' => $newname,
                         'type' => 'DATE',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1723,6 +1769,7 @@ class Csz_admin_model extends CI_Model {
                         'name' => $newname,
                         'type' => 'VARCHAR',
                         'constraint' => '255',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1731,6 +1778,7 @@ class Csz_admin_model extends CI_Model {
                     $oldname => array(
                         'name' => $newname,
                         'type' => 'TEXT',
+                        'null' => TRUE,
                     ),
                 );
                 break;
@@ -1748,8 +1796,8 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$sql_file    sql file path
      * @return  FALSE if sql file not found
      */
-    public function execSqlFile($sql_file) {
-        if (file_exists($sql_file)) {
+    public function execSqlFile($sql_file){
+        if(file_exists($sql_file)){
             $this->load->helper('file');
             $backup = read_file($sql_file);
             $sql1 = preg_replace('#/\*.*?\*/#s', '', $backup);
@@ -1758,10 +1806,10 @@ class Csz_admin_model extends CI_Model {
             array_pop($sqls);
             $i = 0;
             foreach($sqls as $statement){
-                if ( trim($statement) != null ) {
-                    $sql = trim($statement) . ";";
+                if(trim($statement) != null){
+                    $sql = trim($statement).";";
                     $this->db->query(trim($sql));
-                    if ( $i >= 1000 ) { /* When 1000 query. Is sleep 5 sec. */
+                    if($i >= 1000){ /* When 1000 query. Is sleep 5 sec. */
                         sleep(5);
                         $i = 0;
                     }
@@ -1772,7 +1820,7 @@ class Csz_admin_model extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /**
      * chkPluginActive
      *
@@ -1781,7 +1829,7 @@ class Csz_admin_model extends CI_Model {
      * @param	string	$plugin_urlrewrite    plugin url rewrite
      * @return  TRUE or FALSE
      */
-    public function chkPluginActive($plugin_urlrewrite) {
+    public function chkPluginActive($plugin_urlrewrite){
         if($plugin_urlrewrite){
             $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite", $plugin_urlrewrite, 1);
             if($status->plugin_active){
@@ -1793,13 +1841,13 @@ class Csz_admin_model extends CI_Model {
             return FALSE;
         }
     }
-    
+
     /**
      * insertWidget
      *
      * Function for insert the new widget
      */
-    public function insertWidget() {
+    public function insertWidget(){
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $data = array(
@@ -1820,7 +1868,7 @@ class Csz_admin_model extends CI_Model {
      *
      * @param	string	$id    widget id
      */
-    public function updateWidget($id) {
+    public function updateWidget($id){
         // Update the lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $this->db->set('widget_name', $this->input->post("widget_name", TRUE));
@@ -1830,6 +1878,55 @@ class Csz_admin_model extends CI_Model {
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('widget_xml_id', $id);
         $this->db->update('widget_xml');
+    }
+    
+    /**
+     * updateBFSettings
+     *
+     * Function for update the Brute Force Protection settings
+     */
+    public function updateBFSettings(){
+        $this->db->set('bf_protect_period', $this->input->post("bf_protect_period", TRUE));
+        $this->db->set('max_failure', $this->input->post("max_failure", TRUE));
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where("login_security_config_id", 1);
+        $this->db->update('login_security_config');
+    }
+    
+    /**
+     * saveWhiteIP
+     *
+     * Function for insert the new whitelist IP Address
+     */
+    public function saveWhiteIP(){
+        $ip_address = $this->input->post('ip_address', TRUE);
+        if($this->Csz_model->chkBFwhitelistIP($ip_address) === FALSE){
+            $data = array(
+                'ip_address' => $ip_address,
+                'note' => $this->input->post('note', TRUE),
+            );
+            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->insert('whitelist_ip', $data);
+            $this->removeData('blacklist_ip', 'ip_address', $ip_address);
+        }
+    }
+    
+    /**
+     * saveBlackIP
+     *
+     * Function for insert the new blacklist IP Address
+     */
+    public function saveBlackIP(){
+        $ip_address = $this->input->post('ip_address', TRUE);
+        if($this->Csz_model->chkBFblacklistIP($ip_address) === FALSE){
+            $data = array(
+                'ip_address' => $ip_address,
+                'note' => $this->input->post('note', TRUE),
+            );
+            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->insert('blacklist_ip', $data);
+            $this->removeData('whitelist_ip', 'ip_address', $ip_address);
+        }
     }
 
 }

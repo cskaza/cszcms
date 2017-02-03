@@ -23,6 +23,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('album_name', $album->album_name, FALSE)
             );
             echo form_input($data);
@@ -35,6 +36,7 @@
                 'name' => 'keyword',
                 'id' => 'keyword',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('keyword', $album->keyword, FALSE)
             );
             echo form_input($data);
@@ -50,7 +52,6 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'maxlength' => '255',
                 'value' => set_value('short_desc', $album->short_desc, FALSE)
             );
             echo form_input($data);
@@ -158,7 +159,7 @@
             <em><?php echo  $this->lang->line('gallery_fileallow') ?></em>
         </blockquote>
         <?php echo  form_open(BASE_URL . '/admin/plugin/gallery/uploadIndexSave'); ?>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>

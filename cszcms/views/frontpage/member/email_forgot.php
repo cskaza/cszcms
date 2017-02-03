@@ -10,19 +10,23 @@
                 <div class="panel-body text-center">
                     <?php if(!$chksts){ ?>
                         <?php echo form_open(BASE_URL . '/member/forgot') ?>
-                        <?php echo form_error('email', '<div class="error">', '</div>'); ?>	
-                        <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
-                        <?php
-                        $data = array(
-                            'name' => 'email',
-                            'id' => 'email',
-                            'type' => 'email',
-                            'class' => 'form-control',
-                            'required' => 'required',
-                            'autofocus' => 'true',
-                            'value' => set_value('email'),
-                            'placeholder' => $this->Csz_model->getLabelLang('login_email')
-                        ); echo form_input($data); ?>
+                        <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                        <div class="form-group has-feedback">
+                            <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
+                            <?php
+                            $data = array(
+                                'name' => 'email',
+                                'id' => 'email',
+                                'type' => 'email',
+                                'class' => 'form-control',
+                                'required' => 'required',
+                                'autofocus' => 'true',
+                                'value' => set_value('email'),
+                                'placeholder' => $this->Csz_model->getLabelLang('login_email')
+                            );
+                            echo form_input($data); ?>
+                            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                        </div>
                         <br>
                         <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                         <br>

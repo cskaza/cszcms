@@ -24,6 +24,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('lang_name', $lang->lang_name)
             );
             echo form_input($data);
@@ -58,6 +59,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('country', $lang->country)
             );
             echo form_input($data);

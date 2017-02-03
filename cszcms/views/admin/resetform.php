@@ -12,9 +12,9 @@
                     <?php if(!$success_chk){ ?>
                     <b><?php echo $this->lang->line('forgot_email'); ?>: <?php echo $email?></b>
                     <?php echo form_open() ?>
-                    <div class="control-group">		
-                        <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="password"><?php echo $this->lang->line('user_new_pass'); ?>*</label>
+                    <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                    <div class="form-group has-feedback">
+                        <label for="password" class="control-label"><?php echo $this->lang->line('user_new_pass') ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'password',
@@ -26,12 +26,12 @@
                             'autocomplete' => 'off'
                         );
                         echo form_password($data);
-                        ?>			
+                        ?>
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div> <!-- /control-group -->
-
-                    <div class="control-group">	
-                        <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
-                        <label class="control-label" for="con_password"><?php echo $this->lang->line('user_new_confirm'); ?>*</label>
+                    <?php echo form_error('con_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                    <div class="form-group has-feedback">
+                        <label for="con_password" class="control-label"><?php echo $this->lang->line('user_new_confirm') ?>*</label>
                         <?php
                         $data = array(
                             'name' => 'con_password',
@@ -43,7 +43,8 @@
                             'autocomplete' => 'off'
                         );
                         echo form_password($data);
-                        ?>			
+                        ?>
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div> <!-- /control-group -->
                     <br>
                     <button class="btn btn-lg btn-primary" type="submit" id="forget_submit"><?php echo $this->lang->line('forgot_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-lg" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo  BASE_URL . '/admin' ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>

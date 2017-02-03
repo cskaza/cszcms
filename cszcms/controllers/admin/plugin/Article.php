@@ -127,19 +127,19 @@ class Article extends CI_Controller {
     public function catIndexSave(){
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        $i = 0;
+        $count = 0;
         $arrange = 1;
         $article_db_id = $this->input->post('article_db_id', TRUE);
         if (!empty($article_db_id)) {
-            while ($i < count($article_db_id)) {
-                if ($article_db_id[$i]) {
+            while ($count < count($article_db_id)) {
+                if ($article_db_id[$count]) {
                     $this->db->set('arrange', $arrange, FALSE);
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
-                    $this->db->where("article_db_id", $article_db_id[$i]);
+                    $this->db->where("article_db_id", $article_db_id[$count]);
                     $this->db->update('article_db');
                     $arrange++;
                 }
-                $i++;
+                $count++;
             }
         }
         $this->db->cache_delete_all();

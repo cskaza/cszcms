@@ -110,6 +110,7 @@
                     <div class="control-group">										
                         <label class="control-label" for="birthday"><?php echo $this->Csz_model->getLabelLang('birthday'); ?></label><br>
                         <?php
+                            if($users->birthday === NULL) $users->birthday = '0000-00-00';
                             list($year,$month,$day) = explode('-', $users->birthday);
                             $att = 'id="year" class="form-control-static" ';
                             $data = array();

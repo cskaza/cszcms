@@ -70,13 +70,17 @@ class Headfoot_html extends CI_Model {
         if(!empty($get_mainmenu)){
             foreach ($get_mainmenu as $rs){
                 $page_url_rs = $this->Csz_model->getPageUrlFromID($rs->pages_id);
-                if($page_url_rs && !$rs->other_link && !$rs->plugin_menu){
+                if($page_url_rs && (!$rs->other_link && !$rs->plugin_menu) || ($rs->other_link == NULL && $rs->plugin_menu == NULL)){
                     $page_link = base_url().$page_url_rs;
                     $target = '';
-                }else if($rs->other_link && !$page_url_rs && !$rs->plugin_menu){
+                }else if($rs->other_link && (!$page_url_rs && !$rs->plugin_menu) || ($page_url_rs == NULL && $rs->plugin_menu == NULL)){
                     $page_link = $rs->other_link;
-                    $target = ' target="_blank"';
-                }else if(!$rs->other_link && !$page_url_rs && $rs->plugin_menu){
+                    if (substr($rs->other_link, 0, 1) === '#') {
+                        $target = '';
+                    }else{
+                        $target = ' target="_blank"';
+                    }
+                }else if((!$rs->other_link && !$page_url_rs) || ($rs->other_link == NULL && $page_url_rs == NULL) && $rs->plugin_menu){
                     if($rs->plugin_menu == 'member'){
                         $page_link = base_url().$rs->plugin_menu;
                     }else{
@@ -103,13 +107,17 @@ class Headfoot_html extends CI_Model {
                     if(!empty($drop_menu)){
                         foreach ($drop_menu as $rs_sub){
                             $page_url_rs_sub = $this->Csz_model->getPageUrlFromID($rs_sub->pages_id);
-                            if($page_url_rs_sub && !$rs_sub->other_link && !$rs_sub->plugin_menu){
+                            if($page_url_rs_sub && (!$rs_sub->other_link && !$rs_sub->plugin_menu) || ($rs_sub->other_link == NULL && $rs_sub->plugin_menu == NULL)){
                                 $page_link_sub = base_url().$page_url_rs_sub;
                                 $target_sub = '';      
-                            }else if($rs_sub->other_link && !$page_url_rs_sub  && !$rs_sub->plugin_menu){
+                            }else if($rs_sub->other_link && (!$page_url_rs_sub  && !$rs_sub->plugin_menu) || ($page_url_rs_sub == NULL  && $rs_sub->plugin_menu == NULL)){
                                 $page_link_sub = $rs_sub->other_link;
-                                $target_sub = ' target="_blank"';       
-                            }else if(!$page_url_rs_sub && !$rs_sub->other_link && $rs_sub->plugin_menu){
+                                if (substr($rs_sub->other_link, 0, 1) === '#') {
+                                    $target_sub = '';
+                                }else{
+                                    $target_sub = ' target="_blank"';
+                                }  
+                            }else if((!$page_url_rs_sub && !$rs_sub->other_link) || ($page_url_rs_sub == NULL && $rs_sub->other_link == NULL) && $rs_sub->plugin_menu){
                                 if($rs_sub->plugin_menu == 'member'){
                                     $page_link_sub = base_url().$rs_sub->plugin_menu;
                                 }else{
@@ -200,79 +208,6 @@ class Headfoot_html extends CI_Model {
     }
     
     /**
-     * admin_topmenu
-     *
-     * Function for top menu on backend
-     *
-     * @return  string
-     */
-    public function admin_topmenu(){
-        if(admin_helper::is_a_member($this->session->userdata('admin_type')) === FALSE){
-            $config = $this->Csz_admin_model->load_config();
-            $userdata = $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id'));
-            $html = '<nav class="navbar navbar-inverse navbar-fixed-top">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="'.base_url().'admin">'.$this->lang->line('backend_system').'</a>
-                    </div>            
-                    <div id="navbar" class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="'.base_url().'" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> '.$this->lang->line('nav_view_site').'</a></li>                        
-                            <li><a href="'.base_url().'admin/users/edit/'.$this->session->userdata('user_admin_id').'"><span class="glyphicon glyphicon-user"></span> '.$userdata->name.'</a></li>
-                            <li class="dropdown">
-                                <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('nav_content_menu').'</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="'.base_url().'admin/forms"><i class="glyphicon glyphicon-modal-window"></i> '.$this->lang->line('forms_header').'</a></li>
-                                    <li><a href="'.base_url().'admin/widget"><i class="glyphicon glyphicon-gift"></i> '.$this->lang->line('widget_header').'</a></li>
-                                    <li><a href="'.base_url().'admin/uploadindex"><i class="glyphicon glyphicon-picture"></i> '.$this->lang->line('uploadfile_header').'</a></li>
-                                    <li><a href="'.base_url().'admin/pages"><i class="glyphicon glyphicon-file"></i> '.$this->lang->line('pages_header').'</a></li> 
-                                    <li><a href="'.base_url().'admin/navigation"><i class="glyphicon glyphicon-object-align-top"></i> '.$this->lang->line('nav_nav_header').'</a></li>';                             
-                                    if($config->link_statistic_active) $html.= '<li><a href="'.base_url().'admin/linkstats"><i class="glyphicon glyphicon-stats"></i> '.$this->lang->line('linkstats_header').'</a></li>';
-                                $html.= '</ul>
-                            </li>
-                            <li class="dropdown">
-                                <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('nav_general_menu').'</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="'.base_url().'admin/lang"><i class="glyphicon glyphicon-globe"></i> '.$this->lang->line('lang_header').'</a></li>';
-                            if($this->session->userdata('admin_type') == 'admin'){ 
-                                $html.= '<li><a href="'.base_url().'admin/genlabel"><i class="glyphicon glyphicon-globe"></i> '.$this->lang->line('genlabel_header').'</a></li>'; 
-                                $html.= '<li><a href="'.base_url().'admin/settings"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('settings_header').'</a></li>'; 
-                            }
-                            $html.= '<li><a href="'.base_url().'admin/social"><i class="glyphicon glyphicon-share"></i> '.$this->lang->line('social_header').'</a></li>';
-                            if($this->session->userdata('admin_type') == 'admin'){ $html.= '<li><a href="'.base_url().'admin/upgrade"><i class="glyphicon glyphicon-compressed"></i> '.$this->lang->line('maintenance_header').'</a></li>'; }   
-                            $html.= '<li><a href="'.base_url().'admin/plugin"><i class="glyphicon glyphicon-gift"></i> '.$this->lang->line('pluginmgr_header').'</a></li>';
-                            $html.= '<li><a href="'.base_url().'admin/users"><i class="glyphicon glyphicon-user"></i> '.$this->lang->line('nav_admin_users').'</a></li>
-                                     <hr><li><a href="'.BASE_URL.'/admin/upgrade/clearAllCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearallcache').'</a></li>
-                                         <li><a href="'.BASE_URL.'/admin/upgrade/clearAllDBCache" onclick="return confirm(\''.$this->lang->line('delete_message').'\');"><i class="glyphicon glyphicon-erase"></i> '.$this->lang->line('btn_clearalldbcache').'</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="glyphicon glyphicon-menu-hamburger"></i> '.$this->lang->line('pluginmgr_header').'</a>
-                                <ul class="dropdown-menu">';
-                                    $plugin_arr = $this->Csz_model->getValueArray('plugin_name,plugin_urlrewrite', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_active = '1'", '', 0);
-                                    if($plugin_arr !== FALSE){
-                                        foreach ($plugin_arr as $value) {
-                                            $html.= '<li><a href="'.base_url().'admin/plugin/'.$value['plugin_urlrewrite'].'"><i class="glyphicon glyphicon-gift"></i> '.$value['plugin_name'].'</a></li>';
-                                        }
-                                    }
-                                $html.= '</ul>
-                            </li>
-                            <li><a href="'.base_url().'admin/logout"><i class="glyphicon glyphicon-log-out"></i> '.$this->lang->line('nav_logout').'</a></li>
-                        </ul> 
-                    </div>           
-                </div>
-            </nav>';
-            return $html;
-        }
-    }
-    
-    /**
      * admin_leftli
      *
      * Function for left menu on backend <li></li>
@@ -285,27 +220,23 @@ class Headfoot_html extends CI_Model {
      * @param	string	$submenu   Submenu (TRUE or FALSE)
      * @return  string
      */
-    private function admin_leftli($cur_page,$page_chk,$url,$menu_name,$icon,$submenu = FALSE){
+    private function admin_leftli($cur_page,$page_chk,$url,$menu_name,$icon){
         $active = '';
         $glyp_icon = '';
-        $sub_menu = '';
         if($cur_page == $page_chk){
             $active = ' class="active"';
         }
         if($icon){
-            $glyp_icon = '<span class="glyphicon '.$icon.'"></span> ';
+            $glyp_icon = '<i class="'.$icon.'"></i> ';
         }
-        if($submenu){
-            $sub_menu = '- ';
-        }
-        $html = '<li'.$active.'><a href="'.base_url().''.$url.'">'.$sub_menu.''.$glyp_icon.''.$menu_name.'</a></li>';
+        $html = '<li'.$active.'><a href="'.base_url().''.$url.'">'.$glyp_icon.'<span>'.$menu_name.'</span></a></li>';
         return $html;
     }
 
     /**
      * admin_leftmenu
      *
-     * Function for left menu on backend
+     * Function for left menu on backend (For AdminLTE Template)
      *
      * @param	string	$cur_page   Current page
      * @return  string
@@ -313,60 +244,74 @@ class Headfoot_html extends CI_Model {
     public function admin_leftmenu($cur_page){
         if(admin_helper::is_a_member($this->session->userdata('admin_type')) === FALSE){
             $config = $this->Csz_admin_model->load_config();
-            $html = '<ul class="nav nav-sidebar">';
-            $html.= $this->admin_leftli($cur_page,'admin','admin',$this->lang->line('nav_dash'),'glyphicon-dashboard');
-            $html.= '</ul><hr>';
-            $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="#" title="'.$this->lang->line('nav_content_menu').'" onclick="ChkHideShow(\'content_menu\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_content_menu').'</a></li>';
+            $html = $this->admin_leftli($cur_page,'admin','admin',$this->lang->line('nav_dash'),'fa fa-dashboard');
+            $html.= $this->admin_leftli($cur_page,'analytics','admin/analytics',$this->lang->line('nav_analytics'),'fa fa-google');
+            /* Start Content Menu */
             if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms'  || $cur_page == 'linkstats'){
-                $gel_settings_display = "";
+                $content_display = "active ";
             }else{
-                $gel_settings_display = "display: none;";
+                $content_display = "";
             }
-            $html.= '<ul id="content_menu" class="nav nav-sidebar" style="'.$gel_settings_display.'padding: 0 25px;">';
-            $html.= $this->admin_leftli($cur_page,'forms','admin/forms',$this->lang->line('forms_header'),'glyphicon-modal-window',TRUE);
-            $html.= $this->admin_leftli($cur_page,'widget','admin/widget',$this->lang->line('widget_header'),'glyphicon-gift',TRUE);
-            $html.= $this->admin_leftli($cur_page,'uploadindex','admin/uploadindex',$this->lang->line('uploadfile_header'),'glyphicon-picture',TRUE);
-            $html.= $this->admin_leftli($cur_page,'pages','admin/pages',$this->lang->line('pages_header'),'glyphicon-file',TRUE);
-            $html.= $this->admin_leftli($cur_page,'navigation','admin/navigation',$this->lang->line('nav_nav_header'),'glyphicon-object-align-top',TRUE);       
-            if($config->link_statistic_active) $html.= $this->admin_leftli($cur_page,'linkstats','admin/linkstats',$this->lang->line('linkstats_header'),'glyphicon-stats',TRUE);
-            $html.= '</ul></ul><hr>';
-            $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="#" title="'.$this->lang->line('nav_gel_settings').'" onclick="ChkHideShow(\'gel_settings\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('nav_gel_settings').'</a></li>';
+            $html.= '<li class="'.$content_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
+            $html.= $this->admin_leftli($cur_page,'forms','admin/forms',$this->lang->line('forms_header'),'glyphicon glyphicon-modal-window');
+            $html.= $this->admin_leftli($cur_page,'widget','admin/widget',$this->lang->line('widget_header'),'glyphicon glyphicon-gift');
+            $html.= $this->admin_leftli($cur_page,'uploadindex','admin/uploadindex',$this->lang->line('uploadfile_header'),'glyphicon glyphicon-picture');
+            $html.= $this->admin_leftli($cur_page,'pages','admin/pages',$this->lang->line('pages_header'),'glyphicon glyphicon-file');
+            $html.= $this->admin_leftli($cur_page,'navigation','admin/navigation',$this->lang->line('nav_nav_header'),'glyphicon glyphicon-object-align-top');       
+            if($config->link_statistic_active) $html.= $this->admin_leftli($cur_page,'linkstats','admin/linkstats',$this->lang->line('linkstats_header'),'glyphicon glyphicon-stats');
+            $html.= '</ul></li>';
+            /* End Content Menu */
+            /* Start General Menu */
             if($cur_page == 'users' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin'){
-                $gel_settings_display = "";
+                $gel_settings_display = "active ";
             }else{
-                $gel_settings_display = "display: none;";
+                $gel_settings_display = "";
             }
-            $html.= '<ul id="gel_settings" class="nav nav-sidebar" style="'.$gel_settings_display.'padding: 0 25px;">';
-            $html.= $this->admin_leftli($cur_page,'lang','admin/lang',$this->lang->line('lang_header'),'glyphicon-globe',TRUE);
+            $html.= '<li class="'.$gel_settings_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('nav_gel_settings').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
+            $html.= $this->admin_leftli($cur_page,'lang','admin/lang',$this->lang->line('lang_header'),'glyphicon glyphicon-globe');
             if($this->session->userdata('admin_type') == 'admin'){ 
-                $html.= $this->admin_leftli($cur_page,'genlabel','admin/genlabel',$this->lang->line('genlabel_header'),'glyphicon-globe',TRUE); 
-                $html.= $this->admin_leftli($cur_page,'settings','admin/settings',$this->lang->line('settings_header'),'glyphicon-cog',TRUE); 
+                $html.= $this->admin_leftli($cur_page,'genlabel','admin/genlabel',$this->lang->line('genlabel_header'),'glyphicon glyphicon-globe'); 
+                $html.= $this->admin_leftli($cur_page,'settings','admin/settings',$this->lang->line('settings_header'),'glyphicon glyphicon-cog'); 
             }
-            $html.= $this->admin_leftli($cur_page,'social','admin/social',$this->lang->line('social_header'),'glyphicon-share',TRUE);
-            if($this->session->userdata('admin_type') == 'admin'){ $html.= $this->admin_leftli($cur_page,'upgrade','admin/upgrade',$this->lang->line('maintenance_header'),'glyphicon-compressed',TRUE); }        
-            $html.= $this->admin_leftli($cur_page,'plugin','admin/plugin',$this->lang->line('pluginmgr_header'),'glyphicon-gift',TRUE);
-            $html.= $this->admin_leftli($cur_page,'users','admin/users',$this->lang->line('nav_admin_users'),'glyphicon-user',TRUE);
-            $html.= '</ul></ul><hr>';
-            
-            $html.= '<ul class="nav nav-sidebar">';
-            $html.= '<li><a href="#" title="'.$this->lang->line('pluginmgr_header').'" onclick="ChkHideShow(\'plugins\');"><span class="glyphicon glyphicon-menu-hamburger"></span> '.$this->lang->line('pluginmgr_header').'</a></li>';
+            $html.= $this->admin_leftli($cur_page,'social','admin/social',$this->lang->line('social_header'),'glyphicon glyphicon-share');
+            if($this->session->userdata('admin_type') == 'admin'){ $html.= $this->admin_leftli($cur_page,'upgrade','admin/upgrade',$this->lang->line('maintenance_header'),'glyphicon glyphicon-compressed'); }        
+            $html.= $this->admin_leftli($cur_page,'plugin','admin/plugin',$this->lang->line('pluginmgr_header'),'glyphicon glyphicon-gift');
+            $html.= $this->admin_leftli($cur_page,'users','admin/users',$this->lang->line('nav_admin_users'),'glyphicon glyphicon-user');
+            $html.= '</ul></li>';
+            /* End General Menu */
+            /* Start Plugin Menu */
             $plugin_arr = $this->Csz_model->getValueArray('plugin_name,plugin_urlrewrite', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_active = '1'", '', 0);
             $plugin_menu = '';
             if($plugin_arr !== FALSE){
                 foreach ($plugin_arr as $value) {
                     $plugin_url[] = $value['plugin_urlrewrite'];
-                    $plugin_menu.= $this->admin_leftli($cur_page,$value['plugin_urlrewrite'],'admin/plugin/'.$value['plugin_urlrewrite'],$value['plugin_name'],'glyphicon-gift',TRUE);
+                    $plugin_menu.= $this->admin_leftli($cur_page,$value['plugin_urlrewrite'],'admin/plugin/'.$value['plugin_urlrewrite'],$value['plugin_name'],'glyphicon glyphicon-gift');
                 }
             }
             (in_array($cur_page, $plugin_url)) ? $plugin_display = "" : $plugin_display = "display: none;";
-            $html.= '<ul id="plugins" class="nav nav-sidebar" style="'.$plugin_display.'padding: 0 25px;">';
+            $html.= '<li class="'.$plugin_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('pluginmgr_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
             $html.= $plugin_menu;
-            $html.= '</ul></ul><hr>';
-            $html.= '<ul class="nav nav-sidebar">
-                        <li><a href="'.base_url().'admin/logout"><span class="glyphicon glyphicon-log-out"></span> '.$this->lang->line('nav_logout').'</a></li>
-                    </ul>';
+            $html.= '</ul></li>';            
+            /* End Plugin Menu */
+            /* Start brute force login protection Menu */
+            if($this->session->userdata('admin_type') == 'admin'){
+                if($cur_page == 'loginlogs' || $cur_page == 'bfsettings' || $cur_page == 'emaillogs'){
+                    $bf_login_display = "active ";
+                }else{
+                    $bf_login_display = "";
+                }
+                $html.= '<li class="'.$bf_login_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('bf_protection_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+                $html.= '<ul class="treeview-menu">';
+                $html.= $this->admin_leftli($cur_page,'emaillogs','admin/emaillogs',$this->lang->line('emaillogs_header'),'glyphicon glyphicon-envelope');
+                $html.= $this->admin_leftli($cur_page,'loginlogs','admin/loginlogs',$this->lang->line('loginlogs_header'),'glyphicon glyphicon-list-alt');
+                $html.= $this->admin_leftli($cur_page,'bfsettings','admin/bfsettings',$this->lang->line('bf_settings'),'glyphicon glyphicon-cog');
+                $html.= '</ul></li>';
+            }
+            /* End brute force login protection Menu */
+            $html.= '<br><li><a href="' . base_url() . 'admin/logout"><i class="fa fa-sign-out text-red"></i> <span>' . $this->lang->line('nav_logout') . '</span></a></li>';
             return $html;
         }
     }
@@ -380,8 +325,7 @@ class Headfoot_html extends CI_Model {
      */
     public function admin_footer(){
         /* Please do not remove or change this function */
-        $html = '<footer>
-                    <hr>
+        $html = '<footer class="main-footer">
                     <div class="row">
                         <div class="col-md-8 div-copyright">
                             '.$this->Csz_model->cszCopyright().'

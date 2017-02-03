@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CSZ CMS
  *
@@ -21,7 +22,6 @@
  * 
  * Mysql database with MySQLi class - only one connection alowed
  */
-
 class Database{
 
     private $_connection;
@@ -51,8 +51,6 @@ class Database{
     }
 
     public function numrow($result){
-        $result->execute();
-        $result->store_result();
         return $result->num_rows;
     }
 
@@ -61,7 +59,7 @@ class Database{
     }
 
     public function mysqli_multi_query_file($mysqli, $filename){
-        /*error_reporting(E_ERROR | E_PARSE);*/
+        /* error_reporting(E_ERROR | E_PARSE); */
         $sql = file_get_contents($filename);
         // remove comments
         $sql = preg_replace('#/\*.*?\*/#s', '', $sql);
@@ -83,8 +81,8 @@ class Database{
                 }else{
                     if(trim($sqlPart)){ // no empty queries
                         $mysqli->multi_query($sqlPart);
-                        while($mysqli->next_result()){
-;
+                        while(@$mysqli->next_result()){
+                            ;
                         }
                     }
                 }
@@ -102,15 +100,15 @@ class Database{
             }else{
                 if(trim($sqlPart)){
                     $mysqli->multi_query($sqlPart);
-                    while($mysqli->next_result()){
-;
+                    while(@$mysqli->next_result()){
+                        ;
                     }
                 }
             }
         }else{
             $mysqli->multi_query($sql);
-            while($mysqli->next_result()){
-;
+            while(@$mysqli->next_result()){
+                ;
             }
         }
     }
@@ -118,25 +116,52 @@ class Database{
 }
 
 class Version{
-    private $version = '1.1.4'; /* For CMS Version */
-    private $release = 'release'; /* For release or beta */
+    
+    function __construct() {
+        define('BASEPATH', 'cszcms');
+    }
+    
+    private function getVersionConfig(){
+        $config = array();
+        require '../cszcms/config/systemconfig.php';
+        return $config['csz_version'];
+    }
+    
+    private function getReleaseConfig(){
+        $config = array();
+        require '../cszcms/config/systemconfig.php';
+        return $config['csz_release'];
+    }
 
     public function getVersion(){
         $version = '';
-
-        if($this->release == 'beta'){
-            $version = $this->version.' Beta';
+        if($this->getReleaseConfig() == 'beta'){
+            $version = $this->getVersionConfig().' Beta';
         }else{
-            $version = $this->version;
+            $version = $this->getVersionConfig();
         }
         return $version;
     }
-    
+
+    public function deleteDIR($folder){
+        foreach(glob($folder."/install")as $files_folder){
+            //echo $files_folder
+            if(is_dir($files_folder)){
+                $this->deleteDIR($files_folder);
+            }else{
+                unlink($files_folder);
+            }
+        }
+        return rmdir($folder);
+    }
+
     public function setTimezone($timezone){
-        if(!$timezone) $timezone = 'Asia/Bangkok';
-        if (function_exists('ini_set')) {
+        if(!$timezone)
+            $timezone = 'Asia/Bangkok';
+        if(function_exists('ini_set')){
             ini_set('max_execution_time', 300);
             ini_set('date.timezone', $timezone);
         }
     }
+
 }

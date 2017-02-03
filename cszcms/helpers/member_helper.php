@@ -28,13 +28,16 @@ class Member_helper{
     * @param	string	$email    Email Address from session
     */
     static function is_logged_in($email){
+        $CI =& get_instance();
         if(!$email || !$_SESSION['admin_logged_in']){
+            $CI->load->model('Csz_model');
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            $redirect= BASE_URL.'/member/login?url_return='.$url_return;
+            $sess_data = array('cszflogin_cururl' => $url_return);
+            $CI->session->set_userdata($sess_data);
+            $redirect= BASE_URL.'/member/login';
             header("Location: $redirect");
             exit;
         }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_visitor'] != 1){
-            $CI =& get_instance();
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){

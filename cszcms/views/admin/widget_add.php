@@ -24,6 +24,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('widget_name', '', FALSE)
             );
             echo form_input($data);
@@ -40,6 +41,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('xml_url', '', FALSE)
             );
             echo form_input($data);

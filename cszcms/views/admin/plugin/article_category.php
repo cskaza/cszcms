@@ -42,7 +42,7 @@
         </form>
         <br><br>
         <?php echo  form_open(BASE_URL . '/admin/plugin/article/catIndexSave'); ?>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>

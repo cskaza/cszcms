@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('pluginmgr_header') ?></div>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>

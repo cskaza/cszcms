@@ -24,6 +24,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('form_name', $form_rs->form_name, FALSE)
             );
             echo form_input($data);
@@ -38,6 +39,7 @@
                 'name' => 'form_enctype',
                 'id' => 'form_enctype',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('form_enctype', $form_rs->form_enctype, FALSE)
             );
             echo form_input($data);
@@ -63,6 +65,7 @@
                 'name' => 'success_txt',
                 'id' => 'success_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('success_txt', $form_rs->success_txt, FALSE)
             );
             echo form_input($data);
@@ -76,6 +79,7 @@
                 'name' => 'captchaerror_txt',
                 'id' => 'captchaerror_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('captchaerror_txt', $form_rs->captchaerror_txt, FALSE)
             );
             echo form_input($data);
@@ -89,6 +93,7 @@
                 'name' => 'error_txt',
                 'id' => 'error_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('error_txt', $form_rs->error_txt, FALSE)
             );
             echo form_input($data);
@@ -121,6 +126,7 @@
                         'name' => 'email',
                         'id' => 'email',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('email', $form_rs->email, FALSE)
                     );
                     echo form_input($data);
@@ -135,6 +141,7 @@
                         'name' => 'subject',
                         'id' => 'subject',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('subject', $form_rs->subject, FALSE)
                     );
                     echo form_input($data);
@@ -184,6 +191,7 @@
                         'name' => 'visitor_subject',
                         'id' => 'visitor_subject',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('visitor_subject', $form_rs->visitor_subject, FALSE)
                     );
                     echo form_input($data);
@@ -247,33 +255,34 @@
                             $data['textarea'] = 'textarea';
                             echo form_dropdown('field_type1[]', $data, $field_val['field_type'], $att);
                             ?>
+                            <input type="hidden" name="field_oldtype[]" id="field_oldtype" value="<?php echo $field_val['field_type']?>">
                         </div>            
                         <div class="control-group">	
                             <label class="control-label" for="field_name1"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name1[]" id="field_name1" class="form-control" value="<?php echo $field_val['field_name']?>">
+                            <input type="text" name="field_name1[]" id="field_name1" class="form-control" maxlength="255" value="<?php echo $field_val['field_name']?>">
                             <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?php echo $field_val['field_name']?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_id1"><?php echo $this->lang->line('field_id'); ?></label>
-                            <input type="text" name="field_id1[]" id="field_id1" class="form-control" value="<?php echo $field_val['field_id']?>">
+                            <input type="text" name="field_id1[]" id="field_id1" class="form-control" maxlength="255" value="<?php echo $field_val['field_id']?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_class1"><?php echo $this->lang->line('field_class'); ?></label>
-                            <input type="text" name="field_class1[]" id="field_class1" class="form-control" value="<?php echo $field_val['field_class']?>">
+                            <input type="text" name="field_class1[]" id="field_class1" class="form-control" maxlength="255" value="<?php echo $field_val['field_class']?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_placeholder1"><?php echo $this->lang->line('field_placeholder'); ?></label>
-                            <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" value="<?php echo $field_val['field_placeholder']?>">
+                            <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" maxlength="255" value="<?php echo $field_val['field_placeholder']?>">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="control-group">	
                             <label class="control-label" for="field_value1"><?php echo $this->lang->line('field_value'); ?></label>
-                            <input type="text" name="field_value1[]" id="field_value1" class="form-control" value="<?php echo $field_val['field_value']?>">
+                            <input type="text" name="field_value1[]" id="field_value1" class="form-control" maxlength="255" value="<?php echo $field_val['field_value']?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_label1"><?php echo $this->lang->line('field_label'); ?></label>
-                            <input type="text" name="field_label1[]" id="field_label1" class="form-control" value="<?php echo $field_val['field_label']?>">
+                            <input type="text" name="field_label1[]" id="field_label1" class="form-control" maxlength="255" value="<?php echo $field_val['field_label']?>">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="sel_option_val1"><?php echo $this->lang->line('sel_option_val'); ?></label>
@@ -322,29 +331,29 @@
                         </div>            
                         <div class="control-group">	
                             <label class="control-label" for="field_name"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name[]" id="field_name" class="form-control">
+                            <input type="text" name="field_name[]" id="field_name" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_id"><?php echo $this->lang->line('field_id'); ?></label>
-                            <input type="text" name="field_id[]" id="field_id" class="form-control">
+                            <input type="text" name="field_id[]" id="field_id" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_class"><?php echo $this->lang->line('field_class'); ?></label>
-                            <input type="text" name="field_class[]" id="field_class" class="form-control">
+                            <input type="text" name="field_class[]" id="field_class" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_placeholder"><?php echo $this->lang->line('field_placeholder'); ?></label>
-                            <input type="text" name="field_placeholder[]" id="field_placeholder" class="form-control">
+                            <input type="text" name="field_placeholder[]" id="field_placeholder" class="form-control" maxlength="255">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="control-group">	
                             <label class="control-label" for="field_value"><?php echo $this->lang->line('field_value'); ?></label>
-                            <input type="text" name="field_value[]" id="field_value" class="form-control">
+                            <input type="text" name="field_value[]" id="field_value" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_label"><?php echo $this->lang->line('field_label'); ?></label>
-                            <input type="text" name="field_label[]" id="field_label" class="form-control">
+                            <input type="text" name="field_label[]" id="field_label" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="sel_option_val"><?php echo $this->lang->line('sel_option_val'); ?></label>

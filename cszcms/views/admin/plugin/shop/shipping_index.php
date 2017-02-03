@@ -22,36 +22,33 @@
             </div>
         </form>
         <br><br>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="45%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('shop_order_detail'); ?></th>
-                        <th width="15%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('shop_shipping_name'); ?></th>
-                        <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('shop_shipping_id'); ?></th>
-                        <th width="20%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('shop_shipping_note'); ?></th>
-                        <th width="10%"></th>
+                        <th width="85%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('shop_order_detail'); ?></th>
+                        <th width="15%"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($shipping === FALSE) { ?>
                         <tr>
-                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="2" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
                         foreach ($shipping as $u) {
-                            $payment = $this->Csz_model->getValue('order_detail', 'shop_payment', "inv_id = '".$u['inv_id']."' AND payment_status = 'Completed'", '', 1);
-                            echo '<tr>';                                 
-                            echo '<td style="vertical-align: middle;">' . $payment->order_detail . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;">' . $u['shipping_name'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;">' . $u['shipping_id'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;">';
-                            echo ($u['note']) ? $u['note'] : '-';
-                            echo '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/plugin/shop/shippingEdit/' . $u['shop_shipping_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i></a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/shop/shippingDel/'.$u['shop_shipping_id'].'/'.$u['inv_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
-                            echo '</tr>';
-                        }
+                            $payment = $this->Csz_model->getValue('order_detail', 'shop_payment', "inv_id = '".$u['inv_id']."' AND payment_status = 'Completed'", '', 1); ?>
+                            <tr>
+                                <td style="word-wrap:break-word;">
+                                    <?php echo (!empty($payment) && $payment->order_detail != NULL && $payment->order_detail) ? $payment->order_detail : '-'; ?>
+                                    <b><?php echo $this->lang->line('shop_shipping_name'); ?></b>: <?php echo $u['shipping_name']; ?><br>
+                                    <b><?php echo $this->lang->line('shop_shipping_id'); ?></b>: <?php echo $u['shipping_id']; ?><br>
+                                    <b><?php echo $this->lang->line('shop_shipping_note'); ?></b>: <?php echo ($u['note']) ? $u['note'] : '-'; ?><br>
+                                </td>
+                                <td class="text-center" style="vertical-align: middle;"><a href="<?php echo BASE_URL.'/admin/plugin/shop/shippingEdit/' . $u['shop_shipping_id']; ?>" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i></a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message'); ?>')" href="<?php echo BASE_URL.'/admin/plugin/shop/shippingDel/'.$u['shop_shipping_id'].'/'.$u['inv_id']; ?>"><i class="glyphicon glyphicon-remove"></i></a></td>
+                            </tr>
+                        <?php }
                     }
                     ?>
                 </tbody>

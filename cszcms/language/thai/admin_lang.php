@@ -9,9 +9,9 @@ $lang['dashboard_totalmember']	= "รวมสมาชิก";
 $lang['dashboard_viewdetail']	= "ดูรายละเอียด";
 $lang['dashboard_linkrecent']	= "สถิติลิงค์ล่าสุด 20 รายการ";
 $lang['dashboard_emailrecent']	= "บันทึกอีเมล์ล่าสุด 10 รายการ";
-$lang['dashboard_loginrecent']	= "บันทึกการเข้าสู่ระบบล่าสุด 20 รายการ";
 $lang['dashboard_toemail']	= "ถึง";
 $lang['dashboard_fromemail']	= "จาก";
+$lang['dashboard_rssnews']	= "ข่าว CSZ CMS ล่าสุด 6 รายการ";
 
 //Navigation Bar
 $lang['nav_dash']		= "แดชบอร์ด";
@@ -22,6 +22,16 @@ $lang['nav_admin_users']	= "ผู้ใช้งาน";
 $lang['nav_nav_header']         = "แถบเมนู";
 $lang['nav_logout']		= "ออกจากระบบ";
 $lang['nav_gel_settings']	= "เมนูทั่วไป";
+$lang['nav_analytics']		= "Analytics";
+
+// Google Analytics
+$lang['ga_last30']		= "Google Analytics 30 วันล่าสุด";
+$lang['ga_maps']		= "แผนที่ Google Analytics";
+$lang['ga_sessions']            = "Google Analytics Sessions";
+$lang['ga_devices']		= "Google Analytics อุปกรณ์";
+$lang['ga_sources']		= "Google Analytics แหล่งที่มา";
+$lang['ga_refer']               = "Google Analytics อ้างอิง";
+$lang['ga_no_settings']         = 'Google Analytics ไม่ได้ถูกตั้งค่าบน <a href="'.base_url().'admin/settings#ga_client_id" title="การตั้งค่าเว็บไซต์"><b>การตั้งค่าเว็บไซต์</b></a>!';
 
 //Users - All Users
 $lang['user_header']			= "ผู้ใช้งานทั้งหมด";
@@ -95,9 +105,10 @@ $lang['forgot_btn']		= "รีเซ็ตรหัสผ่าน";
 $lang['forgot_check_email']	= "กรุณาเช็คอีเมล์ในกล่องขาเข้า. และคลิกลิงค์ที่แนบมาเพื่อทำการรีเซ็ตรหัสผ่าน";
 
 //Dashboard
-$lang['dash_welcome']		= "ยินดีต้อนรับเข้าสู่เบื้องหลัง CSZ-CMS";
+$lang['dash_welcome']		= "ยินดีต้อนรับเข้าสู่เบื้องหลัง CSZ CMS";
 $lang['dash_cur_time']		= "วันที่/เวลา ณ ขณะนี้:";
-$lang['dash_message']		= "นี้คือระบบการจัดการสำหรับผู้ดูแลระบบ, ใช้เพื่อจัดการเนื้อหาทั้งหมดและค่าต่าง ๆ บนเว็บไซต์. ระบบเว็บสำเร็จรูปนี้สร้างอยู่บนพื้นฐานของ Codeigniter และ ออกแบบภายใต้โครงสร้างของ Bootstrap, ระบบนี้รองรับความเข้ากันได้กับทุกขนาดหน้าจอ.";
+$lang['dash_message']		= "นี่คือระบบการจัดการสำหรับผู้ดูแลระบบ, ใช้เพื่อจัดการเนื้อหาทั้งหมดและค่าต่าง ๆ บนเว็บไซต์. ระบบเว็บสำเร็จรูปนี้สร้างอยู่บนพื้นฐานของ Codeigniter และ ออกแบบภายใต้โครงสร้างของ Bootstrap, ระบบนี้รองรับความเข้ากันได้กับทุกขนาดหน้าจอ. ระบบนี้นั้นตั้งอยู่บนพื้นฐานของภาษา PHP บนฝั่งของ Server และใช้ฐานข้อมูล MySQL หรือ MariaDB สำหรับจัดเก็บข้อมูล.<br><br>ระบบนี้คือโอเพนซอร์สสำหรับระบบการจัดการเนื้อหา และทั้งหมดเป็นอิสระภายใต้ใบอนุญาต Astian Develop Public License (ADPL).";
+$lang['dash_cszcms_link']	= "เว็บไซต์ CSZ CMS อย่างเป็นทางการ";
 
 // EMAILS FORGET PASSWORD
 $lang['email_reset_subject']    = "รีเซ็ตรหัสผ่านของคุณ CSZ-CMS";
@@ -210,6 +221,11 @@ $lang['settings_og_image']		= "รูปภาพของ og metatag (og:image)
 $lang['settings_fbappid_header']	= "การตั้งค่า Facebook";
 $lang['settings_fbapp_id']		= "FB App ID";
 $lang['settings_fbappid_remark']	= 'คุณสามารถรับ FB App ID ได้ที่ <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>';
+$lang['settings_google_config']		= "การตั้งค่า Google API";
+$lang['settings_ga_client_id']		= "Google API Client ID";
+$lang['settings_ga_client_id_remark']	= 'จะสร้าง Google API Console project และ client ID ได้อย่างไร? <a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank"><b>ดูที่นี่</b></a>';
+$lang['settings_ga_view_id']		= "Google Analytics View ID";
+$lang['settings_ga_view_id_remark']	= 'คุณสามารถดู view ID ได้ที่ <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>คลิกที่นี่</b></a>. หลังจากคุณ "Access Google Analytics" และเลือกข้อมูล analytics ของเว็บไซต์คุณ. กรุณาดู view ID ของคุณได้ที่ "ids"';
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";
@@ -409,3 +425,16 @@ $lang['fb_comment_sort']                = "การจัดเรียง Fac
 $lang['fb_comment_sort_top']                = "ยอดนิยม";
 $lang['fb_comment_sort_newest']                = "ล่าสุด";
 $lang['fb_comment_sort_oldest']                = "เก่าสุด";
+
+// Brute force login protection
+$lang['bf_protection_header']                = "การป้องกัน Brute Force";
+$lang['bf_period_time']                = "ระยะเวลาในการป้องกัน Brute Force (เป็นนาที)";
+$lang['bf_max_fail']                    = "ความล้มเหลวเข้าสู่ระบบสูงสุด (ในระยะเวลา)";
+$lang['bf_white_list']                    = "Whitelist IP Address";
+$lang['bf_black_list']                    = "Blacklist IP Address";
+$lang['bf_note']                    = "หมายเหตุ";
+$lang['bf_ip_banned_alert']           = "ที่อยู่ไอพีของคุณถูกสั่งห้าม!";
+$lang['bf_settings']                    = "การตั้งค่าการป้องกัน";
+$lang['loginlogs_header']	= "บันทึกการเข้าสู่ระบบ";
+$lang['loginlogs_result']                    = "ผลลัพธ์";
+$lang['emaillogs_header']               = "บันทึกระบบอีเมล์";

@@ -45,13 +45,130 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         $this->csz_referrer->setIndex();
         $this->template->setSub('email_logs', $this->Csz_model->getValueArray('*', 'email_logs', "ip_address != ''", '', 10, 'timestamp_create', 'desc'));
-        $this->template->setSub('login_logs', $this->Csz_model->getValueArray('*', 'login_logs', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
         $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
         $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
         $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
         $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
         $this->template->setSub('visitor_admin', $this->Csz_admin_model->chkVisitorUser($this->session->userdata('user_admin_id')));
+        $this->load->library('RSSParser');
+        $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_url'));  /* get feed from CSZ CMS Article */
+        $this->rssparser->set_cache_life(30);                       /* Set cache life time in minutes */
+        $this->template->setSub('rss', $this->rssparser->getFeed(6));
         $this->template->loadSub('admin/home');
+    }
+    
+    public function analytics() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $settings = $this->Csz_admin_model->load_config();
+        $this->csz_referrer->setIndex();
+        $this->template->setJS('<!-- Step 2: Load the library. -->
+        <script>
+        (function(w,d,s,g,js,fjs){
+          g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+          js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+          js.src="https://apis.google.com/js/platform.js";
+          fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load("analytics")};
+        }(window,document,"script"));
+        </script>
+        <script>
+        gapi.analytics.ready(function() {
+          // Step 3: Authorize the user.
+          var CLIENT_ID = "'.$settings->ga_client_id.'";
+          var VIEW_ID = "ga:'.str_replace('ga:', '', $settings->ga_view_id).'";
+          gapi.analytics.auth.authorize({
+            container: "auth-button",
+            clientid: CLIENT_ID,
+          });
+          // Step 4: Create the view selector.
+          var viewSelector = new gapi.analytics.ViewSelector({
+            container: "view-selector"
+          });
+          // Step 5: Create the timeline chart. activeUsers
+          var referdata = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:fullReferrer",
+              "metrics": "ga:sessions",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+              "sort": "-ga:sessions",
+            },
+            chart: {
+              type: "TABLE",
+              container: "timeline-refer"
+            }
+          });
+          var timeline = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:country",
+              "metrics": "ga:sessions",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+            },
+            chart: {
+              type: "GEO",
+              container: "timeline-map",
+              keepAspectRatio: true,
+              width: 100 + "%",
+            }
+          });
+          var timeline2 = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:date",
+              "metrics": "ga:sessions",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+            },
+            chart: {
+              type: "LINE",
+              container: "timeline-sessions",
+            }
+          });
+          var timeline3 = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:browser",
+              "metrics": "ga:sessions",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+            },
+            chart: {
+              type: "PIE",
+              container: "timeline-device",
+            }
+          });
+          var timeline4 = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:source",
+              "metrics": "ga:sessions",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+            },
+            chart: {
+              type: "PIE",
+              container: "timeline-source",
+            }
+          });
+          // Step 6: Hook up the components to work together.
+          gapi.analytics.auth.on("success", function(response) {
+            timeline.set().execute();
+            timeline2.set().execute();
+            timeline3.set().execute();
+            referdata.set().execute();
+            timeline4.set().execute();
+          });
+        });
+        </script>');
+        $this->template->setSub('settings', $settings);
+        $this->template->loadSub('admin/analytics');
     }
     
     public function deleteEmailLogs() {
@@ -61,20 +178,6 @@ class Admin extends CI_Controller {
         //Delete the languages
         if($this->uri->segment(4)) {
             $this->Csz_admin_model->removeData('email_logs', 'email_logs_id', $this->uri->segment(4));
-            $this->db->cache_delete_all();
-            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-        }
-        //Return to languages list
-        redirect($this->csz_referrer->getIndex(), 'refresh');
-    }
-    
-    public function deleteLoginLogs() {
-        admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        //Delete the languages
-        if($this->uri->segment(4)) {
-            $this->Csz_admin_model->removeData('login_logs', 'login_logs_id', $this->uri->segment(4));
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
@@ -109,9 +212,8 @@ class Admin extends CI_Controller {
             $result = $this->Csz_admin_model->login($email, $password);
             if ($result == 'SUCCESS') {
                 $this->Csz_model->saveLogs($email, 'Backend Login Successful!', $result);
-                $url_return = $this->input->post('url_return', TRUE);
-                if($url_return){
-                    redirect($url_return, 'refresh');
+                if($this->session->userdata('cszblogin_cururl')){
+                    redirect($this->session->userdata('cszblogin_cururl'), 'refresh');
                 }else{
                     redirect(BASE_URL.'/admin', 'refresh');
                 }

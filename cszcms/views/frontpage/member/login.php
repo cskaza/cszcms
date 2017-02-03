@@ -17,38 +17,46 @@
                         if ($error == 'CAPTCHA_WRONG') {
                             echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('captcha_wrong') . "</span><br><br>";
                         }
+                        if ($error == 'IP_BANNED') {
+                            echo "<span class=\"error\">Your IP Address been banned!</span><br><br>";
+                        }
                     }
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/member/login/check') ?>
-                    <input type="hidden" id="url_return" name="url_return" value="<?php echo $this->input->get('url_return', TRUE)?>"/>
-                    <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
-                    <?php
-                    $data = array(
-                        'name' => 'email',
-                        'id' => 'email',
-                        'type' => 'email',
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'autofocus' => 'true',
-                        'value' => set_value('email'),
-                        'placeholder' => $this->Csz_model->getLabelLang('login_email')
-                    );
-                    echo form_input($data);
-                    ?>
-                    <label for="password" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_password') ?>*</label>
-                    <?php
-                    $data = array(
-                        'name' => 'password',
-                        'id' => 'password',
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'value' => set_value('password'),
-                        'placeholder' => $this->Csz_model->getLabelLang('login_password'),
-                        'autocomplete' => 'off'
-                    );
-                    echo form_password($data);
-                    ?>
+                    <div class="form-group has-feedback">
+                        <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
+                        <?php
+                        $data = array(
+                            'name' => 'email',
+                            'id' => 'email',
+                            'type' => 'email',
+                            'class' => 'form-control',
+                            'required' => 'required',
+                            'autofocus' => 'true',
+                            'value' => set_value('email'),
+                            'placeholder' => $this->Csz_model->getLabelLang('login_email')
+                        );
+                        echo form_input($data);
+                        ?>
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="password" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_password') ?>*</label>
+                        <?php
+                        $data = array(
+                            'name' => 'password',
+                            'id' => 'password',
+                            'class' => 'form-control',
+                            'required' => 'required',
+                            'value' => set_value('password'),
+                            'placeholder' => $this->Csz_model->getLabelLang('login_password'),
+                            'autocomplete' => 'off'
+                        );
+                        echo form_password($data);
+                        ?>
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
                     <br>
                     <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                     <br>

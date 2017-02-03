@@ -45,7 +45,6 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
     /* Database Connect */
     $db = new Database($dbhost, $dbuser, $dbpass, $dbname);
     $mysqli = $db->connectDB();
-
     if ($email && $_POST['password']) {
         /* Database Insert */
         $filename = 'cszcms_app.sql';
@@ -60,7 +59,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
         $filename = 'cszcms_app_default.sql';
         $db->mysqli_multi_query_file($mysqli, $filename);
     }
-    $result = $mysqli->prepare("SELECT * FROM user_admin");
+    $result = $mysqli->query("SELECT * FROM user_admin");
     $numrow = $db->numrow($result);
     if (!$numrow) {
         $success = 0;
@@ -201,6 +200,13 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 echo '<span class="error">FAIL</span>';
                                 $curl = 0;
                             } ?>]<br>
+                                PHP GD library Enable [<?php if (extension_loaded('gd') && function_exists('gd_info')) {
+                                echo '<span class="success">PASS</span>';
+                                $gd = 1;
+                            } else {
+                                echo '<span class="error">FAIL</span>';
+                                $gd = 0;
+                            } ?>]<br>
                                 Config Write Permission [<?php if (is_writable('../config_example.inc.php')) {
                                 echo '<span class="success">PASS</span>';
                                 $config_per = 1;
@@ -230,7 +236,7 @@ if (!empty($_POST) && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] 
                                 $dbcache_per = 0;
                             } ?>]
                             <?php
-                            if ($sqli == 1 && $php == 1 && $curl == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
+                            if ($sqli == 1 && $php == 1 && $curl == 1 && $gd == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
                                 $chk_pass = 1;
                             }
                             ?>

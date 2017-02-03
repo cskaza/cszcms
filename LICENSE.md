@@ -1,6 +1,6 @@
 #### CSZ CMS
 
-Astian Public Licence (APL)
+Astian Public Licence (ADPL)
 
 Copyright (c) 2016, Astian Foundation
 

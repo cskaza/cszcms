@@ -32,7 +32,7 @@ class Formsaction extends CI_Controller {
         if ($form_id) {
             //Get form data
             $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
-            if ($frm_rs->active) {
+            if ($frm_rs !== FALSE && $frm_rs->active) {
                 $cur_page = $this->session->userdata('cszfrm_cururl');
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id);
                 if ($frm_rs->captcha) {

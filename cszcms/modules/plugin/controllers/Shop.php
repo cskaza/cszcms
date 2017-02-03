@@ -426,13 +426,17 @@ class Shop extends CI_Controller {
         $this->load->helper('form');
         $row = $this->Csz_model->load_config();
         $shop_config = $this->Shop_model->load_config();
+        if($shop_config->only_member){
+            Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        }
+        Member_helper::chkVisitor($this->session->userdata('user_admin_id'));
         $title = 'Shopping online payment | ' . $row->site_name;
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title, $row->keywords, $title));
         $this->template->set('cur_page', $this->page_url);
         $lastID = $this->Csz_model->getLastID('shop_payment', 'shop_payment_id');
         $cart_check = $this->cart->contents();
-        if (!empty($cart_check) && $this->input->post('email') && $this->input->post('name') && $this->input->post('phone') && $this->input->post('address')) {
+        if ((!$shop_config->bank_disable || $shop_config->paypal_active || $shop_config->paysbuy_active) && !empty($cart_check) && $this->input->post('email') && $this->input->post('name') && $this->input->post('phone') && $this->input->post('address')) {
             $inv_id = 'INV-' . str_pad($lastID + 1, 11, '0', STR_PAD_LEFT); /* Gen Invoice ID */
             $sha1_hash = sha1($inv_id . '+csz+' . time()); /* Gen SHA1 hash ID */
             $order_detail = '<h3><b>Invoice ID: ' . $inv_id . '</b></h3>';

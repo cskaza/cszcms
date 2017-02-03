@@ -109,4 +109,3 @@
         <!-- /widget-content --> 
     </div>
 </div>
-<script src="<?php echo base_url()?>assets/js/jquery.mobile-1.4.0-alpha.2.min.js"></script>

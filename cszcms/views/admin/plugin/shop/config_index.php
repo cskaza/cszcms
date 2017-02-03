@@ -169,6 +169,41 @@
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
             <br>
+            <div class="control-group">										
+                <label class="form-control-static" for="only_member">
+                <?php
+                if($settings->only_member){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'only_member',
+                    'id' => 'only_member',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('shop_only_member'); ?></label>
+            </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="form-control-static" for="bank_disable">
+                <?php
+                if($settings->bank_disable){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'bank_disable',
+                    'id' => 'bank_disable',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('shop_bank_disable'); ?></label>
+            </div> <!-- /control-group -->
+            <br>
             <div class="control-group">	
                 <label class="control-label" for="bank_detail"><?php echo $this->lang->line('shop_bank_detail'); ?></label>
                 <textarea name="bank_detail" id="bank_detail" class="form-control body-tinymce"><?php echo  $settings->bank_detail ?></textarea>

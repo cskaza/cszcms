@@ -37,6 +37,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('name', '', FALSE)
             );
             echo form_input($data);
@@ -47,8 +48,10 @@
             <?php
             $att = 'id="lang_iso" class="form-control"';
             $data = array();
-            foreach ($lang as $lg) {
-                $data[$lg->lang_iso] = $lg->lang_name;
+            if (!empty($lang)) {
+                foreach ($lang as $lg) {
+                    $data[$lg->lang_iso] = $lg->lang_name;
+                }
             }
             echo form_dropdown('lang_iso', $data, '', $att);
             ?>		
@@ -76,8 +79,10 @@
                     $att = 'id="pageUrl" class="form-control"';
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
-                    foreach ($pages as $p) {
-                        $data[$p['pages_id']] = $p['page_name'] . ' (' . $p['lang_iso'] . ')';
+                    if (!empty($pages)) {
+                        foreach ($pages as $p) {
+                            $data[$p['pages_id']] = $p['page_name'] . ' (' . $p['lang_iso'] . ')';
+                        }
                     }
                     echo form_dropdown('pageUrl', $data, '', $att);
                     ?>
@@ -91,8 +96,10 @@
                     $att = 'id="pluginmenu" class="form-control"';
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
-                    foreach ($plugin as $p) {
-                        $data[$p['plugin_urlrewrite']] = $p['plugin_name'];
+                    if (!empty($plugin)) {
+                        foreach ($plugin as $p) {
+                            $data[$p['plugin_urlrewrite']] = $p['plugin_name'];
+                        }
                     }
                     $data['member'] = 'Member';
                     echo form_dropdown('pluginmenu', $data, '', $att);
@@ -105,11 +112,10 @@
                 <span class="input-group-addon">
                     <?php
                     $att = 'id="protocal"';
-                    $data = array();
-                    foreach ($dropmenu as $d) {
-                        $data['http://'] = 'http://';
-                        $data['https://'] = 'https://';
-                    }
+                    $data = array();                
+                    $data['http://'] = 'http://';
+                    $data['https://'] = 'https://';
+                    $data['#'] = '#';
                     echo form_dropdown('protocal', $data, '', $att);
                     ?>
                 </span>
@@ -134,8 +140,10 @@
                     $att = 'id="dropMenu" class="form-control"';
                     $data = array();
                     $data[0] = $this->lang->line('option_choose');
-                    foreach ($dropmenu as $d) {
-                        $data[$d['page_menu_id']] = $d['menu_name'] . ' (' . $d['lang_iso'] . ')';
+                    if (!empty($dropmenu)) {
+                        foreach ($dropmenu as $d) {
+                            $data[$d['page_menu_id']] = $d['menu_name'] . ' (' . $d['lang_iso'] . ')';
+                        }
                     }
                     echo form_dropdown('dropMenu', $data, '', $att);
                     ?>

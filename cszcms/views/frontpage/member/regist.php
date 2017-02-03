@@ -10,8 +10,8 @@
                 <div class="panel-body text-left">
                     <?php if(!$chksts){ ?>
                         <?php echo  form_open(BASE_URL . '/member/register/save') ?>
-                        <div class="control-group">
-                            <?php echo form_error('email', '<div class="error">', '</div>'); ?>	
+                        <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                        <div class="form-group has-feedback">                            
                             <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                             <?php
                             $data = array(
@@ -21,43 +21,47 @@
                                 'class' => 'form-control',
                                 'required' => 'required',
                                 'autofocus' => 'true',
-                                'value' => set_value('email', '', FALSE),
-                            ); echo form_input($data); ?>
-                        </div> <!-- /control-group -->
-                        
-                        <div class="control-group">		
-                            <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
-                            <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('login_password'); ?>*</label>
+                                'value' => set_value('email'),
+                                'placeholder' => $this->Csz_model->getLabelLang('login_email')
+                            );
+                            echo form_input($data);
+                            ?>
+                            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                        </div>
+                        <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                        <div class="form-group has-feedback">
+                            <label for="password" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_password'); ?>*</label>
                             <?php
                             $data = array(
                                 'name' => 'password',
                                 'id' => 'password',
-                                'required' => 'required',
-                                'autofocus' => 'true',
                                 'class' => 'form-control',
-                                'value' => set_value('password', '', FALSE),
+                                'required' => 'required',
+                                'value' => set_value('password'),
+                                'placeholder' => $this->Csz_model->getLabelLang('login_password'),
                                 'autocomplete' => 'off'
                             );
                             echo form_password($data);
-                            ?>			
-                        </div> <!-- /control-group -->
-
-                        <div class="control-group">	
-                            <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
-                            <label class="control-label" for="con_password"><?php echo $this->Csz_model->getLabelLang('confirm_password'); ?>*</label>
+                            ?>
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        </div>
+                        <?php echo form_error('con_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                        <div class="form-group has-feedback">
+                            <label for="con_password" class="control-label"><?php echo $this->Csz_model->getLabelLang('confirm_password'); ?>*</label>
                             <?php
                             $data = array(
                                 'name' => 'con_password',
                                 'id' => 'con_password',
-                                'required' => 'required',
-                                'autofocus' => 'true',
                                 'class' => 'form-control',
-                                'value' => set_value('con_password', '', FALSE),
+                                'required' => 'required',
+                                'value' => set_value('con_password'),
+                                'placeholder' => $this->Csz_model->getLabelLang('confirm_password'),
                                 'autocomplete' => 'off'
                             );
                             echo form_password($data);
-                            ?>			
-                        </div> <!-- /control-group -->
+                            ?>
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        </div>
                         <br>
                         <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                         <br>

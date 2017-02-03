@@ -26,6 +26,7 @@
                     'required' => 'required',
                     'autofocus' => 'true',
                     'class' => 'form-control',
+                    'maxlength' => '255',
                     'value' => set_value('title', $article->title, FALSE)
                 );
                 echo form_input($data);
@@ -38,6 +39,7 @@
                     'name' => 'keyword',
                     'id' => 'keyword',
                     'class' => 'form-control',
+                    'maxlength' => '255',
                     'value' => set_value('keyword', $article->keyword, FALSE)
                 );
                 echo form_input($data);
@@ -67,7 +69,7 @@
                     $att = 'id="cat_id" class="form-control" required="required" autofocus="true"';
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
-                    if(isset($category)){
+                    if(!empty($category)){
                         foreach ($category as $c) {
                             $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
                         }
@@ -86,16 +88,15 @@
                 <label class="control-label" for="file_upload"><?php echo $this->lang->line('article_mainpic'); ?></label>
                 <div class="controls">
                     <div><img src="<?php
-                              if ($article->main_picture != "") {
+                              if ($article->main_picture != "" && $article->main_picture != NULL) {
                                   echo BASE_URL . '/photo/plugin/article/' . $article->main_picture;
                               }
                               ?>" id="logo_preloaded" <?php
-                    if ($article->main_picture == "") {
+                    if ($article->main_picture == "" || $article->main_picture == NULL) {
                         echo "style='display:none;'";
                     }
                     ?>></div>
-                    <?php if ($article->main_picture != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $article->main_picture?>"> <span class="remark">Delete File</span></label><?php } ?>
-                    <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                    <?php if ($article->main_picture != "" && $article->main_picture != NULL) { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $article->main_picture?>"> <span class="remark">Delete File</span></label><?php } ?>                    
                     <?php
                     $data = array(
                         'name' => 'file_upload',
@@ -113,8 +114,10 @@
             <?php
                 $att = 'id="lang_iso" class="form-control"';
                 $data = array();
-                foreach ($lang as $lg) {
-                    $data[$lg->lang_iso] = $lg->lang_name;
+                if(!empty($lang)){
+                    foreach ($lang as $lg) {
+                        $data[$lg->lang_iso] = $lg->lang_name;
+                    }
                 }
                 echo form_dropdown('lang_iso', $data, $article->lang_iso, $att);
             ?>	

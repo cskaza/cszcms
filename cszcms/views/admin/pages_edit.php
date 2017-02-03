@@ -24,6 +24,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('page_name', $pages->page_name)
             );
             echo form_input($data);
@@ -83,8 +84,10 @@
             <?php
                 $att = 'id="lang_iso" class="form-control"';
                 $data = array();
-                foreach ($lang as $lg) {
-                    $data[$lg->lang_iso] = $lg->lang_name;
+                if (!empty($lang)) {
+                    foreach ($lang as $lg) {
+                        $data[$lg->lang_iso] = $lg->lang_name;
+                    }
                 }
                 echo form_dropdown('lang_iso', $data, $pages->lang_iso, $att);
             ?>	

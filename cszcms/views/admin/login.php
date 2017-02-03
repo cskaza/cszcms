@@ -13,46 +13,56 @@
                     <div class="text-center">
                     <?php
                     if ($error) {
+                        echo '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
                         if ($error == 'INVALID') {
-                            echo "<span class=\"error\">" . $this->lang->line('login_incorrect') . "</span><br><br>";
+                            echo $this->lang->line('login_incorrect');
                         }
                         if ($error == 'CAPTCHA_WRONG') {
-                            echo "<span class=\"error\">" . $this->lang->line('captcha_wrong') . "</span><br><br>";
+                            echo $this->lang->line('captcha_wrong');
                         }
+                        if ($error == 'IP_BANNED') {
+                            echo $this->lang->line('bf_ip_banned_alert');
+                        }
+                        echo '</div>';
                     }
                     ?>
                     </div>
                     <?php echo form_open(BASE_URL . '/admin/login/check') ?>
-                    <input type="hidden" id="url_return" name="url_return" value="<?php echo $this->input->get('url_return', TRUE)?>"/>
-                    <?php echo form_error('email', '<div class="error">', '</div>'); ?>
-                    <label for="email" class="control-label"><?php echo $this->lang->line('login_email') ?>*</label>
-                    <?php
-                    $data = array(
-                        'name' => 'email',
-                        'id' => 'email',
-                        'type' => 'email',
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'autofocus' => 'true',
-                        'value' => set_value('email'),
-                        'placeholder' => $this->lang->line('login_email')
-                    );
-                    echo form_input($data);
-                    ?>
-                    <?php echo form_error('password', '<div class="error">', '</div>'); ?>
-                    <label for="password" class="control-label"><?php echo $this->lang->line('login_password') ?>*</label>
-                    <?php
-                    $data = array(
-                        'name' => 'password',
-                        'id' => 'password',
-                        'class' => 'form-control',
-                        'required' => 'required',
-                        'value' => set_value('password'),
-                        'placeholder' => $this->lang->line('login_password'),
-                        'autocomplete' => 'off'
-                    );
-                    echo form_password($data);
-                    ?>
+                    <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                    <div class="form-group has-feedback">
+                        <label for="email" class="control-label"><?php echo $this->lang->line('login_email') ?>*</label>
+                        <?php
+                        $data = array(
+                            'name' => 'email',
+                            'id' => 'email',
+                            'type' => 'email',
+                            'class' => 'form-control',
+                            'required' => 'required',
+                            'autofocus' => 'true',
+                            'value' => set_value('email'),
+                            'placeholder' => $this->lang->line('login_email')
+                        );
+                        echo form_input($data);
+                        ?>
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+                    <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                    <div class="form-group has-feedback">
+                        <label for="password" class="control-label"><?php echo $this->lang->line('login_password') ?>*</label>
+                        <?php
+                        $data = array(
+                            'name' => 'password',
+                            'id' => 'password',
+                            'class' => 'form-control',
+                            'required' => 'required',
+                            'value' => set_value('password'),
+                            'placeholder' => $this->lang->line('login_password'),
+                            'autocomplete' => 'off'
+                        );
+                        echo form_password($data);
+                        ?>
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
                     <br>
                     <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
                     <br>

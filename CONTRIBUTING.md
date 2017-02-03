@@ -88,6 +88,17 @@ Version control branching
           date! If you find yourself 'bumping' a pull request that's been
           sidelined for a while, **make sure you rebase or merge to latest
           master** to ensure a speedier resolution.
+          
+Version Formatting
+----------------
+
+File name: 
+upgrade-to-x.x.x.zip
+
+Remark: 
+Version limit x.9.9 only. When subversion is x.9.9. Please go to next version.
+
+
 
 Code formatting
 ---------------

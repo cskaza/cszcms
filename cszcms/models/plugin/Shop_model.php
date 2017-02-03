@@ -45,6 +45,8 @@ class Shop_model extends CI_Model {
         ($this->input->post('stat_soldout_show')) ? $stat_soldout_show = $this->input->post('stat_soldout_show', TRUE) : $stat_soldout_show = 0;
         ($this->input->post('sanbox_active')) ? $sanbox_active = $this->input->post('sanbox_active', TRUE) : $sanbox_active = 0;
         ($this->input->post('ipn_log_active')) ? $ipn_log_active = $this->input->post('ipn_log_active', TRUE) : $ipn_log_active = 0;
+        ($this->input->post('only_member')) ? $only_member = $this->input->post('only_member', TRUE) : $only_member = 0;
+        ($this->input->post('bank_disable')) ? $bank_disable = $this->input->post('bank_disable', TRUE) : $bank_disable = 0;
         $this->db->set('stat_new_show', $stat_new_show);
         $this->db->set('stat_hot_show', $stat_hot_show);
         $this->db->set('stat_bestseller_show', $stat_bestseller_show);
@@ -55,6 +57,8 @@ class Shop_model extends CI_Model {
         $this->db->set('paysbuy_active', $paysbuy_active);
         $this->db->set('paysbuy_email', $this->input->post('paysbuy_email', TRUE));
         $this->db->set('bank_detail', $this->htmlTinyMCE($this->input->post('bank_detail', FALSE)));
+        $this->db->set('only_member', $only_member);
+        $this->db->set('bank_disable', $bank_disable);
         $this->db->set('currency_code', $this->input->post('currency_code', TRUE));
         $this->db->set('seller_email', $this->input->post('seller_email', TRUE));
         $this->db->set('order_subject', $this->input->post('order_subject', TRUE));
@@ -326,7 +330,7 @@ class Shop_model extends CI_Model {
     public function load_config() {
         $this->db->limit(1, 0);
         $query = $this->db->get('shop_config');
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() !== 0) {
             $row = $query->row();
             return $row;
         } else {
@@ -340,7 +344,7 @@ class Shop_model extends CI_Model {
             $this->db->where('shop_category_id', $id);
             $this->db->limit(1, 0);
             $query = $this->db->get('shop_category');
-            if ($query->num_rows() > 0) {
+            if ($query->num_rows() !== 0) {
                 $row = $query->row();
                 return $row->name;
             } else {
@@ -417,7 +421,7 @@ class Shop_model extends CI_Model {
         $this->db->where('shop_product_id', $product_id);
         $this->db->limit(1, 0);
         $query = $this->db->get('shop_product');
-        if (!empty($query) && $query->num_rows() > 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->row();
             $getStock = $row->stock;
             $moreStock = $getStock - $stock_use;
@@ -441,7 +445,7 @@ class Shop_model extends CI_Model {
                 $this->db->where('shop_product_id', $product_id[$i]);
                 $this->db->limit(1, 0);
                 $query = $this->db->get('shop_product');
-                if (!empty($query) && $query->num_rows() > 0) {
+                if (!empty($query) && $query->num_rows() !== 0) {
                     $row = $query->row();
                     $getStock = $row->stock;
                     if($cancel === FALSE){

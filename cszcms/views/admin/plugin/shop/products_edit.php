@@ -355,7 +355,7 @@
         <div class="h2 sub-header"><?php echo $this->lang->line('shop_products_upload') ?></div>
         <div class="row">
             <div class="col-lg-12 col-md-12">
-<?php echo form_open_multipart(BASE_URL . '/admin/plugin/shop/htmlUpload/' . $this->uri->segment(5)) ?>
+            <?php echo form_open_multipart(BASE_URL . '/admin/plugin/shop/htmlUpload/' . $this->uri->segment(5)) ?>
                 <div class="row form-control-static">
                     <div class="col-lg-12 col-md-12">
                         <span class="btn btn-success fileinput-button">
@@ -374,15 +374,15 @@
                         <pre id="filelist" style="display:none;"></pre>
                     </div>
                 </div>
-<?php echo form_close(); ?>       
+            <?php echo form_close(); ?>       
             </div>
         </div>
         <br>
         <blockquote class="remark">
             <em><?php echo $this->lang->line('shop_products_fileallow') ?></em>
         </blockquote>
-<?php echo form_open(BASE_URL . '/admin/plugin/shop/uploadIndexSave'); ?>
-        <div class="table-responsive">
+        <?php echo form_open(BASE_URL . '/admin/plugin/shop/uploadIndexSave'); ?>
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -394,12 +394,12 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-<?php if ($showfile === FALSE) { ?>
+                    <?php if ($showfile === FALSE) { ?>
                         <tr>
                             <td colspan="5" class="text-center"><span class="h6 error"><?php echo $this->lang->line('uploadfile_filenotfound') ?></span></td>
                         </tr>                           
-<?php } else { ?>
-    <?php foreach ($showfile as $file) { ?>
+                    <?php } else { ?>
+                        <?php foreach ($showfile as $file) { ?>
                             <tr class="ui-state-default">
                                 <td class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-resize-vertical"></i></td>
                                 <td class="text-center" style="vertical-align:middle;">
@@ -414,7 +414,7 @@
                                         <img src="<?php echo BASE_URL . '/photo/plugin/shop/' . $file["file_upload"] ?>" width="100">
                                     <?php } else { ?>
                                         <i class="glyphicon glyphicon-file"></i> OTHER
-        <?php } ?>
+                                    <?php } ?>
                                 </td>
                                 <td style="vertical-align:middle;">
                                     <span class="h5"><b><?php echo $file["file_upload"]; ?></b></span>
@@ -429,8 +429,8 @@
                                     <span class="h5"><b><?php echo $file["timestamp_create"] ?></b></span>
                                 </td>
                             </tr>
-    <?php } ?>
-<?php } ?>
+                        <?php } ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>

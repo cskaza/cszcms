@@ -23,6 +23,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('name', '', FALSE)
             );
             echo form_input($data);
@@ -40,6 +41,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('email', '', FALSE)
             );
             echo form_input($data);
@@ -56,6 +58,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('password', '', FALSE),
                 'autocomplete' => 'off'
             );
@@ -73,6 +76,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('con_password', '', FALSE),
                 'autocomplete' => 'off'
             );
@@ -122,6 +126,7 @@
                 'name' => 'first_name',
                 'id' => 'first_name',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('first_name', '', FALSE)
             );
             echo form_input($data);
@@ -134,6 +139,7 @@
                 'name' => 'last_name',
                 'id' => 'last_name',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('last_name', '', FALSE)
             );
             echo form_input($data);

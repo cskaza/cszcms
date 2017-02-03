@@ -79,14 +79,14 @@ class Member extends CI_Controller {
         $result = $this->Csz_model->memberLogin($email, $password);
         if ($result == 'SUCCESS') {
             $this->Csz_model->saveLogs($email, 'Member Login Successful!', $result);
-            $url_return = $this->input->post('url_return', TRUE);
-            if($url_return){
-                redirect($url_return, 'refresh');
+            if($this->session->userdata('cszflogin_cururl')){
+                redirect($this->session->userdata('cszflogin_cururl'), 'refresh');
             }else{
                 redirect(BASE_URL.'/member', 'refresh');
             }
         } else {
             $this->Csz_model->saveLogs($email, 'Member Login Invalid!', $result);
+            $this->template->setSub('config', $this->Csz_model->load_config());
             $this->template->setSub('error', $result);
             $this->load->helper('form');
             $this->template->loadSub('frontpage/member/login');

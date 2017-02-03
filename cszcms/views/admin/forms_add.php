@@ -24,6 +24,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('form_name', '', FALSE)
             );
             echo form_input($data);
@@ -38,6 +39,7 @@
                 'name' => 'form_enctype',
                 'id' => 'form_enctype',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('form_enctype', '', FALSE)
             );
             echo form_input($data);
@@ -63,6 +65,7 @@
                 'name' => 'success_txt',
                 'id' => 'success_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('success_txt', '', FALSE)
             );
             echo form_input($data);
@@ -76,6 +79,7 @@
                 'name' => 'captchaerror_txt',
                 'id' => 'captchaerror_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('captchaerror_txt', '', FALSE)
             );
             echo form_input($data);
@@ -89,6 +93,7 @@
                 'name' => 'error_txt',
                 'id' => 'error_txt',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('error_txt', '', FALSE)
             );
             echo form_input($data);
@@ -118,6 +123,7 @@
                         'name' => 'email',
                         'id' => 'email',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('email', '', FALSE)
                     );
                     echo form_input($data);
@@ -132,6 +138,7 @@
                         'name' => 'subject',
                         'id' => 'subject',
                         'class' => 'form-control',
+                        'maxlength' => '255',
                         'value' => set_value('subject', '', FALSE)
                     );
                     echo form_input($data);
@@ -205,29 +212,29 @@
                         </div>            
                         <div class="control-group">	
                             <label class="control-label" for="field_name"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name[]" id="field_name" class="form-control">
+                            <input type="text" name="field_name[]" id="field_name" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_id"><?php echo $this->lang->line('field_id'); ?></label>
-                            <input type="text" name="field_id[]" id="field_id" class="form-control">
+                            <input type="text" name="field_id[]" id="field_id" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_class"><?php echo $this->lang->line('field_class'); ?></label>
-                            <input type="text" name="field_class[]" id="field_class" class="form-control">
+                            <input type="text" name="field_class[]" id="field_class" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_placeholder"><?php echo $this->lang->line('field_placeholder'); ?></label>
-                            <input type="text" name="field_placeholder[]" id="field_placeholder" class="form-control">
+                            <input type="text" name="field_placeholder[]" id="field_placeholder" class="form-control" maxlength="255">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="control-group">	
                             <label class="control-label" for="field_value"><?php echo $this->lang->line('field_value'); ?></label>
-                            <input type="text" name="field_value[]" id="field_value" class="form-control">
+                            <input type="text" name="field_value[]" id="field_value" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_label"><?php echo $this->lang->line('field_label'); ?></label>
-                            <input type="text" name="field_label[]" id="field_label" class="form-control">
+                            <input type="text" name="field_label[]" id="field_label" class="form-control" maxlength="255">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="sel_option_val"><?php echo $this->lang->line('sel_option_val'); ?></label>

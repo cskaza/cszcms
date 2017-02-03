@@ -41,6 +41,18 @@ class Template {
     }
     
     /**
+     * setJS
+     *
+     * Set More JS for using in templates views file (main file)
+     *
+     * @param	string	$js_txt   Value of variable
+     */
+    function setJS($js_txt)
+    {
+        $this->template_data['extra_js'] = $js_txt;
+    }
+    
+    /**
      * setSub
      *
      * Set variable for using in views file (views file)
@@ -48,9 +60,13 @@ class Template {
      * @param	string	$name    Variable name for use in view file
      * @param	string	$value   Value of variable
      */
-    function setSub($name, $value)
+    function setSub($name, $value = '')
     {
-        $this->data_sub[$name] = $value;
+        if(is_array($name)){
+            $this->data_sub = $name;
+        }else{
+            $this->data_sub[$name] = $value;
+        }
     }
 
     /**

@@ -41,6 +41,8 @@ $lang['shop_stat_hot_show']                 = "แสดงสินค้าร
 $lang['shop_stat_bestseller_show']                 = "แสดงสินค้าขายดี";
 $lang['shop_stat_soldout_show']                 = "แสดงสินค้าหมด";
 $lang['shop_stat_remark']                 = "สำหรับหน้าแรกร้านค้าและฟีดเท่านั้น!";
+$lang['shop_only_member']                 = "การชำระเงินสำหรับสมาชิกเท่านั้น";
+$lang['shop_bank_disable']                 = "ปิดการใช้งานการโอนเงินผ่านธนาคาร";
 
 // Shop Category
 $lang['shop_category_header']             = "ประเภทสินค้า";

@@ -155,10 +155,11 @@ class Forms extends CI_Controller {
         //Delete the languages
         if($this->uri->segment(4) && $this->uri->segment(5)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
-            $field_rs = $this->Csz_model->getValue('field_name', 'form_field', "form_field_id = '".$this->uri->segment(5)."' AND form_main_id = '".$this->uri->segment(4)."'", '', 1);
-            //$this->Csz_admin_model->dropTable('form_'.$frm_rs->form_name);
-            $this->load->dbforge();
-            $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
+            $field_rs = $this->Csz_model->getValue('*', 'form_field', "form_field_id = '".$this->uri->segment(5)."' AND form_main_id = '".$this->uri->segment(4)."'", '', 1);
+            if($field_rs->field_type != 'button' && $field_rs->field_type != 'reset' && $field_rs->field_type != 'submit' && $field_rs->field_type != 'label'){
+                $this->load->dbforge();
+                $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
+            }
             $this->Csz_admin_model->removeData('form_field', 'form_field_id', $this->uri->segment(5));
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
@@ -185,7 +186,7 @@ class Forms extends CI_Controller {
             ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
             //Get users from database   
             $this->template->setSub('form_name', $frm_rs->form_name);
-            $this->template->setSub('field_rs', $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+            $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
             $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
             //Load the view
             $this->template->loadSub('admin/forms_view');

@@ -1,6 +1,23 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.5
+- Add REST for support API.
+- Add Google Analytics data last 30 days to show on backend.
+- Add news feed from cszcms website on backend dashboard.
+- Add Dutch language for backend system.
+- Add brute force login protection system.
+- Change backend template to AdminLTE.
+- Update Codeigniter to 3.1.3.
+- Fix url rewrite for limit maxlength characters.
+- Fix shop plugin to 1.0.3 (Bug fixed and more update feature).
+- Fix remove form auto focus when required field.
+- Fix file upload function for security.
+- Fix TinyMCE use frontend template css.
+- Fix to return method url after login.
+- Fix more security (Url injection).
+- Fix forms builder bug.
+
 CSZ-CMS V.1.1.4
-- Add support for architecture HMVC.
+- Add support for HMVC architecture.
 - Change the license to ADPL.
 - Move plugin frontend to HMVC.
 - Fix shopping plugin to 1.0.2 (Add facebook comments into product view)

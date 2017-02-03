@@ -25,6 +25,7 @@
                     'required' => 'required',
                     'autofocus' => 'true',
                     'class' => 'form-control',
+                    'maxlength' => '255',
                     'value' => set_value('category_name', $category->category_name, FALSE)
                 );
                 echo form_input($data);
@@ -37,7 +38,7 @@
                     $att = 'id="main_cat_id" class="form-control"';
                     $data = array();
                     $data[''] = $this->lang->line('option_choose');
-                    if(isset($main_category)){
+                    if(!empty($main_category)){
                         foreach ($main_category as $c) {
                             if(!$c['main_cat_id'] && $c['article_db_id'] != $this->uri->segment(5)){
                                 $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
@@ -53,8 +54,10 @@
             <?php
                 $att = 'id="lang_iso" class="form-control"';
                 $data = array();
-                foreach ($lang as $lg) {
-                    $data[$lg->lang_iso] = $lg->lang_name;
+                if(!empty($lang)){
+                    foreach ($lang as $lg) {
+                        $data[$lg->lang_iso] = $lg->lang_name;
+                    }
                 }
                 echo form_dropdown('lang_iso', $data, $category->lang_iso, $att);
             ?>	

@@ -1,10 +1,7 @@
-After Version 1.1.4 We move git to gitLab
-https://gitlab.com/cszcms/cszcms
-
 Dependency Status
 ---------------------
-Gemnasium: [![Dependency Status](https://gemnasium.com/badges/github.com/cskaza/cszcms.svg)](https://gemnasium.com/github.com/cskaza/cszcms)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/566/badge)](https://bestpractices.coreinfrastructure.org/projects/566)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/28f12c06c6ff48db94f9c13c148429ad)](https://www.codacy.com/app/Astian-Foundation/cszcms?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=cszcms/cszcms/&amp;utm_campaign=Badge_Grade)
 
 
 #### CSZ CMS
@@ -18,18 +15,16 @@ See more at https://www.cszcms.com
 Server Recommend Requirements:
 - Best on browsers FireFox, Chrome, Safari, IE9.
 - Apache Server.
-- PHP 5.3.7 or higher.
+- PHP 5.4.0 or higher.
 - MySQL 5.0 or higher (Required for MySQLi Driver).
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled.
 - gZip Compression Enabled.
 
 Installation Instructions:
-- Download zip file from https://www.cszcms.com/download
 - Unzip file into 'htdocs' directory or 'public_html' for hosting (If you want to unzip file into directory. Please make new directory and unzip all file into this).
 - Run the website for the setup wizard. Example http://localhost or unzip into directory is http://localhost/yourcmsdir. Or unzip into real hosting with http://www.example.com or http://www.example.com/yourcmsdir
 - Input the value on screen (Required information for database. Exmple Database Server url, Database Username, Database Password, Database Name etc.)
 - In 'Base Url' please input http://localhost or http://localhost/yourcmsdir. Or real hosting is http://www.example.com or http://www.example.com/yourcmsdir
 - Click 'Install' button. And enjoy with your web applications.
 
-Download Here! at https://www.cszcms.com/download

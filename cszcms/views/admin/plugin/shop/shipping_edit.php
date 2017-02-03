@@ -16,7 +16,7 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('shop_shipping_edit') ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('shop'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
         <h4><?php echo $this->lang->line('shop_order_detail') ?></h4>
-        <?php echo $payment->order_detail ?>
+        <?php echo (!empty($payment) && $payment->order_detail != NULL && $payment->order_detail) ? $payment->order_detail : '-' ?>
         <hr>
         <?php echo form_open(BASE_URL . '/admin/plugin/shop/editShippingSave/'.$shipping->shop_shipping_id); ?>
         <div class="control-group">	

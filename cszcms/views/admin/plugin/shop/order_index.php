@@ -29,7 +29,7 @@
             </div>
         </form>
         <br><br>
-        <div class="table-responsive">
+        <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>

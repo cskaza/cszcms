@@ -41,6 +41,8 @@ $lang['shop_stat_hot_show']                 = "Show Hot Products";
 $lang['shop_stat_bestseller_show']                 = "Show Best Seller Products";
 $lang['shop_stat_soldout_show']                 = "Show Sold Out Products";
 $lang['shop_stat_remark']                 = "For shop index and Feed only!";
+$lang['shop_only_member']                 = "Payment For Member Only";
+$lang['shop_bank_disable']                 = "Bank Transfer Disable";
 
 // Shop Category
 $lang['shop_category_header']             = "Products Category";

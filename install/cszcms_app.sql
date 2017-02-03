@@ -161,7 +161,7 @@ INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `o
 (2, 'About Us', 'en', 2, '', '', 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
 (3, 'Contact Us', 'en', 3, '', '', 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07'),
 (4, 'Drop Menu', 'en', 0, '', '', 1, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
-(5, 'CSZ-CMS Website', 'en', 0, 'http://www.cszcms.com', '', 0, 4, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
+(5, 'CSZ-CMS Website', 'en', 0, 'https://www.cszcms.com', '', 0, 4, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE IF NOT EXISTS `settings` (
@@ -190,12 +190,14 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `sendmail_path` varchar(255),
   `member_confirm_enable` int(11),
   `member_close_regist` int(11),
+  `ga_client_id` varchar(255),
+  `ga_view_id` varchar(255),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `timestamp_update`) VALUES
-(1, 'CSZ-CMS Starter', '', '', '', '&copy; %YEAR CSZ-CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '2016-05-19 15:08:31');
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `ga_client_id`, `ga_view_id`, `timestamp_update`) VALUES
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %YEAR CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '', '', '2016-05-19 15:08:31');
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -252,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `timestamp_update` datetime,
   PRIMARY KEY (`general_label_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
@@ -347,7 +349,8 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (90, 'shop_cancel_order_txt', 'For order cancel text', 'We are sorry! Your last transaction was cancelled.', '2016-09-26 10:53:09'),
 (91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09'),
 (92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09'),
-(93, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09');
+(93, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09'),
+(94, 'shop_payment_disable', 'For shop payment disable text', 'Payment Disabled!', '2017-01-13 10:53:09');
 
 DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
@@ -366,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `plugin_manager` (
 INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Article', 'article', '1.0.4', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
 (2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(3, 'Shopping', 'shop', '1.0.2', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
+(3, 'Shopping', 'shop', '1.0.3', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
 
 DROP TABLE IF EXISTS `article_db`;
 CREATE TABLE IF NOT EXISTS `article_db` (
@@ -479,6 +482,8 @@ CREATE TABLE IF NOT EXISTS `shop_config` (
   `paysbuy_active` int(11),
   `paysbuy_email` varchar(255),
   `bank_detail` text,
+  `bank_disable` int(11),
+  `only_member` int(11),
   `currency_code` varchar(10),
   `seller_email` varchar(255),
   `order_subject` varchar(255),
@@ -490,8 +495,8 @@ CREATE TABLE IF NOT EXISTS `shop_config` (
   PRIMARY KEY (`shop_config_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT IGNORE INTO `shop_config` (`shop_config_id`, `stat_new_show`, `stat_hot_show`, `stat_bestseller_show`, `stat_soldout_show`, `paypal_active`, `sanbox_active`, `paypal_email`, `paysbuy_active`, `paysbuy_email`, `bank_detail`, `currency_code`, `seller_email`, `order_subject`, `order_body`, `payment_subject`, `payment_body`, `signature`, `timestamp_update`) VALUES
-(1, 1, 1, 1, 0, 0, 0, '', 0, '', '<h2>Bank Detail:</h2><h4><strong>Example Bank (Test Branch)</strong></h4><p><strong>ACC ID :</strong> 857-1531-19-9<br /> <strong>ACC Name :</strong> Example Tester</p><p><em>After transfer the payment. Please send the payslip to test@example.com</em></p>', 'USD', '', 'Thank you for your order!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you very much for your order. After payment successed. Your order is being processed and will be shipped to you.</p><p><strong></strong></p>', 'Your payment has now been confirmed!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you for your order. Your payment has now been confirmed. Your order is already being processed and will be shipped to you.</p>', '<p><strong>Regards,</strong></p><p><strong>Shopping Web Team</strong><br /><strong>Tel: (001) 234 567 8910</strong><br /><strong>Email: test@example.com</strong></p>', '2016-09-27 12:59:09');
+INSERT IGNORE INTO `shop_config` (`shop_config_id`, `stat_new_show`, `stat_hot_show`, `stat_bestseller_show`, `stat_soldout_show`, `paypal_active`, `sanbox_active`, `paypal_email`, `paysbuy_active`, `paysbuy_email`, `bank_detail`, `bank_disable`, `only_member`, `currency_code`, `seller_email`, `order_subject`, `order_body`, `payment_subject`, `payment_body`, `signature`, `timestamp_update`) VALUES
+(1, 1, 1, 1, 0, 0, 0, '', 0, '', '<h2>Bank Detail:</h2><h4><strong>Example Bank (Test Branch)</strong></h4><p><strong>ACC ID :</strong> 857-1531-19-9<br /> <strong>ACC Name :</strong> Example Tester</p><p><em>After transfer the payment. Please send the payslip to test@example.com</em></p>', 0, 0, 'USD', '', 'Thank you for your order!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you very much for your order. After payment successed. Your order is being processed and will be shipped to you.</p><p><strong></strong></p>', 'Your payment has now been confirmed!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you for your order. Your payment has now been confirmed. Your order is already being processed and will be shipped to you.</p>', '<p><strong>Regards,</strong></p><p><strong>Shopping Web Team</strong><br /><strong>Tel: (001) 234 567 8910</strong><br /><strong>Email: test@example.com</strong></p>', '2016-09-27 12:59:09');
 
 DROP TABLE IF EXISTS `shop_payment`;
 CREATE TABLE IF NOT EXISTS `shop_payment` (
@@ -588,3 +593,33 @@ CREATE TABLE IF NOT EXISTS `widget_xml` (
   PRIMARY KEY (`widget_xml_id`),
   KEY `widget_name` (`widget_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `login_security_config`;
+CREATE TABLE IF NOT EXISTS `login_security_config` (
+  `login_security_config_id` int(11) AUTO_INCREMENT,
+  `bf_protect_period` int(11),
+  `max_failure` int(11),
+  `timestamp_update` datetime,
+  PRIMARY KEY (`login_security_config_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+INSERT INTO `login_security_config` (`login_security_config_id`, `bf_protect_period`, `max_failure`, `timestamp_update`) VALUES
+(1, 60, 20, NOW());
+
+DROP TABLE IF EXISTS `blacklist_ip`;
+CREATE TABLE IF NOT EXISTS `blacklist_ip` (
+  `blacklist_ip_id` int(11) AUTO_INCREMENT,
+  `ip_address` varchar(255),
+  `note` text,
+  `timestamp_create` datetime,
+  PRIMARY KEY (`blacklist_ip_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `whitelist_ip`;
+CREATE TABLE IF NOT EXISTS `whitelist_ip` (
+  `whitelist_ip_id` int(11) AUTO_INCREMENT,
+  `ip_address` varchar(255),
+  `note` text,
+  `timestamp_create` datetime,
+  PRIMARY KEY (`whitelist_ip_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
