@@ -33,7 +33,7 @@ class Article extends CI_Controller {
         $this->template->set_template('admin');
         $this->load->model('plugin/Article_model');
         $this->_init();
-        admin_helper::plugin_not_active($this->uri->segment(3));
+        admin_helper::plugin_not_active('article');
     }
 
     public function _init() {
@@ -48,19 +48,22 @@ class Article extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         $this->csz_referrer->setIndex('article'); /* Set index page when redirect after save */
-
+        $this->db->cache_on();
         //Get users from database
         $this->template->setSub('total_cat', $this->Csz_model->countData('article_db', "active = '1' AND is_category = '1'"));
         $this->template->setSub('total_art', $this->Csz_model->countData('article_db', "active = '1' AND is_category = '0'"));
 
         //Load the view
-        $this->template->loadSub('admin/plugin/article_home');
+        $this->template->loadSub('admin/plugin/article/article_home');
     }
 
     public function article() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         $this->csz_referrer->setIndex('article_art'); /* Set index page when redirect after save */
+        $this->db->cache_on();
         $search_arr = ' 1=1 ';
         if ($this->input->get('search') || $this->input->get('category') || $this->input->get('lang')) {
             if ($this->input->get('search')) {
@@ -93,12 +96,14 @@ class Article extends CI_Controller {
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
         //Load the view
-        $this->template->loadSub('admin/plugin/article_index');
+        $this->template->loadSub('admin/plugin/article/article_index');
     }
 
     public function category() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         $this->csz_referrer->setIndex('article_cat'); /* Set index page when redirect after save */
+        $this->db->cache_on();
         $search_arr = "is_category = '1'";
         if ($this->input->get('search') || $this->input->get('main_cat_id') || $this->input->get('lang')) {
             if ($this->input->get('search')) {
@@ -121,12 +126,13 @@ class Article extends CI_Controller {
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
         //Load the view
-        $this->template->loadSub('admin/plugin/article_category');
+        $this->template->loadSub('admin/plugin/article/article_category');
     }
     
     public function catIndexSave(){
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         $count = 0;
         $arrange = 1;
         $article_db_id = $this->input->post('article_db_id', TRUE);
@@ -149,27 +155,30 @@ class Article extends CI_Controller {
 
     public function artadd() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
-        $this->template->loadSub('admin/plugin/article_add');
+        $this->template->loadSub('admin/plugin/article/article_add');
     }
 
     public function catadd() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
-        $this->template->loadSub('admin/plugin/article_addcat');
+        $this->template->loadSub('admin/plugin/article/article_addcat');
     }
 
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -190,7 +199,8 @@ class Article extends CI_Controller {
 
     public function addCatSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -209,6 +219,7 @@ class Article extends CI_Controller {
 
     public function artedit() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
@@ -216,7 +227,7 @@ class Article extends CI_Controller {
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
-            $this->template->loadSub('admin/plugin/article_artedit');
+            $this->template->loadSub('admin/plugin/article/article_artedit');
         } else {
             redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
         }
@@ -224,7 +235,8 @@ class Article extends CI_Controller {
 
     public function editArtSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
                 //Load the form validation library
                 $this->load->library('form_validation');
@@ -249,6 +261,7 @@ class Article extends CI_Controller {
     
     public function catedit() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
@@ -256,7 +269,7 @@ class Article extends CI_Controller {
             $this->template->setSub('category', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
-            $this->template->loadSub('admin/plugin/article_catedit');
+            $this->template->loadSub('admin/plugin/article/article_catedit');
         } else {
             redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
         }
@@ -264,7 +277,8 @@ class Article extends CI_Controller {
     
     public function editCatSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
             $this->load->library('form_validation');
             //Set validation rules
@@ -284,7 +298,8 @@ class Article extends CI_Controller {
 
     public function artdel() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('delete');
         if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
@@ -296,7 +311,8 @@ class Article extends CI_Controller {
     
     public function catdel() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('delete');
         if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
@@ -308,7 +324,8 @@ class Article extends CI_Controller {
     
     public function asCopy() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('save');
         if($this->uri->segment(5)){
             $article = $this->Csz_model->getValue('*', 'article_db', "article_db_id = '".$this->uri->segment(5)."' AND is_category = '0'", '', 1);
             if($article !== FALSE){

@@ -33,7 +33,7 @@ class Gallery extends CI_Controller {
         $this->template->set_template('admin');
         $this->load->model('plugin/Gallery_model');
         $this->_init();
-        admin_helper::plugin_not_active($this->uri->segment(3));
+        admin_helper::plugin_not_active('gallery');
     }
 
     public function _init() {
@@ -48,6 +48,8 @@ class Gallery extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('gallery');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex('gallery'); /* Set index page when redirect after save */
         $search_arr = "gallery_db_id != '' ";
         if ($this->input->get('search')) {
@@ -67,21 +69,23 @@ class Gallery extends CI_Controller {
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
         //Load the view
-        $this->template->loadSub('admin/plugin/gallery_index');
+        $this->template->loadSub('admin/plugin/gallery/gallery_index');
     }
 
     public function add() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('gallery');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
-        $this->template->loadSub('admin/plugin/gallery_add');
+        $this->template->loadSub('admin/plugin/gallery/gallery_add');
     }
 
     public function addSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -101,6 +105,7 @@ class Gallery extends CI_Controller {
 
     public function edit() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('gallery');
         //Load the form helper
         $this->load->helper('form');
         $this->csz_referrer->setIndex('gallery_edit'); /* Set index page when redirect after save */
@@ -115,7 +120,7 @@ class Gallery extends CI_Controller {
             $this->template->setSub('showfile', $this->Csz_admin_model->getIndexData('gallery_picture', 0, 0, 'arrange', 'ASC', $search_arr));
             $this->template->setSub('total_row', $total_row);
             //Load the view
-            $this->template->loadSub('admin/plugin/gallery_edit');
+            $this->template->loadSub('admin/plugin/gallery/gallery_edit');
         } else {
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
         }
@@ -123,7 +128,8 @@ class Gallery extends CI_Controller {
 
     public function editSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
             //Load the form validation library
             $this->load->library('form_validation');
@@ -147,7 +153,8 @@ class Gallery extends CI_Controller {
     
     public function addYoutube() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
             $gallery_type = $this->input->post('gallery_type', TRUE);
             $youtube_url = $this->input->post('youtube_url', TRUE);
@@ -165,7 +172,8 @@ class Gallery extends CI_Controller {
 
     public function htmlUpload() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
             $gallery_type = $this->input->post('gallery_type', TRUE);
             $path = FCPATH . "/photo/plugin/gallery/";
@@ -193,7 +201,8 @@ class Gallery extends CI_Controller {
 
     public function uploadIndexSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         $path = FCPATH . "/photo/plugin/gallery/";
         $filedel = $this->input->post('filedel', TRUE);
         $caption = $this->input->post('caption', TRUE);
@@ -201,6 +210,7 @@ class Gallery extends CI_Controller {
         $arrange = 1;
         $gallery_picture_id = $this->input->post('gallery_picture_id', TRUE);
         if (isset($filedel)) {
+            admin_helper::is_allowchk('delete');
             foreach ($filedel as $value) {
                 if ($value) {
                     $filename = $this->Csz_model->getValue('file_upload', 'gallery_picture', 'gallery_picture_id', $value, 1);
@@ -240,7 +250,8 @@ class Gallery extends CI_Controller {
     
     public function albumIndexSave() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
         $i = 0;
         $arrange = 1;
         $gallery_db_id = $this->input->post('gallery_db_id', TRUE);
@@ -263,7 +274,8 @@ class Gallery extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('delete');
         if ($this->uri->segment(5)) {
             $path = FCPATH . "/photo/plugin/gallery/";
             //Delete the data

@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('nav_admin_users') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_admin_txt') ?>
             </li>
         </ol>
     </div>
@@ -28,7 +28,8 @@
                             <div class="col-lg-5 col-md-5">
                                 <p><b><?php echo $this->lang->line('user_new_name') ?>:</b> <?php echo ($users->name && $users->name != NULL) ? $users->name : '-'; ?></p>
                                 <p><b><?php echo $this->lang->line('user_new_email') ?>:</b> <?php if($this->session->userdata('admin_visitor') == 0){ echo ($users->email && $users->email != NULL) ? $users->email : '-'; }else{ echo $this->lang->line('user_not_allow_txt'); } ?></p>
-                                <p><b><?php echo $this->lang->line('user_new_type') ?>:</b> <?php echo ucfirst($users->user_type); ?></p>
+                                <?php $user_group = $this->Csz_auth_model->get_groups_fromuser($users->user_admin_id); ?>
+                                <p><b><?php echo $this->lang->line('user_group_txt') ?>:</b> <?php echo ($user_group !== FALSE) ? $user_group->name : '-' ; ?></p>
                                 <p><b><?php echo $this->lang->line('user_first_name') ?> - <?php echo $this->lang->line('user_last_name') ?>:</b> <?php echo ($users->first_name && $users->first_name != NULL) ? ucfirst($users->first_name) : '-'; ?> <?php echo ($users->last_name && $users->last_name != NULL) ? ucfirst($users->last_name) : '-'; ?></p>
                             </div>
                             <div class="col-lg-5 col-md-5">

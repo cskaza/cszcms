@@ -29,7 +29,7 @@
                         <div class="col-lg-6 col-md-6">
                             <p><b><?php echo $this->Csz_model->getLabelLang('display_name') ?>:</b> <?php echo ($users->name) ? $users->name : '-'; ?></p>
                             <p><b><?php echo $this->Csz_model->getLabelLang('email_address') ?>:</b> <?php echo ($users->email) ? $users->email : '-'; ?></p>
-                            <p><b><?php echo $this->Csz_model->getLabelLang('first_name') ?> - <?php echo $this->Csz_model->getLabelLang('last_name') ?>:</b> <?php echo ($users->first_name) ? ucfirst($users->first_name) : '-'; ?> <?php echo ($users->last_name) ? ucfirst($users->last_name) : '-'; ?></p>
+                            <p><b><?php echo $this->Csz_model->getLabelLang('first_name') ?> - <?php echo $this->Csz_model->getLabelLang('last_name') ?>:</b> <?php echo ($users->first_name) ? ucfirst($users->first_name) : '-'; ?> <?php echo ($users->last_name) ? ucfirst($users->last_name) : ''; ?></p>
                             <p><b><?php echo $this->Csz_model->getLabelLang('birthday') ?>:</b> <?php echo ($users->birthday && $users->birthday != '0000-00-00') ? date('d F Y', strtotime($users->birthday)) : '-'; ?></p>
                         </div>
                         <div class="col-lg-6 col-md-6">
@@ -37,7 +37,8 @@
                             <p><b><?php echo $this->Csz_model->getLabelLang('phone') ?>:</b> <?php echo ($users->phone) ? $users->phone : '-'; ?></p>
                             <p><b><?php echo $this->Csz_model->getLabelLang('address') ?>:</b> <?php echo($users->address) ? $users->address : '-'; ?></p>
                         </div>
-                    </div> 
+                    </div>
+                    <br>
                 </div>
             </div>
         </div>

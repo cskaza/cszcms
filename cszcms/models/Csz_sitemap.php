@@ -91,21 +91,26 @@ class Csz_sitemap extends CI_Model {
                 </url>'."\n";
             }
         }
-        $page = $this->Csz_model->getValueArray('page_url', 'pages', 'active', 1, 0, 'page_url', 'ASC');
-        if($page !== FALSE){
-            foreach ($page as $row) {
-                $sitemap_xml.= '<url>
-                <loc>'.BASE_URL.'/'.$row['page_url'].'</loc>
-                <changefreq>always</changefreq>
-                </url>'."\n";
-            }
-        }
-        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
+        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
-                if($row['other_link'] && $chkotherlink !== FALSE){
+                if($row['pages_id'] && $row['pages_id'] != NULL && $row['pages_id'] != 0){
+                    $pages = $this->Csz_model->getValue('page_url', 'pages', "active = '1' AND pages_id = '".$row['pages_id']."'", '', 1, 'page_url', 'ASC');                    
+                    if($row['drop_page_menu_id'] != 0 && $row['drop_page_menu_id'] != NULL){
+                        $main = $this->Csz_model->getValue('menu_name', 'page_menu', "active = '1' AND page_menu_id = '".$row['drop_page_menu_id']."'", '', 1, 'menu_name', 'ASC');                    
+                        $sitemap_xml.= '<url>
+                        <loc>'.BASE_URL.'/'.$this->Csz_model->rw_link($main->menu_name).'/'.$pages->page_url.'</loc>
+                        <changefreq>always</changefreq>
+                        </url>'."\n";
+                    }else{
+                        $sitemap_xml.= '<url>
+                        <loc>'.BASE_URL.'/'.$pages->page_url.'</loc>
+                        <changefreq>always</changefreq>
+                        </url>'."\n";
+                    }
+                }else if($row['other_link'] && $row['other_link'] != NULL && $chkotherlink !== FALSE){
                     if(!in_array($row['other_link'], $url_same)){
                         $sitemap_xml.= '<url>
                         <loc>'.$row['other_link'].'</loc>
@@ -113,7 +118,7 @@ class Csz_sitemap extends CI_Model {
                         </url>'."\n";
                     }
                     $url_same[] = $row['other_link'];
-                }else if($row['plugin_menu']){                    
+                }else if($row['plugin_menu'] && $row['plugin_menu'] != NULL){                    
                     if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
                         $sitemap_xml.= '<url>
                         <loc>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</loc>
@@ -124,22 +129,19 @@ class Csz_sitemap extends CI_Model {
                 }
             }
         }
-        $plugin = $this->Csz_model->getValueArray('plugin_db_table,plugin_urlrewrite', 'plugin_manager', "plugin_active = '1' AND plugin_db_table != ''", '', 0, 'timestamp_update', 'DESC');
+        $plugin = $this->Csz_model->getValueArray('plugin_config_filename', 'plugin_manager', "plugin_active = '1' AND plugin_config_filename != ''", '', 0, 'timestamp_update', 'DESC');
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
-                $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                if($plugin_db[0] == 'article_db'){
-                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
-                }else{
-                    $where = "active = '1' AND url_rewrite != ''";
-                }
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
-                if($plugindb !== FALSE){
-                    foreach ($plugindb as $rs) {
-                        $sitemap_xml.= '<url>
-                        <loc>'.BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].'</loc>
-                        <changefreq>always</changefreq>
-                        </url>'."\n";
+                $plugin_db = $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sitemap_viewtable');
+                if(!empty($plugin_db)){
+                    $plugindata = $this->Csz_model->getValueArray('*', $plugin_db, $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sqlextra_condition'), '', 0, $plugin_db.'_id', 'DESC');
+                    if($plugindata !== FALSE){
+                        foreach ($plugindata as $rs) {
+                            $sitemap_xml.= '<url>
+                            <loc>'.BASE_URL.'/plugin/'.$this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_urlrewrite').'/view/'.$rs[$plugin_db.'_id'].'/'.$rs['url_rewrite'].'</loc>
+                            <changefreq>always</changefreq>
+                            </url>'."\n";
+                        }
                     }
                 }
             }       
@@ -177,25 +179,7 @@ class Csz_sitemap extends CI_Model {
 	<ror:sortOrder>0</ror:sortOrder>
 	<ror:resourceOf>sitemap</ror:resourceOf>
         </item>'."\n";
-        $page = $this->Csz_model->getValueArray('*', 'pages', 'active', 1, 0, 'page_url', 'ASC');
-        if($page !== FALSE){
-            $i = 0;
-            foreach ($page as $row) {
-                $i++;
-                if($i < 10) $order = 1;
-		else if($i < 50) $order = 2;
-		else $order = 3;
-                $ror_xml.= '<item>
-                        <link>'.BASE_URL.'/'.$row['page_url'].'</link>
-                        <title>'.$row['page_name'].'</title>
-                        <description>'.$row['page_desc'].'</description>
-                        <ror:updatePeriod>always</ror:updatePeriod>
-                        <ror:sortOrder>'.$order.'</ror:sortOrder>
-                        <ror:resourceOf>sitemap</ror:resourceOf>
-                </item>'."\n";
-            }
-        }
-        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
+        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             $i = 0;
             $url_same = array();
@@ -205,7 +189,29 @@ class Csz_sitemap extends CI_Model {
 		else if($i < 50) $order = 2;
 		else $order = 3;
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
-                if($row['other_link'] && $chkotherlink !== FALSE){
+                if($row['pages_id'] && $row['pages_id'] != NULL && $row['pages_id'] != 0){
+                    $pages = $this->Csz_model->getValue('*', 'pages', "active = '1' AND pages_id = '".$row['pages_id']."'", '', 1, 'page_url', 'ASC');                    
+                    if($row['drop_page_menu_id'] != 0 && $row['drop_page_menu_id'] != NULL){
+                        $main = $this->Csz_model->getValue('menu_name', 'page_menu', "active = '1' AND page_menu_id = '".$row['drop_page_menu_id']."'", '', 1, 'menu_name', 'ASC');                    
+                        $ror_xml.= '<item>
+                                <link>'.BASE_URL.'/'.$this->Csz_model->rw_link($main->menu_name).'/'.$pages->page_url.'</link>
+                                <title>'.$pages->page_name.'</title>
+                                <description>'.$pages->page_desc.'</description>
+                                <ror:updatePeriod>always</ror:updatePeriod>
+                                <ror:sortOrder>'.$order.'</ror:sortOrder>
+                                <ror:resourceOf>sitemap</ror:resourceOf>
+                        </item>'."\n";
+                    }else{
+                        $ror_xml.= '<item>
+                                <link>'.BASE_URL.'/'.$pages->page_url.'</link>
+                                <title>'.$pages->page_name.'</title>
+                                <description>'.$pages->page_desc.'</description>
+                                <ror:updatePeriod>always</ror:updatePeriod>
+                                <ror:sortOrder>'.$order.'</ror:sortOrder>
+                                <ror:resourceOf>sitemap</ror:resourceOf>
+                        </item>'."\n";
+                    }
+                }else if($row['other_link'] && $row['other_link'] != NULL && $chkotherlink !== FALSE){
                     if(!in_array($row['other_link'], $url_same)){
                         $ror_xml.= '<item>
                             <link>'.$row['other_link'].'</link>
@@ -217,7 +223,7 @@ class Csz_sitemap extends CI_Model {
                         </item>'."\n";
                     }
                     $url_same[] = $row['other_link'];                   
-                }else if($row['plugin_menu']){
+                }else if($row['plugin_menu'] && $row['plugin_menu'] != NULL){
                     if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
                         $ror_xml.= '<item>
                             <link>'.BASE_URL.'/plugin/'.$row['plugin_menu'].'</link>
@@ -232,34 +238,31 @@ class Csz_sitemap extends CI_Model {
                 }
             }
         }
-        $plugin = $this->Csz_model->getValueArray('plugin_db_table,plugin_urlrewrite', 'plugin_manager', "plugin_active = '1' AND plugin_db_table != ''", '', 0, 'timestamp_update', 'DESC');
+        $plugin = $this->Csz_model->getValueArray('plugin_config_filename', 'plugin_manager', "plugin_active = '1' AND plugin_config_filename != ''", '', 0, 'timestamp_update', 'DESC');
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
-                $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                if($plugin_db[0] == 'article_db'){
-                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
-                }else{
-                    $where = "active = '1' AND url_rewrite != ''";
-                }
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
-                if($plugindb !== FALSE){
-                    $i = 0;
-                    foreach ($plugindb as $rs) {
-                        $i++;
-                        if($i < 10) $order = 1;
-                        else if($i < 50) $order = 2;
-                        else $order = 3;
-                        $ror_xml.= '<item>
-                                <link>'.BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].'</link>
-                                <title>'.str_replace('-', ' ', $rs['url_rewrite']).'</title>
-                                <description>'.$rs['short_desc'].'</description>
-                                <ror:updatePeriod>always</ror:updatePeriod>
-                                <ror:sortOrder>'.$order.'</ror:sortOrder>
-                                <ror:resourceOf>sitemap</ror:resourceOf>
-                        </item>'."\n";
+                $plugin_db = $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sitemap_viewtable');
+                if(!empty($plugin_db)){
+                    $plugindata = $this->Csz_model->getValueArray('*', $plugin_db, $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sqlextra_condition'), '', 0, $plugin_db.'_id', 'DESC');
+                    if($plugindata !== FALSE){
+                        $i = 0;
+                        foreach ($plugindata as $rs) {
+                            $i++;
+                            if($i < 10) $order = 1;
+                            else if($i < 50) $order = 2;
+                            else $order = 3;
+                            $ror_xml.= '<item>
+                                    <link>'.BASE_URL.'/plugin/'.$this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_urlrewrite').'/view/'.$rs[$plugin_db.'_id'].'/'.$rs['url_rewrite'].'</link>
+                                    <title>'.str_replace('-', ' ', $rs['url_rewrite']).'</title>
+                                    <description>'.$rs['short_desc'].'</description>
+                                    <ror:updatePeriod>always</ror:updatePeriod>
+                                    <ror:sortOrder>'.$order.'</ror:sortOrder>
+                                    <ror:resourceOf>sitemap</ror:resourceOf>
+                            </item>'."\n";
+                        }
                     }
                 }
-            }
+            }       
         }
         $ror_xml.= '</channel></rss>'."\n";
         if($ror_xml){
@@ -279,24 +282,26 @@ class Csz_sitemap extends CI_Model {
             foreach ($lang as $row) {
                 $sitemap_txt.= BASE_URL.'/lang/'.$row['lang_iso'].''."\n";
             }
-        }
-        $page = $this->Csz_model->getValueArray('page_url', 'pages', 'active', 1, 0, 'page_url', 'ASC');
-        if($page !== FALSE){
-            foreach ($page as $row) {
-                $sitemap_txt.= BASE_URL.'/'.$row['page_url'].''."\n";
-            }
-        }
-        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
+        }       
+        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
-                if($row['other_link'] && $chkotherlink !== FALSE){
+                if($row['pages_id'] && $row['pages_id'] != NULL && $row['pages_id'] != 0){
+                    $pages = $this->Csz_model->getValue('page_url', 'pages', "active = '1' AND pages_id = '".$row['pages_id']."'", '', 1, 'page_url', 'ASC');                    
+                    if($row['drop_page_menu_id'] != 0 && $row['drop_page_menu_id'] != NULL){
+                        $main = $this->Csz_model->getValue('menu_name', 'page_menu', "active = '1' AND page_menu_id = '".$row['drop_page_menu_id']."'", '', 1, 'menu_name', 'ASC');                    
+                        $sitemap_txt.= BASE_URL.'/'.$this->Csz_model->rw_link($main->menu_name).'/'.$pages->page_url.''."\n";
+                    }else{
+                        $sitemap_txt.= BASE_URL.'/'.$pages->page_url.''."\n";
+                    }
+                }else if($row['other_link'] && $row['other_link'] != NULL && $chkotherlink !== FALSE){
                     if(!in_array($row['other_link'], $url_same)){
                         $sitemap_txt.= $row['other_link'].''."\n";
                     }
                     $url_same[] = $row['other_link'];
-                }else if($row['plugin_menu']){
+                }else if($row['plugin_menu'] && $row['plugin_menu'] != NULL){
                     if(!in_array(BASE_URL.'/plugin/'.$row['plugin_menu'], $url_same)){
                         $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_menu'].''."\n";
                     }
@@ -304,22 +309,19 @@ class Csz_sitemap extends CI_Model {
                 }
             }
         }
-        $plugin = $this->Csz_model->getValueArray('plugin_db_table,plugin_urlrewrite', 'plugin_manager', "plugin_active = '1' AND plugin_db_table != ''", '', 0, 'timestamp_update', 'DESC');
+        $plugin = $this->Csz_model->getValueArray('plugin_config_filename', 'plugin_manager', "plugin_active = '1' AND plugin_config_filename != ''", '', 0, 'timestamp_update', 'DESC');
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
-                $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                if($plugin_db[0] == 'article_db'){
-                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
-                }else{
-                    $where = "active = '1' AND url_rewrite != ''";
-                }
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
-                if($plugindb !== FALSE){
-                    foreach ($plugindb as $rs) {
-                        $sitemap_txt.= BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].''."\n";
+                $plugin_db = $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sitemap_viewtable');
+                if(!empty($plugin_db)){
+                    $plugindata = $this->Csz_model->getValueArray('*', $plugin_db, $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sqlextra_condition'), '', 0, $plugin_db.'_id', 'DESC');
+                    if($plugindata !== FALSE){
+                        foreach ($plugindata as $rs) {
+                            $sitemap_txt.= BASE_URL.'/plugin/'.$this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_urlrewrite').'/view/'.$rs[$plugin_db.'_id'].'/'.$rs['url_rewrite'].''."\n";
+                        }
                     }
                 }
-            }
+            }       
         }
         if($sitemap_txt){
             $file_path = FCPATH."urllist.txt";
@@ -340,26 +342,27 @@ class Csz_sitemap extends CI_Model {
         </head>
         <body>
         <div>
-        <h1>HTML Site Map by CSZ CMS</h1>
+        <h1>HTML Site Map by <a href="https://www.cszcms.com" target="_blank">CSZ CMS '.$this->Csz_model->getVersion().'</a></h1>
         <p><b>Last updated: </b><em>'.date("d F Y H:i:s").'</em></p>
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr valign="top">
         <td class="lpart" colspan="100">';
         $sitemap_html.= '<h2><a href="'.BASE_URL.'" title="'.$webconfig->site_name.' | '.$webconfig->keywords.'">'.$webconfig->site_name.' | '.$webconfig->keywords.'</a></h2>';
-        $sitemap_html.= '<h3>Pages List</h3>';
-        $page = $this->Csz_model->getValueArray('*', 'pages', 'active', 1, 0, 'page_url', 'ASC');
-        if($page !== FALSE){
-            foreach ($page as $row) {
-                $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/'.$row['page_url'].'" title="'.$row['page_name'].'">'.$row['page_name'].'</a></h4>';
-            }
-        }
         $sitemap_html.= '<h3>Navigations List</h3>';
-        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND pages_id = '0' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
+        $menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');
         if($menu_other !== FALSE){
             $url_same = array();
             foreach ($menu_other as $row) {
                 $chkotherlink = strpos($row['other_link'], BASE_URL);
-                if($row['other_link'] && $chkotherlink !== FALSE){
+                if($row['pages_id'] && $row['pages_id'] != NULL && $row['pages_id'] != 0){
+                    $pages = $this->Csz_model->getValue('*', 'pages', "active = '1' AND pages_id = '".$row['pages_id']."'", '', 1, 'page_url', 'ASC');                    
+                    if($row['drop_page_menu_id'] != 0 && $row['drop_page_menu_id'] != NULL){
+                        $main = $this->Csz_model->getValue('menu_name', 'page_menu', "active = '1' AND page_menu_id = '".$row['drop_page_menu_id']."'", '', 1, 'menu_name', 'ASC');                    
+                        $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/'.$this->Csz_model->rw_link($main->menu_name).'/'.$pages->page_url.'" title="'.$pages->page_name.'">'.$pages->page_name.'</a></h4>';
+                    }else{
+                        $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/'.$pages->page_url.'" title="'.$pages->page_name.'">'.$pages->page_name.'</a></h4>';
+                    }
+                }else if($row['other_link'] && $chkotherlink !== FALSE){
                     if(!in_array($row['other_link'], $url_same)){
                         $sitemap_html.= '<h4> - <a href="'.$row['other_link'].'" title="'.$row['menu_name'].'">'.$row['menu_name'].'</a></h4>';
                     }
@@ -373,23 +376,19 @@ class Csz_sitemap extends CI_Model {
                 }
             }
         }
-        $plugin = $this->Csz_model->getValueArray('plugin_db_table,plugin_urlrewrite', 'plugin_manager', "plugin_active = '1' AND plugin_db_table != ''", '', 0, 'timestamp_update', 'DESC');
+        $plugin = $this->Csz_model->getValueArray('plugin_config_filename', 'plugin_manager', "plugin_active = '1' AND plugin_config_filename != ''", '', 0, 'timestamp_update', 'DESC');
         if($plugin !== FALSE){
             foreach ($plugin as $row) {
-                $sitemap_html.= '<h3>'.$row['plugin_urlrewrite'].'</h3>';
-                $plugin_db = explode(',', $row['plugin_db_table']); /* Get First table from this field */
-                if($plugin_db[0] == 'article_db'){
-                    $where = "active = '1' AND url_rewrite != '' AND is_category != '1'";
-                }else{
-                    $where = "active = '1' AND url_rewrite != ''";
-                }
-                $plugindb = $this->Csz_model->getValueArray('*', $plugin_db[0], $where, '', 0, 'timestamp_update', 'DESC');
-                if($plugindb !== FALSE){
-                    foreach ($plugindb as $rs) {
-                        $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/plugin/'.$row['plugin_urlrewrite'].'/view/'.$rs[$plugin_db[0].'_id'].'/'.$rs['url_rewrite'].'" title="'.str_replace('-', ' ', $rs['url_rewrite']).'">'.str_replace('-', ' ', $rs['url_rewrite']).'</a></h4>';  
+                $plugin_db = $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sitemap_viewtable');
+                if(!empty($plugin_db)){
+                    $plugindata = $this->Csz_model->getValueArray('*', $plugin_db, $this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_sqlextra_condition'), '', 0, $plugin_db.'_id', 'DESC');
+                    if($plugindata !== FALSE){
+                        foreach ($plugindata as $rs) {
+                            $sitemap_html.= '<h4> - <a href="'.BASE_URL.'/plugin/'.$this->Csz_model->getPluginConfig($row['plugin_config_filename'], 'plugin_urlrewrite').'/view/'.$rs[$plugin_db.'_id'].'/'.$rs['url_rewrite'].'" title="'.str_replace('-', ' ', $rs['url_rewrite']).'">'.str_replace('-', ' ', $rs['url_rewrite']).'</a></h4>';
+                        }
                     }
                 }
-            }
+            }       
         }
         $sitemap_html.= "</td>
         </tr>

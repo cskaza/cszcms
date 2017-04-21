@@ -1,3 +1,4 @@
+<style type="text/css">.galleryimgs img{width: 100%;height: 250px;object-fit: cover;margin: 20px 0px}</style>
 <div class="jumbotron">
     <div class="container">
         <h1><?php echo $this->Csz_model->getLabelLang('gallery_header') ?></h1>
@@ -17,9 +18,9 @@
             $i = 1;
             foreach ($gallery as $value) { ?>
                 <div class="col-md-4">
-                    <div class="thumbnail">
+                    <div class="thumbnail galleryimgs">
                         <?php $f_img = $this->Gallery_model->getFirstImgs($value['gallery_db_id']); ?>
-                        <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><img class="img-responsive img-thumbnail" src="<?php echo $f_img?>" alt="<?php echo $value['album_name'] ?>"></a>
+                        <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><img class="lazy img-responsive img-thumbnail" data-src="<?php echo $f_img?>" alt="<?php echo $value['album_name'] ?>"></a>
                         <hr>
                         <div class="caption">
                             <a href="<?php echo BASE_URL.'/plugin/gallery/view/'.$value['gallery_db_id'].'/'.$value['url_rewrite'] ?>" title="<?php echo $value['album_name'] ?>"><h2><?php echo $value['album_name'] ?></h2></a>

@@ -21,9 +21,9 @@
                                     <center><a href="<?php echo BASE_URL.'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'] ?>" title="<?php echo $a['title'] ?>">
                                     <?php
                                     if($a["main_picture"]){
-                                        echo '<img src="'.BASE_URL.'/photo/plugin/article/'.$a['main_picture'].'" class="img-responsive img-thumbnail" alt="'.$a['title'].'">';
+                                        echo '<img data-src="'.BASE_URL.'/photo/plugin/article/'.$a['main_picture'].'" class="lazy img-responsive img-thumbnail" alt="'.$a['title'].'">';
                                     }else{
-                                        echo '<img src="'.BASE_URL.'/photo/no_image.png" class="img-responsive img-thumbnail" alt="'.$a['title'].'">';
+                                        echo '<img data-src="'.BASE_URL.'/photo/no_image.png" class="lazy img-responsive img-thumbnail" alt="'.$a['title'].'">';
                                     }
                                     ?></a></center>
                                 </div>

@@ -1,4 +1,37 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.6
+- Add Lazyload jquery.
+- Add Italian language for backend system.
+- Add Spanish language for backend system.
+- Add TinyMCE can select file from "File Upload" (On Image, Link and Video).
+- Add group Operations (creating/deleting groups, permission settings).
+- Add private messages (between users).
+- Add custom css field for pages content.
+- Add google custom search on frontend (Can enable/disable on backend).
+- Add banner management.
+- Add the action logs for backend (for save and delete).
+- Add backup function with impotant file (photo directory, custom template directory, .htaccess, config.inc.php).
+- Add widget html custom sytle.
+- Add maintenance mode enable on site settings.
+- Update Font-awesome to 4.7.0.
+- Update Codeigniter to 3.1.4.
+- Change default template style.
+- Support for PHP 7
+- Remove new version alert on frontend.
+- Remove module shop, this module it will be in store of plugins.
+- Fix forms builder bug.
+- Fix AdminLTE setting slide menu z-index.
+- Fix db cache for RSS feed.
+- Fix RSSParser for feed news on backend.
+- Fix new linkstatics function.
+- Fix dropdown menu hierarchical url (good SEO).
+- Fix sitemap generator for menu hierarchical url.
+- Fix more performance for backend and frontend (Include html minify).
+- Fix navigation menu for support #mydiv or page#mydiv.
+- Fix password encyption for more security.
+- Fix plugin structure for support developer.
+- Fix sitemap generator for new plugin structure.
+
 CSZ-CMS V.1.1.5
 - Add REST for support API.
 - Add Google Analytics data last 30 days to show on backend.

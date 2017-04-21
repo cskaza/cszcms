@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `page_keywords` varchar(255),
   `page_desc` text,
   `content` text,
+  `custom_css` text,
   `active` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
@@ -134,10 +135,10 @@ CREATE TABLE IF NOT EXISTS `pages` (
   KEY `page_url` (`page_url`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
-INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_title`, `page_keywords`, `page_desc`, `content`, `active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header id="myCarousel" class="carousel slide">\r\n<ol class="carousel-indicators">\r\n<li data-target="#myCarousel" data-slide-to="0" class="active"></li>\r\n<li data-target="#myCarousel" data-slide-to="1"></li>\r\n<li data-target="#myCarousel" data-slide-to="2"></li>\r\n</ol>\r\n<!-- Wrapper for slides -->\r\n<div class="carousel-inner">\r\n<div class="item active">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide One" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 1</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Two" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 2</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Three" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 3</h2>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- Controls --> <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <span class="icon-prev"></span> </a> <a class="right carousel-control" href="#myCarousel" data-slide="next"> <span class="icon-next"></span> </a></header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- /container -->', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
-(2, 'About Us', 'about-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
-(3, 'Contact Us', 'contact-us', 'en', 'CSZ-CMS Contact us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, contact us', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>Contact us!</h1>\r\n<p>If you want to contact us please use this form below. Or send the email to <a href="mailto:info@cszcms.com">info@cszcms.com</a></p>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<h2>Google Map</h2>\r\n<p><iframe width="100%" height="315" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.168282092751!2d98.37285931425068!3d7.877454308128998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zN8KwNTInMzguOCJOIDk4wrAyMiczMC4yIkU!5e0!3m2!1sen!2sth!4v1462104596003" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>\r\n</div>\r\n<div class="col-md-6">\r\n<h2>Contact Form</h2>\r\n<p>If you have any question please send this from.</p>\r\n<p>[?]{=forms:contactus_en}[?]</p>\r\n</div>\r\n</div>\r\n</div>\r\n<p></p>\r\n<p></p>', 1, '2016-04-30 16:57:16', '2016-05-12 17:59:41');
+INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_title`, `page_keywords`, `page_desc`, `content`, `custom_css`, `active`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header id="myCarousel" class="carousel slide">\r\n<ol class="carousel-indicators">\r\n<li data-target="#myCarousel" data-slide-to="0" class="active"></li>\r\n<li data-target="#myCarousel" data-slide-to="1"></li>\r\n<li data-target="#myCarousel" data-slide-to="2"></li>\r\n</ol>\r\n<!-- Wrapper for slides -->\r\n<div class="carousel-inner">\r\n<div class="item active">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide One" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 1</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Two" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 2</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Three" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 3</h2>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- Controls --> <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <span class="icon-prev"></span> </a> <a class="right carousel-control" href="#myCarousel" data-slide="next"> <span class="icon-next"></span> </a></header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- /container -->', '', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
+(2, 'About Us', 'about-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', '', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
+(3, 'Contact Us', 'contact-us', 'en', 'CSZ-CMS Contact us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, contact us', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>Contact us!</h1>\r\n<p>If you want to contact us please use this form below. Or send the email to <a href="mailto:info@cszcms.com">info@cszcms.com</a></p>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<h2>Google Map</h2>\r\n<p><iframe width="100%" height="315" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.168282092751!2d98.37285931425068!3d7.877454308128998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zN8KwNTInMzguOCJOIDk4wrAyMiczMC4yIkU!5e0!3m2!1sen!2sth!4v1462104596003" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>\r\n</div>\r\n<div class="col-md-6">\r\n<h2>Contact Form</h2>\r\n<p>If you have any question please send this from.</p>\r\n<p>[?]{=forms:contactus_en}[?]</p>\r\n</div>\r\n</div>\r\n</div>\r\n<p></p>\r\n<p></p>', '', 1, '2016-04-30 16:57:16', '2016-05-12 17:59:41');
 
 DROP TABLE IF EXISTS `page_menu`;
 CREATE TABLE IF NOT EXISTS `page_menu` (
@@ -180,7 +181,6 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `googlecapt_active` int(11),
   `googlecapt_sitekey` varchar(255),
   `googlecapt_secretkey` varchar(255),
-  `link_statistic_active` int(11),
   `pagecache_time` int(3),
   `email_protocal` varchar(20),
   `smtp_host` varchar(255),
@@ -192,12 +192,15 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `member_close_regist` int(11),
   `ga_client_id` varchar(255),
   `ga_view_id` varchar(255),
+  `gsearch_active` int(11),
+  `gsearch_cxid` varchar(255),
+  `maintenance_active` int(11),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `link_statistic_active`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `ga_client_id`, `ga_view_id`, `timestamp_update`) VALUES
-(1, 'CSZ CMS Starter', '', '', '', '&copy; %YEAR CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, 0, '', '', '', '', '', '', 0, 0, '', '', '2016-05-19 15:08:31');
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `timestamp_update`) VALUES
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %YEAR CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', 0, '', 0, '2016-05-19 15:08:31');
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -224,7 +227,6 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `address` text,
   `phone` varchar(100),
   `picture` varchar(255),
-  `backend_visitor` int(11),
   `active` int(11),
   `session_id` varchar(255),
   `md5_hash` varchar(255),
@@ -254,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `general_label` (
   `timestamp_update` datetime,
   PRIMARY KEY (`general_label_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=77 ;
 
 INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `timestamp_update`) VALUES
 (1, 'login_heading', 'For member login Header text', 'Member Login', '2016-07-04 11:43:18'),
@@ -275,7 +277,7 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (16, 'email_reset_subject', 'For email subject when member forget password', 'Reset your member password', '2016-06-26 15:43:39'),
 (17, 'email_reset_message', 'For email message when member forget password', 'Please click the link below within 30 minutes to reset your password.', '2016-06-26 15:43:39'),
 (18, 'email_dear', 'For email header', 'Dear ', '2016-06-26 15:43:39'),
-(19, 'email_footer', 'For email footer', 'Regards,<br>', '2016-06-26 15:43:39'),
+(19, 'email_footer', 'For email footer', 'Regards,', '2016-06-26 15:43:39'),
 (20, 'email_check', 'For email does not exist text', 'This email address does not exist', '2016-06-26 15:47:01'),
 (21, 'btn_cancel', 'For cancel button', 'Cancel', '2016-06-26 15:52:28'),
 (22, 'btn_back', 'For back button', 'Back', '2016-06-26 15:53:59'),
@@ -299,7 +301,7 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (40, 'address', 'For address text', 'Address', '2016-07-01 16:45:41'),
 (41, 'new_password', 'For new password text', 'New Password', '2016-07-02 18:01:57'),
 (42, 'change_password', 'For change password text', 'Change Password', '2016-07-02 18:04:49'),
-(43, 'picture', 'For picture text', 'You Picture', '2016-07-02 18:18:58'),
+(43, 'picture', 'For picture text', 'Picture', '2016-07-02 18:18:58'),
 (44, 'save_btn', 'For save button text', 'Save', '2016-07-02 18:35:11'),
 (45, 'cancel_btn', 'For cancel button text', 'Cancel', '2016-07-02 18:35:11'),
 (46, 'article_index_header', 'For article index page', 'List of Article', '2016-07-12 17:08:16'),
@@ -318,58 +320,35 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (59, 'gellery_view_btn', 'For gallery view button', 'View Gallery', '2016-07-15 15:41:19'),
 (60, 'article_archive', 'For article archive text', 'Archive', '2016-07-21 10:39:19'),
 (61, 'article_updatedate', 'For article updatetime text', 'Updated date', '2016-07-21 10:39:19'),
-(62, 'shop_new_product', 'For new product label', 'New Products', '2016-09-19 16:26:59'),
-(63, 'shop_hot_product', 'For hot product label', 'Hot Products', '2016-09-19 16:26:59'),
-(64, 'shop_bestseller_product', 'For beset seller label', 'Best Seller', '2016-09-19 16:26:59'),
-(65, 'shop_soldout_product', 'For soldout label', 'Sold Out', '2016-09-19 16:26:59'),
-(66, 'shop_see_more', 'For see more button', 'See More', '2016-09-19 16:28:41'),
-(67, 'shop_product_category', 'For product category label', 'Products Category', '2016-09-19 16:28:41'),
-(68, 'shop_cart_text', 'For cart text', 'Shopping Cart', '2016-09-19 16:44:00'),
-(69, 'shop_notfound', 'For data not found', 'Data not found!', '2016-09-19 17:31:26'),
-(70, 'shop_view_btn', 'For view button', 'View', '2016-09-20 17:17:59'),
-(71, 'shop_price_txt', 'For price text.', 'Price', '2016-09-21 17:53:25'),
-(72, 'shop_add_to_cart_btn', 'For Add to cart button', 'Add to Cart', '2016-09-21 17:53:25'),
-(73, 'shop_option_txt', 'For option text', 'Additional Option', '2016-09-22 10:51:25'),
-(74, 'shop_product_code_txt', 'For product code text', 'Product Code', '2016-09-22 11:00:53'),
-(75, 'shop_home_txt', 'For home text', 'Home', '2016-09-22 15:24:07'),
-(76, 'shop_product_search_txt', 'For product search text', 'Products Search', '2016-09-22 15:47:27'),
-(77, 'shop_qty_txt', 'For quantity text', 'Qty', '2016-09-22 16:02:59'),
-(78, 'shop_product_name_txt', 'For product name text', 'Product Name', '2016-09-22 17:56:16'),
-(79, 'shop_amount_txt', 'For amount text', 'Amount', '2016-09-22 17:56:16'),
-(80, 'shop_clear_cart_txt', 'For clear cart text', 'Clear Cart', '2016-09-22 17:56:16'),
-(81, 'shop_place_order_txt', 'For place order text', 'Place Order', '2016-09-22 17:56:16'),
-(82, 'shop_order_total_txt', 'For order total text', 'Total', '2016-09-22 17:56:16'),
-(83, 'shop_delete_alert', 'For delete alert text', 'Do you want to do this ?', '2016-09-22 18:07:39'),
-(84, 'shop_payment_btn', 'For payment button text', 'Payment Now', '2016-09-23 15:23:48'),
-(85, 'shop_contact_detail_txt', 'For contact detail text', 'Contact Detail', '2016-09-23 15:27:55'),
-(86, 'shop_your_email_login', 'For your email logged in as text', 'Your email logged in as', '2016-09-23 16:55:09'),
-(87, 'shop_payment_methods', 'For payment methods text', 'Payment Methods', '2016-09-23 17:31:37'),
-(88, 'shop_bank_transfer', 'For bank transfer text', 'Bank Transfer', '2016-09-23 17:31:37'),
-(89, 'shop_special_price', 'For special price text', 'Special Price', '2016-09-25 19:51:06'),
-(90, 'shop_cancel_order_txt', 'For order cancel text', 'We are sorry! Your last transaction was cancelled.', '2016-09-26 10:53:09'),
-(91, 'shop_success_order_txt', 'For order success text', 'Your payment was successful! Thank you for purchase.', '2016-09-26 10:53:09'),
-(92, 'shop_all_product_txt', 'For all product text', 'All Products', '2016-09-26 10:53:09'),
-(93, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09'),
-(94, 'shop_payment_disable', 'For shop payment disable text', 'Payment Disabled!', '2017-01-13 10:53:09');
+(62, 'article_search_txt', 'For article search text', 'Article Search', '2016-09-26 10:53:09'),
+(63, 'pm_txt', 'For private message header text', 'Private Message', '2017-02-27 10:53:09'),
+(64, 'pm_to_txt', 'For private message (To) text', 'To', '2017-02-27 10:53:09'),
+(65, 'pm_from_txt', 'For private message (From) text', 'From', '2017-02-27 10:53:09'),
+(66, 'pm_subject_txt', 'For private message subject text', 'Subject', '2017-02-27 10:53:09'),
+(67, 'pm_msg_txt', 'For private message text', 'Message', '2017-02-27 10:53:09'),
+(68, 'pm_send_txt', 'For private message send text', 'Send', '2017-02-27 10:53:09'),
+(69, 'pm_delete_txt', 'For private message delete text', 'Delete', '2017-02-27 10:53:09'),
+(70, 'pm_inbox_txt', 'For private message inbox text', 'Inbox', '2017-02-27 10:53:09'),
+(71, 'pm_newmsg_txt', 'For private message new message text', 'New Message', '2017-02-27 10:53:09'),
+(72, 'users_list_txt', 'For users list text', 'Users List', '2017-02-28 10:53:09'),
+(73, 'pm_datetime_txt', 'For date time text', 'Date/Time', '2017-02-28 10:53:09'),
+(74, 'not_permission_txt', 'For not have permission text', 'You might not have permission to access this section!', '2017-02-28 10:53:09'),
+(75, 'success_txt', 'For success text', 'Successfully!', '2017-03-02 10:53:09'),
+(76, 'error_txt', 'For error text', 'Error! Please try again.', '2017-03-02 10:53:09');
 
 DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
   `plugin_manager_id` int(11) AUTO_INCREMENT,
-  `plugin_name` varchar(255),
-  `plugin_urlrewrite` varchar(255),
-  `plugin_version` varchar(10),
-  `plugin_owner` varchar(255),
-  `plugin_db_table` text,
+  `plugin_config_filename` varchar(255),
   `plugin_active` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`plugin_manager_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_name`, `plugin_urlrewrite`, `plugin_version`, `plugin_owner`, `plugin_db_table`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Article', 'article', '1.0.4', 'CSKAZA', 'article_db', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(2, 'Gallery', 'gallery', '1.0.3', 'CSKAZA', 'gallery_db,gallery_picture', 1, '2016-07-21 09:59:53', '2016-08-23 15:28:25'),
-(3, 'Shopping', 'shop', '1.0.3', 'CSKAZA', 'shop_product,shop_category,shop_config,shop_payment,shop_product_imgs,shop_product_option,shop_shipping', 1, NOW(), NOW());
+INSERT INTO `plugin_manager` (`plugin_manager_id`, `plugin_config_filename`, `plugin_active`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'article', 1, NOW(), NOW()),
+(2, 'gallery', 1, NOW(), NOW());
 
 DROP TABLE IF EXISTS `article_db`;
 CREATE TABLE IF NOT EXISTS `article_db` (
@@ -454,133 +433,6 @@ CREATE TABLE IF NOT EXISTS `login_logs` (
   PRIMARY KEY (`login_logs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-DROP TABLE IF EXISTS `shop_category`;
-CREATE TABLE IF NOT EXISTS `shop_category` (
-  `shop_category_id` int(11) AUTO_INCREMENT,
-  `shop_category_main_id` int(11),
-  `name` varchar(255),
-  `url_rewrite` varchar(255),
-  `keyword` varchar(255),
-  `short_desc` varchar(255),
-  `active` int(11),
-  `arrange` int(11),
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_category_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `shop_config`;
-CREATE TABLE IF NOT EXISTS `shop_config` (
-  `shop_config_id` int(11) AUTO_INCREMENT,
-  `stat_new_show` int(11),
-  `stat_hot_show` int(11),
-  `stat_bestseller_show` int(11),
-  `stat_soldout_show` int(11),
-  `paypal_active` int(11),
-  `sanbox_active` int(11),
-  `paypal_email` varchar(255),
-  `paysbuy_active` int(11),
-  `paysbuy_email` varchar(255),
-  `bank_detail` text,
-  `bank_disable` int(11),
-  `only_member` int(11),
-  `currency_code` varchar(10),
-  `seller_email` varchar(255),
-  `order_subject` varchar(255),
-  `order_body` text,
-  `payment_subject` varchar(255),
-  `payment_body` text,
-  `signature` text,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_config_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
-INSERT IGNORE INTO `shop_config` (`shop_config_id`, `stat_new_show`, `stat_hot_show`, `stat_bestseller_show`, `stat_soldout_show`, `paypal_active`, `sanbox_active`, `paypal_email`, `paysbuy_active`, `paysbuy_email`, `bank_detail`, `bank_disable`, `only_member`, `currency_code`, `seller_email`, `order_subject`, `order_body`, `payment_subject`, `payment_body`, `signature`, `timestamp_update`) VALUES
-(1, 1, 1, 1, 0, 0, 0, '', 0, '', '<h2>Bank Detail:</h2><h4><strong>Example Bank (Test Branch)</strong></h4><p><strong>ACC ID :</strong> 857-1531-19-9<br /> <strong>ACC Name :</strong> Example Tester</p><p><em>After transfer the payment. Please send the payslip to test@example.com</em></p>', 0, 0, 'USD', '', 'Thank you for your order!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you very much for your order. After payment successed. Your order is being processed and will be shipped to you.</p><p><strong></strong></p>', 'Your payment has now been confirmed!', '<p><strong>Dear Valued Customer,</strong></p><p><strong></strong><br /></p><p>Thank you for your order. Your payment has now been confirmed. Your order is already being processed and will be shipped to you.</p>', '<p><strong>Regards,</strong></p><p><strong>Shopping Web Team</strong><br /><strong>Tel: (001) 234 567 8910</strong><br /><strong>Email: test@example.com</strong></p>', '2016-09-27 12:59:09');
-
-DROP TABLE IF EXISTS `shop_payment`;
-CREATE TABLE IF NOT EXISTS `shop_payment` (
-  `shop_payment_id` int(11) AUTO_INCREMENT,
-  `sha1_hash` varchar(255),
-  `inv_id` varchar(100),
-  `email` varchar(255),
-  `name` varchar(255),
-  `phone` varchar(255),
-  `address` text,
-  `payment_methods` varchar(100),
-  `price_total` double,
-  `order_detail` text,
-  `user_agent` varchar(255),
-  `ip_address` varchar(100),
-  `payment_status` varchar(100),
-  `shipping` int(11),
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_payment_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `shop_product`;
-CREATE TABLE IF NOT EXISTS `shop_product` (
-  `shop_product_id` int(11) AUTO_INCREMENT,
-  `product_name` varchar(255),
-  `url_rewrite` varchar(255),
-  `shop_category_id` int(11),
-  `keyword` varchar(255),
-  `short_desc` varchar(255),
-  `full_desc` text,
-  `price` double,
-  `discount` double,
-  `stock` int(11),
-  `product_code` varchar(100),
-  `product_status` varchar(255),
-  `active` int(11),
-  `fb_comment_active` int(11),
-  `fb_comment_limit` int(11),
-  `fb_comment_sort` varchar(20),
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_product_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `shop_product_imgs`;
-CREATE TABLE IF NOT EXISTS `shop_product_imgs` (
-  `shop_product_imgs_id` int(11) AUTO_INCREMENT,
-  `shop_product_id` int(11),
-  `file_upload` varchar(255),
-  `caption` varchar(255),
-  `arrange` int(11),
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_product_imgs_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `shop_product_option`;
-CREATE TABLE IF NOT EXISTS `shop_product_option` (
-  `shop_product_option_id` int(11) AUTO_INCREMENT,
-  `shop_product_id` int(11),
-  `field_type` varchar(100),
-  `field_name` varchar(255),
-  `field_placeholder` varchar(255),
-  `field_value` varchar(255),
-  `field_label` varchar(255),
-  `field_sel_value` text,
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_product_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-DROP TABLE IF EXISTS `shop_shipping`;
-CREATE TABLE IF NOT EXISTS `shop_shipping` (
-  `shop_shipping_id` int(11) AUTO_INCREMENT,
-  `inv_id` varchar(100),
-  `shipping_name` varchar(255),
-  `shipping_id` varchar(100),
-  `note` text,
-  `timestamp_create` datetime,
-  `timestamp_update` datetime,
-  PRIMARY KEY (`shop_shipping_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
 DROP TABLE IF EXISTS `widget_xml`;
 CREATE TABLE IF NOT EXISTS `widget_xml` (
   `widget_xml_id` int(11) AUTO_INCREMENT,
@@ -588,6 +440,10 @@ CREATE TABLE IF NOT EXISTS `widget_xml` (
   `xml_url` varchar(255),
   `limit_view` int(11),
   `active` int(11),
+  `widget_open` text,
+  `widget_content` text,
+  `widget_seemore` text,
+  `widget_close` text,
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`widget_xml_id`),
@@ -622,4 +478,174 @@ CREATE TABLE IF NOT EXISTS `whitelist_ip` (
   `note` text,
   `timestamp_create` datetime,
   PRIMARY KEY (`whitelist_ip_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `link_stat_mgt`;
+CREATE TABLE IF NOT EXISTS `link_stat_mgt` (
+  `link_stat_mgt_id` int(11) AUTO_INCREMENT,
+  `url` varchar(255),
+  `timestamp_create` datetime,
+  PRIMARY KEY (`link_stat_mgt_id`),
+  KEY `url` (`url`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `user_groups`;
+CREATE TABLE `user_groups` (
+  `user_groups_id` int(11) AUTO_INCREMENT,
+  `name` varchar(100),
+  `definition` text,
+  PRIMARY KEY (`user_groups_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
+
+INSERT INTO `user_groups` VALUES ('1', 'Admin', 'Super Admin Group');
+INSERT INTO `user_groups` VALUES ('2', 'Editor', 'Editor Access Group');
+INSERT INTO `user_groups` VALUES ('3', 'Public', 'Public Access Group');
+INSERT INTO `user_groups` VALUES ('4', 'Guest', 'Guest Access Group');
+
+DROP TABLE IF EXISTS `user_perms`;
+CREATE TABLE `user_perms` (
+  `user_perms_id` int(11) AUTO_INCREMENT,
+  `name` varchar(100),
+  `definition` text,
+  `permstype` varchar(100),
+  PRIMARY KEY (`user_perms_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=27;
+
+INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VALUES
+(1, 'save', 'For save permission on backend', 'backend'),
+(2, 'delete', 'For delete permission on backend', 'backend'),
+(3, 'analytics', 'For analytics access permission on backend', 'backend'),
+(4, 'forms builder', 'For forms builder access permission', 'backend'),
+(5, 'plugin widget', 'For plugin widget access permission on backend', 'backend'),
+(6, 'file upload', 'For file upload access permission on backend', 'backend'),
+(7, 'pages content', 'For pages content access permission on backend', 'backend'),
+(8, 'navigation', 'For navigation access permission on backend', 'backend'),
+(9, 'linkstats', 'For statistic for links access permission on backend', 'backend'),
+(10, 'language', 'For language access permission on backend', 'backend'),
+(11, 'general label', 'For general label access permission on backend', 'backend'),
+(12, 'site settings', 'For site settings access permission on backend', 'backend'),
+(13, 'maintenance', 'For maintenance system access permission on backend', 'backend'),
+(14, 'plugin manager', 'For plugin manager access permission on backend', 'backend'),
+(15, 'admin users', 'For admin users access permission on backend', 'backend'),
+(16, 'member users', 'For member users access permission on backend', 'backend'),
+(17, 'user groups', 'For user groups access permission on backend', 'backend'),
+(18, 'email logs', 'For email logs access permission on backend', 'backend'),
+(19, 'login logs', 'For login logs access permission on backend', 'backend'),
+(20, 'protection settings', 'For protection settings access permission on backend', 'backend'),
+(21, 'gallery', 'For gallery plugin access permission on backend', 'backend'),
+(22, 'article', 'For article plugin access permission on backend', 'backend'),
+(23, 'social', 'For social settings access permission on backend', 'backend'),
+(24, 'profile save', 'For user profile save permission on frontend', 'frontend'),
+(25, 'pm', 'For private message access permission on frontend', 'frontend'),
+(26, 'banner', 'For banner manager access permission on backend', 'backend');
+
+DROP TABLE IF EXISTS `user_perm_to_group`;
+CREATE TABLE `user_perm_to_group` (
+  `user_perms_id` int(11),
+  `user_groups_id` int(11),
+  PRIMARY KEY (`user_perms_id`,`user_groups_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `user_perm_to_group` (`user_perms_id`, `user_groups_id`) VALUES
+(1, 2),
+(3, 2),
+(3, 4),
+(4, 2),
+(4, 4),
+(5, 2),
+(5, 4),
+(6, 2),
+(6, 4),
+(7, 2),
+(7, 4),
+(8, 2),
+(8, 4),
+(9, 2),
+(9, 4),
+(10, 2),
+(10, 4),
+(11, 2),
+(11, 4),
+(12, 4),
+(13, 2),
+(13, 4),
+(14, 4),
+(21, 2),
+(21, 4),
+(22, 2),
+(22, 4),
+(23, 2),
+(23, 4),
+(24, 2),
+(24, 3),
+(25, 2),
+(25, 3),
+(25, 4),
+(26, 2),
+(26, 4);
+
+DROP TABLE IF EXISTS `user_to_group`;
+CREATE TABLE `user_to_group` (
+  `user_admin_id` int(11),
+  `user_groups_id` int(11),
+  PRIMARY KEY (`user_admin_id`,`user_groups_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `user_to_group` VALUES ('1', '1');
+
+DROP TABLE IF EXISTS `user_pms`;
+CREATE TABLE `user_pms` (
+  `id` int(11) AUTO_INCREMENT,
+  `sender_id` int(11),
+  `receiver_id` int(11),
+  `title` varchar(255),
+  `message` text,
+  `date_sent` datetime,
+  `date_read` datetime,
+  `pm_deleted_sender` int(1),
+  `pm_deleted_receiver` int(1),
+  PRIMARY KEY (`id`),
+  KEY `full_index` (`id`,`sender_id`,`receiver_id`,`date_read`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `banner_mgt`;
+CREATE TABLE `banner_mgt` (
+  `banner_mgt_id` int(11) AUTO_INCREMENT,
+  `name` varchar(255),
+  `img_path` varchar(255),
+  `width` int(5),
+  `height` int(5),
+  `link` varchar(255),
+  `start_date` date,
+  `end_date` date,
+  `nofollow` int(11),
+  `active` int(11),
+  `note` text,
+  `timestamp_create` datetime,
+  `timestamp_update` datetime,
+  PRIMARY KEY (`banner_mgt_id`),
+  KEY `link` (`link`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `banner_statistic`;
+CREATE TABLE `banner_statistic` (
+  `banner_statistic_id` int(11) AUTO_INCREMENT,
+  `banner_mgt_id` int(11),
+  `ip_address` varchar(255),
+  `timestamp_create` datetime,
+  PRIMARY KEY (`banner_statistic_id`),
+  KEY `banner_mgt_id` (`banner_mgt_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `actions_logs`;
+CREATE TABLE `actions_logs` (
+  `actions_logs_id` int(11) AUTO_INCREMENT,
+  `email_login` varchar(255),
+  `user_agent` varchar(255),
+  `ip_address` varchar(100),
+  `note` text,
+  `url` varchar(255),
+  `actions` varchar(255),
+  `timestamp_create` datetime,
+  PRIMARY KEY (`actions_logs_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

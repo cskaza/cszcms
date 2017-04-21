@@ -74,15 +74,15 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> DB_DSN,
+	'dsn'	=> '',
 	'hostname' => DB_HOST,
 	'username' => DB_USERNAME,
 	'password' => DB_PASS,
 	'database' => DB_NAME,
-	'dbdriver' => DB_DRIVER,
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
+	'db_debug' => FALSE,
 	'cache_on' => FALSE,
 	'cachedir' => APPPATH.'/db_cache',
 	'char_set' => 'utf8',

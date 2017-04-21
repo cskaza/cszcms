@@ -33,10 +33,11 @@ tinymce.PluginManager.add('form_insert', function (editor) {
         // Open window
         var selType = [
             {text: 'Forms', value: 'forms'},
-            {text: 'Widget', value: 'widget'}
+            {text: 'Widget', value: 'widget'},
+            {text: 'Banner', value: 'banner'}
         ];
         editor.windowManager.open({
-            title: 'CSZ-CMS Forms/Widget',
+            title: 'CSZ-CMS Forms/Widget/Banner',
             body: [
                 {
                     name: 'type',
@@ -44,7 +45,7 @@ tinymce.PluginManager.add('form_insert', function (editor) {
                     label: 'Type',
                     values: buildListItems(selType)
                 },
-                {type: 'textbox', name: 'name', label: 'Name', size: 40}
+                {type: 'textbox', name: 'name', label: 'Value', size: 40}
             ],
             onsubmit: function (e) {
                 // Insert content when the window form is submitted
@@ -58,7 +59,7 @@ tinymce.PluginManager.add('form_insert', function (editor) {
     editor.addButton('form_insert', {
         /*text: 'PN',*/
         icon: 'glyphicons guicon guicon-form',
-        tooltip: 'Insert Forms/Widget',
+        tooltip: 'Insert Forms/Widget/Banner',
         onclick: function () {
             showPopup();
         }

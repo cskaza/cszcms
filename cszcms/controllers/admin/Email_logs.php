@@ -43,8 +43,7 @@ class Email_logs extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('email logs');
         $this->load->helper('form');
         $this->load->library('pagination');
         $this->csz_referrer->setIndex();
@@ -86,8 +85,8 @@ class Email_logs extends CI_Controller {
     
     public function deleteEmailLogs() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('email logs');
+        admin_helper::is_allowchk('delete');
         $delR = $this->input->post('delR');
         if(isset($delR)){
             foreach ($delR as $value) {

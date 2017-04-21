@@ -21,6 +21,20 @@ $config['base_url'] = BASE_URL;
 
 /*
 |--------------------------------------------------------------------------
+| Assets URL
+|--------------------------------------------------------------------------
+|
+| URL to your assets dir. Please typically without a trailing slash:
+| Example:
+|	http://assets.example.com
+|
+| BASE_URL.'/assets' as default
+|
+*/
+$config['assets_url'] = BASE_URL.'/assets';
+
+/*
+|--------------------------------------------------------------------------
 | Index File
 |--------------------------------------------------------------------------
 |
@@ -95,7 +109,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -164,9 +178,6 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | By default CodeIgniter uses search-engine friendly segment based URLs:
 | example.com/who/what/where/
 |
-| By default CodeIgniter enables access to the $_GET array.  If for some
-| reason you would like to disable it, set 'allow_get_array' to FALSE.
-|
 | You can optionally enable standard query string based URLs:
 | example.com?who=me&what=something&where=here
 |
@@ -181,7 +192,6 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | use segment based URLs.
 |
 */
-$config['allow_get_array'] = TRUE;
 $config['enable_query_strings'] = FALSE;
 $config['controller_trigger'] = 'c';
 $config['function_trigger'] = 'm';
@@ -397,7 +407,7 @@ $config['sess_regenerate_destroy'] = TRUE;
 $config['cookie_prefix']	= 'cszcookie';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= FALSE;
+$config['cookie_secure']	= isset($_SERVER['HTTPS']) ? TRUE : FALSE;
 $config['cookie_httponly'] 	= TRUE;
 
 /*

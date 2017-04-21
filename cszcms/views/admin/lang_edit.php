@@ -15,7 +15,7 @@
         <?php echo form_open(BASE_URL . '/admin/lang/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
-            <?php echo form_error('lang_name', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('lang_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="lang_name"><?php echo $this->lang->line('lang_name'); ?>*</label>
             <?php
             $data = array(
@@ -32,7 +32,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('lang_iso', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('lang_iso', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('lang_iso'); ?>*</label>
             <?php
             $data = array(
@@ -50,7 +50,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">
-            <?php echo form_error('country', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('country', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="country"><?php echo $this->lang->line('lang_country'); ?>*</label>
             <?php
             $data = array(
@@ -67,7 +67,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('country_iso', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('country_iso', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="country_iso"><?php echo $this->lang->line('lang_country_iso'); ?>*</label>
             <?php
             $data = array(

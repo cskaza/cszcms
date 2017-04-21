@@ -43,9 +43,10 @@ class Forms extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('forms builder');
         $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
-
         // Pages variable
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('form_main');
@@ -65,7 +66,7 @@ class Forms extends CI_Controller {
 
     public function addForms() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        
+        admin_helper::is_allowchk('forms builder');
         //Load the form helper
         $this->load->helper('form');
         //Load the view
@@ -74,7 +75,8 @@ class Forms extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('forms builder');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -95,16 +97,23 @@ class Forms extends CI_Controller {
 
     public function editForms() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('forms builder');
         //Load the form helper
         $this->load->helper('form');
         $this->csz_referrer->setIndex('edit_form');
         if($this->uri->segment(4)){
-            //Get data from database
-            $this->template->setSub('form_rs', $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $this->uri->segment(4), 1));
-            $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
-            $this->template->setSub('field_email', $this->Csz_model->getValueArray('*', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'email'", ''));
-            //Load the view
-            $this->template->loadSub('admin/forms_edit');
+            $this->db->cache_on();
+            $form_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            if($form_rs !== FALSE){
+                //Get data from database
+                $this->template->setSub('form_rs', $form_rs);
+                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+                $this->template->setSub('field_email', $this->Csz_model->getValueArray('*', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'email'", ''));
+                //Load the view
+                $this->template->loadSub('admin/forms_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -112,7 +121,8 @@ class Forms extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('forms builder');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -134,7 +144,8 @@ class Forms extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('forms builder');
+        admin_helper::is_allowchk('delete');
         //Delete the languages
         if($this->uri->segment(4)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -151,7 +162,8 @@ class Forms extends CI_Controller {
     
     public function deleteField() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('forms builder');
+        admin_helper::is_allowchk('delete');
         //Delete the languages
         if($this->uri->segment(4) && $this->uri->segment(5)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -171,25 +183,30 @@ class Forms extends CI_Controller {
     
     public function viewForm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('forms builder');
         if($this->uri->segment(4)){
+            $this->db->cache_on();
             $this->csz_referrer->setIndex('admin_form_view');
             $this->load->library('pagination');
             // Get form name
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
-            // Pages variable
-            $result_per_page = 20;
-            $total_row = $this->Csz_admin_model->countTable('form_'.$frm_rs->form_name);
-            $num_link = 10;
-            $base_url = BASE_URL . '/admin/forms/view/'.$this->uri->segment(4).'/';
-            // Pageination config
-            $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link,5);       
-            ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
-            //Get users from database   
-            $this->template->setSub('form_name', $frm_rs->form_name);
-            $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
-            $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
-            //Load the view
-            $this->template->loadSub('admin/forms_view');
+            if($frm_rs !== FALSE){
+                $result_per_page = 20;
+                $total_row = $this->Csz_admin_model->countTable('form_'.$frm_rs->form_name);
+                $num_link = 10;
+                $base_url = BASE_URL . '/admin/forms/view/'.$this->uri->segment(4).'/';
+                // Pageination config
+                $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link,5);       
+                ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
+                //Get users from database   
+                $this->template->setSub('form_name', $frm_rs->form_name);
+                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+                $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
+                //Load the view
+                $this->template->loadSub('admin/forms_view');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -197,7 +214,8 @@ class Forms extends CI_Controller {
     
     public function deleteViewData() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('forms builder');
+        admin_helper::is_allowchk('delete');
         //Delete the languages
         if($this->uri->segment(4) && $this->uri->segment(6)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);

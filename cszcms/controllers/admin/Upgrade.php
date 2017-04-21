@@ -51,7 +51,7 @@ class Upgrade extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::is_allowchk('maintenance');
         $this->csz_referrer->setIndex();
         $this->session->unset_userdata('cszcms_lastver');
         $this->load->helper('directory');
@@ -64,8 +64,8 @@ class Upgrade extends CI_Controller {
 
     public function download() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion($this->cur_version);
@@ -78,6 +78,7 @@ class Upgrade extends CI_Controller {
             }
             $newfname = FCPATH . basename($url);
             if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
+                $this->Csz_admin_model->setMaintenance();
                 if (file_exists($newfname)) {
                     $unzip = @$this->unzip->extract($newfname, FCPATH);
                     if(!empty($unzip)){
@@ -100,6 +101,7 @@ class Upgrade extends CI_Controller {
                 if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
                     redirect('/admin/upgrade/download', 'refresh');
                 }else{
+                    $this->Csz_admin_model->unsetMaintenance();
                     $this->Csz_model->clear_all_cache();
                     $this->db->cache_delete_all();
                     // When Success 
@@ -118,8 +120,8 @@ class Upgrade extends CI_Controller {
     
     public function install() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
         if ($_FILES['file_upload'] != null) {
@@ -127,6 +129,7 @@ class Upgrade extends CI_Controller {
                 $config['upload_path'] = FCPATH;
                 /* set the filter image types Ex. zip|rar|7z */
                 $config['allowed_types'] = 'zip';
+                $config['max_size'] = '10240'; /* Limit upload size 10MB */
                 $file_name = 'manualzip_'.time().'.zip';
                 $config['file_name'] = $file_name;
                 //load the upload library
@@ -136,6 +139,7 @@ class Upgrade extends CI_Controller {
                 @$this->upload->do_upload('file_upload');
                 $newfname = FCPATH . $file_name;
                 if (file_exists($newfname)) {
+                    $this->Csz_admin_model->setMaintenance();
                     @$this->unzip->extract($newfname, FCPATH);
                     if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) { /* for sql upgrade  */
                         $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
@@ -150,6 +154,9 @@ class Upgrade extends CI_Controller {
                     if (is_writable($newfname)) {
                         @unlink($newfname);
                     }
+                    $this->Csz_admin_model->unsetMaintenance();
+                    $this->Csz_model->clear_all_cache();
+                    $this->db->cache_delete_all();
                     $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 } else {
                     $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
@@ -166,8 +173,8 @@ class Upgrade extends CI_Controller {
     
     public function dbOptimize() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $this->load->dbutil();
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
@@ -181,8 +188,8 @@ class Upgrade extends CI_Controller {
     
     public function dbBackup() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $this->load->dbutil();
         $prefs = array(
                 'format'      => 'txt',             // gzip, zip, txt
@@ -196,28 +203,58 @@ class Upgrade extends CI_Controller {
         force_download('cszcmsbackup_'.date('Ymd').'.sql', $backup);
     }
     
+    public function fileBackup() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
+        $this->load->library('zip');
+        $this->load->helper('directory');
+        $this->zip->read_dir('photo/');
+        foreach (directory_map('templates/', 1) as $t) {
+            if (!is_dir($t)) {
+                $t = str_replace("\\", "", $t);
+                $t = str_replace("/", "", $t);
+                if (($t != "index.html" && $t != ".htaccess") && ($t != "admin") && (strpos($t, 'admin') === false) && ($t != "cszdefault") && (strpos($t, 'cszdefault') === false)) {
+                    $this->zip->read_dir('templates/' . $t . '/');
+                }
+            }
+        }
+        foreach (directory_map('cszcms/views/templates/', 1) as $t) {
+            if (!is_dir($t)) {
+                $t = str_replace("\\", "", $t);
+                $t = str_replace("/", "", $t);
+                if (($t != "index.html") && ($t != "admin") && (strpos($t, 'admin') === false) && ($t != "cszdefault") && (strpos($t, 'cszdefault') === false)) {
+                    $this->zip->read_dir('cszcms/views/templates/' . $t . '/');
+                }
+            }
+        }
+        $this->zip->read_file(FCPATH . '/.htaccess', '.htaccess');
+        $this->zip->read_file(FCPATH . '/config.inc.php', 'config.inc.php');
+        $this->zip->download('cszfilebackup_'.date('Ymd').'.zip');
+    }
+    
     public function clearAllCache() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $this->Csz_model->clear_all_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
-        redirect('admin/upgrade', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function clearAllDBCache() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
-        redirect('admin/upgrade', 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function clearAllSession() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('delete');
         $this->Csz_model->clear_all_session();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/logout', 'refresh');
@@ -225,8 +262,8 @@ class Upgrade extends CI_Controller {
 
     public function clearAllErrLog() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('delete');
         $this->Csz_model->clear_all_error_log();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
@@ -234,10 +271,11 @@ class Upgrade extends CI_Controller {
     
     public function downloadErrLog() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
         $log_file = $this->input->post('errlogfile', TRUE);
         if($log_file){
+            $log_file = $this->security->sanitize_filename($log_file);
             $data = read_file(APPPATH . '/logs/'.$log_file);
             $string = str_replace("<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>", '', $data);
             $this->load->helper('download');

@@ -10,6 +10,23 @@
                 <div class="panel-body text-left">
                     <?php if(!$chksts){ ?>
                         <?php echo  form_open(BASE_URL . '/member/register/save') ?>
+                        <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                        <div class="form-group has-feedback">                            
+                            <label for="name" class="control-label"><?php echo $this->Csz_model->getLabelLang('display_name') ?>*</label>
+                            <?php
+                            $data = array(
+                                'name' => 'name',
+                                'id' => 'name',
+                                'class' => 'form-control',
+                                'required' => 'required',
+                                'autofocus' => 'true',
+                                'value' => set_value('name'),
+                                'placeholder' => $this->Csz_model->getLabelLang('display_name')
+                            );
+                            echo form_input($data);
+                            ?>
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </div>
                         <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <div class="form-group has-feedback">                            
                             <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>

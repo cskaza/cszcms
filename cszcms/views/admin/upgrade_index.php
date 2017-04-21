@@ -3,7 +3,7 @@
     <div class="col-lg-6 col-md-6">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') . ' / ' . $this->lang->line('pluginmgr_install') ?>
+                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') ?>
             </li>
         </ol>
         <?php echo form_open_multipart(BASE_URL . '/admin/upgrade/install'); ?>
@@ -107,6 +107,7 @@
         </ol>
         <a href="<?php echo BASE_URL . '/admin/upgrade/optimize' ?>" class="btn btn-primary"><?php echo $this->lang->line('btn_optimize_db') ?></a>
         <br><br><a href="<?php echo BASE_URL . '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
+        <br><br><a href="<?php echo BASE_URL . '/admin/upgrade/filebackup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_file') ?></a>
         <br><br>
     </div>
 </div>

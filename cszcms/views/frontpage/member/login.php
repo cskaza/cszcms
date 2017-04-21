@@ -11,15 +11,17 @@
                     <div class="text-center">
                     <?php
                     if ($error) {
+                        echo '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
                         if ($error == 'INVALID') {
-                            echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('login_incorrect') . "</span><br><br>";
+                            echo $this->Csz_model->getLabelLang('login_incorrect');
                         }
                         if ($error == 'CAPTCHA_WRONG') {
-                            echo "<span class=\"error\">" . $this->Csz_model->getLabelLang('captcha_wrong') . "</span><br><br>";
+                            echo $this->Csz_model->getLabelLang('captcha_wrong');
                         }
                         if ($error == 'IP_BANNED') {
-                            echo "<span class=\"error\">Your IP Address been banned!</span><br><br>";
+                            echo 'Your IP Address been banned!';
                         }
+                        echo '</div>';
                     }
                     ?>
                     </div>

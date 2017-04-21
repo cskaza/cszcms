@@ -29,15 +29,15 @@ class Member_helper{
     */
     static function is_logged_in($email){
         $CI =& get_instance();
-        if(!$email || !$_SESSION['admin_logged_in']){
-            $CI->load->model('Csz_model');
+        $CI->load->library('session');
+        if(!$email){
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $sess_data = array('cszflogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
             $redirect= BASE_URL.'/member/login';
             header("Location: $redirect");
             exit;
-        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_visitor'] != 1){
+        }else if($email && $_SESSION['session_id']){
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
@@ -56,7 +56,7 @@ class Member_helper{
     * @param	string	$email_session    Email Address from session
     */
     static function login_already($email_session){
-        if($email_session && $_SESSION['admin_logged_in']){
+        if($email_session){
             $redirect= BASE_URL.'/member';
             header("Location: $redirect");
             exit;
@@ -68,12 +68,18 @@ class Member_helper{
     *
     * Function for check the plugin active (frontend use)
     *
-    * @param	string	$plugin_urlrewrite    Plugin url_rewrite
+    * @param	string	$plugin_config_filename    Plugin config filename
     */
-    static function plugin_not_active($plugin_urlrewrite){
+    static function plugin_not_active($plugin_config_filename){
         $CI =& get_instance();
+        $CI->load->model('Csz_model');
         $CI->load->model('Csz_admin_model');
-        $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_urlrewrite);
+        if($CI->Csz_model->load_config()->maintenance_active){
+            //Return to home page
+            redirect('./', 'refresh');
+            exit;
+        }
+        $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_config_filename);
         if($chkactive === FALSE){
             $redirect= BASE_URL.'/';
             header("Location: $redirect");
@@ -82,22 +88,24 @@ class Member_helper{
     }
     
     /**
-    * chkVisitor
+    * is_allowchk
     *
-    * Function for check user is visitor mode
+    * Function for check permission allow to access on the section
     *
-    * @param	string	$user_admin_id    User id from session
+    * @param	string	$perms_name    Permission Name
     */
-    static function chkVisitor($user_admin_id) {
+    static function is_allowchk($perms_name){
         $CI =& get_instance();
-        $CI->load->model('Csz_admin_model');
-        $CI->load->library('session');
-        $chk = $CI->Csz_admin_model->chkVisitorUser($user_admin_id);
-        if($chk != 0){
-            $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">You not have permission!</div>');
-            $redirect= BASE_URL.'/member';
-            header("Location: $redirect");
-            exit;
+        if($perms_name){
+            $CI->load->model('Csz_auth_model');
+            $CI->load->model('Csz_model');
+            if($CI->Csz_auth_model->is_group_allowed($perms_name, 'frontend') === FALSE){
+                $CI->load->library('session');
+                $CI->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$CI->Csz_model->getLabelLang('not_permission_txt').'</div>');
+                $redirect= BASE_URL.'/member';
+                header("Location: $redirect");
+                exit;
+            }
         }
     }
 } 

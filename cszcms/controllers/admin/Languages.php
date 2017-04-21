@@ -43,7 +43,9 @@ class Languages extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('language');
         $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
 
         // Pages variable
@@ -65,6 +67,7 @@ class Languages extends CI_Controller {
 
     public function addLang() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('language');
         //Load the form helper
         $this->load->helper('form');
         //Load the view
@@ -73,7 +76,8 @@ class Languages extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -98,13 +102,19 @@ class Languages extends CI_Controller {
 
     public function editLang() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('language');
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
-            //Get user details from database
-            $this->template->setSub('lang', $this->Csz_model->getValue('*', 'lang_iso', 'lang_iso_id', $this->uri->segment(4), 1));
-            //Load the view
-            $this->template->loadSub('admin/lang_edit');
+            $this->db->cache_on();
+            $lang = $this->Csz_model->getValue('*', 'lang_iso', 'lang_iso_id', $this->uri->segment(4), 1);
+            if($lang !== FALSE){
+                $this->template->setSub('lang', $lang);
+                //Load the view
+                $this->template->loadSub('admin/lang_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -112,7 +122,8 @@ class Languages extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -138,7 +149,8 @@ class Languages extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('delete');
         if($this->uri->segment(4)){
             //Delete the languages
             if($this->uri->segment(4) != 1) {

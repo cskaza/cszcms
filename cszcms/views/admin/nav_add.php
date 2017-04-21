@@ -98,10 +98,9 @@
                     $data[''] = $this->lang->line('option_choose');
                     if (!empty($plugin)) {
                         foreach ($plugin as $p) {
-                            $data[$p['plugin_urlrewrite']] = $p['plugin_name'];
+                            $data[$this->Csz_model->getPluginConfig($p['plugin_config_filename'], 'plugin_urlrewrite')] = $this->Csz_model->getPluginConfig($p['plugin_config_filename'], 'plugin_name');
                         }
                     }
-                    $data['member'] = 'Member';
                     echo form_dropdown('pluginmenu', $data, '', $att);
                     ?>
                 </div> <!-- /controls -->				

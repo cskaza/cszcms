@@ -118,7 +118,7 @@ class Xml_writer extends XMLWriter
         }
 
         // Set DTD.
-        $this->startDocument($this->_xmlVersion, $this->_charSet);
+        $this->startDocument($this->_xmlVersion, $this->_charSet, 'no');
 
         // Set XSLT stylesheet path, if any.
         if ($this->_xsltFilePath) {

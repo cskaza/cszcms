@@ -16,7 +16,8 @@
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></b></div>
                 <div class="panel-body text-left">
                     <?php echo form_open_multipart(BASE_URL.'/member/edit/save'); ?>
-                    <div class="control-group">										
+                    <div class="control-group">	
+                        <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('display_name'); ?>*</label>
                         <?php
                         $data = array(
@@ -32,7 +33,7 @@
                     </div> <!-- /control-group -->
 
                     <div class="control-group">		
-                        <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
+                        <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                         <label class="control-label" for="email"><?php echo $this->Csz_model->getLabelLang('email_address'); ?>*</label>
                         <?php
                         $data = array(
@@ -52,7 +53,7 @@
                         <div class="panel-heading" onclick="ChkHideShow('newpassword');"><a href="#"><b><?php echo $this->Csz_model->getLabelLang('change_password'); ?></b></a></div>
                         <div class="panel-body" id="newpassword" style="display:none;">
                             <div class="control-group">		
-                                <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
+                                <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                                 <label class="control-label" for="password"><?php echo $this->Csz_model->getLabelLang('new_password'); ?></label>
                                 <?php
                                 $data = array(
@@ -67,7 +68,7 @@
                             </div> <!-- /control-group -->
 
                             <div class="control-group">	
-                                <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
+                                <?php echo form_error('con_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                                 <label class="control-label" for="con_password"><?php echo $this->Csz_model->getLabelLang('confirm_password'); ?></label>
                                 <?php
                                 $data = array(
@@ -197,7 +198,7 @@
                     </div> <!-- /control-group -->
                     <br>
                     <div class="control-group">		
-                        <?php echo form_error('cur_password', '<div class="error">', '</div>'); ?>									
+                        <?php echo form_error('cur_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                         <label class="control-label" for="cur_password"><?php echo $this->Csz_model->getLabelLang('login_password'); ?>*</label>
                         <?php
                         $data = array(

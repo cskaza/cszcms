@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h4 sub-header"><b><?php echo  $this->lang->line('btn_view') ?>:</b> <?php echo $url_link; ?>  <a role="button" href="<?php echo $this->csz_referrer->getIndex()?>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-arrow-left"></i> <?php echo  $this->lang->line('btn_back') ?></a></div>
+        <div class="h4 sub-header"><b><?php echo  $this->lang->line('btn_view') ?>:</b> <?php echo $url_link; ?> <a role="button" href="<?php echo $this->csz_referrer->getIndex()?>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-arrow-left"></i> <?php echo  $this->lang->line('btn_back') ?></a></div>
         <form action="<?php echo BASE_URL . '/admin/linkstats/view/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/'; ?>" method="get">
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('ip_address'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label>
@@ -27,15 +27,14 @@
                 <thead>
                     <tr>
                         <th width="8%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?php echo  $this->lang->line('btn_delete') ?></label></th>
-                        <th width="37%" class="text-center"><?php echo $this->lang->line('ip_address'); ?></th>
+                        <th width="47%" class="text-center"><?php echo $this->lang->line('ip_address'); ?></th>
                         <th width="45%" class="text-center"><?php echo $this->lang->line('linkstats_dateime'); ?></th>
-                        <th width="10%"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($linkstats === FALSE) { ?>
                         <tr>
-                            <td colspan="4" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="3" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
@@ -45,14 +44,8 @@
                                     <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['link_statistic_id'].'">
                                 </td>';
                             echo '<td class="text-center">' . $u['ip_address'] . '</td>';
-                            echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
-                            echo '<td class="text-center">';
-                            if($this->session->userdata('admin_type') == 'admin'){
-                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteid/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
-                            }else{
-                                echo '&nbsp;-&nbsp;';
-                            }
-                            echo '</td></tr>';
+                            echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';                            
+                            echo '</tr>';
                         }
                         ?>
                     <?php } ?>

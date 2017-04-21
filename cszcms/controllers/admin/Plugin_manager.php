@@ -45,8 +45,9 @@ class Plugin_manager extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin manager');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
-
         $this->load->helper('form');
         $this->load->library('pagination');
         // Pages variable
@@ -69,10 +70,10 @@ class Plugin_manager extends CI_Controller {
 
     public function setstatus() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('plugin manager');
+        admin_helper::is_allowchk('save');
         if ($this->uri->segment(4)) {
-            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite != '' AND plugin_manager_id = '".$this->uri->segment(4)."'", '', 1);
+            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_config_filename != '' AND plugin_manager_id = '".$this->uri->segment(4)."'", '', 1);
             if ($status->plugin_active) {
                 $this->db->set('plugin_active', 0, FALSE);
                 $this->db->set('timestamp_update', 'NOW()', FALSE);

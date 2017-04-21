@@ -1,4 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
 /*!
  *   AdminLTE v2.3.7
  *   Author: Almsaeed Studio
@@ -21,7 +20,7 @@ body {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
@@ -62,7 +61,7 @@ body {
   -o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
   margin-left: 230px;
-  z-index: 820;
+  z-index: 5;
 }
 .layout-top-nav .content-wrapper,
 .layout-top-nav .right-side,
@@ -97,7 +96,7 @@ body {
 .right-side {
   min-height: 100%;
   background-color: #ecf0f5;
-  z-index: 800;
+  z-index: 4;
 }
 .main-footer {
   background: #fff;
@@ -163,7 +162,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: sans-serif;
 }
 /* General Links */
 a {
@@ -193,7 +192,7 @@ a:focus {
 .main-header {
   position: relative;
   max-height: 100px;
-  z-index: 2;
+  z-index: 10;
 }
 .main-header .navbar {
   -webkit-transition: margin-left 0.3s ease-in-out;
@@ -365,8 +364,8 @@ a:focus {
 .navbar-toggle {
   color: #fff;
   border: 0;
-  margin: 0;
-  padding: 15px 15px;
+  /*margin: 0;
+  padding: 15px 15px;*/
 }
 @media (max-width: 991px) {
   .navbar-custom-menu .navbar-nav > li {
@@ -421,7 +420,7 @@ a:focus {
   padding-top: 50px;
   min-height: 100%;
   width: 230px;
-  z-index: 1;
+  z-index: 2;
   -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
   -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
   -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -590,7 +589,7 @@ a:focus {
   .sidebar-mini.sidebar-collapse .right-side,
   .sidebar-mini.sidebar-collapse .main-footer {
     margin-left: 50px !important;
-    z-index: 840;
+    z-index: 2;
   }
   .sidebar-mini.sidebar-collapse .main-sidebar {
     -webkit-transform: translate(0, 0);
@@ -598,7 +597,7 @@ a:focus {
     -o-transform: translate(0, 0);
     transform: translate(0, 0);
     width: 50px !important;
-    z-index: 850;
+    z-index: 3;
   }
   .sidebar-mini.sidebar-collapse .sidebar-menu > li {
     position: relative;
@@ -696,7 +695,7 @@ a:focus {
  */
 .control-sidebar-bg {
   position: fixed;
-  z-index: 1000;
+  z-index: 4;
   bottom: 0;
 }
 .control-sidebar-bg,
@@ -711,7 +710,7 @@ a:focus {
 .control-sidebar {
   position: absolute;
   padding-top: 50px;
-  z-index: 1010;
+  z-index: 5;
 }
 @media (max-width: 768px) {
   .control-sidebar {
@@ -5058,5 +5057,5 @@ ul {
 }
 .remark{
 	font-size:12px;
-	color:#F00;
+	color: #31708f;
 }

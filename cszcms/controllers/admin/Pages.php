@@ -43,7 +43,9 @@ class Pages extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('pages content');
         $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
         // Pages variable
         $search_arr = '';
@@ -69,7 +71,7 @@ class Pages extends CI_Controller {
 
     public function addPages() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        
+        admin_helper::is_allowchk('pages content');
         //Get lang from database
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         
@@ -81,7 +83,8 @@ class Pages extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('pages content');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -106,15 +109,20 @@ class Pages extends CI_Controller {
 
     public function editPages() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('pages content');
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
-            //Get user details from database
-            //Get lang from database
-            $this->template->setSub('lang', $this->Csz_model->loadAllLang());
-            $this->template->setSub('pages', $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1));
-            //Load the view
-            $this->template->loadSub('admin/pages_edit');
+            $this->db->cache_on();
+            $pages = $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1);
+            if($pages !== FALSE){
+                $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+                $this->template->setSub('pages', $pages);
+                //Load the view
+                $this->template->loadSub('admin/pages_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -122,7 +130,8 @@ class Pages extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('pages content');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -147,7 +156,8 @@ class Pages extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('pages content');
+        admin_helper::is_allowchk('delete');
         if($this->uri->segment(4)){
             //Delete the languages
             if($this->uri->segment(4) != 1) {
@@ -165,7 +175,8 @@ class Pages extends CI_Controller {
     
     public function asCopy() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('pages content');
+        admin_helper::is_allowchk('save');
         if($this->uri->segment(4)){
             $page = $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1);
             if($page !== FALSE){

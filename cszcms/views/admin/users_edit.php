@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_edit_header') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_admin_txt') ?>
             </li>
         </ol>
     </div>
@@ -13,7 +13,8 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('user_edit_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
         <?php echo form_open_multipart(BASE_URL.'/admin/users/edited/'.$this->uri->segment(4)); ?>
-        <div class="control-group">										
+        <div class="control-group">
+            <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>
             <?php
             $data = array(
@@ -30,7 +31,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">		
-            <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="email"><?php echo $this->lang->line('user_new_email'); ?>*</label>
             <?php
             if($this->session->userdata('admin_visitor')){
@@ -51,7 +52,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">		
-            <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="password"><?php echo $this->lang->line('user_new_pass'); ?></label>
             <?php
             $data = array(
@@ -67,7 +68,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('con_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="con_password"><?php echo $this->lang->line('user_new_confirm'); ?></label>
             <?php
             $data = array(
@@ -81,40 +82,37 @@
             echo form_password($data);
             ?>			
         </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="group"><?php echo $this->lang->line('user_group_txt'); ?>*</label>
+            <?php
+                $att = 'id="group" class="form-control" required="required"';
+                if($this->uri->segment(4) == '1' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
+                    $att.=  ' disabled = "disabled"';
+                }
+                $data = array();
+                $data[''] = $this->lang->line('option_choose');
+                if (!empty($group)) {
+                    foreach ($group as $lg) {
+                        $data[$lg['user_groups_id']] = $lg['name'];
+                    }
+                }
+                $user_group = $this->Csz_auth_model->get_groups_fromuser($users->user_admin_id);
+                ($user_group !== FALSE) ? $users->user_groups_id = $user_group->user_groups_id : $users->user_groups_id = '';
+                echo form_dropdown('group', $data, $users->user_groups_id, $att);
+            ?>	
+        </div> <!-- /control-group -->
         <div class="control-group">										
             <label class="control-label" for="user_type"><?php echo $this->lang->line('user_new_type'); ?></label>
             <?php
                 $att = 'id="user_type" class="form-control"';
-                if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor'){
+                if($this->uri->segment(4) == '1' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
                     $att.= ' disabled="disabled"';
                 }
                 $data = array();
                 $data['admin'] = 'Admin';
-                $data['editor'] = 'Editor';
                 $data['member'] = 'Member';
                 echo form_dropdown('user_type', $data, $users->user_type, $att);
             ?>		
-        </div> <!-- /control-group -->
-        <br>
-        <div class="control-group">										
-            <label class="form-control-static" for="backend_visitor">
-            <?php
-            if($users->backend_visitor){
-                $checked = 'checked';
-            }else{
-                $checked = '';
-            }
-            $data = array(
-                'name' => 'backend_visitor',
-                'id' => 'backend_visitor',
-                'value' => '1',
-                'checked' => $checked               
-            );
-            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
-                $data['disabled'] = 'disabled';
-            }
-            echo form_checkbox($data);
-            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label> &nbsp; <span class="remark">(<?php echo $this->lang->line('user_notapply_member'); ?>)</span>
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
@@ -131,7 +129,7 @@
                 'value' => '1',
                 'checked' => $checked
             );
-            if($this->uri->segment(4) == '1' || $this->session->userdata('admin_type') == 'editor' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
+            if($this->uri->segment(4) == '1' || $this->session->userdata('user_admin_id') == $this->uri->segment(4)){
                 $data['disabled'] = 'disabled';
             }
             echo form_checkbox($data);
@@ -253,7 +251,7 @@
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">		
-            <?php echo form_error('cur_password', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('cur_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="cur_password"><?php echo $this->lang->line('user_cur_pass'); ?>*</label>
             <?php
             $data = array(

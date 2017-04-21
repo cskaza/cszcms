@@ -43,26 +43,21 @@ class Linkstats extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('linkstats');
         $this->load->helper('form');
-        $this->load->library('pagination');   
+        $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
         $search_arr = '';
-        if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
+        if($this->input->get('search')){
             $search_arr.= ' 1=1 ';
             if($this->input->get('search')){
-                $search_arr.= " AND link LIKE '%".$this->input->get('search', TRUE)."%'";
-            }
-            if($this->input->get('start_date') && !$this->input->get('end_date')){
-                $search_arr.= " AND timestamp_create >= '".$this->input->get('start_date',true)." 00:00:00'";
-            }elseif($this->input->get('end_date') && !$this->input->get('start_date')){
-                $search_arr.= " AND timestamp_create <= '".$this->input->get('end_date',true)." 23:59:59'";
-            }elseif($this->input->get('start_date') && $this->input->get('end_date')){
-                $search_arr.= " AND timestamp_create >= '".$this->input->get('start_date',true)." 00:00:00' AND timestamp_create <= '".$this->input->get('end_date',true)." 23:59:59'";
+                $search_arr.= " AND url LIKE '%".$this->input->get('search', TRUE)."%'";
             }
         }
         // Pages variable
         $result_per_page = 20;
-        $total_row = $this->Csz_model->countData('link_statistic', $search_arr, 'link');
+        $total_row = $this->Csz_model->countData('link_stat_mgt', $search_arr);
         $num_link = 10;
         $base_url = BASE_URL . '/admin/linkstats/';
 
@@ -71,24 +66,57 @@ class Linkstats extends CI_Controller {
         ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_statistic', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr, 'link'));
+        $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_stat_mgt', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
         $this->template->setSub('total_row',$total_row);
         //Load the view
         $this->template->loadSub('admin/linkstats_index');
     }
     
+    public function addLinks() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('linkstats');
+        //Load the form helper
+        $this->load->helper('form');
+        //Load the view
+        $this->template->loadSub('admin/linkstats_add');
+    }
+
+    public function insert() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('linkstats');
+        admin_helper::is_allowchk('save');
+        //Load the form validation library
+        $this->load->library('form_validation');
+        //Set validation rules
+        $this->form_validation->set_rules('url', 'URL', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            //Validation failed
+            $this->addLinks();
+        } else {
+            //Validation passed
+            //Add the user
+            $this->Csz_admin_model->insertLinks();
+            //Return to user list
+            $this->db->cache_delete_all();
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+    
     public function view() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('linkstats');
         if($this->uri->segment(4)){
+            $this->db->cache_on();
             $this->csz_referrer->setIndex('view');
             $this->load->helper('form');
             $this->load->library('pagination');   
-            $getLink = $this->Csz_model->getValue('*', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
+            $getLink = $this->Csz_model->getValue('url', 'link_stat_mgt', 'link_stat_mgt_id', $this->uri->segment(4), 1);
             if(empty($getLink)|| $getLink == NULL){
                 redirect($this->csz_referrer->getIndex(), 'refresh');
                 exit();
             }
-            $search_arr = "link = '".str_replace("'", "\'", $getLink->link)."' ";
+            $search_arr = "link = '".str_replace("'", "\'", $getLink->url)."' ";
             if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
                 if($this->input->get('search')){
                     $search_arr.= " AND ip_address LIKE '%".$this->input->get('search', TRUE)."%'";
@@ -114,7 +142,7 @@ class Linkstats extends CI_Controller {
             //Get users from database
             $this->template->setSub('linkstats', $this->Csz_admin_model->getIndexData('link_statistic', $result_per_page, $pagination, 'link_statistic_id', 'desc', $search_arr));
             $this->template->setSub('total_row',$total_row);
-            $this->template->setSub('url_link',$getLink->link);
+            $this->template->setSub('url_link',$getLink->url);
             //Load the view
             $this->template->loadSub('admin/linkstats_view');
         }else{
@@ -124,8 +152,8 @@ class Linkstats extends CI_Controller {
     
     public function deleteViewByID() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('linkstats');
+        admin_helper::is_allowchk('delete');
         $delR = $this->input->post('delR');
         if(isset($delR)){
             foreach ($delR as $value) {
@@ -141,14 +169,15 @@ class Linkstats extends CI_Controller {
     
     public function deleteIndexByURL() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('linkstats');
+        admin_helper::is_allowchk('delete');
         $delR = $this->input->post('delR');
         if(isset($delR)){
             foreach ($delR as $value) {
                 if ($value) {
-                    $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $value, 1);
-                    $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);
+                    $getLink = $this->Csz_model->getValue('url', 'link_stat_mgt', 'link_stat_mgt_id', $value, 1);
+                    $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->url);
+                    $this->Csz_admin_model->removeData('link_stat_mgt', 'link_stat_mgt_id', $value);
                 }
             }
         }
@@ -156,30 +185,5 @@ class Linkstats extends CI_Controller {
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
-
-    public function deleteByID() {
-        admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        if($this->uri->segment(4)){
-            $this->Csz_admin_model->removeData('link_statistic', 'link_statistic_id', $this->uri->segment(4));   
-        }
-        $this->db->cache_delete_all();
-        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-        redirect($this->csz_referrer->getIndex(), 'refresh');
-    }
     
-    public function deleteByURL() {
-        admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        if($this->uri->segment(4)){
-            $getLink = $this->Csz_model->getValue('link', 'link_statistic', 'link_statistic_id', $this->uri->segment(4), 1);
-            $this->Csz_admin_model->removeData('link_statistic', 'link', $getLink->link);   
-        }
-        $this->db->cache_delete_all();
-        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-        redirect($this->csz_referrer->getIndex(), 'refresh');
-    }
-
 }

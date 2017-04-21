@@ -12,17 +12,8 @@ $row = $this->Csz_admin_model->load_config();
         <?php echo $meta_tags ?>
         <?php echo link_tag('templates/admin/favicon.ico', 'shortcut icon', 'image/ico'); ?>
         <title><?php echo $title ?></title>
-
         <!-- Bootstrap Core CSS -->
         <?php echo $core_css ?>
-
-        <!-- Custom Fonts -->        
-        <?php echo link_tag('https://code.cdn.mozilla.net/fonts/fira.css') ?>
-
-        <!-- Ionicons -->
-        <?php echo link_tag('https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css') ?>
-        <!-- jvectormap -->
-        <?php echo link_tag('assets/js/plugins/jvectormap/jquery-jvectormap-1.2.2.css') ?>
         <!-- Theme style -->
         <?php echo link_tag('templates/admin/css/AdminLTE.min.css') ?>
         <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -37,7 +28,7 @@ $row = $this->Csz_admin_model->load_config();
         <![endif]-->
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
-        <?php if($this->session->userdata('user_admin_id') && $this->session->userdata('admin_email') && $this->session->userdata('admin_type') != 'member'){ ?>
+        <?php if($this->session->userdata('user_admin_id') && $this->session->userdata('admin_email') && $this->session->userdata('admin_logged_in')){ ?>
             <?php $users = $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')); /* Get admin user information */
             ($users->picture) ? $user_img = BASE_URL . '/photo/profile/' . $users->picture : $user_img = BASE_URL . '/photo/no_image.png'; ?>
             <div class="wrapper">
@@ -59,6 +50,48 @@ $row = $this->Csz_admin_model->load_config();
                         <!-- Navbar Right Menu -->
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
+                                <!-- Messages: style can be found in dropdown.less-->
+                                <?php $unread = $this->Csz_auth_model->count_unread_pms(); ?>
+                                <li class="dropdown messages-menu">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-envelope"></i>
+                                    <?php if($unread != 0){ ?><span class="label label-danger"><b><?php echo $unread ?></b></span><?php } ?>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li class="header"><b><?php echo sprintf($this->lang->line('pm_unread_txt'), $unread) ?></b></li>
+                                    <li>
+                                      <!-- inner menu: contains the actual data -->
+                                      <ul class="menu">
+                                        <?php $unread_msg = $this->Csz_auth_model->list_pms(10, 0, $this->session->userdata('user_admin_id'), '', TRUE);
+                                        if($unread_msg !== FALSE){
+                                        foreach($unread_msg as $value){ ?>
+                                            <!-- start message -->
+                                            <li>
+                                              <a href="<?php echo base_url(); ?>admin/pm/view/<?php echo $value['id']; ?>">
+                                                  <div class="pull-left" style="margin-top:-5px;">
+                                                    <i class="fa fa-envelope"></i>
+                                                </div>
+                                                  <h4 style="margin: 0 0 0 20px;">
+                                                  <?php echo $this->Csz_admin_model->getUser($value['sender_id'])->name ?>
+                                                  <small><i class="fa fa-clock-o"></i> <?php echo $value['date_sent'] ?></small>
+                                                </h4>
+                                                <p style="margin:0;white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;"><?php echo $value['title'] ?></p>
+                                              </a>
+                                            </li>
+                                            <!-- end message -->
+                                        <?php } 
+                                        }else{?>
+                                            <!-- start message -->
+                                            <span class="text-center">
+                                                <h4><?php echo $this->lang->line('pm_nomsg_alert') ?></h4>
+                                            </span>
+                                            <!-- end message -->
+                                        <?php } ?>
+                                      </ul>
+                                    </li>
+                                    <li class="footer"><a href="<?php echo base_url(); ?>admin/pm"><b><?php echo $this->lang->line('pm_seeall_msg') ?></b></a></li>
+                                  </ul>
+                                </li>
                                 <li>
                                     <a href="<?php echo base_url(); ?>" target="_blank">
                                         <i class="fa fa-eye"></i>
@@ -77,7 +110,8 @@ $row = $this->Csz_admin_model->load_config();
                                             <img src="<?php echo $user_img; ?>" class="img-circle" alt="User Image">
                                             <p>
                                                 <b><?php echo $users->name; ?></b>
-                                                <small><em><?php echo $this->lang->line('user_new_type'); ?>: <?php echo ucfirst($this->session->userdata('admin_type')); ?></em></small>
+                                                <?php $user_group = $this->Csz_auth_model->get_groups_fromuser($users->user_admin_id); ?>
+                                                <small><em><?php echo $this->lang->line('user_group_txt'); ?>: <?php echo ($user_group !== FALSE) ? ucfirst($user_group->name) : '-'; ?></em></small>
                                             </p>
                                         </li>
                                         <!-- Menu Body -->
@@ -97,6 +131,14 @@ $row = $this->Csz_admin_model->load_config();
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-trash"></i> <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a></li>
+                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
+                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a></li>
+                                    </ul>
+                                </li>
                                 <!-- Control Sidebar Toggle Button -->
                                 <li>
                                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
@@ -105,8 +147,7 @@ $row = $this->Csz_admin_model->load_config();
                         </div>
                     </nav>
                 </header>
-                <!-- End topbar -->
-                
+                <!-- End topbar -->               
                 <!-- Start Left side menu -->
                 <!-- Left side column. contains the logo and sidebar -->
                 <aside class="main-sidebar">
@@ -124,7 +165,7 @@ $row = $this->Csz_admin_model->load_config();
                         </div>
                         <!-- sidebar menu: : style can be found in sidebar.less -->
                         <ul class="sidebar-menu">
-                            <li class="header"><?php echo strtoupper($title); ?></li>
+                            <li class="header"><?php echo str_replace('Backend System | ', '', $title); ?></li>
                             <?php echo  $this->Headfoot_html->admin_leftmenu($cur_page) ?>
                         </ul>
                     </section>
@@ -151,7 +192,6 @@ $row = $this->Csz_admin_model->load_config();
                         <?php echo $content; ?>
                         <!-- /.content -->
                         <br><br>
-                        
                     </div>
                     <div class="footer" style="position:absolute;bottom:0%;right:2%;transform:translateY(-100%);">
                         <div class="row col-md-12 text-center">
@@ -162,7 +202,6 @@ $row = $this->Csz_admin_model->load_config();
                     </div>
                 </div>
                 <!-- End Content Wrapper. Contains page content -->
-                    
 
                 <!-- Start Footer -->
                 <?php echo  $this->Headfoot_html->admin_footer() ?>
@@ -216,9 +255,6 @@ $row = $this->Csz_admin_model->load_config();
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <?php echo $core_js ?>
-
-        <!-- FastClick -->
-        <script src="<?php echo base_url() ?>assets/js/plugins/fastclick/fastclick.js"></script>
         <!-- AdminLTE App -->
         <script src="<?php echo base_url() ?>templates/admin/js/app.min.js"></script>
         <!-- AdminLTE for demo purposes -->
@@ -226,75 +262,7 @@ $row = $this->Csz_admin_model->load_config();
         <!-- Custom Plugin JavaScript -->
         <script src="<?php echo base_url() ?>templates/admin/js/script.js"></script>  
         <script type="text/javascript">
-            $(function () {
-                tinymce.init({
-                    selector: '.body-tinymce',
-                    height: '500px',
-                    content_css: [
-                        '<?php echo BASE_URL; ?>/assets/css/bootstrap.min.css',
-                        '<?php echo BASE_URL; ?>/templates/<?php echo $row->themes_config; ?>/css/<?php echo $row->themes_config; ?>.min.css',
-                        '<?php echo BASE_URL; ?>/assets/font-awesome/css/font-awesome.min.css'
-                    ],
-                    remove_trailing_brs: false,
-                    convert_urls : false,
-                    extended_valid_elements : "*[*],script[charset|defer|language|src|type]",
-                    valid_elements: "*[*],script[charset|defer|language|src|type]",
-                    plugins: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert fontawesome",
-                    toolbar1: "insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage codesample",
-                    toolbar2: "forecolor backcolor emoticons glyphicons fontawesome | b_button jumbotron row_cols boots_panels boot_alert form_insert",
-                    image_advtab: true,
-                    image_class_list: [
-                        {title: 'None', value: ''},
-                        {title: 'Responsive', value: 'img-responsive'},
-                        {title: 'Rounded & Responsive', value: 'img-responsive img-rounded'},
-                        {title: 'Circle & Responsive', value: 'img-responsive img-circle'},
-                        {title: 'Thumbnail & Responsive', value: 'img-responsive img-thumbnail'}
-                    ],
-                    style_formats: [
-                        { title: 'Text', items: [
-                            {title: 'Muted text', inline: 'span', classes: 'text-muted'},
-                            {title: 'Primary text', inline: 'span', classes: 'text-primary'},
-                            {title: 'Success text', inline: 'span', classes: 'text-success'},
-                            {title: 'Info text', inline: 'span', classes: 'text-info'},
-                            {title: 'Warning text', inline: 'span', classes: 'text-warning'},
-                            {title: 'Danger text', inline: 'span', classes: 'text-danger'},
-                            {title: 'Badges', inline: 'span', classes: 'badge'}
-                        ] },
-                        { title: 'Label', items: [
-                            {title: 'Default Label', inline: 'span', classes: 'label label-default'},
-                            {title: 'Primary Label', inline: 'span', classes: 'label label-primary'},
-                            {title: 'Success Label', inline: 'span', classes: 'label label-success'},
-                            {title: 'Info Label', inline: 'span', classes: 'label label-info'},
-                            {title: 'Warning Label', inline: 'span', classes: 'label label-warning'},
-                            {title: 'Danger Label', inline: 'span', classes: 'label label-danger'}
-                        ] },
-                        { title: 'Headers', items: [
-                            { title: 'h1', block: 'h1' },
-                            { title: 'h2', block: 'h2' },
-                            { title: 'h3', block: 'h3' },
-                            { title: 'h4', block: 'h4' },
-                            { title: 'h5', block: 'h5' },
-                            { title: 'h6', block: 'h6' }
-                        ] },
-                        { title: 'Blocks', items: [
-                            { title: 'p', block: 'p' },
-                            { title: 'div', block: 'div' },
-                            { title: 'pre', block: 'pre' }
-                        ] },
-                        { title: 'Containers', items: [
-                            { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
-                            { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
-                            { title: 'blockquote', block: 'blockquote', wrapper: true },
-                            { title: 'hgroup', block: 'hgroup', wrapper: true },
-                            { title: 'aside', block: 'aside', wrapper: true },
-                            { title: 'figure', block: 'figure', wrapper: true }
-                        ] }
-                    ]
-                });
-            });
-        $(document).ready(function(){
-            runTinyMCE(<?php echo $row->themes_config; ?>);
-        });
+            $(function(){tinymce.init({selector:".body-tinymce",height:"500px",content_css:["<?php echo BASE_URL; ?>/assets/css/bootstrap.min.css","<?php echo BASE_URL; ?>/templates/<?php echo $row->themes_config; ?>/css/<?php echo $row->themes_config; ?>.min.css","<?php echo BASE_URL; ?>/assets/font-awesome/css/font-awesome.min.css"],remove_trailing_brs:!1,convert_urls:!1,plugins:"advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor colorpicker imagetools glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert fontawesome cszfile",external_filemanager_path:"<?php echo BASE_URL; ?>/admin/",relative_urls:!1,toolbar1:"insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage codesample",toolbar2:"forecolor backcolor emoticons glyphicons fontawesome | b_button jumbotron row_cols boots_panels boot_alert form_insert",image_advtab:!0,image_class_list:[{title:"None",value:""},{title:"Responsive",value:"img-responsive"},{title:"Rounded & Responsive",value:"img-responsive img-rounded"},{title:"Circle & Responsive",value:"img-responsive img-circle"},{title:"Thumbnail & Responsive",value:"img-responsive img-thumbnail"}],style_formats:[{title:"Text",items:[{title:"Muted text",inline:"span",classes:"text-muted"},{title:"Primary text",inline:"span",classes:"text-primary"},{title:"Success text",inline:"span",classes:"text-success"},{title:"Info text",inline:"span",classes:"text-info"},{title:"Warning text",inline:"span",classes:"text-warning"},{title:"Danger text",inline:"span",classes:"text-danger"},{title:"Badges",inline:"span",classes:"badge"}]},{title:"Label",items:[{title:"Default Label",inline:"span",classes:"label label-default"},{title:"Primary Label",inline:"span",classes:"label label-primary"},{title:"Success Label",inline:"span",classes:"label label-success"},{title:"Info Label",inline:"span",classes:"label label-info"},{title:"Warning Label",inline:"span",classes:"label label-warning"},{title:"Danger Label",inline:"span",classes:"label label-danger"}]},{title:"Headers",items:[{title:"h1",block:"h1"},{title:"h2",block:"h2"},{title:"h3",block:"h3"},{title:"h4",block:"h4"},{title:"h5",block:"h5"},{title:"h6",block:"h6"}]},{title:"Blocks",items:[{title:"p",block:"p"},{title:"div",block:"div"},{title:"pre",block:"pre"}]},{title:"Containers",items:[{title:"section",block:"section",wrapper:!0,merge_siblings:!1},{title:"article",block:"article",wrapper:!0,merge_siblings:!1},{title:"blockquote",block:"blockquote",wrapper:!0},{title:"hgroup",block:"hgroup",wrapper:!0},{title:"aside",block:"aside",wrapper:!0},{title:"figure",block:"figure",wrapper:!0}]}]})});
         </script>
         <!-- Load Extra JavaScript -->
         <?php if(!empty($extra_js)){ 

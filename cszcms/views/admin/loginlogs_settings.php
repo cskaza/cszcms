@@ -74,7 +74,7 @@
             <label><?php echo $this->lang->line('ip_address') ?></label>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-laptop"></i></div>
-                <input class="form-control" type="text" name="ip_address" id="ip_address" value="<?php echo $this->input->ip_address(); ?>">
+                <input class="form-control" type="text" name="ip_address" id="ip_address" value="<?php echo $this->input->ip_address(); ?>" required>
             </div> <!-- /.input group -->
         </div>
         <div class="form-group">
@@ -129,7 +129,7 @@
             <label><?php echo $this->lang->line('ip_address') ?></label>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-laptop"></i></div>
-                <input class="form-control" type="text" name="ip_address" id="ip_address">
+                <input class="form-control" type="text" name="ip_address" id="ip_address" required>
             </div> <!-- /.input group -->
         </div>
         <div class="form-group">

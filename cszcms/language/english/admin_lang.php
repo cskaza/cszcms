@@ -54,7 +54,7 @@ $lang['user_new_pass']			= "New Password";
 $lang['user_new_confirm']		= "Confirm Password";
 $lang['user_new_active']		= "Activate";
 $lang['user_new_deactive']		= "Deactivated";
-$lang['user_new_type']                  = "Permission Type";
+$lang['user_new_type']                  = "Users Type";
 $lang['user_first_name']                = "First Name";
 $lang['user_last_name']                 = "Last Name";
 $lang['user_birthday']                  = "Birth Day";
@@ -65,6 +65,18 @@ $lang['user_picture']                   = "Picture";
 $lang['user_backend_visitor']           = "Visitor for Backend";
 $lang['user_not_allow_txt']             = "You might not have permission to access this section!";
 $lang['user_notapply_member']           = "Don't apply to 'Member' type!";
+$lang['user_member_txt']                = "Member Users";
+$lang['user_admin_txt']                 = "Admin Users";
+$lang['user_group_txt']                 = "User Groups";
+$lang['user_group_new']                 = "New Groups";
+$lang['user_group_edit']                = "Edit Groups";
+$lang['user_group_name']                = "Group Name";
+$lang['user_group_definition']          = "Group Definition";
+$lang['user_permission_txt']            = "Permission";
+$lang['user_backend_txt']               = "Backend";
+$lang['user_frontend_txt']              = "Frontend";
+$lang['user_perm_allow']                = "Allow";
+$lang['user_perm_deny']                 = "Deny";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";
@@ -198,8 +210,6 @@ $lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
 $lang['settings_googlecapt_remark']	= 'You can get key of reCaptcha at <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Site Logo";
 $lang['settings_logo_remark']		= "Site logo has height not exceeding 50 px for default template.";
-$lang['settings_link_statistic_active']	= "Statistic for link Enable (In page content)";
-$lang['settings_link_statistic_remark']	= 'Please use linkstats="(number of index)" after href="" attribute in &lt;a&gt; tag for enable statistic';
 $lang['settings_pagecache_time']	= "Pages cache time control";
 $lang['settings_pagecache_time_min']	= "Minutes";
 $lang['settings_pagecache_time_off']	= "Off";
@@ -226,6 +236,10 @@ $lang['settings_ga_client_id']		= "Google API Client ID";
 $lang['settings_ga_client_id_remark']	= 'How to Creating a Google API Console project and client ID? <a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank"><b>See here</b></a>';
 $lang['settings_ga_view_id']		= "Google Analytics View ID";
 $lang['settings_ga_view_id_remark']	= 'You can see view ID at <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>Click Here</b></a>. After you "Access Google Analytics" and choose your site analytics. Please see your view ID at "ids"';
+$lang['settings_gsearch_active']	= "Google Custom Search Enable";
+$lang['settings_gsearch_cxid']          = "Your search engine ID (cx ID)";
+$lang['settings_gsearch_remark']	= 'You can see at <a href="https://developers.google.com/custom-search/docs/tutorial/introduction" target="_blank"><b>Custom Search Tutorial</b></a>.';
+$lang['settings_maintenance_active']    = "Enable Maintenance Mode";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
@@ -278,6 +292,7 @@ $lang['pages_active']                    = "Active";
 $lang['pages_keywords']                    = "Pages Keywords";
 $lang['pages_desc']                    = "Pages Description";
 $lang['pages_content']                    = "Pages Content";
+$lang['pages_custom_css']                    = "Custom CSS";
 
 //Captcha
 $lang['captcha_text']             = "Security Check (Please enter the character shown in the image)";
@@ -366,9 +381,11 @@ $lang['clearallcache_success_alert']    = "Clear all pages cached successfully!"
 $lang['clearalldbcache_success_alert']    = "Clear all DB cached successfully!";
 $lang['btn_clear_sess']                 = "Clear All Session";
 $lang['clear_sess_message']            = "After session has been cleared. Please login again. Do you want to do this?";
+$lang['btn_backup_file']		= "File Backup";
 
 //Link Statistic
 $lang['linkstats_header']             = "Statistic for link";
+$lang['linkstats_newbtn']             = "New Link";
 $lang['linkstats_url']                 = "URL";
 $lang['linkstats_dateime']              = "Date/Time";
 $lang['linkstats_count']                = "Click Count";
@@ -416,6 +433,10 @@ $lang['widget_active']                    = "Active";
 $lang['widget_name']                 = "Widget Name";
 $lang['widget_xml_url']                 = "Widget XML URL";
 $lang['widget_limit_view']                 = "Show Limit";
+$lang['widget_widget_open']                 = "HTML Open";
+$lang['widget_widget_content']                 = "HTML Content";
+$lang['widget_widget_seemore']                 = "HTML See more Button";
+$lang['widget_widget_close']                 = "HTML Close";
 $lang['widget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see Widget Name<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
 
 // Facebook Comments
@@ -436,5 +457,33 @@ $lang['bf_note']                    = "Note";
 $lang['bf_ip_banned_alert']           = "Your IP Address been banned!";
 $lang['bf_settings']                    = "Protection Settings";
 $lang['loginlogs_header']               = "Login Logs";
+$lang['actionslogs_header']               = "Actions Logs";
 $lang['loginlogs_result']                    = "Result";
 $lang['emaillogs_header']               = "Email Logs";
+
+// Private Message
+$lang['pm_header']                = "Private Message";
+$lang['pm_nomsg_alert']                = "No new message!";
+$lang['pm_unread_txt']                    = "You have %d unread messages";
+$lang['pm_seeall_msg']                    = "See All Messages";
+$lang['pm_to']                    = "To";
+$lang['pm_from']                    = "From";
+$lang['pm_subject']                    = "Subject";
+$lang['pm_message']                    = "Message";
+$lang['pm_send']                    = "Send";
+$lang['pm_inbox']                    = "Inbox";
+$lang['pm_new_msg']                    = "New Message";
+
+// Banner Mgt
+$lang['banner_header']                = "Banner Manager";
+$lang['banner_new']             = "New Banner";
+$lang['banner_name']                 = "Banner Name";
+$lang['banner_img']                 = "Banner Image";
+$lang['banner_width']                 = "Width";
+$lang['banner_height']                 = "Height";
+$lang['banner_link']                 = "Link";
+$lang['banner_count']                = "Click Count";
+$lang['banner_date_period']            = "Date Period";
+$lang['banner_nofollow']            = "No Follow Link";
+$lang['banner_expired']            = "Banner Expired";
+$lang['banner_indexremark']		= "<i>Please use this tag for insert the banner into the content. Please see Banner ID#<br><b>Tag:</b></i> [?]{=banner:<b>banner_id</b>}[?]";

@@ -13,11 +13,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <?php echo link_tag('templates/cszdefault/imgs/favicon.ico', 'shortcut icon', 'image/ico');?>
         <title><?php echo $title?></title>
         <!-- Bootstrap Core CSS -->
-        <?php echo  $core_css ?>        
+        <?php echo $core_css ?>
         <!-- Custom CSS -->
-        <?php echo  link_tag('templates/cszdefault/css/cszdefault.min.css') ?>        
-        <!-- Custom Fonts -->        
-        <?php echo  link_tag('https://code.cdn.mozilla.net/fonts/fira.css"') ?>
+        <?php echo link_tag('templates/cszdefault/css/cszdefault.min.css') ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -40,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand page-scroll" href="<?php echo BASE_URL?>"><?php echo $this->Headfoot_html->getLogo();?></a>
+                    <a class="navbar-brand page-scroll" href="<?php echo base_url() ?>"><?php echo $this->Headfoot_html->getLogo();?></a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -103,14 +101,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <?php echo $core_js?>
-        <script src="<?php echo base_url()?>/templates/cszdefault/js/classie.min.js"></script>
-        <script src="<?php echo base_url()?>/templates/cszdefault/js/cbpAnimatedHeader.min.js"></script>
-        <script type="text/javascript">
-        // Highlight the top nav as scrolling occurs
-        $('body').scrollspy({
-            target: '.navbar-fixed-top'
-        });
-        </script>
         <?php if($additional_js){ ?>
         <script type="text/javascript">
             <?php echo $additional_js?>

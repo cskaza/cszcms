@@ -11,12 +11,10 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('linkstats_header') ?></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('linkstats_header') ?> <a role="button" href="<?php echo BASE_URL?>/admin/linkstats/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('linkstats_newbtn') ?></a></div>
         <form action="<?php echo BASE_URL . '/admin/linkstats/'; ?>" method="get">
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('linkstats_url'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label>
-                <label class="control-label" for="start_date"><?php echo $this->lang->line('startdate_field'); ?>: <input type="text" name="start_date" id="start_date" class="form-control-static form-datepicker" value="<?php echo $this->input->get('start_date');?>"></label>
-                <label class="control-label" for="end_date"><?php echo $this->lang->line('enddate_field'); ?>: <input type="text" name="end_date" id="end_date" class="form-control-static form-datepicker" value="<?php echo $this->input->get('end_date');?>"></label>
                 <input type="submit" name="submit" id="submit" class="btn btn-default" value="<?php echo $this->lang->line('search'); ?>">
             </div>
         </form>
@@ -27,10 +25,10 @@
                 <thead>
                     <tr>
                         <th width="8%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?php echo  $this->lang->line('btn_delete') ?></label></th>
-                        <th width="50%" class="text-center"><?php echo $this->lang->line('linkstats_url'); ?></th>
+                        <th width="57%" class="text-center"><?php echo $this->lang->line('linkstats_url'); ?></th>
                         <th width="10%" class="text-center"><?php echo $this->lang->line('linkstats_count'); ?></th>
                         <th width="15%" class="text-center"><?php echo $this->lang->line('linkstats_dateime'); ?></th>
-                        <th width="17%"></th>
+                        <th width="10%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,16 +41,20 @@
                         foreach ($linkstats as $u) {
                             echo '<tr>';
                             echo '<td class="text-center" style="vertical-align:middle;">
-                                    <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['link_statistic_id'].'">
-                                </td>';
-                            echo '<td>' . $u['link'] . '</td>';
-                            $where_arr = array('link'=>$u['link']);
-                            echo '<td class="text-center">' . number_format($this->Csz_model->countData('link_statistic', $where_arr)) . '</td>';
-                            echo '<td class="text-center">' . $u['timestamp_create'] . '</td>';
-                            echo '<td class="text-center"><a href="'.BASE_URL.'/admin/linkstats/view/' . $u['link_statistic_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a>';
-                            if($this->session->userdata('admin_type') == 'admin'){
-                                echo ' &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/linkstats/deleteurl/'.$u['link_statistic_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a>';
-                            }
+                                    <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['link_stat_mgt_id'].'">
+                                </td>'; ?>
+                            <td style="vertical-align:middle;">
+                                <div class="form-group has-warning">
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><b><?php echo  $this->lang->line('uploadfile_urlpath') ?></b></div>
+                                        <input type="text" readonly class="form-control" id="full_url" value="<?php echo BASE_URL ?>/link/<?php echo $u['link_stat_mgt_id'] ?>#<?php echo $u['url'] ?>" onfocus="this.select();" onmouseup="return false;">
+                                    </div>
+                                </div>
+                            </td>
+                            <?php $where_arr = array('link'=>$u['url']);
+                            echo '<td class="text-center" style="vertical-align:middle;">' . number_format($this->Csz_model->countData('link_statistic', $where_arr)) . '</td>';
+                            echo '<td class="text-center" style="vertical-align:middle;">' . $u['timestamp_create'] . '</td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL.'/admin/linkstats/view/' . $u['link_stat_mgt_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a>';
                             echo '</td></tr>';
                         }
                         ?>

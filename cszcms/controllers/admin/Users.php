@@ -43,16 +43,15 @@ class Users extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('admin users');
         $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
-        $search_arr = '';
-        if($this->input->get('search') || $this->input->get('user_type')){
+        $search_arr = " user_type = 'admin' ";
+        if($this->input->get('search')){
             $search_arr.= ' 1=1 ';
             if($this->input->get('search')){
                 $search_arr.= " AND name LIKE '%".$this->input->get('search', TRUE)."%' OR email LIKE '%".$this->input->get('search', TRUE)."%'";
-            }
-            if($this->input->get('user_type')){
-                $search_arr.= " AND user_type = '".$this->input->get('user_type', TRUE)."'";
             }
         }
         // Pages variable
@@ -64,28 +63,30 @@ class Users extends CI_Controller {
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
         ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
         //Get users from database
-        $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_type', 'asc', $search_arr));
-        $this->template->setSub('total_row',$total_row);       
+        $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_admin_id', 'asc', $search_arr));        
+        $this->template->setSub('total_row', $total_row);       
         //Load the view
         $this->template->loadSub('admin/users_index');
     }
 
     public function addUser() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::is_allowchk('admin users');
         //Load the form helper
         $this->load->helper('form');
+        $this->template->setSub('group', $this->Csz_auth_model->get_group_all());
         //Load the view
         $this->template->loadSub('admin/users_add');
     }
 
     public function confirm() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('admin users');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
+        $this->form_validation->set_rules('name', $this->lang->line('user_new_name'), 'required|is_unique[user_admin.name]');
         $this->form_validation->set_rules('email', $this->lang->line('user_new_email'), 'trim|required|valid_email|is_unique[user_admin.email]');
         $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|required|matches[password]');
@@ -112,16 +113,23 @@ class Users extends CI_Controller {
 
     public function editUser() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if($this->session->userdata('admin_type') != 'admin' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+        if($this->Csz_auth_model->is_group_allowed('admin users', 'backend') === FALSE && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
             redirect('/admin/users', 'refresh');
         }
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
+            $this->db->cache_on();
             //Get user details from database
-            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
-            //Load the view
-            $this->template->loadSub('admin/users_edit');
+            $users = $this->Csz_admin_model->getUser($this->uri->segment(4), 'admin');
+            if($users !== FALSE){
+                $this->template->setSub('users', $users);
+                $this->template->setSub('group', $this->Csz_auth_model->get_group_all());
+                //Load the view
+                $this->template->loadSub('admin/users_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -129,13 +137,14 @@ class Users extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
-        if($this->session->userdata('admin_type') != 'admin' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
+        admin_helper::is_allowchk('save');
+        if($this->Csz_auth_model->is_group_allowed('admin users', 'backend') === FALSE && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){
             redirect('/admin/users', 'refresh');
         }       
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
+        $this->form_validation->set_rules('name', $this->lang->line('user_new_name'), 'required|is_unique[user_admin.name.user_admin_id.' . $this->uri->segment(4) . ']');
         $this->form_validation->set_rules('email', $this->lang->line('user_new_email'), 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->uri->segment(4) . ']');
         $this->form_validation->set_rules('password', $this->lang->line('user_new_pass'), 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('con_password', $this->lang->line('user_new_confirm'), 'trim|matches[password]');
@@ -169,11 +178,18 @@ class Users extends CI_Controller {
     
     public function viewUsers() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        if($this->uri->segment(4)){             
+        admin_helper::is_allowchk('admin users');
+        if($this->uri->segment(4)){
+            $this->db->cache_on();
             //Get users from database   
-            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(4)));
-            //Load the view
-            $this->template->loadSub('admin/users_view');
+            $users = $this->Csz_admin_model->getUser($this->uri->segment(4), 'admin');
+            if($users !== FALSE){
+                $this->template->setSub('users', $users);
+                //Load the view
+                $this->template->loadSub('admin/users_view');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -181,12 +197,13 @@ class Users extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('admin users');
+        admin_helper::is_allowchk('delete');
         if($this->uri->segment(4)){
             if ($this->session->userdata('user_admin_id') != $this->uri->segment(4)) {
                 //Delete the user account
                 $this->Csz_admin_model->removeUser($this->uri->segment(4));
+                $this->Csz_auth_model->remove_user_from_allgroup($this->uri->segment(4));
                 $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             } else {
@@ -246,6 +263,7 @@ class Users extends CI_Controller {
         admin_helper::login_already($this->session->userdata('admin_email'));
         $this->db->where('email', $str);
         $this->db->where("user_type != 'member'");
+        $this->db->where('active', 1);
         $this->db->limit(1, 0);
         $query = $this->db->get('user_admin');
         if ($query->num_rows() == 1) {
@@ -261,7 +279,7 @@ class Users extends CI_Controller {
         $md5_hash = $this->uri->segment(3);
         $this->Csz_admin_model->chkMd5Time($md5_hash);
         $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
-        if (!$user_rs){
+        if (!$user_rs || $user_rs === FALSE){
             redirect('admin/user/forgot', 'refresh');
         } else {
             $this->template->setSub('email', $user_rs->email);

@@ -43,9 +43,10 @@ class Widget extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin widget');
         $this->load->library('pagination');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
-
         // Pages variable
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('widget_xml');
@@ -65,6 +66,7 @@ class Widget extends CI_Controller {
 
     public function addWidget() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin widget');
         //Load the form helper
         $this->load->helper('form');
         //Load the view
@@ -73,7 +75,8 @@ class Widget extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -95,13 +98,19 @@ class Widget extends CI_Controller {
 
     public function editWidget() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin widget');
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(4)) {
-            //Get user details from database
-            $this->template->setSub('widget', $this->Csz_model->getValue('*', 'widget_xml', 'widget_xml_id', $this->uri->segment(4), 1));
-            //Load the view
-            $this->template->loadSub('admin/widget_edit');
+            $this->db->cache_on();
+            $widget = $this->Csz_model->getValue('*', 'widget_xml', 'widget_xml_id', $this->uri->segment(4), 1);
+            if($widget !== FALSE){
+                $this->template->setSub('widget', $widget);
+                //Load the view
+                $this->template->loadSub('admin/widget_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         } else {
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -109,7 +118,8 @@ class Widget extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
@@ -133,11 +143,13 @@ class Widget extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('delete');
         if ($this->uri->segment(4)) {
             //Delete the widget
             $this->Csz_admin_model->removeData('widget_xml', 'widget_xml_id', $this->uri->segment(4));
             $this->db->cache_delete_all();
+            $this->Csz_model->clear_file_cache('widget_*', TRUE);
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
         //Return to widget list

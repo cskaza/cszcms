@@ -58,7 +58,7 @@ tinymce.PluginManager.add('link', function(editor) {
 
 	function showDialog(linkList) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
-		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, linkStatsCtrl, value;
+		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
 
 		function linkListChangeHandler(e) {
 			var textCtrl = win.find('#text');
@@ -169,10 +169,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			data.title = value;
 		}
                 
-                data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-                if ((value = dom.getAttrib(anchorElm, 'linkstats'))) {
-			data.linkstats = value;
-		}
+                data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';               
 
 		if (onlyText) {
 			textListCtrl = {
@@ -257,15 +254,6 @@ tinymce.PluginManager.add('link', function(editor) {
 				value: data.title
 			};
 		}
-                
-                if (editor.settings.linkstats !== false) {
-			linkStatsCtrl = {
-				name: 'linkstats',
-				type: 'textbox',
-				label: 'Linkstats index number',
-				value: data.linkstats
-			};
-		}
 
 		win = editor.windowManager.open({
 			title: 'Insert link',
@@ -286,7 +274,6 @@ tinymce.PluginManager.add('link', function(editor) {
 				buildAnchorListControl(data.href),
 				linkListCtrl,
 				relListCtrl,
-                                linkStatsCtrl,
 				targetListCtrl,
 				classListCtrl
 			],
@@ -315,8 +302,7 @@ tinymce.PluginManager.add('link', function(editor) {
 						rel: data.rel ? data.rel : null,
 						"class": data["class"] ? data["class"] : null,
 						title: data.title ? data.title : null,
-                                                href: href,
-                                                linkstats: data.linkstats ? data.linkstats : null,
+                                                href: href
 					};
 
 					if (anchorElm) {

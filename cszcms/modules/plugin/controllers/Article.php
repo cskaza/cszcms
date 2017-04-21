@@ -45,7 +45,7 @@ class Article extends CI_Controller {
         }
         if($row->pagecache_time != 0){ $this->db->cache_on(); }
         $this->_init();
-        member_helper::plugin_not_active($this->uri->segment(2));
+        member_helper::plugin_not_active('article');
     }
 
     public function _init() {
@@ -59,7 +59,7 @@ class Article extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $title = 'Article | ' . $row->site_name;
+        $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
@@ -89,7 +89,7 @@ class Article extends CI_Controller {
             $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
             if($cat_row !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $title = 'Article | ' . $row->site_name;
+                $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
                 $this->template->set('title', $title);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
@@ -159,7 +159,7 @@ class Article extends CI_Controller {
             $year_arr = explode('-', $this->uri->segment(4));
             if($year_arr !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $title = 'Article | ' . $row->site_name;
+                $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
                 $this->template->set('title', $title);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
@@ -230,14 +230,13 @@ class Article extends CI_Controller {
     public function rss() {
         // creating rss feed with our most recent 20
         // first load the library
-        $this->db->cache_off();
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
         // create new instance
         $feed = new Feed();
         // set your feed's title, description, link, pubdate and language
         $feed->title = $row->site_name;
-        $feed->description = 'Article | ' . $row->site_name;
+        $feed->description = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
         $feed->link = BASE_URL.'/plugin/article';
         $search_arr = " is_category = '0' AND active = '1'";
         $limit = 20;
@@ -268,12 +267,15 @@ class Article extends CI_Controller {
         $xml->addNode('main_url', BASE_URL.'/plugin/article');
         // Get article 10 items
         if ($this->uri->segment(4)) {
-            $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$this->uri->segment(4)."'";
+            if($this->uri->segment(5)){
+                $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$this->uri->segment(4)."' AND cat_id = '".$this->uri->segment(5)."'";
+            }else{
+                $search_arr = " is_category = '0' AND active = '1' AND lang_iso = '".$this->uri->segment(4)."'";
+            }
         }else{
             $search_arr = " is_category = '0' AND active = '1'";
         }
-        $limit = 20;
-        $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
+        $article = $this->Csz_admin_model->getIndexData('article_db', 100, 0, 'timestamp_create', 'desc', $search_arr);
         if($article !== FALSE){
             $xml->addNode('null', '0'); // For check item is not empty
             foreach ($article as $row) {
@@ -285,7 +287,7 @@ class Article extends CI_Controller {
                 if($row['main_picture']){
                     $xml->addNode('photo', BASE_URL.'/photo/plugin/article/'.$row['main_picture']);
                 }else{
-                    $xml->addNode('photo', BASE_URL.'photo/no_image.png');
+                    $xml->addNode('photo', BASE_URL.'/photo/no_image.png');
                 }
                 // End sub branch
                 $xml->endBranch();
@@ -296,6 +298,7 @@ class Article extends CI_Controller {
         // End Main branch 
         $xml->endBranch();
         // Print the XML to screen
+        header('Content-type: text/xml');
         $xml->getXml(true);
         exit();
     }   

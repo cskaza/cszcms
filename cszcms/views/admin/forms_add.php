@@ -15,7 +15,7 @@
         <?php echo form_open_multipart(BASE_URL . '/admin/forms/insert'); ?>
 
         <div class="control-group">	
-            <?php echo form_error('form_name', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('form_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="form_name"><?php echo $this->lang->line('forms_name'); ?>*</label>
             <?php
             $data = array(
@@ -32,7 +32,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('form_enctype', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('form_enctype', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="form_enctype"><?php echo $this->lang->line('forms_enctype'); ?></label>
             <?php
             $data = array(
@@ -58,7 +58,7 @@
         </div> <!-- /control-group -->
         
         <div class="control-group">	
-            <?php echo form_error('success_txt', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('success_txt', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="success_txt"><?php echo $this->lang->line('forms_success_txt'); ?></label>
             <?php
             $data = array(
@@ -72,7 +72,7 @@
             ?>				
         </div> <!-- /control-group -->
         <div class="control-group">	
-            <?php echo form_error('captchaerror_txt', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('captchaerror_txt', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="captchaerror_txt"><?php echo $this->lang->line('forms_captchaerror_txt'); ?></label>
             <?php
             $data = array(
@@ -86,7 +86,7 @@
             ?>				
         </div> <!-- /control-group -->
         <div class="control-group">	
-            <?php echo form_error('error_txt', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('error_txt', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="error_txt"><?php echo $this->lang->line('forms_error_txt'); ?></label>
             <?php
             $data = array(
@@ -116,7 +116,7 @@
             </div>
             <div class="panel-body" id="chk-sendmail" style="display: none;">
                 <div class="control-group">	
-                    <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
+                    <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                     <label class="control-label" for="email"><?php echo $this->lang->line('forms_email'); ?></label>
                     <?php
                     $data = array(
@@ -131,7 +131,7 @@
                 </div> <!-- /control-group -->
 
                 <div class="control-group">	
-                    <?php echo form_error('subject', '<div class="error">', '</div>'); ?>									
+                    <?php echo form_error('subject', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                     <label class="control-label" for="subject"><?php echo $this->lang->line('forms_subject'); ?></label>
                     <?php
                     $data = array(

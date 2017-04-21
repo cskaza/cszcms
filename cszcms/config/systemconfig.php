@@ -23,16 +23,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.1.5'; /* For CMS Version */
+$config['csz_version'] = '1.1.6'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 
  * For CSZ CMS check lastest version xml url
- * Defualt url https://www.cszcms.com/downloads/lastest_version.xml
- * Backup url https://cszcms-d99bf.firebaseapp.com/lastest_version.xml
+ * Defualt url https://cszcms-d99bf.firebaseapp.com/lastest_version.xml
+ * Backup url https://www.cszcms.com/downloads/lastest_version.xml
  */
 $config['csz_chkverxmlurl_main'] = 'https://www.cszcms.com/downloads/lastest_version.xml';
-$config['csz_chkverxmlurl_backup'] = 'https://cszcms-d99bf.firebaseapp.com/lastest_version.xml';
+$config['csz_chkverxmlurl_backup'] = 'https://cszcms.sourceforge.io/xml/lastest_version.xml';
 
 /* 
  * For CSZ CMS upgrade server file path Ex. https://www.cszcms.com/downloads/upgrade/upgrade-to-1.1.4.zip
@@ -47,3 +47,4 @@ $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
  * Defualt Url https://www.cszcms.com/plugin/article/rss
  */
 $config['csz_backend_feed_url'] = 'https://www.cszcms.com/plugin/article/rss';
+$config['csz_backend_feed_backup_url'] = 'http://astian.org/plugin/article/rss';

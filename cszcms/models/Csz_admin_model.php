@@ -37,14 +37,7 @@ class Csz_admin_model extends CI_Model{
      * @return	object or FALSE
      */
     public function load_config(){
-        $this->db->limit(1, 0);
-        $query = $this->db->get('settings');
-        if($query->num_rows() !== 0){
-            $row = $query->row();
-            return $row;
-        }else{
-            return FALSE;
-        }
+        return $this->Csz_model->load_config();
     }
 
     /**
@@ -206,16 +199,23 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$uri_segment    Uri secment for use pageination
      */
     public function pageSetting($base_url, $total_row, $result_per_page, $num_link, $uri_segment = ''){
-        if(!$uri_segment)
+        if(!$uri_segment){
             $uri_segment = 3;
+        }
         $this->load->library('pagination');
         $config = array();
+        $suffix_url = '';
         $config["base_url"] = $base_url;
         $config["total_rows"] = $total_row;
         $config["per_page"] = $result_per_page;
         $config['use_page_numbers'] = TRUE;
         $config['page_query_string'] = FALSE;
         $config['reuse_query_string'] = FALSE;
+        if(count($_GET) > 0){
+            $suffix_url = '?'.http_build_query($_GET, '', "&");
+            $config['suffix'] = $suffix_url;
+        }
+        $config['first_url'] = $config['base_url'].$suffix_url;
         $config['num_links'] = $num_link;
         $config['full_tag_open'] = '<nav><ul class="pagination">';
         $config['full_tag_close'] = '</ul></nav>';
@@ -253,10 +253,9 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$groupby    DB group by field. NULL if not need
      * @return	array
      */
-    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = 'timestamp_create', $sort = 'desc', $search_sql = '', $groupby = ''){
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = '', $sort = '', $search_sql = '', $groupby = ''){
         // Get a list of all user accounts
         $count = $this->Csz_model->countData($table, $search_sql, $groupby, $orderby, $sort);
-        if($offset > ceil(($count / $limit))) $offset = ceil(($count / $limit));
         $this->db->select('*');
         if($search_sql){
             if(is_array($search_sql)){
@@ -267,12 +266,19 @@ class Csz_admin_model extends CI_Model{
                 $this->db->where($search_sql);
             }
         }
-        $this->db->order_by($orderby, $sort);
+        if($orderby && $sort){           
+            $this->db->order_by($orderby, $sort);
+        }elseif($orderby){
+            $this->db->order_by($orderby);
+        }
         if($groupby)
             $this->db->group_by($groupby);
         if($limit && $limit != 0){
-            $start = ($offset * $limit) - $limit;
-            if($start < 0) $start = 0;
+            if($offset > ceil((intval($count) / intval($limit))))
+                $offset = ceil((intval($count) / intval($limit)));
+            $start = (intval($offset) * intval($limit)) - intval($limit);
+            if($start < 0)
+                $start = 0;
             $this->db->limit($limit, $start);
         }
         $query = $this->db->get($table);
@@ -286,6 +292,7 @@ class Csz_admin_model extends CI_Model{
         }else{
             return FALSE;
         }
+        $this->db->close();
     }
 
     /**
@@ -296,15 +303,15 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$id    member id
      * @return	object or FALSE
      */
-    public function getUser($id){
+    public function getUser($id, $type = ''){
         // Get the user details
-        $this->db->select("*");
-        $this->db->where("user_admin_id", $id);
-        $this->db->limit(1, 0);
-        $query = $this->db->get('user_admin');
-        if($query->num_rows() !== 0){
-            $row = $query->row();
-            return $row;
+        $sql_where = "user_admin_id = '".$id."'";
+        if($type){
+            $sql_where.= " AND user_type = '".$type."'";
+        }
+        $rows = $this->Csz_model->getValue('*', 'user_admin', $sql_where, '', 1);
+        if($rows !== FALSE){
+            return $rows;
         }else{
             return FALSE;
         }
@@ -320,34 +327,9 @@ class Csz_admin_model extends CI_Model{
      */
     public function getUserEmail($id){
         // Get the user email address
-        $this->db->select("email");
-        $this->db->where("user_admin_id", $id);
-        $query = $this->db->get('user_admin');
-        if($query->num_rows() !== 0){
-            foreach($query->result() as $rows){
-                $email = $rows->email;
-                return $email;
-            }
-        }
-    }
-
-    /**
-     * chkVisitorUser
-     *
-     * Function for check user is visitor status
-     *
-     * @param	string	$id    member id
-     * @return	int or FALSE
-     */
-    public function chkVisitorUser($id){
-        $this->db->select("backend_visitor");
-        $this->db->where("user_admin_id", $id);
-        $this->db->limit(1, 0);
-        $query = $this->db->get('user_admin');
-        $rows = $query->row();
-        if(!empty($rows)){
-            $backend_visitor = $rows->backend_visitor;
-            return $backend_visitor;
+        $rows = $this->Csz_model->getValue('email', 'user_admin', "user_admin_id", $id, 1);
+        if($rows !== FALSE){
+            return $rows->email;
         }else{
             return FALSE;
         }
@@ -356,19 +338,15 @@ class Csz_admin_model extends CI_Model{
     /**
      * createUser
      *
+     * @param	string	$member    member is TRUE
      * Function for create the new user
      */
-    public function createUser(){
+    public function createUser($member = FALSE){
         // Create the user account
         if($this->input->post('active')){
             $active = $this->input->post('active', TRUE);
         }else{
             $active = 0;
-        }
-        if($this->input->post('backend_visitor')){
-            $backend_visitor = $this->input->post('backend_visitor', TRUE);
-        }else{
-            $backend_visitor = 0;
         }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
             $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
@@ -387,8 +365,7 @@ class Csz_admin_model extends CI_Model{
         $data = array(
             'name' => $this->input->post('name', TRUE),
             'email' => $this->input->post('email', TRUE),
-            'password' => sha1(md5($this->input->post('password', TRUE))),
-            'user_type' => $this->input->post('user_type', TRUE),
+            'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
             'first_name' => $this->input->post('first_name', TRUE),
             'last_name' => $this->input->post('last_name', TRUE),
             'birthday' => $birthday,
@@ -396,14 +373,21 @@ class Csz_admin_model extends CI_Model{
             'address' => $this->input->post('address', TRUE),
             'phone' => $this->input->post('phone', TRUE),
             'picture' => $upload_file,
-            'backend_visitor' => $backend_visitor,
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
         );
+        if($member === FALSE){
+            $this->db->set('user_type', 'admin');
+        }else{
+            $this->db->set('user_type', 'member');
+        }
         $this->db->set('md5_lasttime', 'NOW()', FALSE);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('user_admin', $data);
+        $this->db->set('user_admin_id', $this->db->insert_id());
+        $this->db->set('user_groups_id', $this->input->post('group', TRUE));
+        $this->db->insert('user_to_group');
     }
 
     /**
@@ -415,18 +399,13 @@ class Csz_admin_model extends CI_Model{
      * @return	TRUE or FALSE
      */
     public function updateUser($id){
-        $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), sha1(md5($this->input->post('cur_password', TRUE))));
-        if($query->num_rows() !== 0){
+        $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), "user_type != 'member'");
+        if($query['num_rows'] !== 0){
             // update the user account
             if($this->input->post('active')){
                 $active = $this->input->post('active', TRUE);
             }else{
                 $active = 0;
-            }
-            if($this->input->post('backend_visitor') && $this->input->post('user_type') != 'member'){
-                $backend_visitor = $this->input->post('backend_visitor', TRUE);
-            }else{
-                $backend_visitor = 0;
             }
             if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
                 $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
@@ -450,16 +429,13 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('name', $this->input->post("name", TRUE), TRUE);
             $this->db->set('email', $this->input->post('email', TRUE), TRUE);
             if($this->input->post('password') != ''){
-                $this->db->set('password', sha1(md5($this->input->post('password', TRUE))), TRUE);
+                $this->db->set('password', $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
                 $this->db->set('md5_lasttime', 'NOW()', FALSE);
             }
-            if($id != 1 && $this->session->userdata('admin_type') == 'admin'){
-                $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
-            }
-            if($id != 1 && $this->session->userdata('admin_type') == 'admin' && $this->session->userdata('user_admin_id') != $id){
-                $this->db->set('backend_visitor', $backend_visitor, FALSE);
+            if($id != 1 && $this->session->userdata('user_admin_id') != $id){
                 $this->db->set('active', $active, FALSE);
+                $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
             }
             $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
             $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
@@ -471,6 +447,21 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
+            if($id != 1 && $this->session->userdata('user_admin_id') != $id){
+                $user_groups_id = $this->input->post("group", TRUE);
+                $data = array(
+                    'user_admin_id' => $id
+                );
+                $count = $this->Csz_model->countData('user_to_group', $data);
+                if ($count === FALSE || $count < 1) {
+                    $this->db->set('user_groups_id', $user_groups_id);
+                    $this->db->insert('user_to_group', $data);
+                }else{
+                    $this->db->set('user_groups_id', $user_groups_id);
+                    $this->db->where('user_admin_id', $id);
+                    $this->db->update('user_to_group');
+                }
+            }
             return TRUE;
         }else{
             return FALSE;
@@ -487,7 +478,7 @@ class Csz_admin_model extends CI_Model{
     public function removeUser($id){
         // Delete a user account
         if($id != 1){
-            $this->db->delete('user_admin', array('user_admin_id' => $id));
+            $this->removeData('user_admin', array('user_admin_id' => $id));
         }
     }
 
@@ -500,10 +491,15 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$id_field    DB id field
      * @param	string	$id_val    DB id value
      */
-    public function removeData($table, $id_field, $id_val){
-        if($table && $id_field && $id_val){
-            // Delete a data from table
-            $this->db->delete($table, array($id_field => $id_val));
+    public function removeData($table, $id_field, $id_val = ''){
+        if($table && $id_field){
+            if(is_array($id_field)){
+                // Delete a data from table
+                $this->db->delete($table, $id_field);
+            }else{
+                // Delete a data from table
+                $this->db->delete($table, array($id_field => $id_val));
+            }
         }else{
             return FALSE;
         }
@@ -573,51 +569,6 @@ class Csz_admin_model extends CI_Model{
     }
 
     /**
-     * login
-     *
-     * Function for check the email and password login
-     *
-     * @param	string	$email    Email Address
-     * @param	string	$password    Password
-     * @return	string
-     */
-    public function login($email, $password){
-        if($this->Csz_model->chkCaptchaRes() == ''){
-            return 'CAPTCHA_WRONG';
-        }else{
-            if($this->Csz_model->chkIPBaned($email) === FALSE){
-                $query = $this->Csz_model->chkPassword($email, $password, "user_type != 'member'");
-                if($query->num_rows() == 1){
-                    $rows = $query->row();
-                    if(!empty($rows)){
-                        $session_id = session_id();
-                        $this->db->set('session_id', $session_id, TRUE);
-                        $this->db->where('user_admin_id', $rows->user_admin_id);
-                        $this->db->update('user_admin');
-                        $data = array(
-                            'user_admin_id' => $rows->user_admin_id,
-                            'admin_name' => $rows->name,
-                            'admin_email' => $rows->email,
-                            'admin_type' => $rows->user_type,
-                            'admin_visitor' => $rows->backend_visitor,
-                            'session_id' => $session_id,
-                            'admin_logged_in' => TRUE,
-                        );
-                        $this->session->set_userdata($data);
-                        return 'SUCCESS';
-                    }else{
-                        return 'INVALID';
-                    }
-                }else{
-                    return 'INVALID';
-                }
-            }else{
-                return 'IP_BANNED';
-            }
-        }
-    }
-
-    /**
      * getLangISOfromName
      *
      * Function for get the language code from name
@@ -674,10 +625,11 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreCss($more_css = ''){
-        $core_css = link_tag('assets/css/bootstrap.min.css');
-        $core_css.= link_tag('assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
-        $core_css.= link_tag('assets/font-awesome/css/font-awesome.min.css');
-        $core_css.= link_tag('assets/css/flag-icon.min.css');
+        $core_css = link_tag($this->config->item('assets_url').'/css/bootstrap.min.css');
+        $core_css.= link_tag($this->config->item('assets_url').'/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
+        $core_css.= link_tag($this->config->item('assets_url').'/font-awesome/css/font-awesome.min.css');
+        $core_css.= link_tag($this->config->item('assets_url').'/css/flag-icon.min.css');
+        $core_css.= link_tag($this->config->item('assets_url').'/js/plugins/select2/select2.min.css');
         if(!empty($more_css)){
             if(is_array($more_css)){
                 foreach($more_css as $value){
@@ -701,11 +653,13 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreJs($more_js = ''){
-        $core_js = '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery-1.12.4.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/bootstrap.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery-ui.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/jquery.ui.touch-punch.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.BASE_URL.'/assets/js/tinymce/tinymce.min.js"></script>';
+        $core_js = '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-1.12.4.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/bootstrap.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-ui.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery.ui.touch-punch.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/tinymce/tinymce.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/plugins/select2/select2.full.min.js"></script>';
+        $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
         if(!empty($more_js)){
             if(is_array($more_js)){
                 foreach($more_js as $value){
@@ -814,23 +768,23 @@ class Csz_admin_model extends CI_Model{
             'additional_js' => $additional_js,
             'additional_metatag' => $this->input->post('additional_metatag'),
             'googlecapt_active' => $this->input->post('googlecapt_active', TRUE),
-            'googlecapt_sitekey' => $this->input->post('googlecapt_sitekey', TRUE),
-            'googlecapt_secretkey' => $this->input->post('googlecapt_secretkey', TRUE),
-            'link_statistic_active' => $this->input->post('link_statistic_active', TRUE),
+            'googlecapt_sitekey' => trim($this->input->post('googlecapt_sitekey', TRUE)),
+            'googlecapt_secretkey' => trim($this->input->post('googlecapt_secretkey', TRUE)),
             'pagecache_time' => $this->input->post('pagecache_time', TRUE),
             'email_protocal' => $this->input->post('email_protocal', TRUE),
             'smtp_host' => $this->input->post('smtp_host', TRUE),
             'smtp_user' => $this->input->post('smtp_user', TRUE),
-            'smtp_pass' => $this->input->post('smtp_pass', TRUE),
             'smtp_port' => $this->input->post('smtp_port', TRUE),
             'sendmail_path' => $this->input->post('sendmail_path', TRUE),
             'member_confirm_enable' => $this->input->post('member_confirm_enable', TRUE),
             'member_close_regist' => $this->input->post('member_close_regist', TRUE),
-            'ga_client_id' => $this->input->post('ga_client_id', TRUE),
-            'ga_view_id' => $this->input->post('ga_view_id', TRUE),
-            'fbapp_id' => $this->input->post('fbapp_id', TRUE),
+            'ga_client_id' => trim($this->input->post('ga_client_id', TRUE)),
+            'ga_view_id' => trim($this->input->post('ga_view_id', TRUE)),
+            'fbapp_id' => trim($this->input->post('fbapp_id', TRUE)),
+            'gsearch_active' => $this->input->post('gsearch_active', TRUE),
+            'gsearch_cxid' => trim($this->input->post('gsearch_cxid', TRUE)),
+            'maintenance_active' => $this->input->post('maintenance_active', TRUE),
         );
-
         if($this->input->post('del_file')){
             $upload_file = '';
             @unlink('photo/logo/'.$this->input->post('del_file', TRUE));
@@ -863,6 +817,8 @@ class Csz_admin_model extends CI_Model{
         $data['og_image'] = $upload_file1;
         if($this->input->post('siteTitle') != "")
             $data['site_name'] = $this->input->post('siteTitle', TRUE);
+        if($this->input->post('smtp_pass', TRUE))
+            $this->db->set('smtp_pass', trim($this->input->post('smtp_pass', TRUE)));
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
@@ -1089,7 +1045,7 @@ class Csz_admin_model extends CI_Model{
     public function getPluginAll(){
         $this->db->select("*");
         $this->db->where("plugin_active", 1);
-        $this->db->order_by("plugin_name", "asc");
+        $this->db->order_by("plugin_config_filename", "asc");
         $query = $this->db->get('plugin_manager');
         if($query->num_rows() !== 0){
             return $query->result_array();
@@ -1169,7 +1125,7 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
         $o_link_input = $this->input->post('url_link', TRUE);
-        if (substr($o_link_input, 0, 1) === '#') {
+        if(substr($o_link_input, 0, 1) === '#'){
             $other_link = substr($o_link_input, 1);
         }else{
             $replace_arr = array('https://', 'http://');
@@ -1211,7 +1167,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
         $o_link_input = $this->input->post('url_link', TRUE);
-        if (substr($o_link_input, 0, 1) === '#') {
+        if(substr($o_link_input, 0, 1) === '#'){
             $other_link = substr($o_link_input, 1);
         }else{
             $replace_arr = array('https://', 'http://');
@@ -1373,25 +1329,40 @@ class Csz_admin_model extends CI_Model{
         $this->db->where('general_label_id', $id);
         $this->db->update('general_label');
     }
-
+    
+    /**
+     * chkPageName
+     *
+     * Function for check page name
+     * 
+     * @return	string
+     */
+    public function chkPageName($page_name_input){
+        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
+                $page_name_input == 'install' || $page_name_input == 'photo' ||
+                $page_name_input == 'system' || $page_name_input == 'templates' || 
+                $page_name_input == 'search' || $page_name_input == 'admin' || 
+                $page_name_input == 'ci_session' || $page_name_input == 'member' || 
+                $page_name_input == 'plugin' || $page_name_input == 'link' || $page_name_input == 'banner') {
+            return 'pages_'.$this->input->post('page_name', TRUE);
+        } else{
+            return $page_name_input;
+        }
+    }
+    
     /**
      * insertPage
      *
      * Function for create new page
      */
     public function insertPage(){
-        $page_name_input = $this->input->post('page_name', TRUE);
-        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
-                $page_name_input == 'install' || $page_name_input == 'photo' ||
-                $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin'){
-            $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
-        }
+        $page_name_input = $this->chkPageName($this->input->post('page_name', TRUE));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
         $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
+        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
         $data = array(
             'page_name' => $page_name_input,
             'page_url' => $page_url,
@@ -1400,6 +1371,7 @@ class Csz_admin_model extends CI_Model{
             'page_keywords' => $this->input->post('page_keywords', TRUE),
             'page_desc' => $this->input->post('page_desc', TRUE),
             'content' => $content,
+            'custom_css' => $custom_css,
             'active' => $active,
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -1416,18 +1388,13 @@ class Csz_admin_model extends CI_Model{
      */
     public function updatePage($id){
         // Update the page
-        $page_name_input = $this->input->post('page_name', TRUE);
-        if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
-                $page_name_input == 'install' || $page_name_input == 'photo' ||
-                $page_name_input == 'system' || $page_name_input == 'templates' ||
-                $page_name_input == 'admin' || $page_name_input == 'ci_session' || $page_name_input == 'member' || $page_name_input == 'plugin'){
-            $page_name_input = 'pages_'.$this->input->post('page_name', TRUE);
-        }
+        $page_name_input = $this->chkPageName($this->input->post('page_name', TRUE));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->Csz_model->rw_link($page_name_input);
         $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
+        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
         $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE), TRUE);
@@ -1435,6 +1402,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('page_keywords', $this->input->post('page_keywords', TRUE), TRUE);
         $this->db->set('page_desc', $this->input->post('page_desc', TRUE), TRUE);
         $this->db->set('content', $content, TRUE);
+        $this->db->set('custom_css', $custom_css, TRUE);
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
@@ -1442,6 +1410,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
         $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode($page_url));
+        $this->Csz_model->clear_file_cache('file_'.$this->Csz_model->encodeURL($page_url));
     }
 
     /**
@@ -1798,6 +1767,8 @@ class Csz_admin_model extends CI_Model{
      */
     public function execSqlFile($sql_file){
         if(file_exists($sql_file)){
+            $db_debug = $this->db->db_debug;
+            $this->db->db_debug = false;
             $this->load->helper('file');
             $backup = read_file($sql_file);
             $sql1 = preg_replace('#/\*.*?\*/#s', '', $backup);
@@ -1809,13 +1780,14 @@ class Csz_admin_model extends CI_Model{
                 if(trim($statement) != null){
                     $sql = trim($statement).";";
                     $this->db->query(trim($sql));
-                    if($i >= 1000){ /* When 1000 query. Is sleep 5 sec. */
+                    if($i >= 5000){ /* When 5000 query. Is sleep 5 sec. */
                         sleep(5);
                         $i = 0;
                     }
                     $i++;
                 }
             }
+            $this->db->db_debug = $db_debug;
         }else{
             return FALSE;
         }
@@ -1826,12 +1798,12 @@ class Csz_admin_model extends CI_Model{
      *
      * Function for check the plugin is active
      *
-     * @param	string	$plugin_urlrewrite    plugin url rewrite
+     * @param	string	$plugin_config_filename    plugin config filename
      * @return  TRUE or FALSE
      */
-    public function chkPluginActive($plugin_urlrewrite){
-        if($plugin_urlrewrite){
-            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_urlrewrite", $plugin_urlrewrite, 1);
+    public function chkPluginActive($plugin_config_filename){
+        if($plugin_config_filename){
+            $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_config_filename", $plugin_config_filename, 1);
             if($status->plugin_active){
                 return TRUE;
             }else{
@@ -1855,6 +1827,10 @@ class Csz_admin_model extends CI_Model{
             'xml_url' => $this->input->post('xml_url', TRUE),
             'limit_view' => $this->input->post('limit_view', TRUE),
             'active' => $active,
+            'widget_open' => $this->input->post('widget_open', TRUE),
+            'widget_content' => $this->input->post('widget_content', TRUE),
+            'widget_seemore' => $this->input->post('widget_seemore', TRUE),
+            'widget_close' => $this->input->post('widget_close', TRUE),
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -1875,11 +1851,28 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('xml_url', $this->input->post("xml_url", TRUE));
         $this->db->set('limit_view', $this->input->post('limit_view', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('widget_open', $this->input->post('widget_open', TRUE));
+        $this->db->set('widget_content', $this->input->post('widget_content', TRUE));
+        $this->db->set('widget_seemore', $this->input->post('widget_seemore', TRUE));
+        $this->db->set('widget_close', $this->input->post('widget_close', TRUE));
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('widget_xml_id', $id);
         $this->db->update('widget_xml');
+        $this->Csz_model->clear_file_cache('widget_'.$this->Csz_model->encodeURL($this->input->post("widget_name", TRUE)));
     }
-    
+
+    /**
+     * insertLinks
+     *
+     * Function for insert the new widget
+     */
+    public function insertLinks(){
+        // Create the new links
+        $this->db->set('url', $this->input->post('url', TRUE));
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->insert('link_stat_mgt');
+    }
+
     /**
      * updateBFSettings
      *
@@ -1892,7 +1885,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where("login_security_config_id", 1);
         $this->db->update('login_security_config');
     }
-    
+
     /**
      * saveWhiteIP
      *
@@ -1900,7 +1893,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function saveWhiteIP(){
         $ip_address = $this->input->post('ip_address', TRUE);
-        if($this->Csz_model->chkBFwhitelistIP($ip_address) === FALSE){
+        if($this->Csz_model->chkBFwhitelistIP($ip_address) === FALSE && !empty($ip_address)){
             $data = array(
                 'ip_address' => $ip_address,
                 'note' => $this->input->post('note', TRUE),
@@ -1908,9 +1901,10 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->insert('whitelist_ip', $data);
             $this->removeData('blacklist_ip', 'ip_address', $ip_address);
+            $this->db->cache_delete_all();
         }
     }
-    
+
     /**
      * saveBlackIP
      *
@@ -1918,7 +1912,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function saveBlackIP(){
         $ip_address = $this->input->post('ip_address', TRUE);
-        if($this->Csz_model->chkBFblacklistIP($ip_address) === FALSE){
+        if($this->Csz_model->chkBFblacklistIP($ip_address) === FALSE && !empty($ip_address)){
             $data = array(
                 'ip_address' => $ip_address,
                 'note' => $this->input->post('note', TRUE),
@@ -1926,7 +1920,138 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->insert('blacklist_ip', $data);
             $this->removeData('whitelist_ip', 'ip_address', $ip_address);
+            $this->db->cache_delete_all();
         }
+    }
+    
+    /**
+     * insertBanner
+     *
+     * Function for insert the new banner
+     */
+    public function insertBanner(){
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('nofollow')) ? $nofollow = $this->input->post('nofollow', TRUE) : $nofollow = 0;
+        $upload_file = '';
+        if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+            $paramiter = '_1';
+            $photo_id = time();
+            $uploaddir = 'photo/banner/';
+            $file_f = $_FILES['file_upload']['tmp_name'];
+            $file_name = $_FILES['file_upload']['name'];
+            $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+        }
+        $data = array(
+            'name' => $this->input->post('name', TRUE),
+            'img_path' => $upload_file,
+            'width' => $this->input->post('width', TRUE),
+            'height' => $this->input->post('height', TRUE),
+            'link' => $this->input->post('link', TRUE),
+            'start_date' => $this->input->post('start_date', TRUE),
+            'end_date' => $this->input->post('end_date', TRUE),
+            'nofollow' => $nofollow,
+            'active' => $active,
+            'note' => $this->input->post('note', TRUE),
+        );
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('banner_mgt', $data);
+    }
+
+    /**
+     * updateBanner
+     *
+     * Function for update the banner
+     *
+     * @param	string	$id    banner id
+     */
+    public function updateBanner($id){
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('nofollow')) ? $nofollow = $this->input->post('nofollow', TRUE) : $nofollow = 0;
+        if($this->input->post('del_file')){
+            $upload_file = '';
+            @unlink('photo/banner/'.$this->input->post('del_file', TRUE));
+        }else{
+            $upload_file = $this->input->post('picture');
+            if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+                $paramiter = '_1';
+                $photo_id = time();
+                $uploaddir = 'photo/banner/';
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
+            }
+        }
+        $data = array(
+            'name' => $this->input->post('name', TRUE),
+            'img_path' => $upload_file,
+            'width' => $this->input->post('width', TRUE),
+            'height' => $this->input->post('height', TRUE),
+            'link' => $this->input->post('link', TRUE),
+            'start_date' => $this->input->post('start_date', TRUE),
+            'end_date' => $this->input->post('end_date', TRUE),
+            'nofollow' => $nofollow,
+            'active' => $active,
+            'note' => $this->input->post('note', TRUE),
+        );
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('banner_mgt_id', $id);
+        $this->db->update('banner_mgt', $data);
+    }
+    
+    /**
+     * saveActionsLogs
+     *
+     * Function for save the login log into database
+     *
+     * @param	string	$url    current url
+     * @param	string	$actions    actions text
+     * @param	string	$note    note text
+     */
+    public function saveActionsLogs($url, $actions, $note = '') {
+        $data = array(
+            'email_login' => $this->session->userdata('admin_email'),
+            'note' => $note,
+            'url' => $url,
+            'actions' => $actions,
+        );
+        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->insert('actions_logs', $data);
+        unset($data);
+    }
+    
+    /**
+     * setMaintenance
+     *
+     * Function for set the maintenance mode on frontend
+     *
+     */
+    public function setMaintenance() {
+        $data = array('maintenance_active' => 1);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where("settings_id", 1);
+        $this->db->update('settings', $data);
+        $this->db->cache_delete_all();
+        $this->Csz_model->clear_file_cache('config');
+        $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
+    }
+    
+    /**
+     * unsetMaintenance
+     *
+     * Function for unset the maintenance mode on frontend
+     *
+     */
+    public function unsetMaintenance() {
+        $data = array('maintenance_active' => 0);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where("settings_id", 1);
+        $this->db->update('settings', $data);
+        $this->db->cache_delete_all();
+        $this->Csz_model->clear_file_cache('config');
+        $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
     }
 
 }

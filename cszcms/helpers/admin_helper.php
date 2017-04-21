@@ -25,19 +25,19 @@ class Admin_helper{
     *
     * Function for check login or not. If login already this function has to check session_id is true
     *
-    * @param	string	$email    Email Address from session
+    * @param	string	$email_session    Email Address from session
     */
-    static function is_logged_in($email){
+    static function is_logged_in($email_session){
         $CI =& get_instance();
-        if(!$email || !$_SESSION['admin_logged_in'] || !$_SESSION['admin_type'] || $_SESSION['admin_type'] == 'member'){
-            $CI->load->model('Csz_model');
+        $CI->load->library('session');
+        if(!$email_session || !$_SESSION['admin_logged_in']){
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $sess_data = array('cszblogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
             $redirect= BASE_URL.'/admin/login';
             header("Location: $redirect");	
             exit;
-        }else if($email && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member' && $_SESSION['admin_visitor'] != 1){
+        }else if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
@@ -56,7 +56,7 @@ class Admin_helper{
     * @param	string	$email_session    Email Address from session
     */
     static function login_already($email_session){
-        if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['admin_type'] != 'member'){
+        if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;
@@ -64,32 +64,29 @@ class Admin_helper{
     }
     
     /**
-    * is_not_admin
+    * is_allowchk
     *
-    * Function for check member type is admin or not
+    * Function for check permission allow to access on the section
     *
-    * @param	string	$user_type    Member type from session
+    * @param	string	$perms_name    Permission Name
     */
-    static function is_not_admin($user_type){
-        if($user_type != 'admin'){
-            $redirect= BASE_URL.'/admin';
-            header("Location: $redirect");	
-            exit;
-        }
-    }
-    
-    /**
-    * is_a_member
-    *
-    * Function for check member type is member or not
-    *
-    * @param	string	$user_type    Member type from session
-    */
-    static function is_a_member($user_type){
-        if($user_type == 'member'){
-            return TRUE;
-        }else{
-            return FALSE;
+    static function is_allowchk($perms_name){
+        $CI =& get_instance();
+        if($perms_name){
+            $CI->load->model('Csz_auth_model');
+            if($CI->Csz_auth_model->is_group_allowed($perms_name, 'backend') === FALSE){
+                $CI->load->library('session');
+                $CI->load->library('csz_referrer');
+                $CI->load->helper('url');
+                $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$CI->lang->line('user_not_allow_txt').'</div>');
+                redirect($CI->csz_referrer->getIndex(), 'refresh');
+                exit;
+            }
+            if($perms_name == 'save' || $perms_name == 'delete'){
+                $CI->load->model('Csz_admin_model');
+                $CI->load->helper('url');
+                $CI->Csz_admin_model->saveActionsLogs(current_url(), $perms_name, $perms_name . ' on [' . uri_string() . ']');
+            }
         }
     }
     
@@ -98,38 +95,16 @@ class Admin_helper{
     *
     * Function for check the plugin active (backend use)
     *
-    * @param	string	$plugin_urlrewrite    Plugin url_rewrite
+    * @param	string	$plugin_config_filename    Plugin config filename
     */
-    static function plugin_not_active($plugin_urlrewrite){
+    static function plugin_not_active($plugin_config_filename){
         $CI =& get_instance();
         $CI->load->model('Csz_admin_model');
-        $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_urlrewrite);
+        $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_config_filename);
         if($chkactive === FALSE){
             $redirect= BASE_URL.'/admin';
             header("Location: $redirect");	
             exit;
         }
-    }
-    
-    /**
-    * chkVisitor
-    *
-    * Function for check user is visitor mode
-    *
-    * @param	string	$user_admin_id    User id from session
-    */
-    static function chkVisitor($user_admin_id) {
-        $CI =& get_instance();
-        $CI->lang->load('admin', LANG);
-        $CI->load->model('Csz_admin_model');
-        $CI->load->library('session'); 
-        $CI->load->library('csz_referrer');
-        $CI->load->helper('url');
-        $chk = $CI->Csz_admin_model->chkVisitorUser($user_admin_id);
-        if($chk != 0){
-            $CI->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$CI->lang->line('user_not_allow_txt').'</div>');
-            redirect($CI->csz_referrer->getIndex(), 'refresh');	
-            exit;
-        }
-    }
+    }  
 } 

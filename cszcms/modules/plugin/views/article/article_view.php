@@ -15,7 +15,7 @@
                     <hr>
                     <p><b><?php echo $article->short_desc?></b></p><br>
                     <?php if($article->main_picture){
-                        echo '<center><img src="'.BASE_URL.'/photo/plugin/article/'.$article->main_picture.'" class="img-responsive img-thumbnail" alt="'.$article->title.'"></center><br>';
+                        echo '<center><img data-src="'.BASE_URL.'/photo/plugin/article/'.$article->main_picture.'" class="lazy img-responsive img-thumbnail" alt="'.$article->title.'"></center><br>';
                     } ?>
                     <?php echo $this->Csz_model->getHtmlContent($article->content, $this->uri->segment(6)) ?>
                 </div>

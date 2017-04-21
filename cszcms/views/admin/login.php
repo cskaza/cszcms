@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-3 hidden-sm hidden-xs"></div>
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo BASE_URL ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></div>
+            <center><span style="font-size:36px;color:#ff6f00;"><a href="<?php echo BASE_URL ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></center>
             <br><br>
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">

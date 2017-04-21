@@ -46,7 +46,7 @@ class Gallery extends CI_Controller {
         }
         if($row->pagecache_time != 0){ $this->db->cache_on(); }
         $this->_init();
-        member_helper::plugin_not_active($this->uri->segment(2));
+        member_helper::plugin_not_active('gallery');
     }
 
     public function _init() {
@@ -61,7 +61,7 @@ class Gallery extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $title = 'Gallery | ' . $row->site_name;
+        $title = $this->Csz_model->getLabelLang('gallery_header') . ' | ' . $row->site_name;
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
@@ -127,14 +127,13 @@ class Gallery extends CI_Controller {
     public function rss() {
         // creating rss feed with our most recent 20
         // first load the library
-        $this->db->cache_off();
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
         // create new instance
         $feed = new Feed();
         // set your feed's title, description, link, pubdate and language
         $feed->title = $row->site_name;
-        $feed->description = 'Gallery | ' . $row->site_name;
+        $feed->description = $this->Csz_model->getLabelLang('gallery_header') . ' | ' . $row->site_name;
         $feed->link = BASE_URL.'/plugin/gallery';
         $search_arr = " active = '1'";
         $limit = 20;
@@ -169,8 +168,7 @@ class Gallery extends CI_Controller {
         }else{
             $search_arr = " active = '1'";
         }
-        $limit = 20;
-        $article = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'arrange', 'asc', $search_arr);
+        $article = $this->Csz_admin_model->getIndexData('gallery_db', 100, 0, 'arrange', 'asc', $search_arr);
         if($article !== FALSE){
             $xml->addNode('null', '0'); // For check item is not empty
             foreach ($article as $row) {

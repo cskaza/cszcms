@@ -89,27 +89,33 @@ class Home extends CI_Controller {
 
     public function index() {
         $config = $this->Csz_model->load_config();
-        if($this->page_rs === FALSE){
-            set_status_header(404);
+        if($config->maintenance_active){
+            $data = array('default_email' => $config->default_email, 'site_name' => $config->site_name, 'site_footer' => $config->site_footer);
+            $this->load->view('frontpage/maintenance', $data);
         }else{
-            if ($this->Csz_model->findFrmTag($this->page_rs->content) !== false) {
-                $config->pagecache_time = 0;
+            if($this->page_rs === FALSE){
+                set_status_header(404);
+            }else{
+                if ($this->Csz_model->findFrmTag($this->page_rs->content) !== false) {
+                    /* For CSRF Protection on page (random CSRF token not use cache) */
+                    $config->pagecache_time = 0;
+                }
             }
+            //Get pages from database
+            if($config->pagecache_time != 0){ $this->db->cache_on(); }
+            $this->template->setSub('page', $this->page_url);
+            $this->template->setSub('page_rs', $this->page_rs);
+            if($this->uri->segment(1) && $this->page_rs !== FALSE){
+                $this->output->cache($config->pagecache_time);
+            }
+            //Load the view
+            $this->template->loadSub('frontpage/getpage');
         }
-        //Get pages from database
-        if($config->pagecache_time != 0){ $this->db->cache_on(); }
-        $this->template->setSub('page', $this->page_url);
-        $this->template->setSub('page_rs', $this->page_rs);
-        if($this->uri->segment(1) && $this->page_rs !== FALSE){
-            $this->output->cache($config->pagecache_time);
-        }
-        //Load the view
-        $this->template->loadSub('frontpage/getpage');
     }
     
     public function setLang() {
         $this->Csz_model->setSiteLang($this->uri->segment(2));
-        redirect('./', 'refresh');
+        redirect(base_url().'?nocache='.time(), 'refresh');
     }
 
 }

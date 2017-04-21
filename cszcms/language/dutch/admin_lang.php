@@ -1,11 +1,11 @@
 <?php
 //Backend System
-$lang['backend_system']		= "Backend System";
+$lang['backend_system']		= "Admin Gedeelte";
 
 //Dashboard
 $lang['dashboard_totalemail']	= "Totaal Email Logs";
 $lang['dashboard_totallink']	= "Totaal Link Statistieken";
-$lang['dashboard_totalmember']	= "Totaal Gebruikeres";
+$lang['dashboard_totalmember']	= "Totaal Gebruikers";
 $lang['dashboard_viewdetail']	= "Bekijk details";
 $lang['dashboard_linkrecent']	= "20 Recente Link Statistieken";
 $lang['dashboard_emailrecent']	= "10 Recente Email Logs";
@@ -27,11 +27,11 @@ $lang['nav_analytics']		= "Analytics";
 // Google Analytics
 $lang['ga_last30']		= "Google Analytics Laatste 30 dagen";
 $lang['ga_maps']		= "Google Analytics Maps";
-$lang['ga_sessions']            = "Google Analytics Sessions";
-$lang['ga_devices']		= "Google Analytics Devices";
-$lang['ga_sources']		= "Google Analytics Sources";
+$lang['ga_sessions']            = "Google Analytics Sessies";
+$lang['ga_devices']		= "Google Analytics Toestellen";
+$lang['ga_sources']		= "Google Analytics Bronnen";
 $lang['ga_refer']               = "Google Analytics Referrer";
-$lang['ga_no_settings']         = 'Google Analytics not config on <a href="'.base_url().'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
+$lang['ga_no_settings']         = 'Google Analytics niet geconfigureerd in <a href="'.base_url().'admin/settings#ga_client_id" title="Site Settings"><b>Site instellingen</b></a>!';
 
 //Users - All Users
 $lang['user_header']			= "Alle Gebruikers";
@@ -54,7 +54,7 @@ $lang['user_new_pass']			= "Nieuw Wachtwoord";
 $lang['user_new_confirm']		= "Bevestig Wachtwoord";
 $lang['user_new_active']		= "Activeer";
 $lang['user_new_deactive']		= "Gedeactiveerd";
-$lang['user_new_type']                  = "Toegangs type";
+$lang['user_new_type']                  = "Gebruikers type";
 $lang['user_first_name']                = "Voornaam";
 $lang['user_last_name']                 = "Achternaam";
 $lang['user_birthday']                  = "Geboortedatum";
@@ -65,6 +65,18 @@ $lang['user_picture']                   = "Afbeelding";
 $lang['user_backend_visitor']           = "Toegang tot achterliggend systeem";
 $lang['user_not_allow_txt']             = "Je hebt geen toegang tot deze sectie!";
 $lang['user_notapply_member']           = "Geen Gebruikers Type!";
+$lang['user_member_txt']                = "Member Gebruikers";
+$lang['user_admin_txt']                 = "Admin Gebruikers";
+$lang['user_group_txt']                 = "Gebruikers Groepen";
+$lang['user_group_new']                 = "Nieuwe Groepen";
+$lang['user_group_edit']                = "Bewerken Groepen";
+$lang['user_group_name']                = "Groepen Naam";
+$lang['user_group_definition']          = "Groepen Definitie";
+$lang['user_permission_txt']            = "Toestemming";
+$lang['user_backend_txt']               = "Backend";
+$lang['user_frontend_txt']              = "Frontend";
+$lang['user_perm_allow']                = "Toestaan";
+$lang['user_perm_deny']                 = "Weigeren";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Opslaan";
@@ -100,15 +112,15 @@ $lang['forgot_reset']		= "Wachtwoord Resetten";
 $lang['forgot_email']		= "Emailadres";
 $lang['forgot_password']	= "Nieuw Wachtwoord";
 $lang['forgot_confirm']		= "Bevestig Wachtwoord";
-$lang['forgot_complete']	= "Succesvol! Your password has been reset";
+$lang['forgot_complete']	= "Succesvol! Uw wachtwoord werd gereset";
 $lang['forgot_btn']		= "Reset";
 $lang['forgot_check_email']	= "Gelieve je mail te checken en te klikken op de Reset Wachtwoord knop";
 
 //Dashboard
-$lang['dash_welcome']		= "Welkom to CSZ CMS Backend";
+$lang['dash_welcome']		= "Welkom op CSZ CMS Backend";
 $lang['dash_cur_time']		= "Huidige tijd & datum:";
-$lang['dash_message']		= "This is an open source web application that allows to manage all content and settings on the websites. It was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease. And based on the server side script language PHP and uses a MySQL or MariaDB database for data storage.<br><br>This is open-source Content Management System. And all is free under the Astian Develop Public License (ADPL).";
-$lang['dash_cszcms_link']	= "The official of CSZ CMS website";
+$lang['dash_message']		= 'Dit is een open source web applicatie dat het beheer van je website toelaat. Deze applicatie werd gemaakt met CodeIgniter als MVC en het bootstrapframework, dit zou je website eenvoudig resonsive moeten maken. Deze applicatie slaat data op via MySQL of MariaDB database.<br><br>Dit is een open source Content Management Systeem. Dit is gratis en onder licentie van the Astian Develop Public License (ADPL).<br><br>Nederlands vertaling door <a href="http://www.online123.be" target="_blank" rel="nofollow external"><b>Online123 - Kevin Goethals</b></a>';
+$lang['dash_cszcms_link']	= "De officiele CSZ CMS website";
 
 // EMAILS FORGET PASSWORD
 $lang['email_reset_subject']    = "Reset uw wachtwoord";
@@ -122,29 +134,29 @@ $lang['email_footer']           = "Met vriendelijke groeten,";
 $lang['email_check']		= "Dit emailadres bestaat niet.";
 $lang['required']			= "Het %s veld is verplicht.";
 $lang['isset']				= "Het %s veld moet een waarde hebben.";
-$lang['valid_email']		= "het %s veld moet een geldig emailadres bevatten.";
-$lang['valid_emails']		= "The %s field must contain all valid email addresses.";
-$lang['valid_url']			= "The %s field must contain a valid URL.";
-$lang['valid_ip']			= "The %s field must contain a valid IP.";
-$lang['min_length']			= "The %s field must be at least %s characters in length.";
-$lang['max_length']			= "The %s field can not exceed %s characters in length.";
-$lang['exact_length']		= "The %s field must be exactly %s characters in length.";
-$lang['alpha']				= "The %s field may only contain alphabetical characters.";
-$lang['alpha_numeric']		= "The %s field may only contain alpha-numeric characters.";
-$lang['alpha_dash']			= "The %s field may only contain alpha-numeric characters, underscores, and dashes.";
-$lang['numeric']			= "The %s field must contain only numbers.";
-$lang['is_numeric']			= "The %s field must contain only numeric characters.";
-$lang['integer']			= "The %s field must contain an integer.";
-$lang['regex_match']		= "The %s field is not in the correct format.";
-$lang['matches']			= "The %s field does not match the %s field.";
-$lang['is_unique'] 			= "This %s already exists.";
-$lang['is_natural']			= "The %s field must contain only positive numbers.";
-$lang['is_natural_no_zero']	= "The %s field must contain a number greater than zero.";
-$lang['decimal']			= "The %s field must contain a decimal number.";
-$lang['less_than']			= "The %s field must contain a number less than %s.";
-$lang['greater_than']		= "The %s field must contain a number greater than %s.";
-$lang['default_data_remark']		= "is default. You can't delete this.";
-$lang['remark_header']		= "Remark";
+$lang['valid_email']		= "Het %s veld moet een geldig emailadres bevatten.";
+$lang['valid_emails']		= "Het %s moet een geldig emailadres bevatten.";
+$lang['valid_url']			= "Het %s veld moet een geldige URL bevatten.";
+$lang['valid_ip']			= "Het %s veld moet een geldig IP adres bevatten.";
+$lang['min_length']			= "Het %s veld moet minstens %s karakters bevatten.";
+$lang['max_length']			= "Het %s veld mag maximum %s karakters bevatten.";
+$lang['exact_length']		= "Het %s veld moet exact %s karakters bevatten.";
+$lang['alpha']				= "Het %s veld mag enkel alfabetische karakters bevatten.";
+$lang['alpha_numeric']		= "Het %s veld mag enkel aflanumerieke karakters bevatten.";
+$lang['alpha_dash']			= "Het %s veld mag enkel alfanumerieke karakters bevatten.";
+$lang['numeric']			= "Het %s veld mag enkel getallen bevatten.";
+$lang['is_numeric']			= "Het %s veld mag enkel getallen bevatten.";
+$lang['integer']			= "Het %s veld moet een speciaal teken bevatten.";
+$lang['regex_match']		= "Het %s veld is niet opgemaakt in het juiste formaat.";
+$lang['matches']			= "Het %s veld komt niet overeen met het %s veld.";
+$lang['is_unique'] 			= "Dit %s bestaat reeds.";
+$lang['is_natural']			= "Het %s veld mag enkel positieve getallen bevatten.";
+$lang['is_natural_no_zero']	= "Het %s veld moet een getal groter dan nul bevatten.";
+$lang['decimal']			= "Het %s veld moet een decimaal nummer bevatten.";
+$lang['less_than']			= "Het %s veld moet een getal kleiner dan %s bevatten.";
+$lang['greater_than']		= "Het %s veld moet een getal groter dan %s bevatten.";
+$lang['default_data_remark']		= "is standaard. Je kan dit niet verwijderen.";
+$lang['remark_header']		= "Opmerking";
 
 //Social Page
 $lang['social_header']			= "Social Instellingen";
@@ -198,8 +210,6 @@ $lang['settings_googlecapt_secretkey']	= "reCaptcha Geheim";
 $lang['settings_googlecapt_remark']	= 'Je kan een reCaptcha key vinden op <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Site Logo";
 $lang['settings_logo_remark']		= "Site logo moet juiste formaat hebben, afhankelijk van de gekozen temlate";
-$lang['settings_link_statistic_active']	= "Statistieken voor link activeren (In pagina beheer)";
-$lang['settings_link_statistic_remark']	= 'Gelieve linkstats ="(nummer van index)" te gebruiken na href="" attribuut in &lt;a&gt; tag';
 $lang['settings_pagecache_time']	= "Pagina tijds cache controle";
 $lang['settings_pagecache_time_min']	= "Minuten";
 $lang['settings_pagecache_time_off']	= "Uit";
@@ -216,7 +226,7 @@ $lang['settings_sitemap_runnow']        = "Start Nu";
 $lang['settings_sitemap_lasttime']      = "Laatste update";
 $lang['settings_member_header']          = "Gebruiker instellingen";
 $lang['settings_member_confirm_active']	= "Gebruiker moet registratie per email bevestigen";
-$lang['settings_member_close_regist']	= "Sluite gebruikers registratie";
+$lang['settings_member_close_regist']	= "Sluit gebruikers registratie";
 $lang['settings_og_image']		= "Afbeelding of og metatag (og:image)";
 $lang['settings_fbappid_header']	= "Facebook Instellingen";
 $lang['settings_fbapp_id']		= "Facebook App ID";
@@ -225,7 +235,11 @@ $lang['settings_google_config']		= "Google API Instellingen";
 $lang['settings_ga_client_id']		= "Google API Client ID";
 $lang['settings_ga_client_id_remark']	= 'Hoe maak je een Google API Console project en client ID? <a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank"><b>Zie hier</b></a>';
 $lang['settings_ga_view_id']		= "Google Analytics View ID";
-$lang['settings_ga_view_id_remark']	= 'You can see view ID at <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>Click Here</b></a>. After you "Access Google Analytics" and choose your site analytics. Please see your view ID at "ids"';
+$lang['settings_ga_view_id_remark']	= 'Je kan je ID zien <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>door hier te klikken</b></a>. Klik op "Access Google Analytics" en kies je site statistieken. Zie je view ID in "ids"';
+$lang['settings_gsearch_active']	= "Google Custom Search Enable";
+$lang['settings_gsearch_cxid']          = "Your search engine ID (cx ID)";
+$lang['settings_gsearch_remark']	= 'You can see at <a href="https://developers.google.com/custom-search/docs/tutorial/introduction" target="_blank"><b>Custom Search Tutorial</b></a>.';
+$lang['settings_maintenance_active']    = "Maintenance Mode Active";
 
 //Navigation Page
 $lang['navpage_header']                 = "Hoofdmenu";
@@ -278,6 +292,7 @@ $lang['pages_active']                   = "Actief";
 $lang['pages_keywords']                 = "Pagina Kernwoorden";
 $lang['pages_desc']                     = "Pagina Omschrijving";
 $lang['pages_content']                  = "Pagina Inhoud";
+$lang['pages_custom_css']               = "Custom CSS";
 
 //Captcha
 $lang['captcha_text']               = "Veiligheidsvraag: vul de tekens van in de afbeelding in";
@@ -301,7 +316,7 @@ $lang['forms_notfound']                 = "Formulier niet gevonden. Gelieve het 
 $lang['forms_addnew']			= "Nieuw Formulier";
 $lang['forms_edit']			= "Pas Formulier Aan";
 $lang['forms_name']			= "Formulier Naan";
-$lang['forms_method']			= "Formulier Method";
+$lang['forms_method']			= "Formulier Methode";
 $lang['forms_enctype']			= "Formulier enctype";
 $lang['forms_delete_msg']               = "Wil je dit doen?";
 $lang['forms_sendmail']			= "Sendmail Aan";
@@ -339,7 +354,7 @@ $lang['formpost_notfound']                 = "Formulier post niet gevonden.";
 $lang['formpost_ipaddress']                 = "IP adres";
 
 //Upgrade
-$lang['upgrade_header']			= "Upgrade Systeem Automatisch";
+$lang['upgrade_header']			= "Systeem Automatisch Upgraden";
 $lang['btn_upgrade']			= "Start Upgrade";
 $lang['upgrade_curver']			= "Huidige versie:";
 $lang['upgrade_lastver']		= "Laatste versie:";
@@ -349,7 +364,7 @@ $lang['upgrade_success_alert']          = "Upgrade Succesvol!";
 $lang['upgrade_error_alert']            = "Upgrade Fout!";
 $lang['upgrade_text']                   = "<b>Belangrijk!</b> Gelieve eerst een backup te nemen van je database en meteen hierna de upgrade te starten.";
 $lang['manual_upgrade']			= "Upgrade Systeem Manueel";
-$lang['logs_download_header']		= "Download Foutmeldingen History";
+$lang['logs_download_header']		= "Download Foutmeldingen Historiek";
 $lang['btn_logs_download']		= "Download!";
 $lang['btn_clear_logs']                 = "Wis alle foutmeldingen geschiedenis";
 
@@ -366,9 +381,11 @@ $lang['clearallcache_success_alert']    = "Pagina cache verwijderen succesvol!";
 $lang['clearalldbcache_success_alert']  = "Database cache verwijderen succesvol!";
 $lang['btn_clear_sess']                 = "Wis alle sessies";
 $lang['clear_sess_message']             = "Na wissen sessies moet je opnieuw inloggen. Wil je dit doen?";
+$lang['btn_backup_file']		= "File Backup";
 
 //Link Statistic
 $lang['linkstats_header']               = "Statistieken voor links";
+$lang['linkstats_newbtn']               = "Nieuwe Link";
 $lang['linkstats_url']                  = "URL";
 $lang['linkstats_dateime']              = "Datum/Tijd";
 $lang['linkstats_count']                = "Klik hoeveelheid";
@@ -413,15 +430,19 @@ $lang['widget_header']                  = "Plugin Widgets";
 $lang['widget_new_header']		= "Nieuwe Widget";
 $lang['widget_edit_header']		= "Pas Widget Aan";
 $lang['widget_active']                  = "Actief";
-$lang['widget_name']                    = "Widget Naan";
+$lang['widget_name']                    = "Widget Naam";
 $lang['widget_xml_url']                 = "Widget XML URL";
 $lang['widget_limit_view']              = "Toon Limiet";
-$lang['widget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see Widget Name<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+$lang['widget_widget_open']                 = "HTML Open";
+$lang['widget_widget_content']                 = "HTML Content";
+$lang['widget_widget_seemore']                 = "HTML See more Button";
+$lang['widget_widget_close']                 = "HTML Close";
+$lang['widget_indexremark']		= "<i>Gebruik aub deze tag om deze plugin in de content toe te voegen. Zie Widget Naam<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
 
 // Facebook Comments
 $lang['fb_comment_active']              = "Sta Facebook Comments toe";
-$lang['fb_comment_limit']               = "Limiteer Comments Hoeveelheid";
-$lang['fb_comment_sort']                = "Facebook Comments Sorteren";
+$lang['fb_comment_limit']               = "Limiteer Reacties Hoeveelheid";
+$lang['fb_comment_sort']                = "Facebook Reacties Sorteren";
 $lang['fb_comment_sort_top']            = "Top";
 $lang['fb_comment_sort_newest']         = "Nieuwste";
 $lang['fb_comment_sort_oldest']         = "Oudste";
@@ -429,12 +450,40 @@ $lang['fb_comment_sort_oldest']         = "Oudste";
 // Brute force login protection
 $lang['bf_protection_header']                = "Brute Force Protection";
 $lang['bf_period_time']                = "Brute Force Protection periode (in minuten)";
-$lang['bf_max_fail']                    = "Maximum Inloggen Mislukkingen (in period)";
-$lang['bf_white_list']                    = "Whitelist IP Address";
-$lang['bf_black_list']                    = "Blacklist IP Address";
+$lang['bf_max_fail']                    = "Maximum Inloggen Mislukkingen (in periode)";
+$lang['bf_white_list']                    = "Whitelist IP Adres";
+$lang['bf_black_list']                    = "Blacklist IP Adres";
 $lang['bf_note']                    = "Notitie";
 $lang['bf_ip_banned_alert']           = "Uw IP Address is verboden!";
-$lang['bf_settings']                    = "Protection Instellingen";
+$lang['bf_settings']                    = "Protectie Instellingen";
 $lang['loginlogs_header']               = "Login Logs";
+$lang['actionslogs_header']               = "Actions Logs";
 $lang['loginlogs_result']                    = "Resultaat";
 $lang['emaillogs_header']               = "Email Logs";
+
+// Private Message
+$lang['pm_header']                = "Prive berichten";
+$lang['pm_nomsg_alert']                = "Geen nieuwe berichten!";
+$lang['pm_unread_txt']                    = "Je hebt %d ongelezen berichten";
+$lang['pm_seeall_msg']                    = "Bekijk alle berichten";
+$lang['pm_to']                    = "Aan";
+$lang['pm_from']                    = "Van";
+$lang['pm_subject']                    = "Onderwerp";
+$lang['pm_message']                    = "Bericht";
+$lang['pm_send']                    = "Verstuur";
+$lang['pm_inbox']                    = "Postvak In";
+$lang['pm_new_msg']                    = "Nieuw Bericht";
+
+// Banner Mgt
+$lang['banner_header']                = "Banner Manager";
+$lang['banner_new']             = "Nieuw Banner";
+$lang['banner_name']                 = "Banner Naam";
+$lang['banner_img']                 = "Banner Afbeelding";
+$lang['banner_width']                 = "Breedte";
+$lang['banner_height']                 = "Hoogte";
+$lang['banner_link']                 = "Link";
+$lang['banner_count']                = "Klik Count";
+$lang['banner_date_period']            = "Date Periode";
+$lang['banner_nofollow']            = "No Follow Link";
+$lang['banner_expired']            = "Banner Verlopen";
+$lang['banner_indexremark']		= "<i>Gebruik dit label voor steek de banner in de inhoud. Zie Banner ID #<br><b>Label:</b></i> [?]{=banner:<b>banner_id</b>}[?]";

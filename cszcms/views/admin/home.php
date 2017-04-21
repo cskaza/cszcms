@@ -44,7 +44,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php echo BASE_URL.'/admin/users' ?>">
+                                    <a href="<?php echo BASE_URL.'/admin/members' ?>">
                                         <div class="panel-footer">
                                             <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -61,14 +61,14 @@
                                                 <h1><i><span class="glyphicon glyphicon-link"></span></i></h1>
                                             </div>
                                             <div class="col-xs-9 text-right">
-                                                <div class="huge"><?php if($config->link_statistic_active){ echo $total_linkstats; }else{ echo '-'; } ?></div>
+                                                <div class="huge"><?php echo $total_linkstats; ?></div>
                                                 <div><?php echo $this->lang->line('dashboard_totallink') ?>!</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php if($config->link_statistic_active){ echo BASE_URL.'/admin/linkstats'; }else{ echo '#'; } ?>">
+                                    <a href="<?php echo BASE_URL.'/admin/linkstats'; ?>">
                                         <div class="panel-footer">
-                                            <span class="pull-left"><?php if($config->link_statistic_active){ echo $this->lang->line('dashboard_viewdetail'); }else{ echo '<span class="error"><b>'.$this->lang->line('pluginmgr_disable').'!</b></span>'; } ?></span>
+                                            <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail'); ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
                                             <div class="clearfix"></div>
                                         </div>
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php echo BASE_URL.'/admin/forms' ?>">
+                                    <a href="<?php echo BASE_URL.'/admin/emaillogs' ?>">
                                         <div class="panel-footer">
                                             <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -115,14 +115,7 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12" style="word-wrap:break-word;">
-                        <?php if(!empty($rss)){
-                            foreach ($rss as $item) {
-                               echo '<a href="'.$item['link'].'" target="_blank"><b>'.$item['title'].'</b></a><br>';
-                               echo '<em>'.$item['pubDate'].'</em><br><br>'; 
-                               echo $item['description'];
-                               echo '<hr>';
-                            }   
-                        } ?>
+                        <?php echo $rss; /* get rss feed */?>
                     </div>
                 </div>
             </div>
@@ -144,7 +137,7 @@
         <div class="row">
             <div class="col-md-12" style="word-wrap:break-word;">
                 <div class="list-group">
-                    <?php if ($visitor_admin != 0 || $_SESSION['admin_type'] != 'admin'){ ?>
+                    <?php if ($this->Csz_auth_model->is_group_allowed('email logs', 'backend') === FALSE){ ?>
                         <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
                             <b><?php echo  $this->lang->line('user_not_allow_txt') ?></b>
@@ -185,7 +178,6 @@
     </div>
 </div>
 <!-- /.box -->
-<?php if($config->link_statistic_active){ ?>
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>
@@ -198,19 +190,26 @@
         <div class="row">
             <div class="col-md-12" style="word-wrap:break-word;">
                 <div class="list-group">
-                    <?php if ($link_stats === FALSE) { ?>
+                    <?php if ($this->Csz_auth_model->is_group_allowed('linkstats', 'backend') === FALSE){ ?>
+                        <div class="list-group-item">
+                            <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
+                            <b><?php echo  $this->lang->line('user_not_allow_txt') ?></b>
+                        </div> 
+                    <?php }else{
+                    if ($link_stats === FALSE) { ?>
                         <div class="list-group-item">
                             <span class="badge"><?php echo date('Y-m-d H:i:s')?></span>
                             <b><?php echo  $this->lang->line('data_notfound') ?></b>
                         </div>                          
                     <?php } else { ?>
                         <?php foreach ($link_stats as $ls) { ?>
-                        <a class="list-group-item" href="<?php echo BASE_URL.'/admin/linkstats/view/'.$ls['link_statistic_id'] ?>">
+                        <span class="list-group-item">
                             <span class="badge"><?php echo $ls['timestamp_create'] ?></span>
                             <b>[<?php echo $ls['ip_address'] ?>]</b> - <?php echo $ls['link'] ?>
-                        </a>
+                        </span>
                         <?php } ?>
-                    <?php } ?>
+                    <?php } 
+                    }?>
                 </div>               
                 <div class="text-right">
                     <a href="<?php echo BASE_URL.'/admin/linkstats' ?>" style="text-decoration: none;"><?php echo $this->lang->line('dashboard_viewdetail') ?> <i><span class="glyphicon glyphicon-expand"></span></i></a>
@@ -220,4 +219,3 @@
     </div>
 </div>
 <!-- /.box -->
-<?php } ?>

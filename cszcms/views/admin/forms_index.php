@@ -16,8 +16,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="8%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="17%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_name'); ?></th>
+                        <th width="25%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_name'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_enctype'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_method'); ?></th>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('forms_sendmail'); ?></th>  
@@ -29,7 +28,7 @@
                 <tbody>
                     <?php if ($forms === FALSE) { ?>
                         <tr>
-                            <td colspan="8" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('forms_notfound') ?></span></td>
+                            <td colspan="7" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('forms_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php foreach ($forms as $u) {
@@ -54,7 +53,6 @@
                                 $captcha = '<i class="error glyphicon glyphicon-remove"></i>';
                             }
                             echo '<tr>';
-                            echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_main_id'] . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_name'] . '</td>'; ?>
                             <td class="text-center"<?php echo $inactive?> style="vertical-align:middle;"><?php echo ($u['form_enctype'])?$u['form_enctype']:'-'?></td>
                             <?php echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $u['form_method'] . '</td>';

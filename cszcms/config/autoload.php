@@ -137,4 +137,4 @@ $autoload['language'] = array();
 |	$autoload['model'] = array('first_model' => 'first');
 */
 
-$autoload['model'] = array('Headfoot_html', 'Csz_model', 'Csz_admin_model');
+$autoload['model'] = array('Headfoot_html', 'Csz_model', 'Csz_admin_model', 'Csz_auth_model');

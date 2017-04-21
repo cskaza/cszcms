@@ -52,7 +52,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 
 	function showDialog(linkList) {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
-		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value, btnClass, linkStatsCtrl, sizeClass;
+		var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value, btnClass, sizeClass;
 
 		function linkListChangeHandler(e) {
 			var textCtrl = win.find('#text');
@@ -167,10 +167,6 @@ tinymce.PluginManager.add('b_button', function(editor) {
 		}
                 
                 data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
-                
-                if ((value = dom.getAttrib(anchorElm, 'linkstats'))) {
-			data.linkstats = value;
-		}
 
 		if (onlyText) {
 			textListCtrl = {
@@ -274,16 +270,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 				value: data.title
 			};
 		}
-                
-                if (editor.settings.linkstats !== false) {
-			linkStatsCtrl = {
-				name: 'linkstats',
-				type: 'textbox',
-				label: 'Linkstats index number',
-				value: data.linkstats
-			};
-		}
-
+                             
 		win = editor.windowManager.open({
 			title: 'Insert Bootstrap Button',
 			data: data,
@@ -303,7 +290,6 @@ tinymce.PluginManager.add('b_button', function(editor) {
 				buildAnchorListControl(data.href),
 				linkListCtrl,
 				relListCtrl,
-                                linkStatsCtrl,
 				targetListCtrl,
 				classListCtrl,
                                 btnClass,
@@ -333,8 +319,7 @@ tinymce.PluginManager.add('b_button', function(editor) {
 						class: data.btn_class + data.size_class,
 						title: data.title ? data.title : null,
                                                 role: "button",
-                                                href: href,
-                                                linkstats: data.linkstats ? data.linkstats : null,
+                                                href: href
 					};
 
 					if (anchorElm) {

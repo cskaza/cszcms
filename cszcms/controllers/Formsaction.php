@@ -25,6 +25,11 @@ class Formsaction extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->CI = & get_instance();
+        if($this->Csz_model->load_config()->maintenance_active){
+            //Return to home page
+            redirect('./', 'refresh');
+            exit;
+        }
     }
 
     public function index() {
@@ -38,7 +43,7 @@ class Formsaction extends CI_Controller {
                 if ($frm_rs->captcha) {
                     if ($this->Csz_model->chkCaptchaRes() == '') {
                         //Return to last page: Captcha invalid
-                        redirect($this->Csz_model->urlencode($cur_page) . '/2', 'refresh');
+                        redirect($cur_page . '/2', 'refresh');
                         exit;
                     }
                 }
@@ -47,13 +52,13 @@ class Formsaction extends CI_Controller {
                     if($frm_rs->form_method == 'post'){
                             if($f_val->field_required && !$this->input->post($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
-                               redirect($this->Csz_model->urlencode($cur_page) . '/3', 'refresh'); 
+                               redirect($cur_page . '/3', 'refresh'); 
                                exit;
                             }
                     }elseif($frm_rs->form_method == 'get'){
                             if($f_val->field_required && !$this->input->get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label'){
                                 //Return to last page: Error
-                               redirect($this->Csz_model->urlencode($cur_page) . '/3', 'refresh'); 
+                               redirect($cur_page . '/3', 'refresh'); 
                                exit;
                             }
                     }
@@ -92,7 +97,7 @@ class Formsaction extends CI_Controller {
                     }
                 }
                 //Return to last page: Success
-                redirect($this->Csz_model->urlencode($cur_page) . '/1', 'refresh');
+                redirect($cur_page . '/1', 'refresh');
                 exit;
             } else {
                 //Return to home page
@@ -117,8 +122,7 @@ class Formsaction extends CI_Controller {
             }else{
                 $to_email = $webconfig->default_email;
             }            
-            $message_html = 'Dear ' . $to_email . ',<br><br>';
-            $message_html.= 'Please see below detail<br><br>';
+            $message_html = $this->Csz_model->getLabelLang('email_dear') . $to_email . ',<br><br>';
             if ($field_val) {
                 foreach ($field_val as $val) {
                     if ($val->field_type != 'button' && $val->field_type != 'reset' && $val->field_type != 'submit' && $val->field_type != 'label') {
@@ -147,7 +151,7 @@ class Formsaction extends CI_Controller {
                     }
                 }
             }
-            $message_html.= '<br><br>Regards,<br>' . $webconfig->site_name;           
+            $message_html.= '<br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . BASE_URL . '" target="_blank"><b>' . $webconfig->site_name . '</b></a>';           
             @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
         } else {
             return FALSE;

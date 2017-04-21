@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_addnew') ?>
+                <i><span class="glyphicon glyphicon-user"></span></i> <?php echo  $this->lang->line('user_admin_txt') ?>
             </li>
         </ol>
     </div>
@@ -13,8 +13,8 @@
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('user_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
         <?php echo form_open_multipart(BASE_URL . '/admin/users/new/add'); ?>
-
-        <div class="control-group">										
+        <div class="control-group">
+            <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>
             <?php
             $data = array(
@@ -31,7 +31,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">		
-            <?php echo form_error('email', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="email"><?php echo $this->lang->line('user_new_email'); ?>*</label>
             <?php
             $data = array(
@@ -49,7 +49,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">		
-            <?php echo form_error('password', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="password"><?php echo $this->lang->line('user_new_pass'); ?>*</label>
             <?php
             $data = array(
@@ -67,7 +67,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('con_password', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('con_password', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="con_password"><?php echo $this->lang->line('user_new_confirm'); ?>*</label>
             <?php
             $data = array(
@@ -83,28 +83,18 @@
             echo form_password($data);
             ?>			
         </div> <!-- /control-group -->
-        <div class="control-group">										
-            <label class="control-label" for="user_type"><?php echo $this->lang->line('user_new_type'); ?>*</label>
+        <div class="control-group">	
+            <label class="control-label" for="group"><?php echo $this->lang->line('user_group_txt'); ?>*</label>
             <?php
-                $att = 'id="user_type" class="form-control" ';
+                $att = 'id="group" class="form-control"';
                 $data = array();
-                $data['admin'] = 'Admin';
-                $data['editor'] = 'Editor';
-                $data['member'] = 'Member';
-                echo form_dropdown('user_type', $data, '', $att);
+                if (!empty($group)) {
+                    foreach ($group as $lg) {
+                        $data[$lg['user_groups_id']] = $lg['name'];
+                    }
+                }
+                echo form_dropdown('group', $data, '', $att);
             ?>	
-        </div> <!-- /control-group -->
-        <br>
-        <div class="control-group">										
-            <label class="form-control-static" for="backend_visitor">
-            <?php
-            $data = array(
-                'name' => 'backend_visitor',
-                'id' => 'backend_visitor',
-                'value' => '1'
-            );
-            echo form_checkbox($data);
-            ?> <?php echo $this->lang->line('user_backend_visitor'); ?></label>	
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										

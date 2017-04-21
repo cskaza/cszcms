@@ -28,6 +28,11 @@ class Member extends CI_Controller {
         $this->CI = & get_instance();
         $this->load->database();
         $row = $this->Csz_model->load_config();
+        if($row->maintenance_active){
+            //Return to home page
+            redirect('./', 'refresh');
+            exit;
+        }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
             define('THEME', $row->themes_config);
@@ -61,6 +66,36 @@ class Member extends CI_Controller {
         $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
         $this->template->loadSub('frontpage/member/home');
     }
+    
+    public function memberList() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->load->library('pagination');
+        $this->csz_referrer->setIndex('member');
+        // Pages variable
+        $search_arr = "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'";
+        $result_per_page = 20;
+        $total_row = $this->Csz_admin_model->countTable('user_admin', $search_arr);
+        $num_link = 10;
+        $base_url = BASE_URL . '/member/list/';
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
+        //Get users from database
+        $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_admin_id', 'desc', $search_arr));
+        $this->template->setSub('total_row',$total_row);
+        //Load the view
+        $this->template->loadSub('frontpage/member/memberlist');
+    }
+    
+    public function viewUser() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->uri->segment(3)){
+            $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(3)));
+            $this->template->loadSub('frontpage/member/viewuser');
+        }else{
+            redirect(BASE_URL.'/member', 'refresh');
+        }
+    }
 
     public function login() {
         Member_helper::login_already($this->session->userdata('admin_email'));
@@ -75,17 +110,17 @@ class Member extends CI_Controller {
     public function loginCheck() {
         Member_helper::login_already($this->session->userdata('admin_email'));
         $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
-        $password = sha1(md5($this->input->post('password', TRUE)));
-        $result = $this->Csz_model->memberLogin($email, $password);
+        $password = $this->input->post('password', TRUE);
+        $result = $this->Csz_model->login($email, $password);
         if ($result == 'SUCCESS') {
-            $this->Csz_model->saveLogs($email, 'Member Login Successful!', $result);
+            $this->Csz_model->saveLogs($email, 'Frontend Login Successful!', $result);
             if($this->session->userdata('cszflogin_cururl')){
                 redirect($this->session->userdata('cszflogin_cururl'), 'refresh');
             }else{
                 redirect(BASE_URL.'/member', 'refresh');
             }
         } else {
-            $this->Csz_model->saveLogs($email, 'Member Login Invalid!', $result);
+            $this->Csz_model->saveLogs($email, 'Frontend Login Invalid!', $result);
             $this->template->setSub('config', $this->Csz_model->load_config());
             $this->template->setSub('error', $result);
             $this->load->helper('form');
@@ -94,25 +129,15 @@ class Member extends CI_Controller {
     }
 
     public function logout() {
-        $data = array(
-            'user_admin_id',
-            'admin_name',
-            'admin_email',
-            'admin_type',
-            'admin_visitor',
-            'session_id',
-            'admin_logged_in',
-        );
-        $this->session->unset_userdata($data);
-        redirect(BASE_URL.'/member', 'refresh');
+        $this->Csz_model->logout(BASE_URL.'/member/login');
     }
 
     public function registMember() {
         Member_helper::login_already($this->session->userdata('admin_email'));
         $config = $this->Csz_model->load_config();
         if($config->member_close_regist){
-            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Member register is closed!</div>');
-            redirect(BASE_URL.'/member', 'refresh');
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Sorry!!! Member register is closed!</div>');
+            redirect(BASE_URL.'/member/login', 'refresh');
             exit();
         }else{
             //Load the form helper
@@ -129,9 +154,10 @@ class Member extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'email address', 'trim|required|valid_email|is_unique[user_admin.email]');
-        $this->form_validation->set_rules('password', 'password', 'trim|required|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('con_password', 'confirm password', 'trim|required|matches[password]');
+        $this->form_validation->set_rules('name', $this->Csz_model->getLabelLang('display_name'), 'required|is_unique[user_admin.name]');
+        $this->form_validation->set_rules('email', $this->Csz_model->getLabelLang('login_email'), 'trim|required|valid_email|is_unique[user_admin.email]');
+        $this->form_validation->set_rules('password', $this->Csz_model->getLabelLang('login_password'), 'trim|required|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('con_password', $this->Csz_model->getLabelLang('confirm_password'), 'trim|required|matches[password]');
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->form_validation->set_message('email', $this->Csz_model->getLabelLang('email_already'));
@@ -151,7 +177,7 @@ class Member extends CI_Controller {
                     $from_name = $config->site_name;
                     $from_email = 'no-reply@' . EMAIL_DOMAIN;
                     $to_email = $email;
-                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a> <br> <br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $config->site_name . '</b></a>';
+                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . BASE_URL . '" target="_blank"><b>' . $config->site_name . '</b></a>';
                     @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
                     $this->template->setSub('chksts', 1);
                     $this->template->loadSub('frontpage/member/regist');
@@ -160,8 +186,8 @@ class Member extends CI_Controller {
                     exit();
                 }
             }else{
-                $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Member register is closed!</div>');
-                redirect('member', 'refresh');
+                $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Sorry!!! Member register is closed!</div>');
+                redirect('member/login', 'refresh');
                 exit();
             }
         }
@@ -172,7 +198,7 @@ class Member extends CI_Controller {
         $md5_hash = $this->uri->segment(3);
         $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'md5_hash', $md5_hash, 1);
         if (!$user_rs) {
-            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">Sorry!!! Invalid Request!</div>');
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('error_txt').'</div>');
         } else {
             $data = array(
                 'active' => 1,
@@ -183,9 +209,9 @@ class Member extends CI_Controller {
             $this->db->where('md5_hash', $md5_hash);
             $this->db->where('user_admin_id', $user_rs->user_admin_id);
             $this->db->update('user_admin', $data);
-            $this->session->set_flashdata('f_error_message','<div class="alert alert-success" role="alert">Success!</div>');
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
         }
-        redirect('member', 'refresh');
+        redirect('member/login', 'refresh');
     }
 
     public function editMember() {
@@ -202,14 +228,15 @@ class Member extends CI_Controller {
 
     public function saveEditMember() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
-        Member_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        Member_helper::is_allowchk('profile save');
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
-        $this->form_validation->set_rules('password', 'New Password', 'trim|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('con_password', 'Confirm Password', 'trim|matches[password]');
-        $this->form_validation->set_rules('cur_password', 'Current Password', 'trim|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('name', $this->Csz_model->getLabelLang('display_name'), 'required|is_unique[user_admin.name.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
+        $this->form_validation->set_rules('email', $this->Csz_model->getLabelLang('login_email'), 'trim|required|valid_email|is_unique[user_admin.email.user_admin_id.' . $this->session->userdata('user_admin_id') . ']');
+        $this->form_validation->set_rules('password', $this->Csz_model->getLabelLang('new_password'), 'trim|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('con_password', $this->Csz_model->getLabelLang('confirm_password'), 'trim|matches[password]');
+        $this->form_validation->set_rules('cur_password', $this->Csz_model->getLabelLang('login_password'), 'trim|min_length[4]|max_length[32]');
         $this->form_validation->set_message('cur_password', $this->Csz_model->getLabelLang('login_incorrect'));
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
@@ -227,7 +254,7 @@ class Member extends CI_Controller {
                     //Get user details from database
                     $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
                     //Load the view
-                    $this->session->set_flashdata('f_error_message','<div class="alert alert-danger" role="alert">'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
+                    $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
                     $this->template->loadSub('frontpage/member/edit');
                 }
             }
@@ -278,6 +305,7 @@ class Member extends CI_Controller {
     public function email_check($str) {
         Member_helper::login_already($this->session->userdata('admin_email'));
         $this->db->where('email', $str);
+        $this->db->where('active', 1);
         $this->db->limit(1, 0);
         $query = $this->db->get('user_admin');
         if ($query->num_rows() == 1) {
@@ -321,6 +349,149 @@ class Member extends CI_Controller {
                 }
             }
         }
+    }
+    
+    public function indexPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        $this->load->helper('form');
+        $this->load->library('pagination');
+        $this->csz_referrer->setIndex('member');
+        // Pages variable
+        $search_arr = " pm_deleted_receiver IS NULL AND receiver_id = '".$this->session->userdata('user_admin_id')."' ";
+        $result_per_page = 20;
+        $total_row = $this->Csz_admin_model->countTable('user_pms', $search_arr);
+        $num_link = 10;
+        $base_url = BASE_URL . '/member/indexpm/';
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
+        //Get users from database
+        $this->template->setSub('msg', $this->Csz_admin_model->getIndexData('user_pms', $result_per_page, $pagination, 'id', 'desc', $search_arr));
+        $this->template->setSub('total_row',$total_row);
+        //Load the view
+        $this->template->loadSub('frontpage/member/pm_index');
+    }
+    
+    public function sendIndexPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        $this->load->helper('form');
+        $this->load->library('pagination');
+        $this->csz_referrer->setIndex('member');
+        // Pages variable
+        $search_arr = " pm_deleted_sender IS NULL AND sender_id = '".$this->session->userdata('user_admin_id')."' ";
+        $result_per_page = 20;
+        $total_row = $this->Csz_admin_model->countTable('user_pms', $search_arr);
+        $num_link = 10;
+        $base_url = BASE_URL . '/member/sendpm/';
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
+        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
+        //Get users from database
+        $this->template->setSub('msg', $this->Csz_admin_model->getIndexData('user_pms', $result_per_page, $pagination, 'id', 'desc', $search_arr));
+        $this->template->setSub('total_row',$total_row);
+        //Load the view
+        $this->template->loadSub('frontpage/member/pm_send_index');
+    }
+    
+    public function viewPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            //Get users from database   
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3));
+            if($pm !== FALSE){
+                $this->template->setSub('pm', $pm);
+                //Load the view
+                $this->template->loadSub('frontpage/member/pm_view');
+            }else{
+                redirect($this->csz_referrer->getIndex('member'), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex('member'), 'refresh');
+        }
+    }
+    
+    public function newPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        //Load the form helper
+        $this->load->helper('form');
+        $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
+        //Load the view
+        $this->template->loadSub('frontpage/member/pm_add');
+    }
+
+    public function insertPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        //Load the form validation library
+        $this->load->library('form_validation');
+        //Set validation rules
+        $this->form_validation->set_rules('to[]', $this->Csz_model->getLabelLang('pm_to_txt'), 'required');
+        $this->form_validation->set_rules('title', $this->Csz_model->getLabelLang('pm_subject_txt'), 'required');
+        $this->form_validation->set_rules('message', $this->Csz_model->getLabelLang('pm_msg_txt'), 'required');
+        if ($this->form_validation->run() == FALSE) {
+            //Validation failed
+            $this->newMSG();
+        } else {            
+            //Validation passed
+            //Add the user
+            foreach($this->input->post('to[]') as $value){
+                $this->Csz_auth_model->send_pm($value, $this->input->post('title', TRUE), $this->input->post('message', TRUE));
+            }
+            $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
+            //Return to user list
+            redirect($this->csz_referrer->getIndex('member'), 'refresh');
+        }
+    }
+    
+    public function setReadPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        //Load the form helper
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            $this->Csz_auth_model->set_as_read_pm($this->uri->segment(3));            
+        }
+        $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
+        redirect($this->csz_referrer->getIndex('member'), 'refresh');
+    }
+    
+    public function setUnReadPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        //Load the form helper
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            $this->Csz_auth_model->set_as_unread_pm($this->uri->segment(3));            
+        }
+        $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
+        redirect($this->csz_referrer->getIndex('member'), 'refresh');
+    }
+    
+    public function indexPMSave() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        $delR = $this->input->post('delR');
+        if(isset($delR)){
+            foreach ($delR as $value) {
+                if ($value) {
+                    $this->Csz_auth_model->delete_pm($value);
+                }
+            }
+        }
+        $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
+        redirect($this->csz_referrer->getIndex('member'), 'refresh');
+    }
+    
+    public function deletePM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            $this->Csz_auth_model->delete_pm($this->uri->segment(3));
+        }
+        $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
+        redirect($this->csz_referrer->getIndex('member'), 'refresh');
     }
 
 }

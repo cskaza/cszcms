@@ -48,6 +48,9 @@ class RSSParser {
 
 	function parse()
 	{
+            $CI =& get_instance();
+            $CI->load->model('Csz_model');
+            if($CI->Csz_model->is_url_exist($this->feed_uri) !== FALSE){
 		// Are we caching?
 		if ($this->cache_life != 0)
 		{
@@ -157,6 +160,9 @@ class RSSParser {
 		}
 
 		return TRUE;
+            }else{
+                return FALSE;
+            }
 	}
 
 	// --------------------------------------------------------------------
@@ -183,22 +189,48 @@ class RSSParser {
 	*/
 	function getFeed($num)
 	{
-		$this->parse();
-			
+            $return = array();
+            $feed = $this->parse();
+            if($feed !== FALSE){		
 		$c = 0;
-		$return = array();
-
 		foreach ($this->data AS $item)
 		{
 			$return[] = $item;
 			$c++;
-
 			if ($c == $num)
 			{
 				break;
 			}
-		}
-		return $return;
+		}		
+            }
+            return $return;
+	}
+        
+        // --------------------------------------------------------------------
+
+	function runFeedBackend($num)
+	{
+            $CI =& get_instance();
+            $CI->load->driver('cache', array('adapter' => 'file'));
+            if (!$CI->cache->get('backend_rssfeed_news')) {
+                $return = '';
+                $rss = $this->getFeed($num);
+                if(!empty($rss)){
+                    foreach ($rss as $item) {
+                        $return.= '<a href="'.$item['link'].'" target="_blank"><b>'.$item['title'].'</b></a><br>';
+                        $return.= '<em>'.$item['pubDate'].'</em><br><br>'; 
+                        $return.= $item['description'];
+                        $return.= '<hr>';
+                    }   
+                }
+                if($CI->Csz_model->load_config()->pagecache_time == 0){
+                    $cache_time = 1;
+                }else{
+                    $cache_time = $CI->Csz_model->load_config()->pagecache_time;
+                }
+                $CI->cache->save('backend_rssfeed_news', $return, ($cache_time * 60));
+            }
+            return $CI->cache->get('backend_rssfeed_news');
 	}
 
 	// --------------------------------------------------------------------

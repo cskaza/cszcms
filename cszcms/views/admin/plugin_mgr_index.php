@@ -18,9 +18,9 @@
                     <tr>
                         <th width="20%" class="text-center"><?php echo $this->lang->line('pluginmgr_status'); ?></th>
                         <th width="20%" class="text-center"><?php echo $this->lang->line('pluginmgr_name'); ?></th>
-                        <th width="20%" class="text-center"><?php echo $this->lang->line('pluginmgr_version'); ?></th>
+                        <th width="15%" class="text-center"><?php echo $this->lang->line('pluginmgr_version'); ?></th>
                         <th width="20%" class="text-center"><?php echo $this->lang->line('pluginmgr_owner'); ?></th>
-                        <th width="20%"></th>
+                        <th width="25%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,19 +41,17 @@
                             
                             echo '<tr>';
                             echo '<td class="text-center" style="vertical-align: middle;">' . $status . '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['plugin_name'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['plugin_version'] . '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . ucfirst($u['plugin_owner']) . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $this->Csz_model->getPluginConfig($u['plugin_config_filename'], 'plugin_name') . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $this->Csz_model->getPluginConfig($u['plugin_config_filename'], 'plugin_version') . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . ucfirst($this->Csz_model->getPluginConfig($u['plugin_config_filename'], 'plugin_author')) . '</td>';
                             echo '<td class="text-center" style="vertical-align: middle;">';
                             if($u['plugin_active']){
-                                echo '<a href="'.BASE_URL.'/admin/plugin/' . $u['plugin_urlrewrite'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('pluginmgr_manage').'</a> &nbsp;&nbsp; ';
+                                echo '<a href="'.BASE_URL.'/admin/plugin/' . $this->Csz_model->getPluginConfig($u['plugin_config_filename'], 'plugin_urlrewrite') . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-cog"></i> '.$this->lang->line('pluginmgr_manage').'</a> &nbsp;&nbsp; ';
                             }
-                            if($this->session->userdata('admin_type') == 'admin'){
-                                if(!$u['plugin_active']){
-                                    echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-ok"></i> '.$this->lang->line('pluginmgr_enable').'</a>';
-                                }else{
-                                    echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('pluginmgr_disable').'</a>';
-                                }
+                            if(!$u['plugin_active']){
+                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-ok"></i> '.$this->lang->line('pluginmgr_enable').'</a>';
+                            }else{
+                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/plugin/setstatus/'.$u['plugin_manager_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('pluginmgr_disable').'</a>';
                             }
                             echo '</td>';
                             echo '</tr>';

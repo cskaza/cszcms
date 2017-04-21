@@ -43,7 +43,8 @@ class General_label extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::is_allowchk('language');
+        $this->db->cache_on();
         $this->csz_referrer->setIndex();
         $this->load->library('pagination');
         // Pages variable
@@ -70,15 +71,20 @@ class General_label extends CI_Controller {
 
     public function edit() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
+        admin_helper::is_allowchk('language');
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
-            //Get user details from database
-            $this->template->setSub('genlab', $this->Csz_model->getValue('*', 'general_label', 'general_label_id', $this->uri->segment(4), 1));
-            $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', "lang_iso != ''", ''));
-            //Load the view
-            $this->template->loadSub('admin/genlabel_edit');
+            $this->db->cache_on();
+            $genlab = $this->Csz_model->getValue('*', 'general_label', 'general_label_id', $this->uri->segment(4), 1);
+            if($genlab !== FALSE){
+                $this->template->setSub('genlab', $genlab);
+                $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', "lang_iso != ''", ''));
+                //Load the view
+                $this->template->loadSub('admin/genlabel_edit');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }else{
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -86,8 +92,8 @@ class General_label extends CI_Controller {
 
     public function updated() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('save');
 
         $this->Csz_admin_model->updateLabel($this->uri->segment(4));
         $this->db->cache_delete_all();
@@ -97,8 +103,8 @@ class General_label extends CI_Controller {
     
     public function syncLang() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_not_admin($this->session->userdata('admin_type'));
-        admin_helper::chkVisitor($this->session->userdata('user_admin_id'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('save');
         $this->Csz_admin_model->syncLabelLang();
         $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('genlabel_synclang_success').'</div>');

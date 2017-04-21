@@ -1,7 +1,20 @@
 <?php
 if ($page_rs !== FALSE) {
-    echo $content = $this->Csz_model->getHtmlContent($page_rs->content, $this->uri->segment(2));
+    $totSegments = $this->uri->total_segments();
+    if(!empty($page_rs->custom_css) && $page_rs->custom_css != NULL){ ?>
+        <style type="text/css"><?php echo $page_rs->custom_css; ?></style>
+    <?php }
+    echo $content = $this->Csz_model->getHtmlContent($page_rs->content, $this->uri->segment($totSegments));
 } else {
+    if(isset($is_linkstat) && isset($url)){ ?>
+    <div class="jumbotron">
+        <div class="container">
+            <br><br>
+            <center><h3>Please Wait... ,Redirect to <?php echo (isset($url)) ? $url : '' ?></h3></center>
+        </div>
+    </div>
+    <?php
+    }else{
     ?>
     <div class="jumbotron">
         <div class="container">
@@ -10,4 +23,5 @@ if ($page_rs !== FALSE) {
                 <a class="btn btn-primary btn-lg" href="<?php echo BASE_URL?>" role="button">back to home &raquo;</a>
         </div>
     </div>
-<?php } ?>
+    <?php }   
+    } ?>

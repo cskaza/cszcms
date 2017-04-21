@@ -15,7 +15,7 @@
         <?php echo form_open(BASE_URL . '/admin/pages/edited/'.$pages->pages_id); ?>
 
         <div class="control-group">	
-            <?php echo form_error('page_name', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('page_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="page_name"><?php echo $this->lang->line('pages_name'); ?>*</label>
             <?php
             $data = array(
@@ -32,7 +32,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">	
-            <?php echo form_error('page_title', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('page_title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="page_title"><?php echo $this->lang->line('pages_title'); ?>*</label>
             <?php
             $data = array(
@@ -48,7 +48,7 @@
         </div> <!-- /control-group -->
         
         <div class="control-group">	
-            <?php echo form_error('page_keywords', '<div class="error">', '</div>'); ?>									
+            <?php echo form_error('page_keywords', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="page_keywords"><?php echo $this->lang->line('pages_keywords'); ?>*</label>
             <?php
             $data = array(
@@ -64,7 +64,7 @@
         </div> <!-- /control-group -->
 
         <div class="control-group">
-            <?php echo form_error('page_desc', '<div class="error">', '</div>'); ?>
+            <?php echo form_error('page_desc', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="page_desc"><?php echo $this->lang->line('pages_desc'); ?>*</label>
             <?php
             $data = array(
@@ -92,7 +92,18 @@
                 echo form_dropdown('lang_iso', $data, $pages->lang_iso, $att);
             ?>	
         </div> <!-- /control-group -->
-        
+        <div class="control-group">            
+            <label class="control-label" for="custom_css"><?php echo $this->lang->line('pages_custom_css'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'custom_css',
+                'id' => 'custom_css',
+                'class' => 'form-control',
+                'value' => set_value('custom_css', $pages->custom_css, FALSE)
+            );
+            echo form_textarea($data);
+            ?>			
+        </div> <!-- /control-group -->
         <div class="control-group">	
             <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
             <textarea name="content" id="content" class="form-control body-tinymce"><?php echo  $pages->content ?></textarea>

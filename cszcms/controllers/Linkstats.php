@@ -22,30 +22,75 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Linkstats extends CI_Controller {
 
+    var $page_rs;
+    var $page_url;
+    var $url_go;
+    
     function __construct() {
         parent::__construct();
         $this->CI = & get_instance();
+        $this->load->database();
+        $row = $this->Csz_model->load_config();
+        if($row->maintenance_active){
+            //Return to home page
+            redirect('./', 'refresh');
+            exit;
+        }
+        if ($row->themes_config) {
+            $this->template->set_template($row->themes_config);
+            define('THEME', $row->themes_config);
+        }
+        if(!$this->session->userdata('fronlang_iso')){ 
+            $this->Csz_model->setSiteLang();
+        }
+        if($this->Csz_model->chkLangAlive($this->session->userdata('fronlang_iso')) == 0){ 
+            $this->session->unset_userdata('fronlang_iso');
+            $this->Csz_model->setSiteLang(); 
+        }
+        $this->_init();
     }
 
-    public function index() {
-        $link1 = str_replace("'", "\'", $this->Csz_model->decodeURL($this->uri->segment(3)));
-        $link = str_replace('['.($this->uri->segment(2)-1).']', '', $link1);
-        if ($link) {
-            echo '<html><head>';
-            echo '<title>Please wait... ,Redirect to '.$link.' | CSZ CMS</title>
-                <meta name="generator" content="CSZ CMS"/>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>';
-            echo '<meta http-equiv="refresh" content="0;url='.$link.'"></head><body>';
-            echo '<center><h2>Please Wait... ,Redirect to '.$link.'</h2></center>';
-            $this->Csz_model->saveLinkStats($link);
-            echo '</body></head>';
-            exit;          
+    public function _init() {
+        $id = $this->uri->segment(2);
+        $row = $this->Csz_model->load_config();
+        if ($id && is_numeric($id)) {
+            $getLink = $this->Csz_model->getValue('url', 'link_stat_mgt', 'link_stat_mgt_id', $id, 1);
+            if(!empty($getLink) && $getLink !== FALSE){
+                $this->url_go = $getLink->url;
+                $redirectmeta = '<meta http-equiv="refresh" content="0;url='.$this->url_go.'">'."\n";
+                $this->Csz_model->saveLinkStats($this->url_go);
+            }else{
+                //Return to home page
+                redirect('./', 'refresh');
+                exit;
+            }
         } else {
             //Return to home page
             redirect('./', 'refresh');
             exit;
         }
+        $this->template->set('core_css', $this->Csz_model->coreCss());
+        $this->template->set('core_js', $this->Csz_model->coreJs());
+        $pageURL = $this->Csz_model->getCurPages();	
+        $this->page_url = $pageURL;
+        $this->template->set('additional_js', $row->additional_js);
+        $this->template->set('additional_metatag', $row->additional_metatag . "\n" . $redirectmeta);
+        $title = 'Please wait... ,Redirect to | ' . $row->site_name;
+        $this->template->set('title', $title);
+        $this->template->set('meta_tags', $this->Csz_model->coreMetatags('Please wait... ,Redirect to ',$row->keywords,$title));
+        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', $title);
+    }
+
+    public function index() {
+        $this->template->setSub('is_linkstat', TRUE);
+        $this->template->setSub('url', $this->url_go);
+        $this->page_rs = FALSE;
+        $this->template->setSub('page', $this->page_url);
+        $this->template->setSub('page_rs', $this->page_rs);
+
+        //Load the view
+        $this->template->loadSub('frontpage/getpage');
     }
 
 }
