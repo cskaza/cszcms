@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('banner_new') ?>  <a role="button" href="<?php echo BASE_URL ?>/admin/banner/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('banner_new') ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/banner/update/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('banner_new') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/banner/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('banner_new') ?></a></div>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/banner/update/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
             <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -157,7 +157,7 @@
             <div class="controls">
                 <div><img class="img-thumbnail img-responsive" src="<?php
                               if ($banner->img_path != "" && $banner->img_path != NULL) {
-                                  echo BASE_URL . '/photo/banner/' . $banner->img_path;
+                                  echo base_url() . 'photo/banner/' . $banner->img_path;
                               }
                               ?>" <?php
                     if ($banner->img_path == "" || $banner->img_path == NULL) {

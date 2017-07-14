@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('lang_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/lang/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('lang_addnew') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/lang/edited/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('lang_addnew') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/lang/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('lang_addnew') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/lang/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
             <?php echo form_error('lang_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>

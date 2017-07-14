@@ -51,7 +51,7 @@ class Forms extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('form_main');
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/forms/';
+        $base_url = $this->Csz_model->base_link(). '/admin/forms/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);  
@@ -194,7 +194,7 @@ class Forms extends CI_Controller {
                 $result_per_page = 20;
                 $total_row = $this->Csz_admin_model->countTable('form_'.$frm_rs->form_name);
                 $num_link = 10;
-                $base_url = BASE_URL . '/admin/forms/view/'.$this->uri->segment(4).'/';
+                $base_url = $this->Csz_model->base_link(). '/admin/forms/view/'.$this->uri->segment(4).'/';
                 // Pageination config
                 $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link,5);       
                 ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     

@@ -4,50 +4,28 @@ function compress()
     @ini_set("pcre.recursion_limit", "16777");
     $CI =& get_instance();
     $buffer = $CI->output->get_output();
-
-    /*$re = '%# Collapse whitespace everywhere but in blacklisted elements.
-        (?>             # Match all whitespans other than single space.
-          [^\S ]\s*     # Either one [\t\r\n\f\v] and zero or more ws,
-        | \s{2,}        # or two or more consecutive-any-whitespace.
-        ) # Note: The remaining regex consumes no text at all...
-        (?=             # Ensure we are not in a blacklist tag.
-          [^<]*+        # Either zero or more non-"<" {normal*}
-          (?:           # Begin {(special normal*)*} construct
-            <           # or a < starting a non-blacklist tag.
-            (?!/?(?:textarea|pre|script)\b)
-            [^<]*+      # more non-"<" {normal*}
-          )*+           # Finish "unrolling-the-loop"
-          (?:           # Begin alternation group.
-            <           # Either a blacklist start tag.
-            (?>textarea|pre|script)\b
-          | \z          # or end of file.
-          )             # End alternation group.
-        )  # If we made it here, we are not in a blacklist tag.
-        %Six';*/
-    $search = array(
-        '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
-        '/[^\S ]+\</s',     // strip whitespaces before tags, except space
-        '/(\s)+/s',         // shorten multiple whitespace sequences
-        '/<!--(.|\s)*?-->/' // Remove HTML comments
-    );
-
-    $replace = array(
-        '>',
-        '<',
-        '\\1',
-        ''
-    );
-
-    $new_buffer = preg_replace($search, $replace, $buffer);
-
-    //$new_buffer = preg_replace($re, " ", $buffer);
-
+    $config = $CI->Csz_model->load_config();
+    $new_buffer = NULL;
+    if($config->html_optimize_disable != 1){
+        $search = array(
+            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+            '/(\s)+/s',         // shorten multiple whitespace sequences
+            '/<!--(.|\s)*?-->/' // Remove HTML comments
+        );
+        $replace = array(
+            '>',
+            '<',
+            '\\1',
+            ''
+        );
+        $new_buffer = preg_replace($search, $replace, $buffer);
+    }
     // We are going to check if processing has working
     if ($new_buffer === null)
     {
         $new_buffer = $buffer;
     }
-
     $CI->output->set_output($new_buffer);
     $CI->output->_display();
 }

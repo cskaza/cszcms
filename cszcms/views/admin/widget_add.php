@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('widget_new_header') ?>  <a role="button" href="<?php echo BASE_URL ?>/admin/widget/addWidget" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('widget_new_header') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/widget/insert'); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('widget_new_header') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/widget/addWidget" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('widget_new_header') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/widget/insert'); ?>
 
         <div class="control-group">	
             <?php echo form_error('widget_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -25,7 +25,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('widget_name', '', FALSE)
+                'value' => set_value('widget_name', $this->Csz_admin_model->getDraftArray('widget_name'), FALSE)
             );
             echo form_input($data);
             ?>			
@@ -42,7 +42,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('xml_url', '', FALSE)
+                'value' => set_value('xml_url', $this->Csz_admin_model->getDraftArray('xml_url'), FALSE)
             );
             echo form_input($data);
             ?>
@@ -58,7 +58,7 @@
                 }
                 $data[50] = 50;
                 $data[100] = 100;
-                echo form_dropdown('limit_view', $data, '', $att);
+                echo form_dropdown('limit_view', $data, $this->Csz_admin_model->getDraftArray('limit_view'), $att);
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
@@ -72,7 +72,7 @@
         if(empty($widget->widget_content) || $widget->widget_content == NULL){
             $widget->widget_content = '<div class="row">
                                             <div class="col-md-3">
-                                                {link_img}
+                                                <a href="{sub_url}" title="{title}"><img class="lazy img-responsive img-thumbnail" data-src="{photo}" alt="{title}"></a>
                                             </div>
                                             <div class="col-md-9">
                                                 <a href="{sub_url}" title="{title}"><h4>{title}</h4></a><br>
@@ -94,7 +94,7 @@
                 'name' => 'widget_open',
                 'id' => 'widget_open',
                 'class' => 'form-control',
-                'value' => set_value('widget_open', $widget->widget_open, FALSE)
+                'value' => set_value('widget_open', ($this->Csz_admin_model->getDraftArray('widget_open')) ? $this->Csz_admin_model->getDraftArray('widget_open') : $widget->widget_open, FALSE)
             );
             echo form_textarea($data);
             ?>			
@@ -106,7 +106,7 @@
                 'name' => 'widget_content',
                 'id' => 'widget_content',
                 'class' => 'form-control',
-                'value' => set_value('widget_content', $widget->widget_content, FALSE)
+                'value' => set_value('widget_content', ($this->Csz_admin_model->getDraftArray('widget_content')) ? $this->Csz_admin_model->getDraftArray('widget_content') : $widget->widget_content, FALSE)
             );
             echo form_textarea($data);
             ?>			
@@ -118,7 +118,7 @@
                 'name' => 'widget_seemore',
                 'id' => 'widget_seemore',
                 'class' => 'form-control',
-                'value' => set_value('widget_seemore', $widget->widget_seemore, FALSE)
+                'value' => set_value('widget_seemore', ($this->Csz_admin_model->getDraftArray('widget_seemore')) ? $this->Csz_admin_model->getDraftArray('widget_seemore') : $widget->widget_seemore, FALSE)
             );
             echo form_textarea($data);
             ?>			
@@ -130,7 +130,7 @@
                 'name' => 'widget_close',
                 'id' => 'widget_close',
                 'class' => 'form-control',
-                'value' => set_value('widget_close', $widget->widget_close, FALSE)
+                'value' => set_value('widget_close', ($this->Csz_admin_model->getDraftArray('widget_close')) ? $this->Csz_admin_model->getDraftArray('widget_close') : $widget->widget_close, FALSE)
             );
             echo form_textarea($data);
             ?>			
@@ -147,7 +147,18 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('lang_active'); ?></label>	
         </div> <!-- /control-group -->
-
+        <br><br>
+        <?php
+            $data = array(
+                'type' => 'button',
+                'name' => 'save_draft',
+                'id' => 'save_draft',
+                'class' => 'btn btn-lg btn-warning',
+                'value' => $this->lang->line('btn_save_draft'),
+            );
+            echo form_input($data);
+            ?> <span id="save_draft_res" class="text-success"></span>
+            <input type="hidden" name="current_url" id="current_url" value="<?php echo current_url(); ?>">
         <br><br>
         <div class="form-actions">
             <?php
@@ -155,7 +166,7 @@
                 'name' => 'submit',
                 'id' => 'submit',
                 'class' => 'btn btn-lg btn-primary',
-                'value' => $this->lang->line('btn_save'),
+                'value' => $this->lang->line('btn_save_exit'),
             );
             echo form_submit($data);
             ?> 

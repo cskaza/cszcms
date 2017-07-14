@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_edit') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/forms/edited/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_edit') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/forms/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
             <?php echo form_error('form_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -301,7 +301,7 @@
                         </div>
                         <br>
                         <div class="control-group text-right">
-                            <a class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->lang->line('forms_delete_msg')?>')" href="<?php echo BASE_URL.'/admin/forms/deleteField/'.$form_rs->form_main_id.'/'.$field_val['form_field_id']?>">
+                            <a class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->lang->line('forms_delete_msg')?>')" href="<?php echo $this->Csz_model->base_link().'/admin/forms/deleteField/'.$form_rs->form_main_id.'/'.$field_val['form_field_id']?>">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </a>
                         </div>

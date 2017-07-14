@@ -89,34 +89,34 @@ class Template {
      * Load view with sub views
      *
      * @param	string	$view    View file for load
+     * @param	string	$othermainfile    Other main view file path
      */
-    function loadSub($view = '')
+    function loadSub($view = '', $othermainfile = '')
     {
         $this->CI =& get_instance();
-        return $this->load($view, $this->data_sub);
+        return $this->load($view, $this->data_sub, '', '', $othermainfile);
     }
     
-    private function load($view = '' , $view_data = array(), $template = '', $return = FALSE)
+    private function load($view = '' , $view_data = array(), $template = '', $return = FALSE, $othermainfile = '')
     {
         $this->CI =& get_instance();
-
-        if (empty($this->use_template_file)) {
-            $template_file = $this->CI->config->item('template_master');
-        }
-
-        if (!empty($this->use_template_file)) {
-            $template_file = $this->use_template_file;
-        }
-        
-        if (empty($template)) {
-            $template = $this->CI->config->item('template_name');
-        }
-
-        if (!empty($this->use_template)) {
-            $template = $this->use_template;
-        }
-
         $this->set($this->CI->config->item('data_container'), $this->CI->load->view($view, array_merge($view_data, array ('template' => $this->template_data)), true));
-        return $this->CI->load->view($this->CI->config->item('template_folder') . '/' . $template . '/'  . $template_file, $this->template_data, $return);
+        if(!$othermainfile){
+            if (empty($this->use_template_file)) {
+                $template_file = $this->CI->config->item('template_master');
+            }
+            if (!empty($this->use_template_file)) {
+                $template_file = $this->use_template_file;
+            }
+            if (empty($template)) {
+                $template = $this->CI->config->item('template_name');
+            }
+            if (!empty($this->use_template)) {
+                $template = $this->use_template;
+            }
+            return $this->CI->load->view($this->CI->config->item('template_folder') . '/' . $template . '/'  . $template_file, $this->template_data, $return);
+        }else{
+            return $this->CI->load->view($othermainfile, $this->template_data, $return);
+        }
     }
 }

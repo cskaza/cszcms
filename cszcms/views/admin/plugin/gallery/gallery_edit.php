@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('gallery_new_header'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/gallery/editSave/'.$this->uri->segment(5)); ?>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/editSave/'.$this->uri->segment(5)); ?>
         <div class="control-group">	
             <?php echo form_error('album_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="album_name"><?php echo $this->lang->line('gallery_albumname'); ?>*</label>
@@ -110,7 +110,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="h4 sub-header"><?php echo  $this->lang->line('gallery_youtube_head') ?></div>
-                <?php echo  form_open(BASE_URL . '/admin/plugin/gallery/addYoutube/'.$this->uri->segment(5)) ?>
+                <?php echo  form_open($this->Csz_model->base_link(). '/admin/plugin/gallery/addYoutube/'.$this->uri->segment(5)) ?>
                 <input type="hidden" name="gallery_type" value="youtubevideos">
                 <div class="form-group has-feedback">
                     <div class="input-group">
@@ -131,7 +131,7 @@
             </div>
             <div class="col-lg-6 col-md-6">  
                 <div class="h4 sub-header"><?php echo  $this->lang->line('uploadfile_uploadtools') ?></div>
-                <?php echo  form_open_multipart(BASE_URL . '/admin/plugin/gallery/htmlUpload/'.$this->uri->segment(5)) ?>
+                <?php echo  form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/htmlUpload/'.$this->uri->segment(5)) ?>
                 <input type="hidden" name="gallery_type" value="multiimages">
                 <div class="row form-control-static">
                     <div class="col-lg-12 col-md-12">
@@ -158,7 +158,7 @@
         <blockquote class="remark">
             <em><?php echo  $this->lang->line('gallery_fileallow') ?></em>
         </blockquote>
-        <?php echo  form_open(BASE_URL . '/admin/plugin/gallery/uploadIndexSave'); ?>
+        <?php echo  form_open($this->Csz_model->base_link(). '/admin/plugin/gallery/uploadIndexSave'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -188,7 +188,7 @@
                                     <?php 
                                     $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
                                     if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' && $file["gallery_type"] == 'multiimages'){ ?>
-                                    <img src="<?php echo BASE_URL.'/photo/plugin/gallery/'.$file["file_upload"]?>" width="100">
+                                    <img src="<?php echo base_url() .'photo/plugin/gallery/'.$file["file_upload"]?>" width="100">
                                     <?php }else{ ?>
                                         <i class="glyphicon glyphicon-facetime-video"></i> YOUTUBE
                                     <?php } ?>

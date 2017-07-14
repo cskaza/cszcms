@@ -11,12 +11,16 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('genlabel_edit_header') ?> <a href="<?php echo BASE_URL . '/admin/genlabel/synclang'?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message');?>')"><i class="glyphicon glyphicon-refresh"></i> <?php echo $this->lang->line('btn_label_synclang')?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/genlabel/updated/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('genlabel_edit_header') ?> <a href="<?php echo $this->Csz_model->base_link(). '/admin/genlabel/synclang'?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message');?>')"><i class="glyphicon glyphicon-refresh"></i> <?php echo $this->lang->line('btn_label_synclang')?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/genlabel/updated/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
             <label class="control-label"><?php echo $this->lang->line('genlabel_name'); ?> <?php if($genlab->remark){ ?><span class="remark"><em>(<?php echo $genlab->remark;?>)</em></span></label><?php } ?>
             <div class="well well-sm"><b><?php echo $genlab->name;?></b></div>
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label">English</label>
+            <div class="well well-sm"><b><?php echo $this->Csz_model->getValue('lang_en', 'general_label', 'general_label_id', $this->uri->segment(4), 1)->lang_en; ?></b></div>
         </div> <!-- /control-group -->
         <?php foreach ($lang as $l) { ?>
             <div class="control-group">	

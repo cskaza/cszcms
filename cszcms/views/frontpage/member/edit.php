@@ -15,7 +15,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-edit"></i> <?php echo $this->Csz_model->getLabelLang('edit_profile') ?></b></div>
                 <div class="panel-body text-left">
-                    <?php echo form_open_multipart(BASE_URL.'/member/edit/save'); ?>
+                    <?php echo form_open_multipart($this->Csz_model->base_link().'/member/edit/save'); ?>
                     <div class="control-group">	
                         <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <label class="control-label" for="name"><?php echo $this->Csz_model->getLabelLang('display_name'); ?>*</label>
@@ -176,15 +176,14 @@
                         <div class="controls">
                             <div><img src="<?php
                                           if ($users->picture != "") {
-                                              echo BASE_URL . '/photo/profile/' . $users->picture;
+                                              echo base_url() . 'photo/profile/' . $users->picture;
                                           }
                                           ?>" id="logo_preloaded" <?php
                                 if ($users->picture == "") {
                                     echo "style='display:none;'";
                                 }
                                 ?> width="50%"></div>
-                                <?php if ($users->picture != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $users->picture?>"> <span class="remark">Delete File</span></label><?php } ?>
-                                <img src="<?php echo BASE_URL; ?>templates/admin/imgs/ajax-loader.gif" style="margin:-7px 5px 0 5px;display:none;" id="loading_pic" />
+                                <?php if ($users->picture != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $users->picture?>"> <span class="remark">Delete File</span></label><?php } ?>                              
                                 <?php
                                 $data = array(
                                     'name' => 'file_upload',

@@ -15,9 +15,9 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-envelope"></i> <?php echo $this->Csz_model->getLabelLang('pm_inbox_txt') ?></b></div>
                 <div class="panel-body">
-                    <a role="button" href="<?php echo BASE_URL?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
+                    <a role="button" href="<?php echo $this->Csz_model->base_link()?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
                     <br><br>
-                    <?php echo  form_open(BASE_URL . '/member/indexpmsave'); ?>
+                    <?php echo  form_open($this->Csz_model->base_link(). '/member/indexpmsave'); ?>
                     <div class="box box-body table-responsive no-padding">
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
@@ -32,7 +32,7 @@
                             <tbody>
                                 <?php if ($msg === FALSE) { ?>
                                     <tr>
-                                        <td colspan="5" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('shop_notfound') ?></span></td>
+                                        <td colspan="5" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('error_txt') ?></span></td>
                                     </tr>                           
                                 <?php } else { ?>
                                     <?php
@@ -43,18 +43,18 @@
                                             </td>';
                                         echo '<td class="text-center h3" style="vertical-align:middle;">';
                                         if($u['date_read'] == NULL){
-                                            echo '<a href="'.BASE_URL . '/member/setread/'.$u['id'].'"><i class="fa fa-envelope" aria-hidden="true"></i></a>';
+                                            echo '<a href="'.$this->Csz_model->base_link(). '/member/setread/'.$u['id'].'"><i class="fa fa-envelope" aria-hidden="true"></i></a>';
                                             $b_start = '<b>';
                                             $b_end = '</b>';
                                         }else{
-                                            echo '<a href="'.BASE_URL . '/member/setunread/'.$u['id'].'"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></a>';
+                                            echo '<a href="'.$this->Csz_model->base_link(). '/member/setunread/'.$u['id'].'"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></a>';
                                             $b_start = '';
                                             $b_end = '';
                                         }
                                         echo '</td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $b_start . $this->Csz_admin_model->getUser($u['sender_id'])->name . $b_end . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $b_start . $u['title'] . $b_end . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $b_start . $u['date_sent'] . $b_end . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $b_start . $this->Csz_admin_model->getUser($u['sender_id'])->name . $b_end . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $b_start . $u['title'] . $b_end . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $b_start . $u['date_sent'] . $b_end . '</a></td>';
                                         echo '</tr>';
                                     }
                                     ?>

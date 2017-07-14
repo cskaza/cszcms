@@ -26,7 +26,9 @@ $(function () {
                             $.datepicker._defaults.dateFormat,
                             selectedDate, instance.settings
                             );
-            dates.not(this).datepicker("option", option, date);
+            if(this.id == "start_date" || this.id == "end_date"){
+                dates.not(this).datepicker("option", option, date);
+            }
         }
     });
 });
@@ -37,6 +39,21 @@ $(function () {
     });
     $("#sel-chkbox-all").change(function () {
         $(".selall-chkbox").prop('checked', $(this).prop("checked"));
+    });
+    $("#sel-chkbox-all1").change(function () {
+        $(".selall-chkbox1").prop('checked', $(this).prop("checked"));
+    });
+    $("#sel-chkbox-all2").change(function () {
+        $(".selall-chkbox2").prop('checked', $(this).prop("checked"));
+    });
+    $("#sel-chkbox-all3").change(function () {
+        $(".selall-chkbox3").prop('checked', $(this).prop("checked"));
+    });
+    $("#sel-chkbox-all4").change(function () {
+        $(".selall-chkbox4").prop('checked', $(this).prop("checked"));
+    });
+    $("#sel-chkbox-all5").change(function () {
+        $(".selall-chkbox5").prop('checked', $(this).prop("checked"));
     });
 });
 $(function()

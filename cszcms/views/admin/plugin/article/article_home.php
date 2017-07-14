@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <a href="<?php echo BASE_URL . '/admin/plugin/article/category' ?>">
+            <a href="<?php echo $this->Csz_model->base_link(). '/admin/plugin/article/category' ?>">
                 <div class="panel-footer">
                     <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                     <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <a href="<?php echo BASE_URL . '/admin/plugin/article/article' ?>">
+            <a href="<?php echo $this->Csz_model->base_link(). '/admin/plugin/article/article' ?>">
                 <div class="panel-footer">
                     <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                     <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -64,7 +64,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('widget_xml_url') ?></h3></div>
             <div class="panel-body">
-                <h5><b><?php echo $this->lang->line('article_header') ?>:</b> <?php echo BASE_URL.'/plugin/article/getWidget' ?>/{language_iso}/{category_id}</h5>
+                <h5><b><?php echo $this->lang->line('article_header') ?>:</b> <?php echo $this->Csz_model->base_link().'/plugin/article/getWidget' ?>/{language_iso}/{category_id}</h5>
                 <span class="remark"><em><?php echo $this->lang->line('article_widget_remark') ?></em></span>
             </div>
         </div>

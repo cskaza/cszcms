@@ -6,7 +6,7 @@
                 <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') ?>
             </li>
         </ol>
-        <?php echo form_open_multipart(BASE_URL . '/admin/upgrade/install'); ?>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/upgrade/install'); ?>
         <?php
         $data = array(
             'name' => 'file_upload',
@@ -38,20 +38,20 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('maintenance_header') ?>
             </li>
         </ol>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a>
         <br><br>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllDBCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a>
         <br><br>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllSession' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a>
         <br><br>
         <ol class="breadcrumb">
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
             </li>
         </ol>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/clearAllErrLog' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clear_logs') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllErrLog' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clear_logs') ?></a>
         <br><br>
-        <?php echo form_open(BASE_URL . '/admin/upgrade/downloadErrLog'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/upgrade/downloadErrLog'); ?>
         <?php
         $att = 'id="errlogfile" class="form-control-static"';
         $data = array();
@@ -96,7 +96,7 @@
         </div>
         <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>
         <br><br>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/download' ?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_upgrade') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/download' ?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_upgrade') ?></a>
         <br><br>
     </div>
     <div class="col-lg-6 col-md-6">
@@ -105,9 +105,10 @@
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('database_maintain_header') ?>
             </li>
         </ol>
-        <a href="<?php echo BASE_URL . '/admin/upgrade/optimize' ?>" class="btn btn-primary"><?php echo $this->lang->line('btn_optimize_db') ?></a>
-        <br><br><a href="<?php echo BASE_URL . '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
-        <br><br><a href="<?php echo BASE_URL . '/admin/upgrade/filebackup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_file') ?></a>
+        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/optimize' ?>" class="btn btn-primary"><?php echo $this->lang->line('btn_optimize_db') ?></a>
+        <br><br><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/backup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_db') ?></a>
+        <br><br><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/filebackup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_file') ?></a>
+        <br><br><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/photobackup' ?>" target="_blank" class="btn btn-primary"><?php echo $this->lang->line('btn_backup_photo') ?></a>
         <br><br>
     </div>
 </div>

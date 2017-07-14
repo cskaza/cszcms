@@ -14,7 +14,7 @@
         <div class="h2 sub-header"><?php echo  $this->lang->line('social_header') ?></div>
         <?php echo  $this->lang->line('social_message') ?><br>
         <?php echo  $this->lang->line('social_enable') ?>
-        <?php echo form_open(BASE_URL . '/admin/social/update'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/social/update'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-striped table-bordered">
                 <thead>

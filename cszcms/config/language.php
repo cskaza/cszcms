@@ -9,5 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $config['admin_language_iso']  = array(
     'english' => 'en',
-    'thai' => 'th'
+    'thai' => 'th',
+    'dutch' => 'nl',
+    'italian' => 'it',
+    'spanish' => 'es',
 );

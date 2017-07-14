@@ -86,11 +86,17 @@ class Csz_model extends CI_Model {
      * @param	string	$search_sql    For sql where Ex. "field1 = '1' AND field2 = '1'" or NULL
      * @param	string	$groupby   Group by field or NULL
      * @param	string	$orderby   Order by field or NULL
-     * @param	string	$sort   asc or desc or NULL
+     * @param	string	$sort   asc or desc or NULL 
+     * @param	string	$join_db   Table to join or NULL 
+     * @param	string	$join_where   Join condition or NULL 
+     * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL 
      * @return	number or FALSE
      */
-    public function countData($table, $search_sql = '', $groupby = '', $orderby = '', $sort = '') {
+    public function countData($table, $search_sql = '', $groupby = '', $orderby = '', $sort = '', $join_db = '', $join_where = '', $join_type = '') {
         $this->db->select('*');
+        if($join_db && $join_where){
+            $this->db->join($join_db, $join_where, $join_type);
+        }
         if ($search_sql) {
             if (is_array($search_sql)) {
                 /* $search = array('field'=>'value') */
@@ -157,13 +163,14 @@ class Csz_model extends CI_Model {
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$groupby   Group by field or NULL 
      * @param	string	$join_db   Table to join or NULL 
-     * @param	string	$join_where   Join condition or NULL 
+     * @param	string	$join_where   Join condition or NULL  
+     * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL
      * @return	Object or FALSE
      */
-    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '') {
+    public function getValue($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '', $join_type = '') {
         $this->db->select($sel_field);
         if($join_db && $join_where){
-            $this->db->join($join_db, $join_where);
+            $this->db->join($join_db, $join_where, $join_type);
         }
         if($where_field || $where_val){
             if (is_array($where_field) && is_array($where_val)) {
@@ -171,7 +178,11 @@ class Csz_model extends CI_Model {
                     $this->db->where($where_field[$i], $where_val[$i]);
                 }
             } else {
-                $this->db->where($where_field, $where_val);
+                if($where_val){
+                    $this->db->where($where_field, $where_val);
+                }else{
+                    $this->db->where($where_field);
+                }
             }
         }
         if ($groupby) {
@@ -214,13 +225,16 @@ class Csz_model extends CI_Model {
      * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
      * @param	string	$orderby   Order by field or NULL 
      * @param	string	$sort   asc or desc or NULL 
-     * @param	string	$groupby   Group by field or NULL 
+     * @param	string	$groupby   Group by field or NULL  
+     * @param	string	$join_db   Table to join or NULL 
+     * @param	string	$join_where   Join condition or NULL  
+     * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL
      * @return	Array or FALSE
      */
-    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '') {
+    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '', $join_type = '') {
         $this->db->select($sel_field);
         if($join_db && $join_where){
-            $this->db->join($join_db, $join_where);
+            $this->db->join($join_db, $join_where, $join_type);
         }
         if($where_field || $where_val){
             if (is_array($where_field) && is_array($where_val)) {
@@ -228,7 +242,11 @@ class Csz_model extends CI_Model {
                     $this->db->where($where_field[$i], $where_val[$i]);
                 }
             } else {
-                $this->db->where($where_field, $where_val);
+                if($where_val){
+                    $this->db->where($where_field, $where_val);
+                }else{
+                    $this->db->where($where_field);
+                }
             }
         }
         if ($groupby) {
@@ -286,6 +304,7 @@ class Csz_model extends CI_Model {
         } else {
             return 0;
         }
+        $this->db->close();
     }
     
     /**
@@ -321,6 +340,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
+        $this->db->close();
     }
 
     /**
@@ -336,7 +356,7 @@ class Csz_model extends CI_Model {
             $cache_time = 1;
             $this->db->limit(1, 0);
             $query = $this->db->get('settings');
-            if ($query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() !== 0) {
                 $row = $query->row();
                 $cache_time = $row->pagecache_time;
             } else {
@@ -344,6 +364,7 @@ class Csz_model extends CI_Model {
             }
             if($cache_time == 0) $cache_time = 1;
             $this->cache->save('config', $row, ($cache_time * 60));
+            $this->db->close();
         }
         return $this->cache->get('config');
     }
@@ -362,6 +383,7 @@ class Csz_model extends CI_Model {
             $row = $query->row();
             return $row->admin_lang;
         }
+        $this->db->close();
     }
 
     /**
@@ -376,9 +398,11 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("lang_iso", $lang);
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->row();
             return $row->country_iso;
+        }else{
+            return FALSE;
         }
     }
 
@@ -394,9 +418,31 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("pages_id", $id);
         $query = $this->db->get('pages');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->row();
             return $row->page_url;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * getFirstPagesActive
+     *
+     * Private function for get first page active for default
+     *
+     * @return	String or FALSE if not found
+     */
+    private function getFirstPagesActive(){
+        $this->db->where("active", '1');
+        $this->db->limit(1, 0);
+        $this->db->order_by('pages_id ASC');
+        $query = $this->db->get('pages');
+        if (!empty($query) && $query->num_rows() !== 0) {
+            $row = $query->row();
+            return $row->page_url;
+        } else {
+            return FALSE;
         }
     }
 
@@ -409,16 +455,28 @@ class Csz_model extends CI_Model {
      * @return	String or FALSE if not found
      */
     public function getDefualtPage($lang) {
-        $this->db->where("lang_iso = '" . $lang . "' AND active = '1'", '');
-        $this->db->limit(1, 0);
-        $this->db->order_by('pages_id ASC');
-        $query = $this->db->get('pages');
-        if ($query->num_rows() !== 0) {
-            $row = $query->row();
-            return $row->page_url;
-        } else {
-            return FALSE;
-        }
+        if(!$lang){ $lang = $this->getDefualtLang(); }
+        $nav = $this->getValue('pages_id', 'page_menu', "lang_iso = '" . $lang . "' AND active = '1' AND drop_page_menu_id = '0' AND pages_id != '0' AND position = '0'", '', 1, 'arrange', 'asc');
+        if($nav !== FALSE){
+            $this->db->where("pages_id", $nav->pages_id);
+            $this->db->limit(1, 0);
+            $query = $this->db->get('pages');
+            if (!empty($query) && $query->num_rows() !== 0) {
+                return $query->row()->page_url;
+            } else {
+                return $this->getFirstPagesActive();
+            }
+        }else{
+            $this->db->where("lang_iso = '" . $lang . "' AND active = '1'", '');
+            $this->db->limit(1, 0);
+            $this->db->order_by('pages_id ASC');
+            $query = $this->db->get('pages');
+            if (!empty($query) && $query->num_rows() !== 0) {
+                return $query->row()->page_url;
+            } else {
+                return $this->getFirstPagesActive();
+            }
+        }       
     }
 
     /**
@@ -430,10 +488,10 @@ class Csz_model extends CI_Model {
      */
     public function getDefualtLang() {
         $this->db->where('active', 1);
-        $this->db->order_by("lang_iso_id", "asc");
+        $this->db->order_by("arrange", "asc");
         $this->db->limit(1, 0);
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->row();
             return $row->lang_iso;
         }
@@ -451,7 +509,11 @@ class Csz_model extends CI_Model {
         $this->db->where("lang_iso", $lang_iso);
         $this->db->where("active", 1);
         $query = $this->db->get('lang_iso');
-        return $query->num_rows();
+        if(!empty($query)){
+            return $query->num_rows();
+        }else{
+            return 0;
+        }
     }
 
     /**
@@ -486,9 +548,9 @@ class Csz_model extends CI_Model {
         $this->db->select("*");
         if ($active)
             $this->db->where("active", 1);
-        $this->db->order_by("lang_iso_id", "asc");
+        $this->db->order_by("arrange", "asc");
         $query = $this->db->get('lang_iso');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -511,7 +573,7 @@ class Csz_model extends CI_Model {
             $this->db->where("active", 1);
             $this->db->limit(1, 0);
             $query = $this->db->get('pages');
-            if ($query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() !== 0) {
                 $row = $query->row();
             } else {
                 $row = FALSE;
@@ -533,19 +595,20 @@ class Csz_model extends CI_Model {
      *
      * @param	int	$drop_page_menu_id    1 = drop menu, 0 = main menu
      * @param	string	$lang    language code
+     * @param	int	$position    menu position  0 = Top, 1 = Bottom
+     * @param	bool	$backend    get value for backend, Default is FALSE
      * @return	Object or FALSE id not found
      */
-    public function main_menu($drop_page_menu_id = 0, $lang = '') {
-        if ($drop_page_menu_id) {
-            $this->db->where("drop_page_menu_id", $drop_page_menu_id);
-        } else {
-            $this->db->where("drop_page_menu_id", 0);
-        }
+    public function main_menu($drop_page_menu_id = 0, $lang = '', $position = 0, $backend = FALSE) {
+        $this->db->where("drop_page_menu_id", $drop_page_menu_id);
+        $this->db->where("position", $position);
         $this->db->where("lang_iso", $lang);
-        $this->db->where("active", 1);
+        if($backend === FALSE){
+            $this->db->where("active", 1);
+        }
         $this->db->order_by("arrange", "asc");
         $query = $this->db->get('page_menu');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -565,7 +628,7 @@ class Csz_model extends CI_Model {
         $this->db->where("active", 1);
         $this->db->order_by("social_name", "asc");
         $query = $this->db->get('footer_social');
-        if ($query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() !== 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -590,26 +653,32 @@ class Csz_model extends CI_Model {
     /**
      * coreCss
      *
-     * Function for load core css
+     * Function for load core css and more css
      *
-     * @param	string	$more_css    additional css
+     * @param	string	$more_css    additional css (string type for single css file or text style only. If you hve many css file please use array)
+     * @param	bool	$more_include    for include the css file or FALSE
      * @return	String
      */
-    public function coreCss($more_css = '') {
+    public function coreCss($more_css = '', $more_include = TRUE) {
         $core_css = '<link rel="canonical" href="' . base_url(uri_string()) . '" />' . "\n";
-        $core_css.= link_tag($this->config->item('assets_url').'/css/corecss.min.css');
+        $core_css.= '<link href="' . $this->Csz_model->base_link().'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
         $core_css.= link_tag($this->config->item('assets_url').'/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/js/plugins/select2/select2.min.css');
         if (!empty($more_css)) {
-            if (is_array($more_css)) {
-                foreach ($more_css as $value) {
-                    if ($value) {
-                        $core_css.= link_tag($value);
+            if($more_include !== FALSE){
+                if (is_array($more_css)) {
+                    foreach ($more_css as $value) {
+                        if ($value) {
+                            $core_css.= link_tag($value);
+                        }
                     }
+                } else {
+                    $core_css.= link_tag($more_css);
                 }
-            } else {
-                $core_css.= link_tag($more_css);
+            }else{
+                $more_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $more_css);
+                $core_css.= '<style type="text/css">'.$more_css.'</style>';
             }
         }
         return $core_css;
@@ -618,26 +687,32 @@ class Csz_model extends CI_Model {
     /**
      * coreJs
      *
-     * Function for load core js
+     * Function for load core js and more js
      *
-     * @param	string	$more_js    additional js
+     * @param	string	$more_js    additional js (string type for single js file or text style only. If you hve many js file please use array)
+     * @param	bool	$more_include    for include the js file or FALSE
      * @return	String
      */
-    public function coreJs($more_js = '') {
+    public function coreJs($more_js = '', $more_include = TRUE) {
         $config = $this->load_config();
-        $core_js = '<script type="text/javascript" src="' . $this->config->item('assets_url'). '/js/corejs.min.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . $this->Csz_model->base_link().'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . $this->config->item('assets_url'). '/js/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});</script>';
         if (!empty($more_js)) {
-            if (is_array($more_js)) {
-                foreach ($more_js as $value) {
-                    if ($value) {
-                        $core_js.= '<script type="text/javascript" src="' . $value . '"></script>';
+            if($more_include !== FALSE){
+                if (is_array($more_js)) {
+                    foreach ($more_js as $value) {
+                        if ($value) {
+                            $core_js.= '<script type="text/javascript" src="' . $value . '"></script>';
+                        }
                     }
+                } else {
+                    $core_js.= '<script type="text/javascript" src="' . $more_js . '"></script>';
                 }
-            } else {
-                $core_js.= '<script type="text/javascript" src="' . $more_js . '"></script>';
+            }else{
+                $more_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $more_js);
+                $core_js.= '<script type="text/javascript">'.str_replace('<script ', '</script><script ', $more_js).'</script>';
             }
         }
         return $core_js;
@@ -651,25 +726,30 @@ class Csz_model extends CI_Model {
      * @param	string	$desc_txt    page description
      * @param	string	$keywords    page keyword
      * @param	string	$title    page title
-     * @param	string	$article_img    page article image url
+     * @param	string	$img_path    page article image url path without base_url() . 'photo/'
+     * @param	string	$more_meta    more meta tag text
      * @return	String
      */
-    public function coreMetatags($desc_txt, $keywords, $title, $article_img = '') {
+    public function coreMetatags($desc_txt, $keywords, $title, $img_path = '', $more_meta = '') {
         $config = $this->load_config();
         $og_image = '';
         $og_type = '';
-        if ($article_img) {
-            $og_image = BASE_URL . '/photo/plugin/article/' . str_replace(BASE_URL . '/photo/plugin/article/', '', $article_img);
-            $og_type = 'article';
+        if ($img_path) {
+            $og_image = base_url() . 'photo/' . str_replace(base_url() . 'photo/', '', $img_path);
+            if (strpos($img_path, 'article') !== false) {
+                $og_type = 'article'; 
+            }else{
+                $og_type = 'website';
+            }
         } else {
             $og_type = 'website';
             if ($config->og_image) {
-                $og_image = BASE_URL . '/photo/logo/' . $config->og_image;
+                $og_image = base_url() . 'photo/logo/' . $config->og_image;
             } else {
                 if ($config->site_logo) {
-                    $og_image = BASE_URL . '/photo/logo/' . $config->site_logo;
+                    $og_image = base_url() . 'photo/logo/' . $config->site_logo;
                 } else {
-                    $og_image = $this->config->item('assets_url') . '/images/logo.png';
+                    $og_image = base_url() . 'photo/no_image.png';
                 }
             }
         }
@@ -686,7 +766,7 @@ class Csz_model extends CI_Model {
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
             array('name' => 'og:type', 'content' => $og_type, 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
-            array('name' => 'og:url', 'content' => BASE_URL . '/' . $this->uri->uri_string(), 'type' => 'property'),
+            array('name' => 'og:url', 'content' => $this->Csz_model->base_link(). '/' . $this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
             array('name' => 'twitter:card', 'content' => 'summary'),
             array('name' => 'twitter:title', 'content' => $title),
@@ -699,6 +779,9 @@ class Csz_model extends CI_Model {
         $return_meta = meta($meta);
         if ($config->fbapp_id) {
             $return_meta.= '<meta property="fb:app_id" content="' . $config->fbapp_id . '" />' . "\n";
+        }
+        if($more_meta){
+            $return_meta.= $more_meta . "\n";
         }
         return $return_meta;
     }
@@ -777,11 +860,11 @@ class Csz_model extends CI_Model {
             $this->db->where('NOW() BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)', '', FALSE); /* For date range between start to end */
             $getBanner = $this->getValue('*', 'banner_mgt', "active = '1' AND banner_mgt_id = '" . $id . "'", '', 1);
             if ($getBanner !== FALSE) {
-                ($getBanner->img_path && $getBanner->img_path != NULL) ? $img = BASE_URL . '/photo/banner/' . $getBanner->img_path : $img = BASE_URL . '/photo/no_image.png';
+                ($getBanner->img_path && $getBanner->img_path != NULL) ? $img = base_url() . 'photo/banner/' . $getBanner->img_path : $img = base_url() . 'photo/no_image.png';
                 ($getBanner->nofollow && $getBanner->nofollow != NULL) ? $nofol = ' rel="nofollow external"' : $nofol = '';
                 ($getBanner->width && $getBanner->width != NULL) ? $width = ' width="' . $getBanner->width . '"' : $width = '';
                 ($getBanner->height && $getBanner->height != NULL) ? $height = ' height="' . $getBanner->height . '"' : $height = '';
-                $html = '<a target="_blank" href="' . BASE_URL . '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '"></a>';
+                $html = '<a target="_blank" href="' . $this->Csz_model->base_link(). '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '"></a>';
                 $content = str_replace('[?]{=banner:' . $getBanner->banner_mgt_id . '}[?]', $html, $content);
             }            
             if($this->load_config()->pagecache_time == 0){
@@ -840,16 +923,13 @@ class Csz_model extends CI_Model {
             if(empty($widget->widget_content) || $widget->widget_content == NULL){
                 $widget->widget_content = '<div class="row">
                                                 <div class="col-md-3">
-                                                    {link_img}
+                                                    <a href="{sub_url}" title="{title}"><img class="lazy img-responsive img-thumbnail" data-src="{photo}" alt="{title}"></a>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <a href="{sub_url}" title="{title}"><h4>{title}</h4></a><br>
                                                     <p>{short_desc}</p>
                                                 </div>
                                             </div><hr>';
-            }
-            if(empty($widget->widget_seemore) || $widget->widget_seemore == NULL){
-                $widget->widget_seemore = '<div class="text-right"><a href="{main_url}" class="btn btn-primary btn-sm">{readmore_text}</a></div>';
             }
             if(empty($widget->widget_close) || $widget->widget_close == NULL){
                 $widget->widget_close = '</div></div>';
@@ -866,12 +946,22 @@ class Csz_model extends CI_Model {
      * Function for check and replace tag in widget html
      *
      * @param	string  $html   html input
-     * @param	string or array $tag   tag in widget
-     * @param	string or array	$replace   replace value
+     * @param	object	$item   the item object get from xml
      * @return	string
      */
-    public function replaceTagInWidget($html, $tag, $replace) {
-        $html = str_replace($tag, $replace, $html);
+    public function replaceTagInWidget($html, $item) {
+        $tags = array();
+        preg_match_all("/{([^\s]+)}/", $html, $tags, PREG_SET_ORDER);
+        if(!empty($tags)){
+            $tag_r = array();
+            $replace_r = array();
+            foreach ($tags as $value) {
+                $tag_r[] = $value[0];
+                $item_name = $value[1];
+                $replace_r[] = $item->$item_name;
+            }
+            $html = str_replace($tag_r, $replace_r, $html);
+        }
         return $html;  
     }
 
@@ -889,15 +979,14 @@ class Csz_model extends CI_Model {
         if (!$this->cache->get('widget_'.$this->encodeURL($wid_name))) {
             $getWidget = $this->getWidgetFromName($wid_name);
             if ($getWidget !== FALSE) {
-                $html = $this->replaceTagInWidget($getWidget->widget_open, '{widget_header_name}', $getWidget->widget_name);
+                $html = str_replace('{widget_header_name}', $getWidget->widget_name, $getWidget->widget_open);
                 if ($this->is_url_exist($getWidget->xml_url) !== FALSE) {
                     $xml = @simplexml_load_file($getWidget->xml_url);
                     if ($xml !== FALSE) {
                         if ($xml->plugin[0]->null == 0) {
                             $i = 1;
                             foreach ($xml->plugin[0]->item as $item) {
-                                $link_img = '<a href="' . $item->sub_url . '" title="' . $item->title . '"><img class="lazy img-responsive img-thumbnail" data-src="' . $item->photo . '" alt="' . $item->title . '"></a>';
-                                $html.= $this->replaceTagInWidget($getWidget->widget_content, array('{link_img}', '{sub_url}', '{title}', '{short_desc}'), array($link_img, $item->sub_url, $item->title, $item->short_desc));
+                                $html.= $this->replaceTagInWidget($getWidget->widget_content, $item);
                                 if ($i == $getWidget->limit_view) {
                                     break;
                                 }
@@ -906,7 +995,7 @@ class Csz_model extends CI_Model {
                         } else {
                             $html.= '<h4 class="error">' . $this->getLabelLang('shop_notfound') . '</h4>';
                         }
-                        $html.= $this->replaceTagInWidget($getWidget->widget_seemore, array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')));                    
+                        $html.= str_replace(array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')), $getWidget->widget_seemore);         
                     }
                 }
                 $html.= $getWidget->widget_close;
@@ -978,12 +1067,12 @@ class Csz_model extends CI_Model {
                 $sts_msg = '';
             }
             $html = $sts_msg;
-            $action_url = BASE_URL . '/formsaction/' . $form_data->form_main_id;
+            $action_url = $this->Csz_model->base_link(). '/formsaction/' . $form_data->form_main_id;
             $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
             if ($CI->config->item('csrf_protection') === TRUE && strpos($action_url, $CI->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get')) {
                 $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
             }
-            $cururl = str_replace(BASE_URL . '/', '', current_url());
+            $cururl = str_replace($this->Csz_model->base_link(). '/', '', current_url());
             $totSegments = $this->uri->total_segments();
             if (is_numeric($this->uri->segment($totSegments))) {
                 $cururl = str_replace('/'.$this->uri->segment($totSegments), '', $cururl);
@@ -1366,6 +1455,7 @@ class Csz_model extends CI_Model {
                 return 'IP_BANNED';
             }
         }
+        $this->db->close();
     }
     
     /**
@@ -1412,6 +1502,7 @@ class Csz_model extends CI_Model {
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->insert('login_logs', $data);
             unset($data);
+            $this->db->close();
         }
     }
 
@@ -1434,11 +1525,11 @@ class Csz_model extends CI_Model {
             $this->db->where("name", $name);
             $this->db->limit(1, 0);
             $query = $this->db->get("general_label");
-            if ($query && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() !== 0) {
                 if ($query->row()->$sel_name)
                     return $query->row()->$sel_name;
                 else
-                    return "This label is untranslated!";
+                    return "This label is untranslated on General Label!";
             }else {
                 return "This language isn't sync! (lang_" . $lang . ")";
             }
@@ -1543,11 +1634,13 @@ class Csz_model extends CI_Model {
      * @param	string	$from_email    from email address
      * @param	string	$from_name    from name
      * @param	string	$bcc    bcc to email address
+     * @param	string	$reply_to    reply email address
      * @param	string	$alt_message    alternate message when html not working
      * @param	array	$attach_file    attach files with array
+     * @param	bool	$save_log    for save email logs into db
      * @return	string
      */
-    public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $bcc = '', $alt_message = '', $attach_file = array()) {
+    public function sendEmail($to_email, $subject, $message, $from_email, $from_name = '', $bcc = '', $reply_to = '', $alt_message = '', $attach_file = array(), $save_log = TRUE) {
         $this->load->library('email');
         $load_conf = $this->load_config();
         $protocal = $load_conf->email_protocal;
@@ -1576,6 +1669,9 @@ class Csz_model extends CI_Model {
         if ($bcc) {
             $this->email->bcc($bcc);
         }
+        if($reply_to){
+            $this->email->reply_to($reply_to);
+        }
         if ($alt_message) {
             $this->email->set_alt_message($alt_message);
         }
@@ -1589,18 +1685,20 @@ class Csz_model extends CI_Model {
         } else {
             $result = $this->email->print_debugger(FALSE);
         }
-        $data = array(
-            'to_email' => $to_email,
-            'from_email' => $from_email,
-            'from_name' => $from_name,
-            'subject' => $subject,
-            'message' => $message,
-            'email_result' => $result,
-        );
-        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
-        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->insert('email_logs', $data);
+        if($save_log === TRUE){
+            $data = array(
+                'to_email' => $to_email,
+                'from_email' => $from_email,
+                'from_name' => $from_name,
+                'subject' => $subject,
+                'message' => $message,
+                'email_result' => $result,
+            );
+            $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+            $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->insert('email_logs', $data);
+        }
         return $result;
     }
 
@@ -1738,7 +1836,7 @@ class Csz_model extends CI_Model {
      */
     public function cleanEmailFormat($email){
         $search = array('&','/',';','\\','"',"'",'|',' ','{','}');
-        $email = str_replace($search, '', $email);
+        $email = str_replace($search, '', trim($email));
         return $this->security->xss_clean($email);
     }
     
@@ -1885,16 +1983,108 @@ class Csz_model extends CI_Model {
      * @return	string or FALSE
      */
     public function getPluginConfig($config_filename, $index_name) {
+        $plugin_config = array();
         $file_path = APPPATH.'/config/plugin/'.str_replace('.php', '', $config_filename).'.php';
         if (!file_exists($file_path)){
             return FALSE;
 	}else{
             include($file_path);
-            if (isset($plugin_config) && is_array($plugin_config)) {
-                return $plugin_config[$index_name];
+            if (isset($plugin_config) && is_array($plugin_config) && array_key_exists($index_name, $plugin_config) === TRUE) {
+                return $plugin_config[strval($index_name)];
             }else{
                 return FALSE;
             }
+        }
+    }
+    
+    /**
+     * base_link
+     *
+     * Function for get the base url link
+     *
+     * @return	string
+     */
+    public function base_link() {
+        $baseurl = rtrim(base_url(), '/');
+        return (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
+    }
+    
+    /**
+     * chkPrivateKey
+     *
+     * Function for check the private key
+     *
+     * @param	string	$private_key    private key
+     * @return	bool
+     */
+    public function chkPrivateKey($private_key = '') {
+        if(!$private_key){ $private_key = 'false'; }
+        $this->db->where("bf_private_key", $private_key);
+        $this->db->limit(1, 0);
+        $query = $this->db->get("login_security_config");
+        if(!empty($query) && $query->num_rows() !== 0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * chkVerUpdate
+     *
+     * Function for check version for update
+     *
+     * @param	string	$cur_ver    current version
+     * @param	string	$last_ver    latest version
+     * @return	bool
+     */
+    public function chkVerUpdate($cur_ver, $last_ver){
+        if (version_compare($cur_ver, $last_ver, '<') === TRUE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    private function chkNextVer($cur_ver, $last_ver){
+        $cur_r = explode('.', $cur_ver);
+        if ($cur_ver == $last_ver) {
+            return $last_ver;
+        } else {
+            if ($cur_r[1] <= 9 && $cur_r[2] < 9) {
+                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
+            } else if ($cur_r[1] < 9 && $cur_r[2] == 9) {
+                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
+            } else if ($cur_r[1] == 9 && $cur_r[2] == 9) {
+                return ($cur_r[0] + 1) . '.0.0';
+            } else {
+                return FALSE;
+            }
+        }
+    }
+
+
+    /**
+     * findNextVersion
+     *
+     * Function for check version for update
+     *
+     * @param	string	$cur_txt    current version
+     * @param	string	$last_ver    latest version
+     * @return	string or false
+     */
+    public function findNextVersion($cur_txt, $last_ver){
+        /* sub version is limit x.9.9 */
+        $cur_xml = explode(' ', $cur_txt);
+        if($cur_xml[0] && $last_ver){
+            $cur_ver = str_replace(' ', '.', $cur_xml[0]);
+            if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
+                return $cur_xml[0];
+            }else{
+                return $this->chkNextVer($cur_ver, $last_ver);
+            }
+        }else{
+            return FALSE;
         }
     }
     

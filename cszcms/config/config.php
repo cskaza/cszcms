@@ -43,7 +43,7 @@ $config['assets_url'] = BASE_URL.'/assets';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = (HTACCESS_FILE === FALSE) ? 'index.php' : '';
 
 /*
 |--------------------------------------------------------------------------
@@ -457,7 +457,12 @@ $config['csrf_token_name'] = 'csrf_csz';
 $config['csrf_cookie_name'] = 'csrf_cookie_csz';
 $config['csrf_expire'] = 3600;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array('admin/upgrade/downloadErrLog');
+$config['csrf_exclude_uris'] = array(
+    'admin/upgrade/downloadErrLog',
+    'plugin/[A-z0-9]+/success/[A-z0-9]+',
+    'plugin/[A-z0-9]+/paypalIPN/[A-z0-9]+',
+    'admin/admin/saveDraft',
+);
 
 /*
 |--------------------------------------------------------------------------

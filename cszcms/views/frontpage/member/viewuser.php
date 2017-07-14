@@ -18,9 +18,9 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 text-center">
                             <?php if ($users->picture) { ?>
-                                <img src="<?php echo BASE_URL . '/photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="160" height="160">
+                                <img src="<?php echo base_url() . 'photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="160" height="160">
                             <?php } else { ?>
-                                <img src="<?php echo BASE_URL . '/photo/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="160" height="160">
+                                <img src="<?php echo base_url() . 'photo/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="160" height="160">
                             <?php } ?>
                             <br><br>
                         </div>
@@ -38,7 +38,7 @@
                     </div>
                     <br>
                 </div>
-                <div class="panel-footer"><a href="<?php echo BASE_URL.'/member/newpm/' . $users->user_admin_id; ?>" class="btn btn-primary" role="button"><i class="glyphicon glyphicon-envelope"></i> <?php echo $this->Csz_model->getLabelLang('pm_send_txt') ?></a></div>
+                <div class="panel-footer"><a href="<?php echo $this->Csz_model->base_link().'/member/newpm/' . $users->user_admin_id; ?>" class="btn btn-primary" role="button"><i class="glyphicon glyphicon-envelope"></i> <?php echo $this->Csz_model->getLabelLang('pm_send_txt') ?></a></div>
             </div>
         </div>
     </div>

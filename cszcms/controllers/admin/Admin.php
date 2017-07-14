@@ -97,7 +97,7 @@ class Admin extends CI_Controller {
             query: {
               "ids": VIEW_ID,
               "dimensions": "ga:fullReferrer",
-              "metrics": "ga:sessions",
+              "metrics": "ga:sessions,ga:pageviews",
               "start-date": "30daysAgo",
               "end-date": "today",
               "sort": "-ga:sessions",
@@ -120,7 +120,7 @@ class Admin extends CI_Controller {
               type: "GEO",
               container: "timeline-map",
               keepAspectRatio: true,
-              width: 100 + "%",
+              width: "100%",
             }
           });
           var timeline2 = new gapi.analytics.googleCharts.DataChart({
@@ -165,6 +165,21 @@ class Admin extends CI_Controller {
               container: "timeline-source",
             }
           });
+          var allpagedata = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:pagePath",
+              "metrics": "ga:sessions,ga:pageviews",
+              "start-date": "30daysAgo",
+              "end-date": "today",
+              "sort": "-ga:sessions",
+            },
+            chart: {
+              type: "TABLE",
+              container: "timeline-allpage"
+            }
+          });
           /* Step 6: Hook up the components to work together. */
           gapi.analytics.auth.on("success", function(response) {
             timeline.set().execute();
@@ -172,6 +187,7 @@ class Admin extends CI_Controller {
             timeline3.set().execute();
             referdata.set().execute();
             timeline4.set().execute();
+            allpagedata.set().execute();
           });
         });
         </script>');
@@ -223,7 +239,7 @@ class Admin extends CI_Controller {
                 if($this->session->userdata('cszblogin_cururl')){
                     redirect($this->session->userdata('cszblogin_cururl'), 'refresh');
                 }else{
-                    redirect(BASE_URL.'/admin', 'refresh');
+                    redirect($this->Csz_model->base_link().'/admin', 'refresh');
                 }
             } else {
                 $this->Csz_model->saveLogs($email, 'Backend Login Invalid!', $result);
@@ -235,7 +251,7 @@ class Admin extends CI_Controller {
     }
 
     public function logout() {
-        $this->Csz_model->logout(BASE_URL.'/admin');
+        $this->Csz_model->logout($this->Csz_model->base_link().'/admin');
     }
 
     public function social() {
@@ -317,7 +333,7 @@ class Admin extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('upload_file', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/uploadindex/';
+        $base_url = $this->Csz_model->base_link(). '/admin/uploadindex/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
@@ -426,14 +442,58 @@ class Admin extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('upload_file', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/tinyMCEfile/';
+        $base_url = $this->Csz_model->base_link(). '/admin/tinyMCEfile/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
         ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 0;
         $data['showfile'] = $this->Csz_admin_model->getIndexData('upload_file', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr);
-        $data['total_row'] = $total_row; 
+        $data['total_row'] = $total_row;
+        $data['core_css'] = $this->Csz_admin_model->coreCss();
+        $data['core_js'] = $this->Csz_admin_model->coreJs();
         $this->load->view('admin/tinymce_index', $data);
+    }
+    
+    public function saveDraft() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('save');
+        if(!empty($_POST) && is_array($_POST)){
+            $formarr = array();
+            $referrer = $this->input->post("current_url");
+            foreach ($_POST as $key => $value) {
+                if($key && $value && $key != 'csrf_csz' && $key != 'current_url'){
+                    if($key == 'content'){
+                        $content1 = str_replace('&lt;', '<', $value);
+                        $value = str_replace('&gt;', '>', $content1);
+                    }
+                    $formarr[$key] = $value;
+                }
+            }
+            if(!empty($formarr) && !empty($referrer)){
+                $input_data = base64_encode(json_encode($formarr));
+                $chk_draft = $this->Csz_model->countData('save_formdraft', "form_url = '".$referrer."'");
+                if($chk_draft > 0){
+                    $this->db->set('submit_array', $input_data);
+                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->where('form_url', $referrer);
+                    $this->db->where('user_admin_id', $this->session->userdata('user_admin_id'));
+                    $this->db->update('save_formdraft');
+                }else{
+                    $this->db->set('form_url', $referrer);
+                    $this->db->set('submit_array', $input_data);
+                    $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
+                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->insert('save_formdraft');
+                }       
+                $this->db->cache_delete_all();
+                echo "SUCCESS";
+            }else{
+                echo "FAIL";
+            }
+        }else{
+            echo "FAIL";
+        }
+        exit(1);
     }
 
 }

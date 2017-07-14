@@ -52,7 +52,7 @@ class Groups extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_groups');
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/groups/';
+        $base_url = $this->Csz_model->base_link(). '/admin/groups/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);

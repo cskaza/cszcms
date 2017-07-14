@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_header') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('forms_header') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link()?>/admin/forms/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('forms_addnew') ?></a></div>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -59,7 +59,7 @@
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $sendmail . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $send_to_visitor . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align:middle;">' . $captcha . '</td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL.'/admin/forms/view/' . $u['form_main_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp;&nbsp; <a href="'.BASE_URL.'/admin/forms/edit/' . $u['form_main_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.BASE_URL.'/admin/forms/delete/'.$u['form_main_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link().'/admin/forms/view/' . $u['form_main_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->lang->line('btn_view').'</a> &nbsp;&nbsp;&nbsp; <a href="'.$this->Csz_model->base_link().'/admin/forms/edit/' . $u['form_main_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.$this->Csz_model->base_link().'/admin/forms/delete/'.$u['form_main_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         } ?>
                     <?php } ?>

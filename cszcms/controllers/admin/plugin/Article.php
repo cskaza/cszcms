@@ -83,7 +83,7 @@ class Article extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('article_db', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/plugin/article/article/';
+        $base_url = $this->Csz_model->base_link(). '/admin/plugin/article/article/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
@@ -155,7 +155,8 @@ class Article extends CI_Controller {
 
     public function artadd() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('article');        
+        $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
@@ -192,6 +193,8 @@ class Article extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Article_model->insert();
+            $this->output->delete_cache('plugin/article/rss');
+            $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
         }
@@ -251,6 +254,8 @@ class Article extends CI_Controller {
                     //Validation passed
                     //Add the user
                     $this->Article_model->artupdate($this->uri->segment(5));
+                    $this->output->delete_cache('plugin/article/rss');
+                    $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
                     $this->db->cache_delete_all();
                     redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
                 }
@@ -303,6 +308,8 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
+            $this->output->delete_cache('plugin/article/rss');
+            $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }

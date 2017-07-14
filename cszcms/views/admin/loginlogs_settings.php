@@ -11,8 +11,12 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-4 col-md-4">
+        <div class="h2 sub-header"><?php echo $this->lang->line('bf_private_key') ?></div>
+        <a href="<?php echo $this->Csz_model->base_link().'/admin/bfsettings/genPrivateKey' ?>" class="btn btn-success" title="<?php echo $this->lang->line('bf_gen_private_key') ?>" onclick="return confirm('<?php echo $this->lang->line('bf_gen_private_key_confirm') ?>');"><?php echo $this->lang->line('bf_gen_private_key') ?></a><br><br>
+        <b><?php echo $this->lang->line('bf_private_key') ?>: </b><pre><em><?php if(!empty($settings->bf_private_key) && $settings->bf_private_key != NULL) echo $settings->bf_private_key; else echo '-'; ?></em></pre>
+        <hr>
         <div class="h2 sub-header"><?php echo  $this->lang->line('bf_settings') ?></div>
-        <?php echo form_open(BASE_URL . '/admin/bfsettings/save'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/bfsettings/save'); ?>
         <div class="control-group">
             <label class="control-label" for="bf_protect_period"><?php echo $this->lang->line('bf_period_time'); ?></label>
             <div class="controls">
@@ -31,6 +35,11 @@
                     $data['90'] = '90 '.$this->lang->line('settings_pagecache_time_min');
                     $data['120'] = '120 '.$this->lang->line('settings_pagecache_time_min');
                     $data['180'] = '180 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['240'] = '240 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['300'] = '300 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['360'] = '360 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['720'] = '720 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['1440'] = '1440 '.$this->lang->line('settings_pagecache_time_min');
                 echo form_dropdown('bf_protect_period', $data, $settings->bf_protect_period, $att); ?>
             </div> <!-- /controls -->
         </div> <!-- /control-group -->
@@ -42,6 +51,7 @@
                     $data = array();
                     $data['2'] = '2';
                     $data['3'] = '3';
+                    $data['4'] = '4';
                     $data['5'] = '5';
                     $data['10'] = '10';
                     $data['15'] = '15';
@@ -69,7 +79,7 @@
     </div>
     <div class="col-lg-4 col-md-4">
         <div class="h2 sub-header"><?php echo $this->lang->line('bf_white_list') ?></div>
-        <?php echo form_open(BASE_URL . '/admin/bfsettings/whiteipsave'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/bfsettings/whiteipsave'); ?>
         <div class="form-group">
             <label><?php echo $this->lang->line('ip_address') ?></label>
             <div class="input-group">
@@ -113,7 +123,7 @@
                         foreach ($whitelist as $u) {
                             echo '<tr>';
                             echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].'</span></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/bfsettings/whiteipdel/'.$u['whitelist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/bfsettings/whiteipdel/'.$u['whitelist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
                             echo '</tr>';
                         }
                         ?>
@@ -124,7 +134,7 @@
     </div>
     <div class="col-lg-4 col-md-4">
         <div class="h2 sub-header"><?php echo  $this->lang->line('bf_black_list') ?></div>
-        <?php echo form_open(BASE_URL . '/admin/bfsettings/blackipsave'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/bfsettings/blackipsave'); ?>
         <div class="form-group">
             <label><?php echo $this->lang->line('ip_address') ?></label>
             <div class="input-group">
@@ -168,7 +178,7 @@
                         foreach ($blacklist as $u) {
                             echo '<tr>';
                             echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].'</span></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/bfsettings/blackipdel/'.$u['blacklist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/bfsettings/blackipdel/'.$u['blacklist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
                             echo '</tr>';
                         }
                         ?>

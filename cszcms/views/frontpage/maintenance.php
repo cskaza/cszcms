@@ -7,10 +7,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta name="generator" content="CSZ CMS | Open Source Content Management with responsive" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        <link href="<?php echo BASE_URL ?>/templates/admin/imgs/favicon.ico" rel="shortcut icon" type="image/ico" />
+        <link href="<?php echo base_url() ?>templates/admin/imgs/favicon.ico" rel="shortcut icon" type="image/ico" />
         <title>Site Maintenance! | <?php echo $site_name ?></title>
         <!-- Bootstrap Core CSS -->
-        <link href="<?php echo BASE_URL ?>/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>

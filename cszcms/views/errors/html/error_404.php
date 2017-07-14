@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <span class="copyright">Powered by CSZ CMS | Open Source Content Management with responsive</span>
+                            <span>Powered by CSZ CMS | Open Source Content Management with responsive</span>
                         </div>
                     </div>
                 </div>

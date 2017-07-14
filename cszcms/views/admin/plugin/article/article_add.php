@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('article_new_header').' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
-        <?php echo form_open_multipart(BASE_URL.'/admin/plugin/article/addsave'); ?>     
+        <?php echo form_open_multipart($this->Csz_model->base_link().'/admin/plugin/article/addsave'); ?>     
         <div class="control-group">	
             <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="title"><?php echo $this->lang->line('article_title'); ?>*</label>
@@ -27,7 +27,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('title', '', FALSE)
+                'value' => set_value('title', $this->Csz_admin_model->getDraftArray('title'), FALSE)
             );
             echo form_input($data);
             ?>		
@@ -40,7 +40,7 @@
                 'id' => 'keyword',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('keyword', '', FALSE)
+                'value' => set_value('keyword', $this->Csz_admin_model->getDraftArray('keyword'), FALSE)
             );
             echo form_input($data);
             ?>			
@@ -56,7 +56,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('short_desc', '', FALSE)
+                'value' => set_value('short_desc', $this->Csz_admin_model->getDraftArray('short_desc'), FALSE)
             );
             echo form_input($data);
             ?>
@@ -74,7 +74,7 @@
                     $data[$c['article_db_id']] = $c['category_name'].' ('.$c['lang_iso'].')';
                 }
             }
-            echo form_dropdown('cat_id', $data, '', $att);
+            echo form_dropdown('cat_id', $data, $this->Csz_admin_model->getDraftArray('cat_id'), $att);
             ?>
             </div> <!-- /controls -->
         </div> <!-- /control-group -->
@@ -87,7 +87,7 @@
                                 </div><br><br>';
             ?>
             <label class="control-label" for="content"><?php echo $this->lang->line('article_content'); ?></label>
-            <textarea name="content" id="content" class="form-control body-tinymce"><?php echo $starter_html ?></textarea>
+            <textarea name="content" id="content" class="form-control body-tinymce"><?php if($this->Csz_admin_model->getDraftArray('content')){ echo $this->Csz_admin_model->getDraftArray('content'); }else{ echo $starter_html; } ?></textarea>
         </div> <!-- /control-group -->
         <hr />
         <div class="control-group">		
@@ -113,7 +113,7 @@
                 foreach($lang as $lg){
                     $data[$lg->lang_iso] = $lg->lang_name;
                 }
-                echo form_dropdown('lang_iso', $data, '', $att);
+                echo form_dropdown('lang_iso', $data, $this->Csz_admin_model->getDraftArray('lang_iso'), $att);
                 ?>	
         </div> <!-- /control-group -->
         <br>
@@ -173,13 +173,25 @@
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
         <br><br>
+        <?php
+            $data = array(
+                'type' => 'button',
+                'name' => 'save_draft',
+                'id' => 'save_draft',
+                'class' => 'btn btn-lg btn-warning',
+                'value' => $this->lang->line('btn_save_draft'),
+            );
+            echo form_input($data);
+            ?> <span id="save_draft_res" class="text-success"></span>
+            <input type="hidden" name="current_url" id="current_url" value="<?php echo current_url(); ?>">
+        <br><br>
         <div class="form-actions">
             <?php
             $data = array(
                 'name' => 'submit',
                 'id' => 'submit',
                 'class' => 'btn btn-lg btn-primary',
-                'value' => $this->lang->line('btn_save'),
+                'value' => $this->lang->line('btn_save_exit'),
             );
             echo form_submit($data);
             ?> 

@@ -88,13 +88,13 @@ class Gallery_model extends CI_Model {
     }
     
     public function getFirstImgs($gallery_db_id) {
-        $no_img = BASE_URL.'/photo/no_image.png';
+        $no_img = base_url().'photo/no_image.png';
         if($gallery_db_id){
             $img_rs = $this->Csz_model->getValue('file_upload,gallery_type,youtube_url', 'gallery_picture', "gallery_db_id", $gallery_db_id, 1, 'arrange', 'asc');
             if(!empty($img_rs)){
                 if($img_rs->gallery_type == 'multiimages'){
                     if($img_rs->file_upload){
-                        return BASE_URL.'/photo/plugin/gallery/'.$img_rs->file_upload;
+                        return base_url().'photo/plugin/gallery/'.$img_rs->file_upload;
                     }else{
                         return $no_img;
                     }                   

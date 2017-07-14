@@ -61,6 +61,13 @@ class Csz_referrer {
             $referred_from = $_SESSION[$key];
         }else{
             $referred_from = current_url();
+            if(!empty($_SERVER["HTTP_REFERER"])) {
+                $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+                $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
+                if(($referer_host && $referer_host === $own_host)){
+                    $referred_from = $_SERVER["HTTP_REFERER"];
+                }
+            }
         }
         return $referred_from;
     }

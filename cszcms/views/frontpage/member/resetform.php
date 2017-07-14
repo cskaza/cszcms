@@ -46,13 +46,13 @@
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div> <!-- /control-group -->
                     <br>
-                    <center><button class="btn btn-primary" type="submit" id="forget_submit"><?php echo $this->Csz_model->getLabelLang('member_reset_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-default" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo BASE_URL . '/member' ?>"><?php echo $this->Csz_model->getLabelLang('btn_cancel'); ?></a></center>
+                    <center><button class="btn btn-primary" type="submit" id="forget_submit"><?php echo $this->Csz_model->getLabelLang('member_reset_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-default" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo $this->Csz_model->base_link(). '/member' ?>"><?php echo $this->Csz_model->getLabelLang('btn_cancel'); ?></a></center>
                     <?php echo  form_close() ?>
                     <?php }if($success_chk){ ?>
                         <center>
                             <p class="success"><?php echo $this->Csz_model->getLabelLang('member_forgot_complete'); ?></p>
                             <br>
-                            <a class="btn btn-lg btn-primary" name="reset_back" id="reset_back" href="<?php echo BASE_URL . '/member'?>"><?php echo $this->Csz_model->getLabelLang('btn_back'); ?></a>
+                            <a class="btn btn-lg btn-primary" name="reset_back" id="reset_back" href="<?php echo $this->Csz_model->base_link(). '/member'?>"><?php echo $this->Csz_model->getLabelLang('btn_back'); ?></a>
                         </center>
                     <?php } ?>
                 </div>

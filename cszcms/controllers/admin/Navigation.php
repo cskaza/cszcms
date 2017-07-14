@@ -45,6 +45,14 @@ class Navigation extends CI_Controller{
         $this->template->set('cur_page', $pageURL);
         $this->all_lang = $this->Csz_model->loadAllLang();
     }
+    
+    private function getPosition(){
+        $position = array(
+            0 => $this->lang->line('navpage_position_top'),
+            1 => $this->lang->line('navpage_position_bottom')
+        );
+        return $position;
+    }
 
     public function index(){
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
@@ -58,7 +66,8 @@ class Navigation extends CI_Controller{
             $lang = $this->uri->segment(3);
         }
         //Get menu from database
-        $this->template->setSub('nav', $this->Csz_admin_model->getAllMenu('', $lang));
+        $this->template->setSub('cur_lang', $lang);
+        $this->template->setSub('position', $this->getPosition());
         $this->template->setSub('lang', $this->all_lang);
         $this->load->helper('form');
         //Load the view
@@ -84,6 +93,7 @@ class Navigation extends CI_Controller{
         $this->template->setSub('dropmenu', $this->Csz_admin_model->getDropMenuAll());
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         $this->template->setSub('plugin', $this->Csz_admin_model->getPluginAll());
+        $this->template->setSub('position', $this->getPosition());
         $this->load->helper('form');
         //Load the view
         $this->template->loadSub('admin/nav_add');
@@ -126,6 +136,7 @@ class Navigation extends CI_Controller{
                 //Get navigation from database
                 $this->template->setSub('nav', $nav);
                 $this->template->setSub('plugin', $this->Csz_admin_model->getPluginAll());
+                $this->template->setSub('position', $this->getPosition());
                 $this->load->helper('form');
                 //Load the view
                 $this->template->loadSub('admin/nav_edit');

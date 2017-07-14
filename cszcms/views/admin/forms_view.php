@@ -46,7 +46,7 @@
                                 }
                             }
                             echo '<td class="text-center" style="vertical-align:middle;">' . $u['ip_address'] . '<br><em style="font-size:10px;">('.$u['timestamp_create'].')</em></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.BASE_URL.'/admin/forms/view/'.$this->uri->segment(4).'/delete/' . $u['form_'.$form_name.'_id'] . '"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('forms_delete_msg').'\')" href="'.$this->Csz_model->base_link().'/admin/forms/view/'.$this->uri->segment(4).'/delete/' . $u['form_'.$form_name.'_id'] . '"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         } ?>
                     <?php } ?>

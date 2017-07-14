@@ -9,6 +9,7 @@ $row = $this->Csz_admin_model->load_config();
 <?php echo doctype('html5') ?>
 <html lang="<?php echo $row->admin_lang ?>">
     <head>
+        <meta http-equiv="refresh" content="3660"/>
         <?php echo $meta_tags ?>
         <?php echo link_tag('templates/admin/favicon.ico', 'shortcut icon', 'image/ico'); ?>
         <title><?php echo $title ?></title>
@@ -30,12 +31,12 @@ $row = $this->Csz_admin_model->load_config();
     <body class="hold-transition skin-blue sidebar-mini">
         <?php if($this->session->userdata('user_admin_id') && $this->session->userdata('admin_email') && $this->session->userdata('admin_logged_in')){ ?>
             <?php $users = $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')); /* Get admin user information */
-            ($users->picture) ? $user_img = BASE_URL . '/photo/profile/' . $users->picture : $user_img = BASE_URL . '/photo/no_image.png'; ?>
+            ($users->picture) ? $user_img = base_url() . 'photo/profile/' . $users->picture : $user_img = base_url() . 'photo/no_image.png'; ?>
             <div class="wrapper">
                 <!-- Start topbar -->
                 <header class="main-header">
                     <!-- Logo -->
-                    <a class="logo" href="<?php echo base_url(); ?>admin">
+                    <a class="logo" href="<?php echo $this->Csz_model->base_link().'/admin'; ?>">
                         <!-- mini logo for sidebar mini 50x50 pixels -->
                         <span class="logo-mini"><b>CSZ</b></span>
                         <!-- logo for regular state and mobile devices -->
@@ -67,7 +68,7 @@ $row = $this->Csz_admin_model->load_config();
                                         foreach($unread_msg as $value){ ?>
                                             <!-- start message -->
                                             <li>
-                                              <a href="<?php echo base_url(); ?>admin/pm/view/<?php echo $value['id']; ?>">
+                                              <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm/view/<?php echo $value['id']; ?>">
                                                   <div class="pull-left" style="margin-top:-5px;">
                                                     <i class="fa fa-envelope"></i>
                                                 </div>
@@ -89,7 +90,7 @@ $row = $this->Csz_admin_model->load_config();
                                         <?php } ?>
                                       </ul>
                                     </li>
-                                    <li class="footer"><a href="<?php echo base_url(); ?>admin/pm"><b><?php echo $this->lang->line('pm_seeall_msg') ?></b></a></li>
+                                    <li class="footer"><a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm"><b><?php echo $this->lang->line('pm_seeall_msg') ?></b></a></li>
                                   </ul>
                                 </li>
                                 <li>
@@ -123,10 +124,10 @@ $row = $this->Csz_admin_model->load_config();
                                         <!-- Menu Footer-->
                                         <li class="user-footer">
                                             <div class="pull-left">
-                                                <a href="<?php echo base_url(); ?>admin/users/edit/<?php echo $this->session->userdata('user_admin_id'); ?>" class="btn btn-default btn-flat"><i class="fa fa-edit"></i> <?php echo $this->lang->line('user_edit_header'); ?></a>
+                                                <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/users/edit/<?php echo $this->session->userdata('user_admin_id'); ?>" class="btn btn-default btn-flat"><i class="fa fa-edit"></i> <?php echo $this->lang->line('user_edit_header'); ?></a>
                                             </div>
                                             <div class="pull-right">
-                                                <a href="<?php echo base_url(); ?>admin/logout" class="btn btn-default btn-flat"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('nav_logout'); ?></a>
+                                                <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/logout" class="btn btn-default btn-flat"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('nav_logout'); ?></a>
                                             </div>
                                         </li>
                                     </ul>
@@ -134,9 +135,9 @@ $row = $this->Csz_admin_model->load_config();
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-trash"></i> <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a></li>
-                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
-                                        <li><a href="<?php echo BASE_URL . '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a></li>
+                                        <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearallcache') ?></a></li>
+                                        <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
+                                        <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a></li>
                                     </ul>
                                 </li>
                                 <!-- Control Sidebar Toggle Button -->
@@ -160,7 +161,7 @@ $row = $this->Csz_admin_model->load_config();
                             </div>
                             <div class="pull-left info">
                                 <p><b><?php echo $users->name; ?></b></p>
-                                <a href="<?php echo base_url(); ?>admin/users/edit/<?php echo $this->session->userdata('user_admin_id'); ?>"><i class="fa fa-edit"></i> <b><?php echo $this->lang->line('user_edit_header'); ?></b></a>
+                                <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/users/edit/<?php echo $this->session->userdata('user_admin_id'); ?>"><i class="fa fa-edit"></i> <b><?php echo $this->lang->line('user_edit_header'); ?></b></a>
                             </div>
                         </div>
                         <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -179,7 +180,7 @@ $row = $this->Csz_admin_model->load_config();
                         <br>
                         <!-- Check upgrade version -->
                         <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
-                        <a href="<?php echo BASE_URL?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade')?>"><div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $this->lang->line('upgrade_newlast_alert')?></div></a>
+                        <a href="<?php echo $this->Csz_model->base_link()?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade')?>"><div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $this->lang->line('upgrade_newlast_alert')?></div></a>
                         <?php } ?>
                         <?php if($this->session->flashdata('error_message') != ''){ ?>
                         <div class="row">
@@ -193,19 +194,20 @@ $row = $this->Csz_admin_model->load_config();
                         <!-- /.content -->
                         <br><br>
                     </div>
-                    <div class="footer" style="position:absolute;bottom:0%;right:2%;transform:translateY(-100%);">
-                        <div class="row col-md-12 text-center">
-                            <a href="#top" title="To Top" style="text-decoration:none;">
-                                <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                            </a><br><br>
-                        </div>
-                    </div>
                 </div>
                 <!-- End Content Wrapper. Contains page content -->
 
                 <!-- Start Footer -->
                 <?php echo  $this->Headfoot_html->admin_footer() ?>
                 <!-- End Footer -->
+                
+                <div class="footer" style="position:absolute;bottom:0;right:2%;transform:translateY(-100%);">
+                    <div class="row col-md-12 text-center">
+                        <a href="#top" title="To Top" style="text-decoration:none;">
+                            <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                        </a>
+                    </div>
+                </div>
                 
                 <!-- Start Control Sidebar For Theme Settings -->
                 <aside class="control-sidebar control-sidebar-dark">
@@ -239,7 +241,7 @@ $row = $this->Csz_admin_model->load_config();
             <?php if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
                 <div class="col-md-3 hidden-sm hidden-xs"></div>
                 <div class="col-md-6 col-sm-12 col-xs-12">
-                    <a href="<?php echo BASE_URL ?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade') ?>"><div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $this->lang->line('upgrade_newlast_alert') ?></div></a>
+                    <a href="<?php echo $this->Csz_model->base_link() ?>/admin/upgrade" title="<?php echo $this->lang->line('btn_upgrade') ?>"><div class="alert alert-warning text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $this->lang->line('upgrade_newlast_alert') ?></div></a>
                 </div>
                 <div class="col-md-3 hidden-sm hidden-xs"></div>                       
             <?php } ?>
@@ -262,7 +264,7 @@ $row = $this->Csz_admin_model->load_config();
         <!-- Custom Plugin JavaScript -->
         <script src="<?php echo base_url() ?>templates/admin/js/script.js"></script>  
         <script type="text/javascript">
-            $(function(){tinymce.init({selector:".body-tinymce",height:"500px",content_css:["<?php echo BASE_URL; ?>/assets/css/bootstrap.min.css","<?php echo BASE_URL; ?>/templates/<?php echo $row->themes_config; ?>/css/<?php echo $row->themes_config; ?>.min.css","<?php echo BASE_URL; ?>/assets/font-awesome/css/font-awesome.min.css"],remove_trailing_brs:!1,convert_urls:!1,plugins:"advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor colorpicker imagetools glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert fontawesome cszfile",external_filemanager_path:"<?php echo BASE_URL; ?>/admin/",relative_urls:!1,toolbar1:"insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage codesample",toolbar2:"forecolor backcolor emoticons glyphicons fontawesome | b_button jumbotron row_cols boots_panels boot_alert form_insert",image_advtab:!0,image_class_list:[{title:"None",value:""},{title:"Responsive",value:"img-responsive"},{title:"Rounded & Responsive",value:"img-responsive img-rounded"},{title:"Circle & Responsive",value:"img-responsive img-circle"},{title:"Thumbnail & Responsive",value:"img-responsive img-thumbnail"}],style_formats:[{title:"Text",items:[{title:"Muted text",inline:"span",classes:"text-muted"},{title:"Primary text",inline:"span",classes:"text-primary"},{title:"Success text",inline:"span",classes:"text-success"},{title:"Info text",inline:"span",classes:"text-info"},{title:"Warning text",inline:"span",classes:"text-warning"},{title:"Danger text",inline:"span",classes:"text-danger"},{title:"Badges",inline:"span",classes:"badge"}]},{title:"Label",items:[{title:"Default Label",inline:"span",classes:"label label-default"},{title:"Primary Label",inline:"span",classes:"label label-primary"},{title:"Success Label",inline:"span",classes:"label label-success"},{title:"Info Label",inline:"span",classes:"label label-info"},{title:"Warning Label",inline:"span",classes:"label label-warning"},{title:"Danger Label",inline:"span",classes:"label label-danger"}]},{title:"Headers",items:[{title:"h1",block:"h1"},{title:"h2",block:"h2"},{title:"h3",block:"h3"},{title:"h4",block:"h4"},{title:"h5",block:"h5"},{title:"h6",block:"h6"}]},{title:"Blocks",items:[{title:"p",block:"p"},{title:"div",block:"div"},{title:"pre",block:"pre"}]},{title:"Containers",items:[{title:"section",block:"section",wrapper:!0,merge_siblings:!1},{title:"article",block:"article",wrapper:!0,merge_siblings:!1},{title:"blockquote",block:"blockquote",wrapper:!0},{title:"hgroup",block:"hgroup",wrapper:!0},{title:"aside",block:"aside",wrapper:!0},{title:"figure",block:"figure",wrapper:!0}]}]})});
+            $(function(){tinymce.init({selector:".body-tinymce",height:"500px",content_css:["<?php echo base_url(); ?>assets/css/bootstrap.min.css","<?php echo base_url(); ?>templates/<?php echo $row->themes_config; ?>/css/<?php echo $row->themes_config; ?>.min.css","<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.min.css"],remove_trailing_brs:!1,convert_urls:!1,plugins:"advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code codesample fullscreen insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor colorpicker imagetools glyphicons b_button jumbotron row_cols boots_panels boot_alert form_insert fontawesome cszfile",external_filemanager_path:"<?php echo $this->Csz_model->base_link(); ?>/admin/",relative_urls:!1,toolbar1:"insertfile undo redo | styleselect fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage codesample",toolbar2:"forecolor backcolor emoticons glyphicons fontawesome | b_button jumbotron row_cols boots_panels boot_alert form_insert",image_advtab:!0,image_class_list:[{title:"None",value:""},{title:"Responsive",value:"img-responsive"},{title:"Rounded & Responsive",value:"img-responsive img-rounded"},{title:"Circle & Responsive",value:"img-responsive img-circle"},{title:"Thumbnail & Responsive",value:"img-responsive img-thumbnail"}],style_formats:[{title:"Text",items:[{title:"Muted text",inline:"span",classes:"text-muted"},{title:"Primary text",inline:"span",classes:"text-primary"},{title:"Success text",inline:"span",classes:"text-success"},{title:"Info text",inline:"span",classes:"text-info"},{title:"Warning text",inline:"span",classes:"text-warning"},{title:"Danger text",inline:"span",classes:"text-danger"},{title:"Badges",inline:"span",classes:"badge"}]},{title:"Label",items:[{title:"Default Label",inline:"span",classes:"label label-default"},{title:"Primary Label",inline:"span",classes:"label label-primary"},{title:"Success Label",inline:"span",classes:"label label-success"},{title:"Info Label",inline:"span",classes:"label label-info"},{title:"Warning Label",inline:"span",classes:"label label-warning"},{title:"Danger Label",inline:"span",classes:"label label-danger"}]},{title:"Headers",items:[{title:"h1",block:"h1"},{title:"h2",block:"h2"},{title:"h3",block:"h3"},{title:"h4",block:"h4"},{title:"h5",block:"h5"},{title:"h6",block:"h6"}]},{title:"Blocks",items:[{title:"p",block:"p"},{title:"div",block:"div"},{title:"pre",block:"pre"}]},{title:"Containers",items:[{title:"section",block:"section",wrapper:!0,merge_siblings:!1},{title:"article",block:"article",wrapper:!0,merge_siblings:!1},{title:"blockquote",block:"blockquote",wrapper:!0},{title:"hgroup",block:"hgroup",wrapper:!0},{title:"aside",block:"aside",wrapper:!0},{title:"figure",block:"figure",wrapper:!0}]}]})});
         </script>
         <!-- Load Extra JavaScript -->
         <?php if(!empty($extra_js)){ 

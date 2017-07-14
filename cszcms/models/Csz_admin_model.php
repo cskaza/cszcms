@@ -87,11 +87,7 @@ class Csz_admin_model extends CI_Model{
     public function chkVerUpdate($cur_ver, $xml_url = ''){
         $last_ver = $this->getLatestVersion($xml_url);
         if($last_ver){
-            if(version_compare($cur_ver, $last_ver, '<') === TRUE){
-                return TRUE;
-            }else{
-                return FALSE;
-            }
+            return $this->Csz_model->chkVerUpdate($cur_ver, $last_ver);
         }else{
             return FALSE;
         }
@@ -107,30 +103,9 @@ class Csz_admin_model extends CI_Model{
      * @return	string or false
      */
     public function findNextVersion($cur_txt, $xml_url = ''){
-        /* sub version is limit x.9.9 */
-        $cur_r = array();
-        $cur_xml = explode(' ', $cur_txt);
         $last_ver = $this->getLatestVersion($xml_url);
-        if($cur_xml[0] && $last_ver){
-            $cur_ver = str_replace(' ', '.', $cur_xml[0]);
-            $cur_r = explode('.', $cur_ver);
-            if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
-                return $cur_xml[0];
-            }else{
-                if($cur_ver == $last_ver){
-                    return $last_ver;
-                }else{
-                    if($cur_r[1] <= 9 && $cur_r[2] < 9){
-                        return $cur_r[0].'.'.$cur_r[1].'.'.($cur_r[2] + 1);
-                    }else if($cur_r[1] < 9 && $cur_r[2] == 9){
-                        return $cur_r[0].'.'.($cur_r[1] + 1).'.0';
-                    }else if($cur_r[1] == 9 && $cur_r[2] == 9){
-                        return ($cur_r[0] + 1).'.0.0';
-                    }else{
-                        return FALSE;
-                    }
-                }
-            }
+        if($last_ver){
+            return $this->Csz_model->findNextVersion($cur_txt, $last_ver);
         }else{
             return FALSE;
         }
@@ -250,13 +225,19 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$orderby  DB order by field. Default is 'timestamp_create'
      * @param	string	$sort     DB sort by asc or desc. Default is 'desc'
      * @param	string	$search_sql    DB where condition. NULL if not need. Example "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%" for string. And array('field'=>'value') for array
-     * @param	string	$groupby    DB group by field. NULL if not need
+     * @param	string	$groupby    DB group by field. NULL if not need 
+     * @param	string	$join_db   Table to join or NULL 
+     * @param	string	$join_where   Join condition or NULL  
+     * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL
      * @return	array
      */
-    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = '', $sort = '', $search_sql = '', $groupby = ''){
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = '', $sort = '', $search_sql = '', $groupby = '', $join_db = '', $join_where = '', $join_type = ''){
         // Get a list of all user accounts
-        $count = $this->Csz_model->countData($table, $search_sql, $groupby, $orderby, $sort);
+        $count = $this->Csz_model->countData($table, $search_sql, $groupby, $orderby, $sort, $join_db, $join_where, $join_type);
         $this->db->select('*');
+        if($join_db && $join_where){
+            $this->db->join($join_db, $join_where, $join_type);
+        }
         if($search_sql){
             if(is_array($search_sql)){
                 foreach($search_sql as $key => $value){
@@ -596,7 +577,7 @@ class Csz_admin_model extends CI_Model{
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
         $key = array_search($lang_iso, $lang_config);
-        if($key){
+        if($key !== FALSE && !empty($key)){
             return $key;
         }else{
             return 'english';
@@ -622,23 +603,29 @@ class Csz_admin_model extends CI_Model{
      * Function for load core css
      *
      * @param	string	$more_css    additional css
+     * @param	bool	$more_include    for include the css file or FALSE
      * @return	String
      */
-    public function coreCss($more_css = ''){
+    public function coreCss($more_css = '', $more_include = TRUE){
         $core_css = link_tag($this->config->item('assets_url').'/css/bootstrap.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/css/flag-icon.min.css');
         $core_css.= link_tag($this->config->item('assets_url').'/js/plugins/select2/select2.min.css');
-        if(!empty($more_css)){
-            if(is_array($more_css)){
-                foreach($more_css as $value){
-                    if($value){
-                        $core_css.= link_tag($value);
+        if (!empty($more_css)) {
+            if($more_include !== FALSE){
+                if (is_array($more_css)) {
+                    foreach ($more_css as $value) {
+                        if ($value) {
+                            $core_css.= link_tag($value);
+                        }
                     }
+                } else {
+                    $core_css.= link_tag($more_css);
                 }
             }else{
-                $core_css.= link_tag($more_css);
+                $more_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $more_css);
+                $core_css.= '<style type="text/css">'.$more_css.'</style>';
             }
         }
         return $core_css;
@@ -650,9 +637,10 @@ class Csz_admin_model extends CI_Model{
      * Function for load core js
      *
      * @param	string	$more_js    additional js
+     * @param	bool	$more_include    for include the js file or FALSE
      * @return	String
      */
-    public function coreJs($more_js = ''){
+    public function coreJs($more_js = '', $more_include = TRUE){
         $core_js = '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-1.12.4.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/bootstrap.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-ui.min.js"></script>';
@@ -660,15 +648,20 @@ class Csz_admin_model extends CI_Model{
         $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/tinymce/tinymce.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
-        if(!empty($more_js)){
-            if(is_array($more_js)){
-                foreach($more_js as $value){
-                    if($value){
-                        $core_js.= '<script type="text/javascript" src="'.$value.'"></script>';
+        if (!empty($more_js)) {
+            if($more_include !== FALSE){
+                if (is_array($more_js)) {
+                    foreach ($more_js as $value) {
+                        if ($value) {
+                            $core_js.= '<script type="text/javascript" src="' . $value . '"></script>';
+                        }
                     }
+                } else {
+                    $core_js.= '<script type="text/javascript" src="' . $more_js . '"></script>';
                 }
             }else{
-                $core_js.= '<script type="text/javascript" src="'.$more_js.'"></script>';
+                $more_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $more_js);
+                $core_js.= '<script type="text/javascript">'.str_replace('<script ', '</script><script ', $more_js).'</script>';
             }
         }
         return $core_js;
@@ -778,12 +771,16 @@ class Csz_admin_model extends CI_Model{
             'sendmail_path' => $this->input->post('sendmail_path', TRUE),
             'member_confirm_enable' => $this->input->post('member_confirm_enable', TRUE),
             'member_close_regist' => $this->input->post('member_close_regist', TRUE),
+            'gmaps_key' => trim($this->input->post('gmaps_key', TRUE)),
+            'gmaps_lat' => trim($this->input->post('gmaps_lat', TRUE)),
+            'gmaps_lng' => trim($this->input->post('gmaps_lng', TRUE)),
             'ga_client_id' => trim($this->input->post('ga_client_id', TRUE)),
             'ga_view_id' => trim($this->input->post('ga_view_id', TRUE)),
             'fbapp_id' => trim($this->input->post('fbapp_id', TRUE)),
             'gsearch_active' => $this->input->post('gsearch_active', TRUE),
             'gsearch_cxid' => trim($this->input->post('gsearch_cxid', TRUE)),
             'maintenance_active' => $this->input->post('maintenance_active', TRUE),
+            'html_optimize_disable' => $this->input->post('html_optimize_disable', TRUE),
         );
         if($this->input->post('del_file')){
             $upload_file = '';
@@ -1029,7 +1026,7 @@ class Csz_admin_model extends CI_Model{
     public function getPagesAll(){
         $this->db->select("*");
         $query = $this->db->get('pages');
-        if($query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() !== 0){
             return $query->result_array();
         }
         return array();
@@ -1047,7 +1044,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where("plugin_active", 1);
         $this->db->order_by("plugin_config_filename", "asc");
         $query = $this->db->get('plugin_manager');
-        if($query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() !== 0){
             return $query->result_array();
         }
         return array();
@@ -1058,25 +1055,13 @@ class Csz_admin_model extends CI_Model{
      *
      * Function for get all menu
      *
-     * @param	string	$drop_page_menu_id    for drop down menu. Default is 0
+     * @param	int	$drop_page_menu_id    1 = drop menu, 0 = main menu
      * @param	string	$lang    language code
-     * @return	object or FALSE
+     * @param	int	$position    menu position  0 = Top, 1 = Bottom
+     * @return	object or FALSE id not found
      */
-    public function getAllMenu($drop_page_menu_id = 0, $lang){
-        if($drop_page_menu_id){
-            $this->db->where("drop_page_menu_id", $drop_page_menu_id);
-        }else{
-            $this->db->where("drop_page_menu_id", 0);
-        }
-        $this->db->where("lang_iso", $lang);
-        $this->db->order_by("arrange", "asc");
-        $query = $this->db->get('page_menu');
-        if($query->num_rows() !== 0){
-            $row = $query->result();
-            return $row;
-        }else{
-            return FALSE;
-        }
+    public function getAllMenu($drop_page_menu_id = 0, $lang = '', $position = 0){
+        return $this->Csz_model->main_menu($drop_page_menu_id, $lang, $position, TRUE);
     }
 
     /**
@@ -1123,6 +1108,7 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
+        ($this->input->post('new_windows')) ? $new_windows = $this->input->post('new_windows', TRUE) : $new_windows = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
         $o_link_input = $this->input->post('url_link', TRUE);
         if(substr($o_link_input, 0, 1) === '#'){
@@ -1143,6 +1129,8 @@ class Csz_admin_model extends CI_Model{
             'plugin_menu' => $this->input->post('pluginmenu', TRUE),
             'drop_menu' => $dropdown,
             'drop_page_menu_id' => $dropMenu,
+            'position' => $this->input->post('position', TRUE),
+            'new_windows' => $new_windows,
             'active' => $active,
             'arrange' => $arrange,
         );
@@ -1163,6 +1151,7 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('dropdown')) ? $dropdown = $this->input->post('dropdown', TRUE) : $dropdown = 0;
         ($this->input->post('dropMenu')) ? $dropMenu = $this->input->post('dropMenu', TRUE) : $dropMenu = 0;
+        ($this->input->post('new_windows')) ? $new_windows = $this->input->post('new_windows', TRUE) : $new_windows = 0;
         $this->db->set('menu_name', $this->input->post("name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
         $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
@@ -1181,6 +1170,8 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('plugin_menu', $this->input->post('pluginmenu', TRUE), TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);
         $this->db->set('drop_page_menu_id', $dropMenu, TRUE);
+        $this->db->set('position', $this->input->post('position', TRUE), TRUE);
+        $this->db->set('new_windows', $new_windows, TRUE);
         $this->db->set('active', $active, TRUE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('page_menu_id', $id);
@@ -1223,6 +1214,7 @@ class Csz_admin_model extends CI_Model{
      * Function for create new language
      */
     public function insertLang(){
+        $arrange = $this->Csz_model->getLastID('lang_iso', 'arrange');
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $data = array(
             'lang_name' => $this->input->post('lang_name', TRUE),
@@ -1231,6 +1223,7 @@ class Csz_admin_model extends CI_Model{
             'country_iso' => $this->input->post('country_iso', TRUE),
             'active' => $active,
         );
+        $this->db->set('arrange', ($arrange)+1);
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('lang_iso', $data);
@@ -1250,16 +1243,25 @@ class Csz_admin_model extends CI_Model{
      */
     public function updateLang($id){
         $old_lang = $this->Csz_model->getValue('lang_iso', 'lang_iso', 'lang_iso_id', $id, 1);
-        if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label') && $old_lang->lang_iso != $this->input->post("lang_iso", TRUE)){
-            $this->load->dbforge();
-            $fields = array(
-                'lang_'.$old_lang->lang_iso => array(
-                    'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
-                    'type' => 'TEXT',
-                    'null' => FALSE,
-                ),
-            );
-            $this->dbforge->modify_column('general_label', $fields);
+        $this->load->dbforge();
+        if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label') && $old_lang->lang_iso != $this->input->post("lang_iso", TRUE)){            
+            if($old_lang->lang_iso != 'en'){
+                $fields = array(
+                    'lang_'.$old_lang->lang_iso => array(
+                        'name' => 'lang_'.$this->input->post("lang_iso", TRUE),
+                        'type' => 'TEXT',
+                        'null' => FALSE,
+                    ),
+                );
+                $this->dbforge->modify_column('general_label', $fields);
+            }else{
+                $fields = array('lang_'.$this->input->post('lang_iso', TRUE) => array('type' => 'TEXT', 'null' => FALSE));
+                $this->dbforge->add_column('general_label', $fields);
+            }
+        }else{
+            if($old_lang->lang_iso != 'en' && $this->input->post("lang_iso", TRUE) == 'en'){
+                $this->dbforge->drop_column('general_label', 'lang_' . $old_lang->lang_iso);
+            }
         }
         /* Update lang in menu */
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
@@ -1299,15 +1301,6 @@ class Csz_admin_model extends CI_Model{
                 if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
                     $fields = array('lang_'.$value['lang_iso'] => array('type' => 'TEXT', 'null' => FALSE));
                     $this->dbforge->add_column('general_label', $fields);
-                }
-            }else{
-                if(!$this->db->field_exists('lang_'.$value['lang_iso'], 'general_label') && $value['lang_iso']){
-                    $fields = array(
-                        'lang_en' => array(
-                            'name' => 'lang_'.$value['lang_iso'], 'type' => 'TEXT', 'null' => FALSE,
-                        ),
-                    );
-                    $this->dbforge->modify_column('general_label', $fields);
                 }
             }
         }
@@ -1363,6 +1356,7 @@ class Csz_admin_model extends CI_Model{
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
+        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js'));
         $data = array(
             'page_name' => $page_name_input,
             'page_url' => $page_url,
@@ -1372,6 +1366,7 @@ class Csz_admin_model extends CI_Model{
             'page_desc' => $this->input->post('page_desc', TRUE),
             'content' => $content,
             'custom_css' => $custom_css,
+            'custom_js' => $custom_js,
             'active' => $active,
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -1395,6 +1390,7 @@ class Csz_admin_model extends CI_Model{
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
+        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js'));
         $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE), TRUE);
@@ -1403,6 +1399,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('page_desc', $this->input->post('page_desc', TRUE), TRUE);
         $this->db->set('content', $content, TRUE);
         $this->db->set('custom_css', $custom_css, TRUE);
+        $this->db->set('custom_js', $custom_js, TRUE);
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
@@ -2052,6 +2049,233 @@ class Csz_admin_model extends CI_Model{
         $this->db->cache_delete_all();
         $this->Csz_model->clear_file_cache('config');
         $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
+    }
+    
+    /**
+     * getFormDraft
+     *
+     * Function for get data from form draft
+     * 
+     * @return	Object or FALSE
+     */
+    public function getFormDraft() {
+        $this->db->select("*");
+        $this->db->where("form_url", current_url());
+        $this->db->where('user_admin_id', $this->session->userdata('user_admin_id'));
+        $this->db->limit(1);
+        $query = $this->db->get('save_formdraft');
+        if(!empty($query) && $query->num_rows() === 1){
+            $data = $query->first_row();
+            return json_decode(base64_decode($data->submit_array), TRUE);
+            
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * getFormDraft
+     *
+     * Function for get data from form draft
+     * 
+     * @return	Object or FALSE
+     */
+    public function getDraftArray($array_key) {
+        $data = $this->getFormDraft();
+        if($data !== FALSE && is_array($data) && isset($data[$array_key])){
+            return $data[$array_key];
+        }else{
+            return '';
+        }
+    }
+    
+    /**
+     * getSaveDraftJS
+     *
+     * Function for get data from form draft
+     * 
+     * @return	String
+     */
+    public function getSaveDraftJS() {
+        $more_js = '
+        $(document).ready(function () {
+            $("#save_draft").click(function () {
+                tinyMCE.triggerSave(); /* save TinyMCE instances before serialize */
+                var fields = $("form").serialize();
+                var urlpost = "'.$this->Csz_model->base_link().'/admin/admin/saveDraft'.'";
+                $.ajax({
+                    url: urlpost,
+                    type: "POST",
+                    data: fields,
+                    success: function (a) {
+                        if(a == "SUCCESS"){
+                            $("#save_draft_res").html("'.$this->lang->line('success_message_alert').'");
+                        }else{
+                            $("#save_draft_res").html("");
+                        }
+                    }
+                });
+                return false;
+            });
+        });';
+        return $more_js;
+    }
+    
+    /**
+     * makePrivateKey
+     *
+     * Function for make private key from db
+     * 
+     */
+    public function makePrivateKey() {
+        $row = $this->load_config();
+        $user = $this->getUser(1);
+        $gmdate = gmdate("YmdHis", time());
+        $private_key = sha1($row->default_email . '|' . $this->Csz_model->base_link() . '|' . $user->password . '|cszcms|' . $gmdate);
+        $this->db->set('bf_private_key', $private_key);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where("login_security_config_id", 1);
+        $this->db->update('login_security_config');
+    }
+    
+    /**
+     * getPrivateKey
+     *
+     * Function for get private key from db
+     * 
+     * @return	String
+     */
+    public function getPrivateKey() {
+        $this->db->select('bf_private_key');
+        $this->db->where("login_security_config_id", '1');
+        $this->db->limit(1, 0);
+        $query = $this->db->get("login_security_config");
+        if(!empty($query) && $query->num_rows() !== 0){
+            $private_key = $query->row()->bf_private_key;
+            if(!empty($private_key) && $private_key != NULL){
+                return $private_key;
+            }else{
+                return '-';
+            }
+        }else{
+            return '-';
+        }
+    }
+    
+    /**
+     * getPluginXML
+     *
+     * Function for get latest version from xml url
+     *
+     * @param	string	$xml_url    xml url file
+     * @return	object or FALSE
+     */
+    public function getPluginXML($xml_url = ''){
+        $this->load->driver('cache', array('adapter' => 'file'));
+        if (!$this->cache->get('plugin_list_xml')) {
+            if(!$xml_url) $xml_url = $this->config->item('csz_pluginxmlurl_main');
+            $xml_url_bak = $this->config->item('csz_pluginxmlurl_backup');
+            if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
+                $xml = file_get_contents($xml_url);
+            }else if($this->Csz_model->is_url_exist($xml_url) === FALSE && $this->Csz_model->is_url_exist($xml_url_bak) !== FALSE){
+                $xml = file_get_contents($xml_url_bak);
+            }else{
+                $xml = FALSE;
+            }
+            if(!empty($xml) && $xml !== FALSE){               
+                $return = &$xml;
+            }else{
+                $return = FALSE;
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;               
+            $this->cache->save('plugin_list_xml', $return, ($cache_time * 60));
+        }
+        return simplexml_load_string($this->cache->get('plugin_list_xml'));
+    }
+    
+    /**
+     * getLatestVerArray
+     *
+     * Function for get latest version from xml url
+     *
+     * @return	array
+     */
+    private function setLatestVer(){
+        $this->load->driver('cache', array('adapter' => 'file'));
+        if (!$this->cache->get('plugin_list_version')) {
+            $plugin_list = $this->getPluginXML();
+            if ($plugin_list !== FALSE) {
+                $ver_arr = array();
+                foreach ($plugin_list as $xml) {
+                    $ver_arr[strval($xml->filename)] = strval($xml->version);
+                }
+            }else{
+                $ver_arr = FALSE;
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;               
+            $this->cache->save('plugin_list_version', $ver_arr, ($cache_time * 60));
+        }
+        return $this->cache->get('plugin_list_version');
+    }
+    
+    /**
+     * pluginLatestVer
+     *
+     * Function for get latest version from xml url
+     *
+     * @param	string	$plugin_config_filename    for plugin config filename
+     * @return	String or FALSE
+     */
+    public function pluginLatestVer($plugin_config_filename){
+        $ver_arr = $this->setLatestVer();
+        if($ver_arr !== FALSE && is_array($ver_arr)){
+            return $ver_arr[strval($plugin_config_filename)]; 
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * chkPluginInst
+     *
+     * Function for get latest version from xml url
+     *
+     * @param	string	$plugin_config_filename    for plugin config filename
+     * @return	TRUE or FALSE
+     */
+    public function chkPluginInst($plugin_config_filename){
+        $count = $this->Csz_model->countData('plugin_manager', "plugin_config_filename = '".$plugin_config_filename."'");
+        if($count != 0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * chkPluginUpdate
+     *
+     * Function for check version for plugin update
+     *
+     * @param	string	$cur_ver    current version
+     * @param	string	$last_ver    latest version
+     * @return	true or false
+     */
+    public function chkPluginUpdate($cur_ver, $last_ver){
+        return $this->Csz_model->chkVerUpdate($cur_ver, $last_ver);
+    }
+    
+    /**
+     * pluginNextVer
+     *
+     * Function for check next version for plugin update
+     *
+     * @param	string	$cur_txt    current version
+     * @param	string	$last_ver    latest version
+     * @return	string or false
+     */
+    public function pluginNextVer($cur_txt, $last_ver){
+        return $this->Csz_model->findNextVersion($cur_txt, $last_ver);
     }
 
 }

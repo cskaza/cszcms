@@ -24,19 +24,11 @@
  */
 class Database{
 
-    private $_connection;
-    private $_host;
-    private $_username;
-    private $_password;
-    private $_database;
+    public $_connection;
 
     // Constructor
     public function __construct($dbhost = '', $dbuser = '', $dbpass = '', $dbname = ''){
-        $this->_host = $dbhost;
-        $this->_username = $dbuser;
-        $this->_password = $dbpass;
-        $this->_database = $dbname;
-        $this->_connection = new mysqli($this->_host, $this->_username, $this->_password, $this->_database);
+        $this->_connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         $this->_connection->set_charset('utf8');
         $this->_connection->query("SET collation_connection = utf8_general_ci");
         // Error handling
@@ -141,18 +133,6 @@ class Version{
             $version = $this->getVersionConfig();
         }
         return $version;
-    }
-
-    public function deleteDIR($folder){
-        foreach(glob($folder."/install")as $files_folder){
-            //echo $files_folder
-            if(is_dir($files_folder)){
-                $this->deleteDIR($files_folder);
-            }else{
-                unlink($files_folder);
-            }
-        }
-        return rmdir($folder);
     }
 
     public function setTimezone($timezone){

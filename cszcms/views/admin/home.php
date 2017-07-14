@@ -44,7 +44,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php echo BASE_URL.'/admin/members' ?>">
+                                    <a href="<?php echo $this->Csz_model->base_link().'/admin/members' ?>">
                                         <div class="panel-footer">
                                             <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php echo BASE_URL.'/admin/linkstats'; ?>">
+                                    <a href="<?php echo $this->Csz_model->base_link().'/admin/linkstats'; ?>">
                                         <div class="panel-footer">
                                             <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail'); ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?php echo BASE_URL.'/admin/emaillogs' ?>">
+                                    <a href="<?php echo $this->Csz_model->base_link().'/admin/emaillogs' ?>">
                                         <div class="panel-footer">
                                             <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
                                             <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
@@ -164,7 +164,7 @@
                                 <span style="font-size:12px;"><b><?php echo $this->lang->line('dashboard_fromemail') ?>: <?php echo $el['from_email'] ?> | <?php echo $this->lang->line('dashboard_toemail') ?>: <?php echo $el['to_email'] ?></b></span> [<span style="font-style: italic; font-size:12px;"><?php echo $el['ip_address'] ?></span>] [<span style="font-style: italic; font-size:12px;"><?php echo $el['user_agent'] ?></span>] [<b><?php echo $error_rs?></b>]<br>
                                 <pre><?php echo strip_tags($el['message']) ?></pre>
                                 <div class="control-group text-right">
-                                    <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo BASE_URL.'/admin/admin/deleteEmailLogs/'.$el['email_logs_id']?>">
+                                    <a class="btn btn-danger btn-sm" role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message')?>')" href="<?php echo $this->Csz_model->base_link().'/admin/admin/deleteEmailLogs/'.$el['email_logs_id']?>">
                                         <i class="glyphicon glyphicon-remove"></i>
                                     </a>
                                 </div>
@@ -212,7 +212,7 @@
                     }?>
                 </div>               
                 <div class="text-right">
-                    <a href="<?php echo BASE_URL.'/admin/linkstats' ?>" style="text-decoration: none;"><?php echo $this->lang->line('dashboard_viewdetail') ?> <i><span class="glyphicon glyphicon-expand"></span></i></a>
+                    <a href="<?php echo $this->Csz_model->base_link().'/admin/linkstats' ?>" style="text-decoration: none;"><?php echo $this->lang->line('dashboard_viewdetail') ?> <i><span class="glyphicon glyphicon-expand"></span></i></a>
                 </div>
             </div>
         </div>

@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/navigation/update/'.$nav->page_menu_id); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('navpage_new_header') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/navigation/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('navpage_addnew') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/navigation/update/'.$nav->page_menu_id); ?>
         <?php if(!$nav->drop_menu){ ?>
         <div id="main_menu"<?php echo ($nav->drop_page_menu_id)?' style="display:none;"':''?>>           
             <div class="control-group">		
@@ -36,6 +36,7 @@
                 <input type="hidden" name="dropdown" id="dropdown" value="1"><?php echo $this->lang->line('option_yes'); ?>
             </div> <!-- /control-group -->
         <?php } ?>
+        <br>
         <div class="control-group">										
             <label class="control-label" for="name"><?php echo $this->lang->line('navpage_menuname'); ?>*</label>
             <?php
@@ -51,6 +52,7 @@
             echo form_input($data);
             ?>			
         </div> <!-- /control-group -->
+        <br>
         <div class="control-group">										
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('navpage_menulang'); ?>*</label>
             <?php
@@ -62,6 +64,20 @@
                     }
                 }
                 echo form_dropdown('lang_iso', $data, $nav->lang_iso, $att);
+            ?>		
+        </div> <!-- /control-group -->
+        <br>
+        <div class="control-group">										
+            <label class="control-label" for="position"><?php echo $this->lang->line('navpage_position'); ?></label>
+            <?php
+            $att = 'id="position" class="form-control"';
+            $data = array();
+            if (!empty($position)) {
+                foreach ($position as $key => $val) {
+                    $data[$key] = $val;
+                }
+            }
+            echo form_dropdown('position', $data, $nav->position, $att);
             ?>		
         </div> <!-- /control-group -->
         <hr>
@@ -150,6 +166,18 @@
                 );
                 echo form_input($data);
                 ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">										
+                <label class="form-control-static" for="new_windows">
+                    <?php
+                    $data = array(
+                        'name' => 'new_windows',
+                        'id' => 'new_windows',
+                        'value' => '1'
+                    );
+                    if($nav->new_windows) $data['checked'] = "checked";
+                    echo form_checkbox($data);
+                    ?> <?php echo $this->lang->line('navpage_new_windows'); ?></label>	
             </div> <!-- /control-group -->
         </div>
         <div id="sub_menu"<?php echo (!$nav->drop_page_menu_id)?' style="display:none;"':''?>>

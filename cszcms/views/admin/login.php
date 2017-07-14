@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-3 hidden-sm hidden-xs"></div>
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <center><span style="font-size:36px;color:#ff6f00;"><a href="<?php echo BASE_URL ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></center>
+            <center><span style="font-size:36px;color:#ff6f00;"><a href="<?php echo $this->Csz_model->base_link() ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></center>
             <br><br>
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
@@ -27,7 +27,7 @@
                     }
                     ?>
                     </div>
-                    <?php echo form_open(BASE_URL . '/admin/login/check') ?>
+                    <?php echo form_open($this->Csz_model->base_link(). '/admin/login/check') ?>
                     <?php echo form_error('email', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                     <div class="form-group has-feedback">
                         <label for="email" class="control-label"><?php echo $this->lang->line('login_email') ?>*</label>
@@ -69,7 +69,7 @@
                     <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->lang->line('login_signin'); ?></button>
                     <?php echo form_close() ?>
                 </div>
-                <div class="panel-footer text-center"><a href="<?php echo BASE_URL; ?>/admin/user/forgot"><?php echo $this->lang->line('login_forgetpwd'); ?></a></div>
+                <div class="panel-footer text-center"><a href="<?php echo $this->Csz_model->base_link(); ?>/admin/user/forgot"><?php echo $this->lang->line('login_forgetpwd'); ?></a></div>
             </div>
         </div>
         <div class="col-md-3 hidden-sm hidden-xs"></div>

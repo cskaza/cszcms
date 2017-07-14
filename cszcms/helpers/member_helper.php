@@ -34,14 +34,14 @@ class Member_helper{
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $sess_data = array('cszflogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
-            $redirect= BASE_URL.'/member/login';
+            $redirect= $CI->Csz_model->base_link().'/member/login';
             header("Location: $redirect");
             exit;
         }else if($email && $_SESSION['session_id']){
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
-                $redirect= BASE_URL.'/member/logout';
+                $redirect= $CI->Csz_model->base_link().'/member/logout';
                 header("Location: $redirect");	
                 exit;
             }
@@ -57,7 +57,8 @@ class Member_helper{
     */
     static function login_already($email_session){
         if($email_session){
-            $redirect= BASE_URL.'/member';
+            $CI =& get_instance();
+            $redirect= $CI->Csz_model->base_link().'/member';
             header("Location: $redirect");
             exit;
         }
@@ -81,7 +82,7 @@ class Member_helper{
         }
         $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_config_filename);
         if($chkactive === FALSE){
-            $redirect= BASE_URL.'/';
+            $redirect= $CI->Csz_model->base_link().'/';
             header("Location: $redirect");
             exit;
         }
@@ -102,7 +103,7 @@ class Member_helper{
             if($CI->Csz_auth_model->is_group_allowed($perms_name, 'frontend') === FALSE){
                 $CI->load->library('session');
                 $CI->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$CI->Csz_model->getLabelLang('not_permission_txt').'</div>');
-                $redirect= BASE_URL.'/member';
+                $redirect= $CI->Csz_model->base_link().'/member';
                 header("Location: $redirect");
                 exit;
             }

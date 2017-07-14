@@ -21,24 +21,24 @@
                                 <tr>
                                     <th width="10%" class="text-center" style="vertical-align:middle;">#ID</th>
                                     <th width="20%" class="text-center" style="vertical-align:middle;"><?php echo $this->Csz_model->getLabelLang('picture'); ?></th>
-                                    <th width="45%" class="text-center" style="vertical-align:middle;"><?php echo $this->Csz_model->getLabelLang('display_name'); ?></th>
-                                    <th width="25%" class="text-center" style="vertical-align:middle;"></th>
+                                    <th width="50%" class="text-center" style="vertical-align:middle;"><?php echo $this->Csz_model->getLabelLang('display_name'); ?></th>
+                                    <th width="20%" class="text-center" style="vertical-align:middle;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($users === FALSE) { ?>
                                     <tr>
-                                        <td colspan="4" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('shop_notfound') ?></span></td>
+                                        <td colspan="4" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('error_txt') ?></span></td>
                                     </tr>                           
                                 <?php } else { ?>
                                     <?php
                                     foreach ($users as $u) {
-                                        ($u['picture']) ? $user_img = BASE_URL . '/photo/profile/' . $u['picture'] : $user_img = BASE_URL . '/photo/no_image.png';
+                                        ($u['picture']) ? $user_img = base_url() . 'photo/profile/' . $u['picture'] : $user_img = base_url() . 'photo/no_image.png';
                                         echo '<tr>';
                                         echo '<td class="text-center" style="vertical-align:middle;">'.$u['user_admin_id'].'</td>';
                                         echo '<td class="text-center h3" style="vertical-align:middle;"><img src="'.$user_img.'" class="img-responsive img-thumbnail" alt="Profile Photo" width="80"></td>';
                                         echo '<td class="text-center" style="vertical-align:middle;">'.$u['name'].'</td>';                                        
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL.'/member/viewuser/' . $u['user_admin_id'] . '" class="btn btn-info btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i>  '.$this->Csz_model->getLabelLang('shop_view_btn').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/member/newpm/' . $u['user_admin_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-envelope"></i>  '.$this->Csz_model->getLabelLang('pm_send_txt').'</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link().'/member/viewuser/' . $u['user_admin_id'] . '" class="btn btn-info btn-sm" role="button"><i class="glyphicon glyphicon-eye-open"></i></a> &nbsp;&nbsp; <a href="'.$this->Csz_model->base_link().'/member/newpm/' . $u['user_admin_id'] . '" class="btn btn-primary btn-sm" role="button"><i class="glyphicon glyphicon-envelope"></i></a></td>';
                                         echo '</tr>';
                                     }
                                     ?>

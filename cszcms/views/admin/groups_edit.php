@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('user_group_new') ?>  <a role="button" href="<?php echo BASE_URL ?>/admin/groups/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('user_group_new') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/groups/update/' . $group->user_groups_id); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('user_group_new') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/groups/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('user_group_new') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/groups/update/' . $group->user_groups_id); ?>
         <div class="control-group">
             <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label h4" for="name"><b><?php echo $this->lang->line('user_group_name'); ?>*</b></label>

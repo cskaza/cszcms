@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12">  
                 <h4><?php echo  $this->lang->line('uploadfile_uploadtools') ?></h4>
-                <?php echo  form_open_multipart(BASE_URL . '/admin/filehtmlupload') ?>
+                <?php echo  form_open_multipart($this->Csz_model->base_link(). '/admin/filehtmlupload') ?>
                 <div class="row form-control-static">
                     <div class="col-lg-12 col-md-12">
                         <span class="btn btn-success fileinput-button">
@@ -41,14 +41,14 @@
         <blockquote class="remark">
             <em><?php echo  $this->lang->line('uploadfile_fileallow') ?></em>
         </blockquote>
-        <form action="<?php echo BASE_URL . '/admin/uploadindex/'; ?>" method="get">
+        <form action="<?php echo $this->Csz_model->base_link(). '/admin/uploadindex/'; ?>" method="get">
             <div class="control-group">
                 <label class="control-label" for="search"><?php echo $this->lang->line('search'); ?>: <input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"></label>
                 <input type="submit" name="submit" id="submit" class="btn btn-default" value="<?php echo $this->lang->line('search'); ?>">
             </div>
         </form>
         <br><br>
-        <?php echo  form_open(BASE_URL . '/admin/uploadindex_save'); ?>
+        <?php echo  form_open($this->Csz_model->base_link(). '/admin/uploadindex_save'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -75,7 +75,7 @@
                                     <?php 
                                     $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
                                     if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif'){ ?>
-                                    <img src="<?php echo BASE_URL.'/photo/upload/'.$file["file_upload"]?>" width="100">
+                                    <img src="<?php echo base_url().'photo/upload/'.$file["file_upload"]?>" width="100">
                                     <?php }else{ ?>
                                         <i class="glyphicon glyphicon-file"></i> <?php echo strtoupper($ext)?>
                                     <?php } ?>
@@ -85,7 +85,7 @@
                                     <div class="form-group has-warning">
                                         <div class="input-group">
                                             <div class="input-group-addon"><b><?php echo  $this->lang->line('uploadfile_urlpath') ?></b></div>
-                                            <input type="text" readonly class="form-control" id="full_url" value="<?php echo  BASE_URL ?>/photo/upload/<?php echo  $file["file_upload"] ?>" onfocus="this.select();" onmouseup="return false;">
+                                            <input type="text" readonly class="form-control" id="full_url" value="<?php echo  base_url() ?>photo/upload/<?php echo  $file["file_upload"] ?>" onfocus="this.select();" onmouseup="return false;">
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
@@ -99,7 +99,7 @@
                                     <span class="h5"><b><?php echo  $file["timestamp_create"] ?></b></span>
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
-                                    <a href="<?php echo  BASE_URL ?>/admin/uploadDownload/<?php echo $file["upload_file_id"] ?>" class="btn btn-primary" role="button" title="<?php echo  $this->lang->line('uploadfile_download') ?>" target="_blank"><i class="glyphicon glyphicon-download"></i></a>
+                                    <a href="<?php echo $this->Csz_model->base_link().'/admin/uploadDownload/'.$file["upload_file_id"] ?>" class="btn btn-primary" role="button" title="<?php echo  $this->lang->line('uploadfile_download') ?>" target="_blank"><i class="glyphicon glyphicon-download"></i></a>
                                 </td>
                             </tr>
                         <?php } ?>

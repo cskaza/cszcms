@@ -15,9 +15,9 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-envelope"></i> <?php echo $this->Csz_model->getLabelLang('pm_send_txt') ?></b></div>
                 <div class="panel-body">
-                    <a role="button" href="<?php echo BASE_URL?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
+                    <a role="button" href="<?php echo $this->Csz_model->base_link()?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
                     <br><br>
-                    <?php echo  form_open(BASE_URL . '/member/indexpmsave'); ?>
+                    <?php echo  form_open($this->Csz_model->base_link(). '/member/indexpmsave'); ?>
                     <div class="box box-body table-responsive no-padding">
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
@@ -31,7 +31,7 @@
                             <tbody>
                                 <?php if ($msg === FALSE) { ?>
                                     <tr>
-                                        <td colspan="4" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('shop_notfound') ?></span></td>
+                                        <td colspan="4" class="text-center"><span class="h6 error"><?php echo $this->Csz_model->getLabelLang('error_txt') ?></span></td>
                                     </tr>                           
                                 <?php } else { ?>
                                     <?php
@@ -40,9 +40,9 @@
                                         echo '<td class="text-center" style="vertical-align:middle;">
                                                 <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['id'].'">
                                             </td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $u['title'] . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/member/viewpm/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $u['title'] . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
                                         echo '</tr>';
                                     }
                                     ?>

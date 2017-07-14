@@ -66,6 +66,10 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion($this->cur_version);
@@ -122,6 +126,10 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
         if ($_FILES['file_upload'] != null) {
@@ -129,7 +137,6 @@ class Upgrade extends CI_Controller {
                 $config['upload_path'] = FCPATH;
                 /* set the filter image types Ex. zip|rar|7z */
                 $config['allowed_types'] = 'zip';
-                $config['max_size'] = '10240'; /* Limit upload size 10MB */
                 $file_name = 'manualzip_'.time().'.zip';
                 $config['file_name'] = $file_name;
                 //load the upload library
@@ -190,26 +197,35 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
         $this->load->dbutil();
         $prefs = array(
                 'format'      => 'txt',             // gzip, zip, txt
-                'filename'    => 'cszcmsbackup.sql',    // File name - NEEDED ONLY WITH ZIP FILES
+                'filename'    => DB_NAME . '.sql',    // File name - NEEDED ONLY WITH ZIP FILES
                 'add_drop'    => TRUE,              // Whether to add DROP TABLE statements to backup file
                 'add_insert'  => TRUE,              // Whether to add INSERT data to backup file
                 'newline'     => "\n"               // Newline character used in backup file
               );
         $backup = $this->dbutil->backup($prefs);
         $this->load->helper('download');
-        force_download('cszcmsbackup_'.date('Ymd').'.sql', $backup);
+        force_download(DB_NAME . '_'.date('Ymd').'.sql', $backup);
     }
     
     public function fileBackup() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
         $this->load->library('zip');
+        $this->zip->clear_data();
         $this->load->helper('directory');
-        $this->zip->read_dir('photo/');
         foreach (directory_map('templates/', 1) as $t) {
             if (!is_dir($t)) {
                 $t = str_replace("\\", "", $t);
@@ -230,7 +246,29 @@ class Upgrade extends CI_Controller {
         }
         $this->zip->read_file(FCPATH . '/.htaccess', '.htaccess');
         $this->zip->read_file(FCPATH . '/config.inc.php', 'config.inc.php');
-        $this->zip->download('cszfilebackup_'.date('Ymd').'.zip');
+        $this->zip->read_file(FCPATH . '/htaccess.config.inc.php', 'htaccess.config.inc.php');
+        $zip_filename = EMAIL_DOMAIN . '_files_'.date('Ymd').'.zip';
+        $this->zip->archive(FCPATH . '/' . $zip_filename);
+        $this->load->helper('download');
+        force_download(FCPATH . '/' . $zip_filename, NULL);
+    }
+    
+    public function photoBackup() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
+        $this->load->library('zip');
+        $this->zip->clear_data();
+        $this->zip->read_dir('photo/');
+        $zip_filename = EMAIL_DOMAIN . '_photo_'.date('Ymd').'.zip';
+        $this->zip->archive(FCPATH . '/' . $zip_filename);
+        $this->load->helper('download');
+        force_download(FCPATH . '/' . $zip_filename, NULL);
     }
     
     public function clearAllCache() {
@@ -238,6 +276,8 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
         $this->Csz_model->clear_all_cache();
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
+        @$this->db->empty_table('save_formdraft');
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
@@ -247,6 +287,8 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
         $this->db->cache_delete_all();
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
+        @$this->db->empty_table('save_formdraft');
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
@@ -256,6 +298,7 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
         $this->Csz_model->clear_all_session();
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/logout', 'refresh');
     }
@@ -265,6 +308,7 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
         $this->Csz_model->clear_all_error_log();
+        @array_map('unlink', glob(FCPATH.'/'.EMAIL_DOMAIN . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect('admin/upgrade', 'refresh');
     }
@@ -273,6 +317,10 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','1024M');
+        }
         $log_file = $this->input->post('errlogfile', TRUE);
         if($log_file){
             $log_file = $this->security->sanitize_filename($log_file);

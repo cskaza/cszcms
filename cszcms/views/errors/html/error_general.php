@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <link href="<?php echo BASE_URL ?>/templates/admin/imgs/favicon.ico" rel="shortcut icon" type="image/ico" />
-        <title>Error</title>
+        <title>Error<?php if($heading) echo ' | ' . $heading; ?></title>
         <!-- Bootstrap Core CSS -->
         <link href="<?php echo BASE_URL ?>/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <h1><i class="glyphicon glyphicon-exclamation-sign"></i> <?php echo $heading; ?></h1>
                 <p><?php echo $message; ?><p>
                 <br>
-                <a class="btn btn-primary btn-lg" href="<?php echo BASE_URL?>" role="button">Back to Home &raquo;</a>
+                <a class="btn btn-primary btn-lg" href="<?php echo BASE_URL ?>" role="button">Back to Home &raquo;</a>
             </div>
         </div>
         <!-- End For Content -->
@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <span class="copyright">Powered by CSZ CMS | Open Source Content Management with responsive</span>
+                            <span>Powered by CSZ CMS | Open Source Content Management with responsive</span>
                         </div>
                     </div>
                 </div>

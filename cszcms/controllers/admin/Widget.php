@@ -51,7 +51,7 @@ class Widget extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('widget_xml');
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/widget/';
+        $base_url = $this->Csz_model->base_link(). '/admin/widget/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
@@ -66,7 +66,8 @@ class Widget extends CI_Controller {
 
     public function addWidget() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('plugin widget');        
+        $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Load the form helper
         $this->load->helper('form');
         //Load the view

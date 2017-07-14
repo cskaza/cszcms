@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('widget_edit_header') ?>  <a role="button" href="<?php echo BASE_URL ?>/admin/widget/addWidget" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('widget_new_header') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/widget/edited/'.$this->uri->segment(4)); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('widget_edit_header') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/widget/addWidget" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('widget_new_header') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/widget/edited/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	
             <?php echo form_error('widget_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -71,16 +71,13 @@
         if(empty($widget->widget_content) || $widget->widget_content == NULL){
             $widget->widget_content = '<div class="row">
                                             <div class="col-md-3">
-                                                {link_img}
+                                                <a href="{sub_url}" title="{title}"><img class="lazy img-responsive img-thumbnail" data-src="{photo}" alt="{title}"></a>
                                             </div>
                                             <div class="col-md-9">
                                                 <a href="{sub_url}" title="{title}"><h4>{title}</h4></a><br>
                                                 <p>{short_desc}</p>
                                             </div>
                                         </div><hr>';
-        }
-        if(empty($widget->widget_seemore) || $widget->widget_seemore == NULL){
-            $widget->widget_seemore = '<div class="text-right"><a href="{main_url}" class="btn btn-primary btn-sm">{readmore_text}</a></div>';
         }
         if(empty($widget->widget_close) || $widget->widget_close == NULL){
             $widget->widget_close = '</div></div>';

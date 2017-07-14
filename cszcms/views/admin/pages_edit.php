@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/pages/edited/'.$pages->pages_id); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_addnew') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/pages/edited/'.$pages->pages_id); ?>
 
         <div class="control-group">	
             <?php echo form_error('page_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -41,6 +41,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('page_title', $pages->page_title)
             );
             echo form_input($data);
@@ -57,6 +58,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
+                'maxlength' => '255',
                 'value' => set_value('page_keywords', $pages->page_keywords)
             );
             echo form_input($data);
@@ -100,6 +102,18 @@
                 'id' => 'custom_css',
                 'class' => 'form-control',
                 'value' => set_value('custom_css', $pages->custom_css, FALSE)
+            );
+            echo form_textarea($data);
+            ?>			
+        </div> <!-- /control-group -->
+        <div class="control-group">            
+            <label class="control-label" for="custom_js"><?php echo $this->lang->line('pages_custom_js'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'custom_js',
+                'id' => 'custom_js',
+                'class' => 'form-control',
+                'value' => set_value('custom_js', $pages->custom_js, FALSE)
             );
             echo form_textarea($data);
             ?>			

@@ -15,9 +15,9 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-send"></i> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></b></div>
                 <div class="panel-body">
-                    <a role="button" href="<?php echo BASE_URL?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
+                    <a role="button" href="<?php echo $this->Csz_model->base_link()?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
                     <br><br>
-                    <?php echo form_open(BASE_URL . '/member/insertpm'); ?>
+                    <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
                     <div class="control-group">	
                         <?php echo form_error('to', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <label class="control-label" for="to"><?php echo $this->Csz_model->getLabelLang('pm_to_txt'); ?>*</label>

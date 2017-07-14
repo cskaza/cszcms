@@ -58,7 +58,7 @@ class Pages extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('pages', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/pages/';
+        $base_url = $this->Csz_model->base_link(). '/admin/pages/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);    
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;        
@@ -71,7 +71,8 @@ class Pages extends CI_Controller {
 
     public function addPages() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('pages content');
+        admin_helper::is_allowchk('pages content');       
+        $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Get lang from database
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         
@@ -85,7 +86,7 @@ class Pages extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('pages content');
         admin_helper::is_allowchk('save');
-        //Load the form validation library
+        //Load the form validation library       
         $this->load->library('form_validation');
         //Set validation rules
         $this->form_validation->set_rules('page_name', 'Pages Name', 'required');

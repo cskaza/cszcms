@@ -9,7 +9,7 @@
     </div>
 </div>
 <!-- /.row -->
-<?php echo form_open_multipart(BASE_URL.'/admin/settings/update'); ?>
+<?php echo form_open_multipart($this->Csz_model->base_link().'/admin/settings/update'); ?>
 <div class="row">
     <div class="col-lg-6 col-md-6">
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_header') ?></div>
@@ -51,6 +51,7 @@
                     'name' => 'siteKeyword',
                     'id' => 'siteKeyword',
                     'class' => 'form-control',
+                    'maxlength' => '255',
                     'value' => set_value('siteKeyword', $settings->keywords, FALSE)
                 );
                 echo form_input($data);
@@ -151,6 +152,9 @@
                 $data['360'] = '360 '.$this->lang->line('settings_pagecache_time_min');
                 $data['720'] = '720 '.$this->lang->line('settings_pagecache_time_min');
                 $data['1440'] = '1440 '.$this->lang->line('settings_pagecache_time_min');
+                $data['10080'] = '10080 '.$this->lang->line('settings_pagecache_time_min');
+                $data['21600'] = '21600 '.$this->lang->line('settings_pagecache_time_min');
+                $data['43200'] = '43200 '.$this->lang->line('settings_pagecache_time_min');
                 echo form_dropdown('pagecache_time', $data, $settings->pagecache_time, $att);
                 ?>
                 <span class="remark"><em><?php echo $this->lang->line('settings_pagecache_time_remark'); ?></em></span>
@@ -173,6 +177,23 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_maintenance_active'); ?></label>
         </div> <!-- /control-group -->
+        <div class="control-group">										
+            <label class="form-control-static" for="html_optimize_disable">
+                <?php
+                if($settings->html_optimize_disable){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'html_optimize_disable',
+                    'id' => 'html_optimize_disable',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_html_optimize_disable'); ?></label>
+        </div> <!-- /control-group -->
         <hr />
         <div class="control-group">		
             <?php echo form_error('file_upload', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
@@ -180,7 +201,7 @@
             <div class="controls">
                 <div><img class="img-responsive img-thumbnail" src="<?php
                     if($settings->site_logo != "" && $settings->site_logo != NULL){
-                        echo BASE_URL.'/photo/logo/'.$settings->site_logo;
+                        echo base_url() . 'photo/logo/'.$settings->site_logo;
                     }
                     ?>" id="logo_preloaded" <?php
                           if($settings->site_logo == "" || $settings->site_logo == NULL){
@@ -207,7 +228,7 @@
             <div class="controls">
                 <div><img class="img-responsive img-thumbnail" src="<?php
                     if($settings->og_image != "" && $settings->og_image != NULL){
-                        echo BASE_URL.'/photo/logo/'.$settings->og_image;
+                        echo base_url().'photo/logo/'.$settings->og_image;
                     }
                     ?>" id="logo_preloaded" <?php
                           if($settings->og_image == "" || $settings->og_image == NULL){
@@ -260,17 +281,7 @@
                 );
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_member_close_regist'); ?></label>
-        </div> <!-- /control-group -->      
-    </div>
-    <div class="col-lg-6 col-md-6">
-        <div class="h2 sub-header"><?php echo $this->lang->line('settings_sitemap_header') ?></div>
-        <a href="<?php echo BASE_URL.'/admin/settings/gensitemap' ?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_header') ?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
-        <b><?php echo $this->lang->line('settings_sitemap_lasttime') ?>: </b><b><?php if($sitemaptime !== FALSE){
-                    echo '<span class="success"><em>'.$sitemaptime.'</em></span>';
-                }else{
-                    echo '<span class="error"><em>-</em></span>';
-                } ?></b>
-        <br><br>
+        </div> <!-- /control-group -->
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_fbappid_header') ?></div>    
         <div class="control-group">	
             <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_fbapp_id'); ?></label>
@@ -288,7 +299,17 @@
                 <span class="remark"><em><?php echo $this->lang->line('settings_fbappid_remark'); ?></em></span>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <br>       
+        <br>   
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <div class="h2 sub-header"><?php echo $this->lang->line('settings_sitemap_header') ?></div>
+        <a href="<?php echo $this->Csz_model->base_link().'/admin/settings/gensitemap' ?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_header') ?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
+        <b><?php echo $this->lang->line('settings_sitemap_lasttime') ?>: </b><b><?php if($sitemaptime !== FALSE){
+                    echo '<span class="success"><em>'.$sitemaptime.'</em></span>';
+                }else{
+                    echo '<span class="error"><em>-</em></span>';
+                } ?></b>
+        <br><br>
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_email_header') ?></div>
         <div class="control-group">	
             <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>
@@ -504,6 +525,58 @@
                 echo form_input($data);
                 ?>
                 <span class="remark"><em><?php echo $this->lang->line('settings_gsearch_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="gmaps_key"><?php echo $this->lang->line('settings_gmaps_key'); ?></label>
+            <div class="controls">
+                <?php
+                $data = array(
+                    'name' => 'gmaps_key',
+                    'id' => 'gmaps_key',
+                    'class' => 'form-control',
+                    'maxlength' => '255',
+                    'value' => set_value('gmaps_key', $settings->gmaps_key, FALSE)
+                );
+                echo form_input($data);
+                ?>
+                <span class="remark"><em><?php echo $this->lang->line('settings_gmaps_key_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="gmaps_lat"><?php echo $this->lang->line('settings_gmaps_lat'); ?></label>
+            <div class="controls">
+                <?php
+                if(empty($settings->gmaps_lat) && $settings->gmaps_lat == NULL){
+                    $settings->gmaps_lat = '-28.621975';
+                }
+                $data = array(
+                    'name' => 'gmaps_lat',
+                    'id' => 'gmaps_lat',
+                    'class' => 'form-control',
+                    'maxlength' => '100',
+                    'value' => set_value('gmaps_lat', $settings->gmaps_lat, FALSE)
+                );
+                echo form_input($data);
+                ?>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="gmaps_lng"><?php echo $this->lang->line('settings_gmaps_lng'); ?></label>
+            <div class="controls">
+                <?php
+                if(empty($settings->gmaps_lng) && $settings->gmaps_lng == NULL){
+                    $settings->gmaps_lng = '150.689082';
+                }
+                $data = array(
+                    'name' => 'gmaps_lng',
+                    'id' => 'gmaps_lng',
+                    'class' => 'form-control',
+                    'maxlength' => '100',
+                    'value' => set_value('gmaps_lng', $settings->gmaps_lng, FALSE)
+                );
+                echo form_input($data);
+                ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
     </div>

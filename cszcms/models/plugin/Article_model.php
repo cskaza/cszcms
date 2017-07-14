@@ -188,14 +188,14 @@ class Article_model extends CI_Model {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="' . BASE_URL . '/admin/plugin/article">' . $this->lang->line('nav_dash') . '</a>
+                    <a class="navbar-brand" href="' . $this->Csz_model->base_link(). '/admin/plugin/article">' . $this->lang->line('nav_dash') . '</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li' . $this->AdminMenuActive('category', $cur_page, 'cat') . '><a href="' . BASE_URL . '/admin/plugin/article/category">' . $this->lang->line('category_header') . '</a></li>
-                        <li' . $this->AdminMenuActive('article', $cur_page, 'art') . '><a href="' . BASE_URL . '/admin/plugin/article/article">' . $this->lang->line('article_header') . '</a></li>                      
+                        <li' . $this->AdminMenuActive('category', $cur_page, 'cat') . '><a href="' . $this->Csz_model->base_link(). '/admin/plugin/article/category">' . $this->lang->line('category_header') . '</a></li>
+                        <li' . $this->AdminMenuActive('article', $cur_page, 'art') . '><a href="' . $this->Csz_model->base_link(). '/admin/plugin/article/article">' . $this->lang->line('article_header') . '</a></li>                      
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -207,7 +207,7 @@ class Article_model extends CI_Model {
         $maincat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '0' AND lang_iso = '" . $lang_iso . "'", '', 0, 'arrange', 'ASC');
         $html = '<div class="panel panel-primary">
                 <div class="panel-body">
-                    <form action="' . BASE_URL . '/plugin/article/search" name="searchfrm" id="searchfrm" method="get" style="margin:0px; padding:0px;">
+                    <form action="' . $this->Csz_model->base_link(). '/plugin/article/search" name="searchfrm" id="searchfrm" method="get" style="margin:0px; padding:0px;">
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-search"></i></span>
                         <input type="text" class="form-control" placeholder="' . $this->Csz_model->getLabelLang('article_search_txt') . '" name="p" value="' . $this->Csz_model->cleanOSCommand($this->input->get('p' ,TRUE)) . '">
@@ -219,16 +219,16 @@ class Article_model extends CI_Model {
                 <div class="panel-heading"><b><i class="glyphicon glyphicon-menu-hamburger"></i> ' . $this->Csz_model->getLabelLang('article_category_menu') . '</b></div>
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">';
-        $html.= '<li role="presentation" class="text-left"><a href="' . BASE_URL . '/plugin/article"><b><i class="glyphicon glyphicon-home"></i> ' . $this->Csz_model->getLabelLang('article_index_header') . '</b></a></li>';
+        $html.= '<li role="presentation" class="text-left"><a href="' . $this->Csz_model->base_link(). '/plugin/article"><b><i class="glyphicon glyphicon-home"></i> ' . $this->Csz_model->getLabelLang('article_index_header') . '</b></a></li>';
         if ($maincat === FALSE) {
             $html.= '<li role="presentation" class="text-left"><a><b>' . $this->Csz_model->getLabelLang('article_cat_not_found') . '</b></a></li>';
         } else {
             foreach ($maincat as $mc) {
-                $html.= '<li role="presentation" class="text-left"><a href="' . BASE_URL . '/plugin/article/category/' . $mc['url_rewrite'] . '"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $mc['category_name'] . '</b></a></li>';
+                $html.= '<li role="presentation" class="text-left"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $mc['url_rewrite'] . '"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $mc['category_name'] . '</b></a></li>';
                 $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '" . $mc['article_db_id'] . "'", '', 0, 'arrange', 'ASC');
                 if (!empty($subcat)) {
                     foreach ($subcat as $sc) {
-                        $html.= '<li role="presentation" class="text-left" style="margin-left:40px;line-height:8px;"><a href="' . BASE_URL . '/plugin/article/category/' . $sc['url_rewrite'] . '">' . $sc['category_name'] . '</a></li>';
+                        $html.= '<li role="presentation" class="text-left" style="margin-left:40px;line-height:8px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $sc['url_rewrite'] . '">' . $sc['category_name'] . '</a></li>';
                     }
                 }
             }
@@ -250,7 +250,7 @@ class Article_model extends CI_Model {
                 $subarchive = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS article_month_name, MONTH(timestamp_create) AS article_month", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '" . $lang_iso . "' AND YEAR(timestamp_create) = '" . $ac['article_year'] . "'", '', 0, 'article_month', 'DESC', 'article_month');
                 if (!empty($subarchive)) {
                     foreach ($subarchive as $sa) {
-                        $html.= '<li role="presentation" class="text-left" style="padding-left:10px;"><a href="' . BASE_URL . '/plugin/article/archive/' . $ac['article_year'] . '-' . $sa['article_month'] . '">' . $sa['article_month_name'] . '</a></li>';
+                        $html.= '<li role="presentation" class="text-left" style="padding-left:10px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/archive/' . $ac['article_year'] . '-' . $sa['article_month'] . '">' . $sa['article_month_name'] . '</a></li>';
                     }
                 }
                 $html.= '</div>';
@@ -261,7 +261,7 @@ class Article_model extends CI_Model {
             </div>';
         $html.= '<div class="panel panel-primary">
                 <div class="panel-body text-center">
-            <a href="' . BASE_URL . '/plugin/article/rss" class="btn btn-sm btn-primary" target="_blank" title="RSS FEED"><i class="fa fa-rss" aria-hidden="true"></i> RSS FEED</a>
+            <a href="' . $this->Csz_model->base_link(). '/plugin/article/rss" class="btn btn-sm btn-primary" target="_blank" title="RSS FEED"><i class="fa fa-rss" aria-hidden="true"></i> RSS FEED</a>
             </div>
             </div>';
         return $html;

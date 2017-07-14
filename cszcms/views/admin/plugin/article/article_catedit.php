@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('category_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_cat').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editCatSave/'.$this->uri->segment(5)); ?>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/article/editCatSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
                 <label class="control-label" for="category_name"><?php echo $this->lang->line('category_name'); ?>*</label>
                 <?php

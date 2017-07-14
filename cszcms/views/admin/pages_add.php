@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
-        <?php echo form_open(BASE_URL . '/admin/pages/insert'); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_addnew') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/pages/insert'); ?>
 
         <div class="control-group">	
             <?php echo form_error('page_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
@@ -25,7 +25,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('page_name', '', FALSE)
+                'value' => set_value('page_name', $this->Csz_admin_model->getDraftArray('page_name') , FALSE)
             );
             echo form_input($data);
             ?>			
@@ -41,7 +41,8 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'value' => set_value('page_title', '', FALSE)
+                'maxlength' => '255',
+                'value' => set_value('page_title', $this->Csz_admin_model->getDraftArray('page_title'), FALSE)
             );
             echo form_input($data);
             ?>				
@@ -57,7 +58,8 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'value' => set_value('page_keywords', '', FALSE)
+                'maxlength' => '255',
+                'value' => set_value('page_keywords', $this->Csz_admin_model->getDraftArray('page_keywords'), FALSE)
             );
             echo form_input($data);
             ?>				
@@ -73,7 +75,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'value' => set_value('page_desc', '', FALSE)
+                'value' => set_value('page_desc', $this->Csz_admin_model->getDraftArray('page_desc'), FALSE)
             );
             echo form_input($data);
             ?>			
@@ -89,7 +91,7 @@
                         $data[$lg->lang_iso] = $lg->lang_name;
                     }
                 }
-                echo form_dropdown('lang_iso', $data, '', $att);
+                echo form_dropdown('lang_iso', $data, $this->Csz_admin_model->getDraftArray('lang_iso'), $att);
             ?>	
         </div> <!-- /control-group -->
         <br>
@@ -112,7 +114,19 @@
                 'name' => 'custom_css',
                 'id' => 'custom_css',
                 'class' => 'form-control',
-                'value' => set_value('custom_css', '', FALSE)
+                'value' => set_value('custom_css', $this->Csz_admin_model->getDraftArray('custom_css'), FALSE)
+            );
+            echo form_textarea($data);
+            ?>			
+        </div> <!-- /control-group -->
+        <div class="control-group">            
+            <label class="control-label" for="custom_js"><?php echo $this->lang->line('pages_custom_js'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'custom_js',
+                'id' => 'custom_js',
+                'class' => 'form-control',
+                'value' => set_value('custom_js', $this->Csz_admin_model->getDraftArray('custom_js'), FALSE)
             );
             echo form_textarea($data);
             ?>			
@@ -128,9 +142,20 @@
                             </div><br><br>';
             ?>
             <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
-            <textarea name="content" id="content" class="form-control body-tinymce"><?php echo $starter_html?></textarea>
+            <textarea name="content" id="content" class="form-control body-tinymce"><?php if($this->Csz_admin_model->getDraftArray('content')){ echo $this->Csz_admin_model->getDraftArray('content'); }else{ echo $starter_html; } ?></textarea>
         </div> <!-- /control-group -->
-        <br>
+        <br><br>
+        <?php
+            $data = array(
+                'type' => 'button',
+                'name' => 'save_draft',
+                'id' => 'save_draft',
+                'class' => 'btn btn-lg btn-warning',
+                'value' => $this->lang->line('btn_save_draft'),
+            );
+            echo form_input($data);
+            ?> <span id="save_draft_res" class="text-success"></span>
+            <input type="hidden" name="current_url" id="current_url" value="<?php echo current_url(); ?>">
         <br><br>
         <div class="form-actions">
             <?php
@@ -138,7 +163,7 @@
                 'name' => 'submit',
                 'id' => 'submit',
                 'class' => 'btn btn-lg btn-primary',
-                'value' => $this->lang->line('btn_save'),
+                'value' => $this->lang->line('btn_save_exit'),
             );
             echo form_submit($data);
             ?> 

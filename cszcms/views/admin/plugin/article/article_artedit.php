@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('article_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/article/editArtSave/'.$this->uri->segment(5)); ?>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/article/editArtSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
                 <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                 <label class="control-label" for="title"><?php echo $this->lang->line('article_title'); ?>*</label>
@@ -89,7 +89,7 @@
                 <div class="controls">
                     <div><img src="<?php
                               if ($article->main_picture != "" && $article->main_picture != NULL) {
-                                  echo BASE_URL . '/photo/plugin/article/' . $article->main_picture;
+                                  echo base_url() . 'photo/plugin/article/' . $article->main_picture;
                               }
                               ?>" id="logo_preloaded" <?php
                     if ($article->main_picture == "" || $article->main_picture == NULL) {

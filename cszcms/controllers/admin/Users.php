@@ -58,7 +58,7 @@ class Users extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('user_admin', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/users/';
+        $base_url = $this->Csz_model->base_link(). '/admin/users/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     
         ($this->uri->segment(3))? $pagination = $this->uri->segment(3) : $pagination = 0;
@@ -250,7 +250,7 @@ class Users extends CI_Controller {
             $from_name = $row->site_name;
             $from_email = 'no-reply@'.EMAIL_DOMAIN;
             $to_email = $email;
-            $message_html = $this->lang->line('email_dear').$email.',<br><br>'.$this->lang->line('email_reset_message').'<br><a href="'.BASE_URL.'/admin/reset/'.$md5_hash.'" target="_blank"><b>'.BASE_URL.'/admin/reset/'.$md5_hash.'</b></a><br><br>'.$this->lang->line('email_footer').'<br><a href="'.BASE_URL.'" target="_blank"><b>'.$row->site_name.'</b></a>';
+            $message_html = $this->lang->line('email_dear').$email.',<br><br>'.$this->lang->line('email_reset_message').'<br><a href="'.$this->Csz_model->base_link().'/admin/reset/'.$md5_hash.'" target="_blank"><b>'.$this->Csz_model->base_link().'/admin/reset/'.$md5_hash.'</b></a><br><br>'.$this->lang->line('email_footer').'<br><a href="'.$this->Csz_model->base_link().'" target="_blank"><b>'.$row->site_name.'</b></a>';
             @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
 
             $this->template->setSub('error_chk', 0);
@@ -299,7 +299,7 @@ class Users extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => sha1(md5($this->input->post('password', TRUE))),
+                        'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
                         'md5_hash' => md5(time()+mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);

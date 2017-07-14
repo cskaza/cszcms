@@ -19,9 +19,9 @@
                         <div class="row">
                             <div class="col-lg-2 col-md-2 text-center">
                                 <?php if($users->picture && $users->picture != NULL){ ?>
-                                <img src="<?php echo BASE_URL . '/photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
+                                <img src="<?php echo base_url() . 'photo/profile/' . $users->picture; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php }else{ ?>
-                                <img src="<?php echo BASE_URL . '/photo/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
+                                <img src="<?php echo base_url() . 'photo/no_image.png'; ?>" class="img-circle" alt="Profile Photo" width="120" height="120">
                                 <?php } ?>
                                 <br><br>
                             </div>

@@ -88,8 +88,31 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         $fopen = fopen($config_file, 'wb') or die("can't open file");
         fwrite($fopen, $config_txt);
         fclose($fopen);
+        /* Prepare htaccess.config.inc.php file */
+        $htaccess_file = '../htaccess.config.inc.php';
+        $htaccess_txt = "<?php \n";
+        $htaccess_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
+        $htaccess_txt .= "/* \n";
+        $htaccess_txt .= "* For .htaccess file support. \n";
+        $htaccess_txt .= "* For mod_rewrite is not support and .htaccess is not support. Please config the 'HTACCESS_FILE' to FALSE  \n";
+        $htaccess_txt .= "* Default is TRUE \n";
+        $htaccess_txt .= "*/ \n";
+        if($_POST['htaccess']){
+            $htaccess_txt .= "define('HTACCESS_FILE', TRUE); \n";
+        }else{
+            $htaccess_txt .= "define('HTACCESS_FILE', FALSE); \n";
+            @rename("../.htaccess", "../bak.htaccess.bak");
+        }
+        /* write htaccess.config.inc.php file */
+        $fopen1 = fopen($htaccess_file, 'wb') or die("can't open file");
+        fwrite($fopen1, $htaccess_txt);
+        fclose($fopen1);
         $success = 1;
         $db->closeDB();
+        if (isset($_COOKIE['csrf_cookie_csz'])) {
+            unset($_COOKIE['csrf_cookie_csz']);
+            setcookie('csrf_cookie_csz', null, -1, '/');
+        }
     }
 }
 ?>
@@ -155,7 +178,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                 <h3 class="panel-title"><b>Please login to backend with your Email address and Password was setup.</b></h3>
                             </div>
                             <div class="panel-body">
-                                <a href="<?php echo $baseurl; ?>/admin?nocache=<?php echo time() ?>" class="btn btn-lg btn-success">Go to Backend login</a>
+                                <a href="<?php echo $baseurl; ?>/index.php/admin?nocache=<?php echo time() ?>" class="btn btn-lg btn-success">Go to Backend login</a>
                             </div>
                         </div>
                     </div>
@@ -247,6 +270,16 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                 $dbcache_per = 0;
                             }
                             ?>]
+                            <?php if(function_exists('apache_get_modules') ){ ?>
+                                <br>
+                                Apache mod_rewrite is enabled [<?php                           
+                                    if(in_array('mod_rewrite', apache_get_modules())){
+                                        echo '<span class="success">PASS</span>';
+                                    }else{
+                                        echo '<span class="error">FAIL</span>';
+                                    }
+                                ?>]
+                            <?php } ?>
                             <?php
                             if ($sqli == 1 && $php == 1 && $curl == 1 && $gd == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
                                 $chk_pass = 1;
@@ -289,6 +322,8 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <h3 class="panel-title"><b>Website Setup</b></h3>
                                     </div>
                                     <div class="panel-body">
+                                        <label for="htaccess"><input id="htaccess" name="htaccess" type="checkbox" checked> Yes, your server is support to .htccess and mod_rewrite.</label><br>
+                                        <span class="text-info"><em>If mod_rewrite is not support and .htaccess is not support. Please uncheck this box!</em></span><br><br>
                                         <label for="baseurl">Base URL*: </label>
                                         <div class="input-group">
                                             <span class="input-group-addon">

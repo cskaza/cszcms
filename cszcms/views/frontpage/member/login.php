@@ -25,7 +25,7 @@
                     }
                     ?>
                     </div>
-                    <?php echo form_open(BASE_URL . '/member/login/check') ?>
+                    <?php echo form_open($this->Csz_model->base_link(). '/member/login/check') ?>
                     <div class="form-group has-feedback">
                         <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                         <?php
@@ -65,7 +65,7 @@
                     <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->Csz_model->getLabelLang('login_signin'); ?></button>
                     <?php echo form_close() ?>
                 </div>
-                <div class="panel-footer text-center"><?php if(!$config->member_close_regist){ ?><a href="<?php echo BASE_URL; ?>/member/register"><?php echo $this->Csz_model->getLabelLang('login_register'); ?></a> &nbsp;&nbsp;|&nbsp;&nbsp; <?php } ?><a href="<?php echo BASE_URL; ?>/member/forgot"><?php echo $this->Csz_model->getLabelLang('login_forgetpwd'); ?></a></div>
+                <div class="panel-footer text-center"><?php if(!$config->member_close_regist){ ?><a href="<?php echo $this->Csz_model->base_link(); ?>/member/register"><?php echo $this->Csz_model->getLabelLang('login_register'); ?></a> &nbsp;&nbsp;|&nbsp;&nbsp; <?php } ?><a href="<?php echo $this->Csz_model->base_link(); ?>/member/forgot"><?php echo $this->Csz_model->getLabelLang('login_forgetpwd'); ?></a></div>
             </div>
         </div>
         <div class="col-md-3 hidden-sm hidden-xs"></div>

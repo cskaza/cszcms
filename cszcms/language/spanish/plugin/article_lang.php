@@ -6,7 +6,7 @@ $lang['article_title']                  = "Titulo/Descripción";
 $lang['article_author']                 = "Autor";
 $lang['article_datetime']               = "Fecha/Hora";
 $lang['category_header']		= "Categoria";
-$lang['article_widget_remark']		= "{language_iso} is the language code for frontend. You can see in 'Language' section on backend system.";
+$lang['article_widget_remark']		= "{language_iso} Es el código de idioma para frontend. Puede ver en la sección 'Idioma' en el sistema backend.";
 $lang['article_total']                  = "Total de Articulos";
 $lang['category_total']                  = "Total de Categorias";
 

@@ -68,7 +68,7 @@ class Login_logs extends CI_Controller {
         $result_per_page = 50;
         $total_row = $this->Csz_admin_model->countTable('login_logs', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/loginlogs/';
+        $base_url = $this->Csz_model->base_link(). '/admin/loginlogs/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
@@ -156,6 +156,16 @@ class Login_logs extends CI_Controller {
             $this->Csz_admin_model->removeData('blacklist_ip', 'blacklist_ip_id', $this->uri->segment(4));
             $this->db->cache_delete_all();
         }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
+    
+    public function genPrivateKey() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('protection settings');
+        admin_helper::is_allowchk('save');
+        $this->Csz_admin_model->makePrivateKey();
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }

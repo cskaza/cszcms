@@ -34,14 +34,14 @@ class Admin_helper{
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $sess_data = array('cszblogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
-            $redirect= BASE_URL.'/admin/login';
+            $redirect= $CI->Csz_model->base_link().'/admin/login';
             header("Location: $redirect");	
             exit;
         }else if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
             $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
-                $redirect= BASE_URL.'/admin/logout';
+                $redirect= $CI->Csz_model->base_link().'/admin/logout';
                 header("Location: $redirect");	
                 exit;
             }
@@ -57,7 +57,8 @@ class Admin_helper{
     */
     static function login_already($email_session){
         if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
-            $redirect= BASE_URL.'/admin';
+            $CI =& get_instance();
+            $redirect= $CI->Csz_model->base_link().'/admin';
             header("Location: $redirect");	
             exit;
         }
@@ -102,7 +103,7 @@ class Admin_helper{
         $CI->load->model('Csz_admin_model');
         $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_config_filename);
         if($chkactive === FALSE){
-            $redirect= BASE_URL.'/admin';
+            $redirect= $CI->Csz_model->base_link().'/admin';
             header("Location: $redirect");	
             exit;
         }

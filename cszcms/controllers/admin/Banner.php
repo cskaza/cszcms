@@ -65,7 +65,7 @@ class Banner extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('banner_mgt', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/banner/';
+        $base_url = $this->Csz_model->base_link(). '/admin/banner/';
 
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link);     

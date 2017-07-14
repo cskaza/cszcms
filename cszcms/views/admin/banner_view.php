@@ -17,7 +17,7 @@
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-primary">
                 <div class="widget-user-image">
-                    <?php ($banner->img_path && $banner->img_path !== NULL) ? $img = BASE_URL . '/photo/banner/' . $banner->img_path : $img = BASE_URL . '/photo/no_image.png'; ?>
+                    <?php ($banner->img_path && $banner->img_path !== NULL) ? $img = base_url() . 'photo/banner/' . $banner->img_path : $img = base_url() . 'photo/no_image.png'; ?>
                     <img class="img-thumbnail" src="<?php echo $img ?>" alt="User Avatar">
                 </div>
                 <!-- /.widget-user-image -->
@@ -43,7 +43,7 @@
                                     foreach ($month as $m) { 
                                         $search_arr_m = "banner_mgt_id = '".$this->uri->segment(4)."' AND YEAR(timestamp_create) = '".$u['banner_year']."' AND MONTH(timestamp_create) = '".$m['banner_month']."'";
                                         $count_m = $this->Csz_model->countData('banner_statistic', $search_arr_m); ?>
-                                        <li><a href="<?php echo BASE_URL.'/admin/banner/view/' . $this->uri->segment(4) . '/' . $u['banner_year'] . '-' . str_pad($m['banner_month'], 2, '0', STR_PAD_LEFT) ; ?>"><?php echo $u['banner_year'].' '.$m['banner_month_name'] ?> <span class="pull-right badge bg-red"><?php echo $count_m ?></span></a></li>
+                                        <li><a href="<?php echo $this->Csz_model->base_link().'/admin/banner/view/' . $this->uri->segment(4) . '/' . $u['banner_year'] . '-' . str_pad($m['banner_month'], 2, '0', STR_PAD_LEFT) ; ?>"><?php echo $u['banner_year'].' '.$m['banner_month_name'] ?> <span class="pull-right badge bg-red"><?php echo $count_m ?></span></a></li>
                                     <?php } ?>
                                 <?php } ?>
                             <?php } ?>

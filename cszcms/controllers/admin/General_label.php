@@ -43,7 +43,7 @@ class General_label extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('general label');
         $this->db->cache_on();
         $this->csz_referrer->setIndex();
         $this->load->library('pagination');
@@ -51,7 +51,7 @@ class General_label extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('general_label');
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/genlabel/';
+        $base_url = $this->Csz_model->base_link(). '/admin/genlabel/';
         
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
@@ -71,7 +71,7 @@ class General_label extends CI_Controller {
 
     public function edit() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('general label');
         //Load the form helper
         $this->load->helper('form');
         if($this->uri->segment(4)){
@@ -92,7 +92,7 @@ class General_label extends CI_Controller {
 
     public function updated() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('general label');
         admin_helper::is_allowchk('save');
 
         $this->Csz_admin_model->updateLabel($this->uri->segment(4));
@@ -103,7 +103,7 @@ class General_label extends CI_Controller {
     
     public function syncLang() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('general label');
         admin_helper::is_allowchk('save');
         $this->Csz_admin_model->syncLabelLang();
         $this->db->cache_delete_all();

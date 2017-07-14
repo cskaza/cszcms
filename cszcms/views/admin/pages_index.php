@@ -11,11 +11,11 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_header') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('pages_header') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link()?>/admin/pages/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('pages_addnew') ?></a></div>
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <form id="lang_sel">
-                    <?php echo  $this->lang->line('lang_header') ?>: <select onchange="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/pages/?lang='+this.options[this.selectedIndex].value);" onblur="this.options[this.selectedIndex].value && (window.location = '<?php echo BASE_URL?>/admin/pages/?lang='+this.options[this.selectedIndex].value);">
+                    <?php echo  $this->lang->line('lang_header') ?>: <select onchange="this.options[this.selectedIndex].value && (window.location = '<?php echo $this->Csz_model->base_link()?>/admin/pages/?lang='+this.options[this.selectedIndex].value);" onblur="this.options[this.selectedIndex].value && (window.location = '<?php echo $this->Csz_model->base_link()?>/admin/pages/?lang='+this.options[this.selectedIndex].value);">
                         <option value="all"><?php echo  $this->lang->line('option_all') ?></option>
                         <?php foreach ($lang as $lg) { ?>
                             <option value="<?php echo $lg->lang_iso?>"<?php echo ($this->input->get('lang') == $lg->lang_iso)?' selected="selected"':''?>><?php echo $lg->lang_name?></option>
@@ -59,7 +59,7 @@
                             echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
                             echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
                             echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
-                            echo '<td class="text-center"><a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.BASE_URL.'/admin/pages/asCopy/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a> &nbsp;&nbsp; <a href="'.BASE_URL.'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.BASE_URL.'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center"><a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.$this->Csz_model->base_link().'/admin/pages/asCopy/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a> &nbsp;&nbsp; <a href="'.$this->Csz_model->base_link().'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                         

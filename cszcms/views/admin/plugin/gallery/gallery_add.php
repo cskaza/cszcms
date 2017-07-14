@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('gallery_new_header'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/plugin/gallery/addSave'); ?>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/addSave'); ?>
         <div class="control-group">	
             <?php echo form_error('album_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="album_name"><?php echo $this->lang->line('gallery_albumname'); ?>*</label>
@@ -24,7 +24,7 @@
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('album_name', '', FALSE)
+                'value' => set_value('album_name', $this->Csz_admin_model->getDraftArray('album_name'), FALSE)
             );
             echo form_input($data);
             ?>			
@@ -37,7 +37,7 @@
                 'id' => 'keyword',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('keyword', '', FALSE)
+                'value' => set_value('keyword', $this->Csz_admin_model->getDraftArray('keyword'), FALSE)
             );
             echo form_input($data);
             ?>			
@@ -52,7 +52,7 @@
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
-                'value' => set_value('short_desc', '', FALSE)
+                'value' => set_value('short_desc', $this->Csz_admin_model->getDraftArray('short_desc'), FALSE)
             );
             echo form_input($data);
             ?>
@@ -65,7 +65,7 @@
             foreach ($lang as $lg) {
                 $data[$lg->lang_iso] = $lg->lang_name;
             }
-            echo form_dropdown('lang_iso', $data, '', $att);
+            echo form_dropdown('lang_iso', $data, $this->Csz_admin_model->getDraftArray('lang_iso'), $att);
             ?>	
         </div> <!-- /control-group -->
         <br>
@@ -81,13 +81,25 @@
                 ?> <?php echo $this->lang->line('lang_active'); ?></label>	
         </div> <!-- /control-group -->
         <br><br>
+        <?php
+            $data = array(
+                'type' => 'button',
+                'name' => 'save_draft',
+                'id' => 'save_draft',
+                'class' => 'btn btn-lg btn-warning',
+                'value' => $this->lang->line('btn_save_draft'),
+            );
+            echo form_input($data);
+            ?> <span id="save_draft_res" class="text-success"></span>
+            <input type="hidden" name="current_url" id="current_url" value="<?php echo current_url(); ?>">
+        <br><br>
         <div class="form-actions">
             <?php
             $data = array(
                 'name' => 'submit',
                 'id' => 'submit',
                 'class' => 'btn btn-lg btn-primary',
-                'value' => $this->lang->line('btn_save'),
+                'value' => $this->lang->line('btn_save_exit'),
             );
             echo form_submit($data);
             ?> 

@@ -75,6 +75,7 @@ class Gallery extends CI_Controller {
     public function add() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('gallery');
+        $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
@@ -98,6 +99,8 @@ class Gallery extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Gallery_model->insert();
+            $this->output->delete_cache('plugin/gallery/rss');
+            $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
         }
@@ -143,6 +146,8 @@ class Gallery extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Gallery_model->update($this->uri->segment(5));
+                $this->output->delete_cache('plugin/gallery/rss');
+                $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
                 $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
             }
@@ -291,6 +296,8 @@ class Gallery extends CI_Controller {
                 }
             }
             $this->Gallery_model->delete($this->uri->segment(5));
+            $this->output->delete_cache('plugin/gallery/rss');
+            $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }

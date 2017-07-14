@@ -151,7 +151,7 @@ class Formsaction extends CI_Controller {
                     }
                 }
             }
-            $message_html.= '<br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . BASE_URL . '" target="_blank"><b>' . $webconfig->site_name . '</b></a>';           
+            $message_html.= '<br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . $this->Csz_model->base_link(). '" target="_blank"><b>' . $webconfig->site_name . '</b></a>';           
             @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
         } else {
             return FALSE;

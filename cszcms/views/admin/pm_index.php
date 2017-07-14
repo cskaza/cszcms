@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('pm_inbox') ?> <a role="button" href="<?php echo BASE_URL?>/admin/pm/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('pm_new_msg') ?></a></div>
-        <?php echo  form_open(BASE_URL . '/admin/pm/indexsave'); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('pm_inbox') ?> <a role="button" href="<?php echo $this->Csz_model->base_link()?>/admin/pm/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('pm_new_msg') ?></a></div>
+        <?php echo  form_open($this->Csz_model->base_link(). '/admin/pm/indexsave'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -38,18 +38,18 @@
                                 </td>';
                             echo '<td class="text-center h3" style="vertical-align:middle;">';
                             if($u['date_read'] == NULL){
-                                echo '<a href="'.BASE_URL . '/admin/pm/setread/'.$u['id'].'"><i class="fa fa-envelope" aria-hidden="true"></i></a>';
+                                echo '<a href="'.$this->Csz_model->base_link(). '/admin/pm/setread/'.$u['id'].'"><i class="fa fa-envelope" aria-hidden="true"></i></a>';
                                 $b_start = '<b>';
                                 $b_end = '</b>';
                             }else{
-                                echo '<a href="'.BASE_URL . '/admin/pm/setunread/'.$u['id'].'"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></a>';
+                                echo '<a href="'.$this->Csz_model->base_link(). '/admin/pm/setunread/'.$u['id'].'"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></a>';
                                 $b_start = '';
                                 $b_end = '';
                             }
                             echo '</td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $b_start . $this->Csz_admin_model->getUser($u['sender_id'])->name . $b_end . '</a></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $b_start . $u['title'] . $b_end . '</a></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $b_start . $u['date_sent'] . $b_end . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $b_start . $this->Csz_admin_model->getUser($u['sender_id'])->name . $b_end . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $b_start . $u['title'] . $b_end . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $b_start . $u['date_sent'] . $b_end . '</a></td>';
                             echo '</tr>';
                         }
                         ?>

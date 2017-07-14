@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('user_group_txt') ?>  <a role="button" href="<?php echo BASE_URL?>/admin/groups/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_group_new') ?></a></div>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('user_group_txt') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link()?>/admin/groups/add" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_group_new') ?></a></div>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -34,7 +34,7 @@
                             echo '<td class="text-center" style="vertical-align: middle;">' . $u['user_groups_id'] . '</td>';
                             echo '<td class="text-center" style="vertical-align: middle;">' . $u['name'] . '</td>';
                             echo '<td style="vertical-align: middle;">' . $u['definition'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.BASE_URL.'/admin/groups/edit/' . $u['user_groups_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.BASE_URL.'/admin/groups/delete/'.$u['user_groups_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.$this->Csz_model->base_link().'/admin/groups/edit/' . $u['user_groups_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/groups/delete/'.$u['user_groups_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                     }    ?>

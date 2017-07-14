@@ -65,7 +65,7 @@ class Actions_logs extends CI_Controller {
         $result_per_page = 50;
         $total_row = $this->Csz_admin_model->countTable('actions_logs', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/admin/actionslogs/';
+        $base_url = $this->Csz_model->base_link(). '/admin/actionslogs/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;

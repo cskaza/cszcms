@@ -76,7 +76,7 @@ class Member extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_admin', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/member/list/';
+        $base_url = $this->Csz_model->base_link(). '/member/list/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
@@ -93,7 +93,7 @@ class Member extends CI_Controller {
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(3)));
             $this->template->loadSub('frontpage/member/viewuser');
         }else{
-            redirect(BASE_URL.'/member', 'refresh');
+            redirect($this->Csz_model->base_link().'/member', 'refresh');
         }
     }
 
@@ -117,7 +117,7 @@ class Member extends CI_Controller {
             if($this->session->userdata('cszflogin_cururl')){
                 redirect($this->session->userdata('cszflogin_cururl'), 'refresh');
             }else{
-                redirect(BASE_URL.'/member', 'refresh');
+                redirect($this->Csz_model->base_link().'/member', 'refresh');
             }
         } else {
             $this->Csz_model->saveLogs($email, 'Frontend Login Invalid!', $result);
@@ -129,7 +129,7 @@ class Member extends CI_Controller {
     }
 
     public function logout() {
-        $this->Csz_model->logout(BASE_URL.'/member/login');
+        $this->Csz_model->logout($this->Csz_model->base_link().'/member/login');
     }
 
     public function registMember() {
@@ -137,7 +137,7 @@ class Member extends CI_Controller {
         $config = $this->Csz_model->load_config();
         if($config->member_close_regist){
             $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Sorry!!! Member register is closed!</div>');
-            redirect(BASE_URL.'/member/login', 'refresh');
+            redirect($this->Csz_model->base_link().'/member/login', 'refresh');
             exit();
         }else{
             //Load the form helper
@@ -177,12 +177,12 @@ class Member extends CI_Controller {
                     $from_name = $config->site_name;
                     $from_email = 'no-reply@' . EMAIL_DOMAIN;
                     $to_email = $email;
-                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . BASE_URL . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . BASE_URL . '" target="_blank"><b>' . $config->site_name . '</b></a>';
+                    $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . $this->Csz_model->base_link(). '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . $this->Csz_model->base_link(). '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . $this->Csz_model->base_link(). '" target="_blank"><b>' . $config->site_name . '</b></a>';
                     @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
                     $this->template->setSub('chksts', 1);
                     $this->template->loadSub('frontpage/member/regist');
                 }else{
-                    redirect(BASE_URL . '/member/confirm/' . $md5_hash, 'refresh');
+                    redirect($this->Csz_model->base_link(). '/member/confirm/' . $md5_hash, 'refresh');
                     exit();
                 }
             }else{
@@ -294,7 +294,7 @@ class Member extends CI_Controller {
             $from_name = $row->site_name;
             $from_email = 'no-reply@' . EMAIL_DOMAIN;
             $to_email = $email;
-            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_reset_message') . '<br><a href="' . BASE_URL . '/member/reset/' . $md5_hash . '" target="_blank"><b>' . BASE_URL . '/member/reset/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . BASE_URL . '" target="_blank"><b>' . $row->site_name . '</b></a>';
+            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_reset_message') . '<br><a href="' . $this->Csz_model->base_link(). '/member/reset/' . $md5_hash . '" target="_blank"><b>' . $this->Csz_model->base_link(). '/member/reset/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . '<br><a href="' . $this->Csz_model->base_link(). '" target="_blank"><b>' . $row->site_name . '</b></a>';
             @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
             $this->template->setSub('error_chk', 0);
             $this->template->setSub('chksts', 1);
@@ -337,7 +337,7 @@ class Member extends CI_Controller {
                     show_error('Sorry!!! Invalid Request!');
                 } else {
                     $data = array(
-                        'password' => sha1(md5($this->input->post('password', TRUE))),
+                        'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
                         'md5_hash' => md5(time() + mt_rand(1, 99999999)),
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
@@ -362,7 +362,7 @@ class Member extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_pms', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/member/indexpm/';
+        $base_url = $this->Csz_model->base_link(). '/member/indexpm/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
@@ -384,7 +384,7 @@ class Member extends CI_Controller {
         $result_per_page = 20;
         $total_row = $this->Csz_admin_model->countTable('user_pms', $search_arr);
         $num_link = 10;
-        $base_url = BASE_URL . '/member/sendpm/';
+        $base_url = $this->Csz_model->base_link(). '/member/sendpm/';
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
         ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
@@ -434,7 +434,7 @@ class Member extends CI_Controller {
         $this->form_validation->set_rules('message', $this->Csz_model->getLabelLang('pm_msg_txt'), 'required');
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
-            $this->newMSG();
+            $this->newPM();
         } else {            
             //Validation passed
             //Add the user

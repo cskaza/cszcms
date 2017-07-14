@@ -13,7 +13,7 @@ $row = $this->Csz_admin_model->load_config();
         <title>TinyMCE Select File</title>
 
         <!-- Bootstrap Core CSS -->
-        <?php echo link_tag($this->config->item('assets_url') . '/css/corecss.min.css'); ?>
+        <?php echo $core_css ?>
         <?php echo link_tag($this->config->item('assets_url') . '/font-awesome/css/font-awesome.min.css'); ?>
         <?php echo link_tag($this->config->item('assets_url') . '/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css'); ?>
 
@@ -73,7 +73,7 @@ $row = $this->Csz_admin_model->load_config();
                                             $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
                                             if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif') {
                                                 ?>
-                                                <img src="<?php echo BASE_URL . '/photo/upload/' . $file["file_upload"] ?>" width="60">
+                                                <img src="<?php echo base_url() . 'photo/upload/' . $file["file_upload"] ?>" width="60">
                                             <?php } else { ?>
                                                 <h4><i class="glyphicon glyphicon-file"></i> <?php echo strtoupper($ext) ?></h4>
                                             <?php } ?>
@@ -104,16 +104,16 @@ $row = $this->Csz_admin_model->load_config();
         <!-- Bootstrap core JavaScript
                 ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-<?php echo '<script type="text/javascript" src="' . $this->config->item('assets_url') . '/js/corejs.min.js"></script>' . "\n"; ?>
-<script type="text/javascript">
-$(document).on("click","tr.fileselect,a#btnselect",function(){
-  item_url = $(this).data("src");
-  var args = top.tinymce.activeEditor.windowManager.getParams();
-  win = (args.window);
-  input = (args.input);
-  win.document.getElementById(input).value = item_url;
-  top.tinymce.activeEditor.windowManager.close();
-});
-</script>
+        <?php echo $core_js ?>
+        <script type="text/javascript">
+        $(document).on("click","tr.fileselect,a#btnselect",function(){
+          item_url = $(this).data("src");
+          var args = top.tinymce.activeEditor.windowManager.getParams();
+          win = (args.window);
+          input = (args.input);
+          win.document.getElementById(input).value = item_url;
+          top.tinymce.activeEditor.windowManager.close();
+        });
+        </script>
     </body>
 </html>

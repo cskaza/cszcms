@@ -31,7 +31,8 @@ $lang['ga_sessions']            = "Sesiones de Google Analytics";
 $lang['ga_devices']		= "Dispositivos en Google Analytics";
 $lang['ga_sources']		= "Fuentes en Google Analytics";
 $lang['ga_refer']               = "Referencias en Google Analytics";
-$lang['ga_no_settings']         = 'Google Analytics not config on <a href="'.base_url().'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
+$lang['ga_allpage']               = "Google Analytics All Pages Content";
+$lang['ga_no_settings']         = 'Google Analytics no está configurado dirijase a <a href="'.get_instance()->Csz_model->base_link().'/'.'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
 
 //Users - All Users
 $lang['user_header']			= "Todos los usuarios";
@@ -40,8 +41,8 @@ $lang['user_name']			= "Mostrar Nombre";
 $lang['user_email']			= "Dirección de Correo Electronico";
 $lang['user_delete_btn']		= "Eliminar";
 $lang['user_edit_btn']                  = "Editar";
-$lang['user_delete_message']            = "Do you want to do this ? Make sure this is not your only user account.";
-$lang['user_delete_myacc']              = "Don't delete! This is your user account.";
+$lang['user_delete_message']            = "¿Esta seguro que desea eliminar este registro? Asegúrese de que ésta no sea la única cuenta de usuario.";
+$lang['user_delete_myacc']              = "¡No elimine! Esta es su cuenta de usuario.";
 $lang['user_addnew']			= "Nuevo usuario";
 
 //Users - New User/Edit User
@@ -54,7 +55,7 @@ $lang['user_new_pass']			= "Nueva Contraseña";
 $lang['user_new_confirm']		= "Confirmar Contraseña";
 $lang['user_new_active']		= "Activo";
 $lang['user_new_deactive']		= "Desactivado";
-$lang['user_new_type']                  = "Usuario Type";
+$lang['user_new_type']                  = "Tipos de Usuario";
 $lang['user_first_name']                = "Primer Nombre";
 $lang['user_last_name']                 = "Ultimo Apellido";
 $lang['user_birthday']                  = "Fecha de Cumpleaños";
@@ -63,9 +64,9 @@ $lang['user_address']                   = "Dirección";
 $lang['user_phone']                     = "Telefono";
 $lang['user_picture']                   = "Imagen";
 $lang['user_backend_visitor']           = "Visitante de zona administrativa";
-$lang['user_not_allow_txt']             = "You might not have permission to access this section!";
+$lang['user_not_allow_txt']             = "Es posible que no tenga permiso para acceder a esta sección.!";
 $lang['user_notapply_member']           = "Don't apply to 'Member' type!";
-$lang['user_member_txt']                = "Member Usuario";
+$lang['user_member_txt']                = "Usuarios Miembros";
 $lang['user_admin_txt']                 = "Admin Usuario";
 $lang['user_group_txt']                 = "Usuario Grupos";
 $lang['user_group_new']                 = "Nuevo Grupos";
@@ -75,11 +76,13 @@ $lang['user_group_definition']          = "Grupos Definición";
 $lang['user_permission_txt']            = "Permiso";
 $lang['user_backend_txt']               = "Backend";
 $lang['user_frontend_txt']              = "Frontend";
-$lang['user_perm_allow']                = "Allow";
-$lang['user_perm_deny']                 = "Deny";
+$lang['user_perm_allow']                = "Permitir";
+$lang['user_perm_deny']                 = "Denegar";
 
 // COMMON BUTTONS
-$lang['btn_save']		= "Save";
+$lang['btn_save']		= "Guardar";
+$lang['btn_save_draft']		= "Save Draft";
+$lang['btn_save_exit']		= "Save & Exit";
 $lang['btn_cancel']		= "Cancelar";
 $lang['btn_delete']		= "Eliminar";
 $lang['btn_edit']		= "Editar";
@@ -97,7 +100,7 @@ $lang['id_col_table']		= "ID#";
 $lang['year_txt']		= "Año";
 $lang['month_txt']		= "Mes";
 $lang['day_txt']		= "Dia";
-$lang['btn_ascopy']		= "As Copy";
+$lang['btn_ascopy']		= "Como Copia";
 
 //Login Page
 $lang['login_heading']		= "Iniciar Sesion en Zona administrativa";
@@ -119,7 +122,7 @@ $lang['forgot_check_email']	= "Por favor revisa tu correctro electronico y pulsa
 //Dashboard
 $lang['dash_welcome']		= "Bienvenido al panel de control de CSZ CMS";
 $lang['dash_cur_time']		= "Fecha y Hora Actual:";
-$lang['dash_message']		= "This is an open source web application that allows to manage all content and settings on the websites. It was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease. And based on the server side script language PHP and uses a MySQL or MariaDB database for data storage.<br><br>This is open-source Content Management System. And all is free under the Astian Develop Public License (ADPL).";
+$lang['dash_message']		= "Esta es una aplicación web de código abierto que permite crear aplicaciones web empresariales o administrar todo el contenido y la configuración en los sitios web. Fue construido sobre la base de Codeigniter y diseñar la estructura de Bootstrap, esto debería hacer que su sitio web responda plenamente con facilidad. Y basado en el servidor de lenguaje de script lado PHP y utiliza una base de datos MySQL o MariaDB para el almacenamiento de datos. <br> <br> Este es el sistema de gestión de contenido de código abierto. Y todo es gratuito bajo la Astian Develop Public License (ADPL).";
 $lang['dash_cszcms_link']	= "El sitio oficial de CSZ CMS.";
 
 // EMAILS FORGET PASSWORD
@@ -127,8 +130,8 @@ $lang['email_reset_subject']    = "Reiniciar tu contraseña CSZ-CMS";
 $lang['email_reset_message']    = "Please click the link below within 30 minutes to reset your password.";
 
 // EMAIL TEXT DEFAULT
-$lang['email_dear']             = "Dear ";
-$lang['email_footer']           = "Regards,";
+$lang['email_dear']             = "Querido ";
+$lang['email_footer']           = "Saludos,";
 
 // ERROR MESSAGES
 $lang['email_check']		= "This email address does not exist.";
@@ -160,8 +163,8 @@ $lang['remark_header']		= "Remark";
 
 //Social Page
 $lang['social_header']			= "Config Social";
-$lang['social_message']			= "Here you can set up the links for your various social accounts. These links will appear in the specified area of your theme.";
-$lang['social_enable']			= "To enable an icon tick the box beside it.";
+$lang['social_message']			= "Aquí puede configurar los vínculos para sus cuentas sociales diferentes. Estos enlaces aparecerán en el área especificada del tema.";
+$lang['social_enable']			= "Para activar un icono, marque la casilla junto a ella.";
 $lang['social_twitter']			= "Twitter";
 $lang['social_facebook']		= "Facebook";
 $lang['social_google']			= "Google+";
@@ -190,7 +193,7 @@ $lang['social_vk']                      = "VKontakte";
 $lang['social_gitlab']                  = "GitLab";
 $lang['social_table_title']		= "Social Site";
 $lang['social_table_link']		= "Profile Link";
-$lang['social_table_active']            = "Active";
+$lang['social_table_active']            = "Activo";
 
 //Settings Page
 $lang['settings_header']		= "Config Sitio";
@@ -237,9 +240,14 @@ $lang['settings_ga_client_id_remark']	= 'How to Creating a Google API Console pr
 $lang['settings_ga_view_id']		= "Google Analytics View ID";
 $lang['settings_ga_view_id_remark']	= 'You can see view ID at <a href="https://ga-dev-tools.appspot.com/query-explorer/" target="_blank"><b>Click Here</b></a>. After you "Access Google Analytics" and choose your site analytics. Please see your view ID at "ids"';
 $lang['settings_gsearch_active']	= "Google Custom Search Enable";
-$lang['settings_gsearch_cxid']          = "Your search engine ID (cx ID)";
+$lang['settings_gsearch_cxid']          = "ID de su motor de búsqueda (cx ID)";
 $lang['settings_gsearch_remark']	= 'You can see at <a href="https://developers.google.com/custom-search/docs/tutorial/introduction" target="_blank"><b>Custom Search Tutorial</b></a>.';
 $lang['settings_maintenance_active']    = "Habilitar el modo de mantenimiento";
+$lang['settings_html_optimize_disable']    = "Disable HTML Optimization";
+$lang['settings_gmaps_key']		= "Google Maps API Key";
+$lang['settings_gmaps_key_remark']	= 'How to getting a Google API key? <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank"><b>See here</b></a>';
+$lang['settings_gmaps_lat']		= "Default Latitude";
+$lang['settings_gmaps_lng']		= "Default Longitude";
 
 //Navigation Page
 $lang['navpage_header']                 = "Menu Principal";
@@ -258,6 +266,13 @@ $lang['delete_message']            = "Esta seguro que quiere realizar esto ?";
 $lang['navpage_addnew']			= "Nuevo Menu";
 $lang['navpagesub_header']                 = "Sub Menu";
 $lang['navpagesub_desc']                 = "Sub Menu for drop down menu";
+$lang['navpage_new_windows']            = "Nuevas Windows";
+$lang['navpage_position']            = "Position";
+$lang['navpage_index_remark_txt']       = "First menu of list is default for frontend page (Only top position).";
+
+//Navigation Position
+$lang['navpage_position_top']            = "Top";
+$lang['navpage_position_bottom']            = "Bottom";
 
 //Langs - All Langs
 $lang['lang_header']			= "Lenguaje";
@@ -265,9 +280,10 @@ $lang['lang_name']			= "Nombre del Lenguage";
 $lang['lang_iso']			= "Codigo del Lenguage";
 $lang['lang_country']			= "Pais";
 $lang['lang_country_iso']		= "Codigo del Pais (Bandera)";
-$lang['lang_delete_message']            = "Do you want to do this ? Make sure this is not defualt language.";
+$lang['lang_delete_message']            = "¿Quieres hacer esto ? Asegúrese de que este no es el idioma predeterminado.";
 $lang['lang_delete_default']              = "No puedes realizar esta operación! Este es el lenguaje predeterminado.";
 $lang['lang_addnew']			= "Nuevo Language";
+$lang['lang_index_remark_txt']              = "is system language. You can't delete this!<br>First language of list is default for frontend.";
 
 //Langs - New Lang/Edit Lang
 $lang['lang_new_header']		= "Nuevo Lenguage";
@@ -277,32 +293,33 @@ $lang['lang_countryiso_remark']		= 'You can see country ISO code list (2 letters
 $lang['lang_iso_remark']		= 'You can see language ISO code list (2 letters long) at - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank" rel="nofollow external">CLICK AQUÍ</a>';
 
 //Pages - All Pages
-$lang['pages_header']			= "Pages Content";
-$lang['pages_name']			= "Pages Name";
-$lang['pages_title']                    = "Pages Title";
-$lang['pages_lang']                     = "Language";
+$lang['pages_header']			= "Paginas";
+$lang['pages_name']			= "Nombre de Pagina";
+$lang['pages_title']                    = "Titulo de Pagina";
+$lang['pages_lang']                     = "Lenguaje";
 $lang['pages_delete_message']            = "Do you want to do this ? Make sure this is not defualt page.";
 $lang['pages_delete_default']              = "Don't delete! This is defualt page.";
-$lang['pages_addnew']			= "New Pages";
+$lang['pages_addnew']			= "Nueva Pagina";
 
 //Pages - New Pages/Edit Pages
-$lang['pages_new_header']		= "New Pages";
-$lang['pages_edit_header']		= "Edit Pages";
-$lang['pages_active']                    = "Active";
-$lang['pages_keywords']                    = "Pages Keywords";
-$lang['pages_desc']                    = "Pages Description";
-$lang['pages_content']                    = "Pages Content";
+$lang['pages_new_header']		= "Nueva Pagina";
+$lang['pages_edit_header']		= "Editar Pagina";
+$lang['pages_active']                    = "Activa";
+$lang['pages_keywords']                    = "Palabras Clave";
+$lang['pages_desc']                    = "Descripción de Pagina";
+$lang['pages_content']                    = "Contenido de Pagina";
 $lang['pages_custom_css']                    = "CSS personalizado";
+$lang['pages_custom_js']                    = "JS personalizado";
 
 //Captcha
-$lang['captcha_text']             = "Security Check (Please enter the character shown in the image)";
-$lang['captcha_wrong']             = "The Security Check was not input correctly. Please try again.";
+$lang['captcha_text']             = "Verificación de Seguridad (Por favor ingrese el carácter mostrado en la imagen)";
+$lang['captcha_wrong']             = "La comprobación de seguridad no se introdujo correctamente. Por favor, inténtelo de nuevo.";
 
 //Uploadfile Page
 $lang['uploadfile_header']                 = "Gestor de Archivos";
 $lang['uploadfile_filenotfound']           = "Archivo no encontrado. Por favor use la herramienta para subir archivos.";
 $lang['uploadfile_thumbnail']           = "Thumbnail";
-$lang['uploadfile_download']           = "Download";
+$lang['uploadfile_download']           = "Descargar";
 $lang['uploadfile_filename']           = "Nombre de Archivo";
 $lang['uploadfile_urlpath']           = "Url de ubicación:";
 $lang['uploadfile_uploadtime']           = "Upload Date/Time";
@@ -381,7 +398,8 @@ $lang['clearallcache_success_alert']    = "La limpieza de todo el cache de las p
 $lang['clearalldbcache_success_alert']    = "La limpieza de todo el cache de la base de datos a sido exitoso!";
 $lang['btn_clear_sess']                 = "Limpiar todas las sesiones";
 $lang['clear_sess_message']            = "Despues de limpiar todas las sesiones. Por favor iniciar sesion otra vez. Quieres realizar esto?";
-$lang['btn_backup_file']		= "File Backup";
+$lang['btn_backup_file']		= "Archivo de la copia de seguridad";
+$lang['btn_backup_photo']		= "Photo/Upload Backup";
 
 //Link Statistic
 $lang['linkstats_header']             = "Statistic for link";
@@ -409,27 +427,33 @@ $lang['genlabel_edit_header']		= "Edit General Label";
 $lang['genlabel_plssync_alert']             = "Please click 'Language Sync' now!";
 
 // Messages Alert
-$lang['success_message_alert']		= "Successfully!";
-$lang['error_message_alert']		= "Error! Please try again.";
+$lang['success_message_alert']		= "Exitosamente!";
+$lang['error_message_alert']		= "Ah ocurrido un error! Por favor intentarlo nuevamente.";
 
 // Plugin Manager
-$lang['pluginmgr_header']               = "Plugin Manager";
-$lang['pluginmgr_name']                 = "Plugin Name";
-$lang['pluginmgr_version']                 = "Plugin Version";
+$lang['pluginmgr_header']               = "Administrador de Plugins";
+$lang['pluginmgr_name']                 = "Nombre del plugin";
+$lang['pluginmgr_version']                 = "Version";
 $lang['pluginmgr_owner']                 = "Plugin Owner";
 $lang['pluginmgr_install']              = "Plugin Install";
-$lang['btn_install']                    = "Install";
-$lang['pluginmgr_zip_remark']              = "Only files (zip) are allowed.";
+$lang['btn_install']                    = "Instalar";
+$lang['pluginmgr_zip_remark']              = "solo archivos (zip) estan permitidos.";
 $lang['pluginmgr_status']              = "Plugin Status";
-$lang['pluginmgr_enable']               = "Enable";
-$lang['pluginmgr_disable']               = "Disable";
+$lang['pluginmgr_enable']               = "Habilitado";
+$lang['pluginmgr_disable']               = "Deshabilitado";
 $lang['pluginmgr_manage']               = "Manage";
+$lang['pluginmgr_store']               = "Plugins Store";
+$lang['pluginmgr_config_filename']                 = "Config File Name";
+$lang['pluginmgr_desc']               = "Description";
+$lang['pluginmgr_upgrade']               = "Upgrade";
+$lang['pluginmgr_latest_version']                 = "Latest Version";
+$lang['pluginmgr_latest_already']                 = "Your plugin is latest version!";
 
 // Widget Builder
 $lang['widget_header']               = "Plugin Widgets";
 $lang['widget_new_header']		= "Nuevo Widget";
-$lang['widget_edit_header']		= "Edit Widget";
-$lang['widget_active']                    = "Active";
+$lang['widget_edit_header']		= "Editar Widget";
+$lang['widget_active']                    = "Activo";
 $lang['widget_name']                 = "Widget Name";
 $lang['widget_xml_url']                 = "Widget XML URL";
 $lang['widget_limit_view']                 = "Show Limit";
@@ -437,15 +461,15 @@ $lang['widget_widget_open']                 = "HTML Open";
 $lang['widget_widget_content']                 = "HTML Content";
 $lang['widget_widget_seemore']                 = "HTML See more Button";
 $lang['widget_widget_close']                 = "HTML Close";
-$lang['widget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see Widget Name<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+$lang['widget_indexremark']		= "<i>Utilice esta etiqueta para insertar el widget de complemento en el contenido. Vea el nombre del widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
 
 // Facebook Comments
-$lang['fb_comment_active']               = "Enable Facebook Comments";
-$lang['fb_comment_limit']               = "Comments Limit Display";
-$lang['fb_comment_sort']                = "Facebook Comments Sort";
+$lang['fb_comment_active']               = "Comentarios de Facebook";
+$lang['fb_comment_limit']               = "Limite de comentario";
+$lang['fb_comment_sort']                = "Comentarios de Facebook Ordenar";
 $lang['fb_comment_sort_top']                = "Top";
-$lang['fb_comment_sort_newest']                = "Newest";
-$lang['fb_comment_sort_oldest']                = "Oldest";
+$lang['fb_comment_sort_newest']                = "El más nuevo";
+$lang['fb_comment_sort_oldest']                = "Más antiguo";
 
 // Brute force login protection
 $lang['bf_protection_header']                = "Proteccion de fuerza bruta";
@@ -460,6 +484,9 @@ $lang['loginlogs_header']               = "Registro de inicios de sesion";
 $lang['actionslogs_header']               = "Registros de acciones";
 $lang['loginlogs_result']                    = "Resultados";
 $lang['emaillogs_header']               = "Registros de correo electronico";
+$lang['bf_private_key']               = "Private Key";
+$lang['bf_gen_private_key']               = "Private Key Generator";
+$lang['bf_gen_private_key_confirm']            = "Do you want to do this? Please change the private key anywhere been required. After private key generate.";
 
 // Private Message
 $lang['pm_header']                = "Mensaje privado";
@@ -479,10 +506,10 @@ $lang['banner_header']                = "Administrador de Banner";
 $lang['banner_new']             = "Nueva Banner";
 $lang['banner_name']                 = "Nombre de Banner";
 $lang['banner_img']                 = "Banner Image";
-$lang['banner_width']                 = "Anchura";
-$lang['banner_height']                 = "Altura";
+$lang['banner_width']                 = "Ancho";
+$lang['banner_height']                 = "Alto";
 $lang['banner_link']                 = "Enlazar";
-$lang['banner_count']                = "Clic Count";
+$lang['banner_count']                = "Clicks";
 $lang['banner_date_period']            = "Período de la fecha";
 $lang['banner_nofollow']            = "Nofollow Enlace";
 $lang['banner_expired']            = "Banner Expired";

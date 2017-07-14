@@ -44,25 +44,39 @@ class Languages extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('language');
-        $this->load->library('pagination');
+        $this->load->helper('form');
         $this->db->cache_on();
         $this->csz_referrer->setIndex();
-
-        // Pages variable
-        $result_per_page = 20;
-        $total_row = $this->Csz_admin_model->countTable('lang_iso');
-        $num_link = 10;
-        $base_url = BASE_URL . '/admin/lang/';
-
-        // Pageination config
-        $this->Csz_admin_model->pageSetting($base_url,$total_row,$result_per_page,$num_link); 
-        ($this->uri->segment(3))? $pagination = ($this->uri->segment(3)) : $pagination = 0;
-
+        $total_row = $this->Csz_model->countData('lang_iso');
         //Get users from database
-        $this->template->setSub('lang', $this->Csz_admin_model->getIndexData('lang_iso', $result_per_page, $pagination, 'lang_iso_id', 'ASC'));
+        $this->template->setSub('lang', $this->Csz_model->getValueArray('*', 'lang_iso', '', '', 0, 'arrange', 'asc'));
+        $this->template->setSub('total_row', $total_row);
 
         //Load the view
         $this->template->loadSub('admin/lang_index');
+    }
+    
+    public function indexSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('language');
+        admin_helper::is_allowchk('save');
+        $i = 0; $arrange = 1;
+        $lang_iso_id = $this->input->post('lang_iso_id', TRUE);
+        if (!empty($lang_iso_id)) {
+            while ($i < count($lang_iso_id)) {
+                if ($lang_iso_id[$i]) {
+                    $this->db->set('arrange', $arrange, FALSE);
+                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->where("lang_iso_id", $lang_iso_id[$i]);
+                    $this->db->update('lang_iso');
+                    $arrange++;
+                }
+                $i++;
+            }
+        }
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function addLang() {
@@ -82,7 +96,7 @@ class Languages extends CI_Controller {
         $this->load->library('form_validation');
         //Set validation rules
         $this->form_validation->set_rules('lang_name', 'Language Name', 'required');
-        $this->form_validation->set_rules('lang_iso', 'Language ISO Code', 'trim|required|min_length[2]|max_length[2]');
+        $this->form_validation->set_rules('lang_iso', 'Language ISO Code', 'trim|required|min_length[2]|max_length[2]|is_unique[lang_iso.lang_iso]');
         $this->form_validation->set_rules('country', 'Country Name', 'required');
         $this->form_validation->set_rules('country_iso', 'Country ISO Code', 'trim|required|min_length[2]|max_length[2]');
 

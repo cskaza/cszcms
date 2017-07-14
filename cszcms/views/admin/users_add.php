@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo  $this->lang->line('user_addnew') ?>  <a role="button" href="<?php echo  BASE_URL ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
-        <?php echo form_open_multipart(BASE_URL . '/admin/users/new/add'); ?>
+        <div class="h2 sub-header"><?php echo  $this->lang->line('user_addnew') ?>  <a role="button" href="<?php echo  $this->Csz_model->base_link() ?>/admin/users/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo  $this->lang->line('user_addnew') ?></a></div>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/users/new/add'); ?>
         <div class="control-group">
             <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="name"><?php echo $this->lang->line('user_new_name'); ?>*</label>

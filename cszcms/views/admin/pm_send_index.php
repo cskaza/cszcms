@@ -11,8 +11,8 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('pm_send') ?> <a role="button" href="<?php echo BASE_URL?>/admin/pm/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('pm_new_msg') ?></a></div>
-        <?php echo  form_open(BASE_URL . '/admin/pm/indexsave'); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('pm_send') ?> <a role="button" href="<?php echo $this->Csz_model->base_link()?>/admin/pm/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('pm_new_msg') ?></a></div>
+        <?php echo  form_open($this->Csz_model->base_link(). '/admin/pm/indexsave'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -35,9 +35,9 @@
                             echo '<td class="text-center" style="vertical-align:middle;">
                                     <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['id'].'">
                                 </td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $u['title'] . '</a></td>';
-                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.BASE_URL . '/admin/pm/view/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $u['title'] . '</a></td>';
+                            echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/admin/pm/view/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
                             echo '</tr>';
                         }
                         ?>

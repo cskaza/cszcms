@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo BASE_URL?>" target="_blank"><?php echo  $this->Headfoot_html->getLogo(); ?></a></span></div>
+            <div class="text-center"><span style="font-size:36px;color:#ff6f00;font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;"><a href="<?php echo base_url()?>" target="_blank"><?php echo  $this->Headfoot_html->getLogo(); ?></a></span></div>
             <br><br><br>         
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
@@ -47,13 +47,13 @@
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div> <!-- /control-group -->
                     <br>
-                    <button class="btn btn-lg btn-primary" type="submit" id="forget_submit"><?php echo $this->lang->line('forgot_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-lg" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo  BASE_URL . '/admin' ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+                    <button class="btn btn-lg btn-primary" type="submit" id="forget_submit"><?php echo $this->lang->line('forgot_btn'); ?></button> &nbsp;&nbsp; <a class="btn btn-lg" name="newsletter_cancel" id="contact_database_cancel" href="<?php echo  $this->Csz_model->base_link(). '/admin' ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
                     <?php echo  form_close() ?>
                     <?php }if($success_chk){ ?>
                         <center>
                             <p class="success"><?php echo $this->lang->line('forgot_complete'); ?></p>
                             <br>
-                            <a class="btn btn-lg btn-primary" name="reset_back" id="reset_back" href="<?php echo BASE_URL . '/admin'?>"><?php echo $this->lang->line('btn_back'); ?></a>
+                            <a class="btn btn-lg btn-primary" name="reset_back" id="reset_back" href="<?php echo $this->Csz_model->base_link(). '/admin'?>"><?php echo $this->lang->line('btn_back'); ?></a>
                         </center>
                     <?php } ?>
                 </div>

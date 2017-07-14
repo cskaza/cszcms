@@ -31,7 +31,8 @@ $lang['ga_sessions']            = "Google Analytics Sessions";
 $lang['ga_devices']		= "Google Analytics Devices";
 $lang['ga_sources']		= "Google Analytics Sources";
 $lang['ga_refer']               = "Google Analytics Referrer";
-$lang['ga_no_settings']         = 'Google Analytics not config on <a href="'.base_url().'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
+$lang['ga_allpage']               = "Google Analytics All Pages Content";
+$lang['ga_no_settings']         = 'Google Analytics not config on <a href="'.get_instance()->Csz_model->base_link().'/'.'admin/settings#ga_client_id" title="Site Settings"><b>Site Settings</b></a>!';
 
 //Users - All Users
 $lang['user_header']			= "All Users";
@@ -80,6 +81,8 @@ $lang['user_perm_deny']                 = "Deny";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";
+$lang['btn_save_draft']		= "Save Draft";
+$lang['btn_save_exit']		= "Save & Exit";
 $lang['btn_cancel']		= "Cancel";
 $lang['btn_delete']		= "Delete";
 $lang['btn_edit']		= "Edit";
@@ -240,6 +243,11 @@ $lang['settings_gsearch_active']	= "Google Custom Search Enable";
 $lang['settings_gsearch_cxid']          = "Your search engine ID (cx ID)";
 $lang['settings_gsearch_remark']	= 'You can see at <a href="https://developers.google.com/custom-search/docs/tutorial/introduction" target="_blank"><b>Custom Search Tutorial</b></a>.';
 $lang['settings_maintenance_active']    = "Enable Maintenance Mode";
+$lang['settings_html_optimize_disable']    = "Disable HTML Optimization";
+$lang['settings_gmaps_key']		= "Google Maps API Key";
+$lang['settings_gmaps_key_remark']	= 'How to getting a Google API key? <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank"><b>See here</b></a>';
+$lang['settings_gmaps_lat']		= "Default Latitude";
+$lang['settings_gmaps_lng']		= "Default Longitude";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
@@ -258,6 +266,13 @@ $lang['delete_message']            = "Do you want to do this ?";
 $lang['navpage_addnew']			= "New Menu";
 $lang['navpagesub_header']                 = "Sub Menu";
 $lang['navpagesub_desc']                 = "Sub Menu for drop down menu";
+$lang['navpage_new_windows']            = "New Windows";
+$lang['navpage_position']            = "Position";
+$lang['navpage_index_remark_txt']       = "First menu of list is default for frontend page (Only top position).";
+
+//Navigation Position
+$lang['navpage_position_top']            = "Top";
+$lang['navpage_position_bottom']            = "Bottom";
 
 //Langs - All Langs
 $lang['lang_header']			= "Language";
@@ -268,6 +283,7 @@ $lang['lang_country_iso']		= "Country Code (Flag)";
 $lang['lang_delete_message']            = "Do you want to do this ? Make sure this is not defualt language.";
 $lang['lang_delete_default']              = "Don't delete! This is defualt language.";
 $lang['lang_addnew']			= "New Language";
+$lang['lang_index_remark_txt']              = "is system language. You can't delete this!<br>First language of list is default for frontend.";
 
 //Langs - New Lang/Edit Lang
 $lang['lang_new_header']		= "New Language";
@@ -293,6 +309,7 @@ $lang['pages_keywords']                    = "Pages Keywords";
 $lang['pages_desc']                    = "Pages Description";
 $lang['pages_content']                    = "Pages Content";
 $lang['pages_custom_css']                    = "Custom CSS";
+$lang['pages_custom_js']                    = "Custom JS";
 
 //Captcha
 $lang['captcha_text']             = "Security Check (Please enter the character shown in the image)";
@@ -382,6 +399,7 @@ $lang['clearalldbcache_success_alert']    = "Clear all DB cached successfully!";
 $lang['btn_clear_sess']                 = "Clear All Session";
 $lang['clear_sess_message']            = "After session has been cleared. Please login again. Do you want to do this?";
 $lang['btn_backup_file']		= "File Backup";
+$lang['btn_backup_photo']		= "Photo/Upload Backup";
 
 //Link Statistic
 $lang['linkstats_header']             = "Statistic for link";
@@ -424,6 +442,12 @@ $lang['pluginmgr_status']              = "Plugin Status";
 $lang['pluginmgr_enable']               = "Enable";
 $lang['pluginmgr_disable']               = "Disable";
 $lang['pluginmgr_manage']               = "Manage";
+$lang['pluginmgr_store']               = "Plugins Store";
+$lang['pluginmgr_config_filename']                 = "Config File Name";
+$lang['pluginmgr_desc']               = "Description";
+$lang['pluginmgr_upgrade']               = "Upgrade";
+$lang['pluginmgr_latest_version']                 = "Latest Version";
+$lang['pluginmgr_latest_already']                 = "Your plugin is latest version!";
 
 // Widget Builder
 $lang['widget_header']               = "Plugin Widgets";
@@ -460,6 +484,9 @@ $lang['loginlogs_header']               = "Login Logs";
 $lang['actionslogs_header']               = "Actions Logs";
 $lang['loginlogs_result']                    = "Result";
 $lang['emaillogs_header']               = "Email Logs";
+$lang['bf_private_key']               = "Private Key";
+$lang['bf_gen_private_key']               = "Private Key Generator";
+$lang['bf_gen_private_key_confirm']            = "Do you want to do this? Please change the private key anywhere been required. After private key generate.";
 
 // Private Message
 $lang['pm_header']                = "Private Message";

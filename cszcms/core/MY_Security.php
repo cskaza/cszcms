@@ -28,4 +28,21 @@ class MY_Security extends CI_Security{
         }
     }
     
+    /**
+     * Show CSRF Error
+     *
+     * @return	void
+     */
+    public function csrf_show_error() {
+        if(!empty($_SERVER["HTTP_REFERER"])) {
+            $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+            $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
+            if(($referer_host && $referer_host === $own_host)){
+                header('Refresh:2;url=' . $_SERVER["HTTP_REFERER"].'?nocache='.time());
+                show_error('The action is not allowed by CSRF Protection. Please wait 2 seconds to redirect.', 403);
+            }
+        }
+        show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
+    }
+    
 }

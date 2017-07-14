@@ -1,4 +1,35 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.7
+- Add custom js on content page and change the custom css function.
+- Add pageview with pagepath on Google Analytics.
+- Add html compress config on site settings.
+- Add Google maps api config on site setttings.
+- Add article and gallery plugin cache for rss and xml.
+- Add navigation position 'Top' and 'Bottom' config.
+- Add sort the frontend language for set default language.
+- Add article plugin to support amp load.
+- Add default page settings from natigation sort.
+- Add 'Save & Exit' and 'Save Draft' button on addnew page (Pages Content, Plugin Widgets, Article plugin, Gallery plugin).
+- Add private key generator on 'Protection Settings' for security use.
+- Add plugins store on backend.
+- Update Codeigniter to 3.1.5.
+- Change db backup filename to 'dbtable_name_datetime.sql'.
+- Fix navigation menu have new windows settings on backend.
+- Fix the widget system.
+- Fix CSRF Error to redirect to referrer url.
+- Fix Bug for all language on backend (language config file) Forget input all language. (Effect with Google reCaptcha).
+- Fix loop redirect after login session is expire and login again.
+- Fix PM bug.
+- Fix sitemap with content page without navigation.
+- Fix general label permission bug.
+- Fix forget password bug (Forget to fix the password encyption).
+- Fix the Geneal Label (Fix lang_en to default field. Not change this field name when change the default language).
+- Fix corecss and corejs file load from controller.
+- Fix rss feed opening and ending tag error.
+- Fix plugin config for plugin link inside member menu.
+- Fix to compatible with server is not support to .htaccess.
+- Fix file and photo backup with large zip file - memory limit reached.
+
 CSZ-CMS V.1.1.6
 - Add Lazyload jquery.
 - Add Italian language for backend system.

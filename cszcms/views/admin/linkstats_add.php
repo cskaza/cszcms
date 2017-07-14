@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo $this->lang->line('linkstats_newbtn') ?></div>
-        <?php echo form_open(BASE_URL . '/admin/linkstats/insert'); ?>
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/linkstats/insert'); ?>
         <div class="control-group">	
             <?php echo form_error('url', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
             <label class="control-label" for="url"><?php echo $this->lang->line('linkstats_url'); ?>*</label>
