@@ -1,3 +1,7 @@
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/aXTh6QLYkHUhSraJAthg6gHM/cskaza/cszcms'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/aXTh6QLYkHUhSraJAthg6gHM/cskaza/cszcms.svg' />
+</a>
+
 Dependency Status
 ---------------------
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/566/badge)](https://bestpractices.coreinfrastructure.org/projects/566)
