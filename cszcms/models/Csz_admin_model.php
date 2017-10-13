@@ -2583,25 +2583,28 @@ class Csz_admin_model extends CI_Model{
     public function getSoftwareInfo($mode = 'a') {
         return @php_uname($mode);
     }
-    
+
     /**
     * Get the directory size
     * @param directory $directory
     * @return integer
     */
-   public function dirSize($directory) {       
+   public function dirSize($directory, $dept = 0) {
         if (!$this->cache->get('chkDirSize_' . md5($directory))) {
             $size = 0;
-            foreach(@new RecursiveIteratorIterator(@new RecursiveDirectoryIterator($directory)) as $file){
-                 if($filesize = @$file->getSize()){
-                     $size += $filesize;
-                 }else{
-                     $size += 0;
-                 }
+            foreach (scandir($directory) as $file) {
+                if ($file != "." and $file != "..") {
+                    $path = $directory . "/" . $file;
+                    if (is_file($path)) {
+                        $size += filesize($path);
+                    } else {
+                        if (is_dir($path)) $size += $this->dirSize($path);
+                    }
+                }
             }
             ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
             $this->cache->save('chkDirSize_' . md5($directory), $size, ($cache_time * 60));
-            unset($file, $filesize, $cache_time, $size);
+            unset($file, $path, $cache_time, $size);
         }
         return $this->cache->get('chkDirSize_' . md5($directory));
    } 
