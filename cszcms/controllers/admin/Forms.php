@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2016 - 2017, Astian Foundation.
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -16,7 +16,7 @@ if (!defined('BASEPATH'))
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2016 - 2017, Astian Foundation.
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -25,20 +25,17 @@ class Forms extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -107,7 +104,7 @@ class Forms extends CI_Controller {
             if($form_rs !== FALSE){
                 //Get data from database
                 $this->template->setSub('form_rs', $form_rs);
-                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), '', array('arrange','form_field_id'), 'ASC'));
                 $this->template->setSub('field_email', $this->Csz_model->getValueArray('*', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'email'", ''));
                 //Load the view
                 $this->template->loadSub('admin/forms_edit');
@@ -149,6 +146,10 @@ class Forms extends CI_Controller {
         //Delete the languages
         if($this->uri->segment(4)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            $fiels_name = $this->Csz_admin_model->countTable('form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'file'");
+            if($fiels_name !== FALSE && $fiels_name != 0){
+                $this->Csz_model->rmdir_recursive(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($frm_rs->form_name));
+            }
             $this->Csz_admin_model->dropTable('form_'.$frm_rs->form_name);
             $this->Csz_admin_model->removeData('form_field', 'form_main_id', $this->uri->segment(4));
             $this->Csz_admin_model->removeData('form_main', 'form_main_id', $this->uri->segment(4));
@@ -168,8 +169,11 @@ class Forms extends CI_Controller {
         if($this->uri->segment(4) && $this->uri->segment(5)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
             $field_rs = $this->Csz_model->getValue('*', 'form_field', "form_field_id = '".$this->uri->segment(5)."' AND form_main_id = '".$this->uri->segment(4)."'", '', 1);
-            if($field_rs->field_type != 'button' && $field_rs->field_type != 'reset' && $field_rs->field_type != 'submit' && $field_rs->field_type != 'label'){
-                $this->load->dbforge();
+            $this->load->dbforge();
+            if($field_rs->field_type != 'button' && $field_rs->field_type != 'reset' && $field_rs->field_type != 'submit' && $field_rs->field_type != 'label'){                
+                $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
+            }else if($field_rs->field_type == 'file'){
+                $this->Csz_model->rmdir_recursive(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($field_rs->field_name));
                 $this->dbforge->drop_column('form_'.$frm_rs->form_name, $field_rs->field_name);
             }
             $this->Csz_admin_model->removeData('form_field', 'form_field_id', $this->uri->segment(5));
@@ -185,8 +189,8 @@ class Forms extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('forms builder');
         if($this->uri->segment(4)){
-            $this->db->cache_on();
             $this->csz_referrer->setIndex('admin_form_view');
+            $this->load->helper('form');
             $this->load->library('pagination');
             // Get form name
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
@@ -200,8 +204,9 @@ class Forms extends CI_Controller {
                 ($this->uri->segment(5))? $pagination = ($this->uri->segment(5)) : $pagination = 0;     
                 //Get users from database   
                 $this->template->setSub('form_name', $frm_rs->form_name);
-                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4)));
+                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), '', array('arrange','form_field_id'), 'ASC'));
                 $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
+                $this->template->setSub('total_row',$total_row);
                 //Load the view
                 $this->template->loadSub('admin/forms_view');
             }else{
@@ -216,15 +221,23 @@ class Forms extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('forms builder');
         admin_helper::is_allowchk('delete');
-        //Delete the languages
-        if($this->uri->segment(4) && $this->uri->segment(6)) {
+        $delR = $this->input->post('delR');
+        if($this->uri->segment(4) && isset($delR)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
-            $this->Csz_admin_model->removeData('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $this->uri->segment(6));
+            $fiels_name = $this->Csz_model->getValue('field_name', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'file'", '', 1);
+            foreach ($delR as $value) {
+                if ($value) {
+                    if($fiels_name !== FALSE && !empty($fiels_name) && $fiels_name->field_name){
+                        $this->Csz_admin_model->removeDataAndFile('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $value, 'forms/'.$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($fiels_name->field_name), $fiels_name->field_name);
+                    }else{
+                        $this->Csz_admin_model->removeData('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $value);
+                    }
+                }
+            }
+            unset($frm_rs,$fiels_name,$delR,$value);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
-        
-        //Return to languages list
         redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
     }
 }

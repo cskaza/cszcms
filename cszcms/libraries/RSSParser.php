@@ -4,6 +4,8 @@
  * This class is written based entirely on the work found below
  * www.techbytes.co.in/blogs/2006/01/15/consuming-rss-with-php-the-simple-way/
  * All credit should be given to the original author
+ * 
+ * Fixed for support by CSKAZA (Founder of CSZ CMS)
  *
  * Example:
 
@@ -55,7 +57,6 @@ class RSSParser {
 		if ($this->cache_life != 0)
 		{
 			$filename = $this->cache_dir.'rss_Parse_'.md5($this->feed_uri);
-
 			// Is there a cache file ?
 			if (file_exists($filename))
 			{
@@ -64,7 +65,10 @@ class RSSParser {
 
 				if ($timedif < ( $this->cache_life * 60))
 				{
-					$rawFeed = file_get_contents($filename);
+					$rawFeed = @file_get_contents($filename);
+                                        $rawFeed = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $rawFeed);
+                                        $rawFeed = preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;', $rawFeed);
+                                        $rawFeed = preg_replace('#<content:encoded>(.*?)</content:encoded>#is', '', $rawFeed);
 				}
 				else
 				{
@@ -78,88 +82,89 @@ class RSSParser {
 				$this->write_cache_flag = true;
 			}
 		}
-
 		// Reset
 		$this->data = array();
 		$this->channel_data = array();
-
 		// Parse the document
 		if (!isset($rawFeed))
 		{
-			$rawFeed = file_get_contents($this->feed_uri);
+			$rawFeed = @$CI->Csz_model->get_contents_url($this->feed_uri);
+                        $rawFeed = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $rawFeed);
+                        $rawFeed = preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;', $rawFeed);
+                        $rawFeed = preg_replace('#<content:encoded>(.*?)</content:encoded>#is', '', $rawFeed);
 		}
+                if($rawFeed !== FALSE){
+                    $xml = new SimpleXmlElement($rawFeed);
+                    if ($xml->channel)
+                    {
+                            // Assign the channel data
+                            $this->channel_data['title'] = $xml->channel->title;
+                            $this->channel_data['description'] = $xml->channel->description;
 
-		$xml = new SimpleXmlElement($rawFeed);
+                            // Build the item array
+                            foreach ($xml->channel->item as $item)
+                            {
+                                    $data = array();
+                                    $data['title'] = (string)$item->title;
+                                    $data['description'] = (string)$item->description;
+                                    $data['pubDate'] = (string)$item->pubDate;
+                                    $data['link'] = (string)$item->link;
+                                    $dc = $item->children('http://purl.org/dc/elements/1.1/');
+                                    $data['author'] = (string)$dc->creator;
 
-		if ($xml->channel)
-		{
-			// Assign the channel data
-			$this->channel_data['title'] = $xml->channel->title;
-			$this->channel_data['description'] = $xml->channel->description;
+                                    if ($this->callback)
+                                    {
+                                            $data = call_user_func($this->callback, $data, $item);
+                                    }
 
-			// Build the item array
-			foreach ($xml->channel->item as $item)
-			{
-				$data = array();
-				$data['title'] = (string)$item->title;
-				$data['description'] = (string)$item->description;
-				$data['pubDate'] = (string)$item->pubDate;
-				$data['link'] = (string)$item->link;
-				$dc = $item->children('http://purl.org/dc/elements/1.1/');
-				$data['author'] = (string)$dc->creator;
-				
-				if ($this->callback)
-				{
-					$data = call_user_func($this->callback, $data, $item);
-				}
-				
-				$this->data[] = $data;
-			}
-		}
-		else
-		{
-			// Assign the channel data
-			$this->channel_data['title'] = $xml->title;
-			$this->channel_data['description'] = $xml->subtitle;
+                                    $this->data[] = $data;
+                            }
+                    }
+                    else
+                    {
+                            // Assign the channel data
+                            $this->channel_data['title'] = $xml->title;
+                            $this->channel_data['description'] = $xml->subtitle;
 
-			// Build the item array
-			foreach ($xml->entry as $item)
-			{
-				$data = array();
-				$data['id'] = (string)$item->id;
-				$data['title'] = (string)$item->title;
-				$data['description'] = (string)$item->content;
-				$data['pubDate'] = (string)$item->published;
-				$data['link'] = (string)$item->link['href'];
-				$dc = $item->children('http://purl.org/dc/elements/1.1/');
-				$data['author'] = (string)$dc->creator;
-				
-				if ($this->callback)
-				{
-					$data = call_user_func($this->callback, $data, $item);
-				}
-					
-				$this->data[] = $data;
-			}
-		}
+                            // Build the item array
+                            foreach ($xml->entry as $item)
+                            {
+                                    $data = array();
+                                    $data['id'] = (string)$item->id;
+                                    $data['title'] = (string)$item->title;
+                                    $data['description'] = (string)$item->content;
+                                    $data['pubDate'] = (string)$item->published;
+                                    $data['link'] = (string)$item->link['href'];
+                                    $dc = $item->children('http://purl.org/dc/elements/1.1/');
+                                    $data['author'] = (string)$dc->creator;
 
-		// Do we need to write the cache file?
-		if ($this->write_cache_flag)
-		{
-			if (!$fp = @fopen($filename, 'wb'))
-			{
-				echo "RSSParser error";
-				log_message('error', "Unable to write cache file: ".$filename);
-				return;
-			}
+                                    if ($this->callback)
+                                    {
+                                            $data = call_user_func($this->callback, $data, $item);
+                                    }
 
-			flock($fp, LOCK_EX);
-			fwrite($fp, $rawFeed);
-			flock($fp, LOCK_UN);
-			fclose($fp);
-		}
+                                    $this->data[] = $data;
+                            }
+                    }
+                    // Do we need to write the cache file?
+                    if ($this->write_cache_flag)
+                    {
+                            if (!$fp = @fopen($filename, 'wb'))
+                            {
+                                    echo "RSSParser error";
+                                    log_message('error', "Unable to write cache file: ".$filename);
+                                    return;
+                            }
 
-		return TRUE;
+                            flock($fp, LOCK_EX);
+                            fwrite($fp, $rawFeed);
+                            flock($fp, LOCK_UN);
+                            fclose($fp);
+                    }
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }
             }else{
                 return FALSE;
             }
@@ -211,7 +216,7 @@ class RSSParser {
 	function runFeedBackend($num)
 	{
             $CI =& get_instance();
-            $CI->load->driver('cache', array('adapter' => 'file'));
+            (CACHE_TYPE == 'file') ? $CI->load->driver('cache', array('adapter' => 'file')) : $CI->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
             if (!$CI->cache->get('backend_rssfeed_news')) {
                 $return = '';
                 $rss = $this->getFeed($num);
@@ -223,11 +228,7 @@ class RSSParser {
                         $return.= '<hr>';
                     }   
                 }
-                if($CI->Csz_model->load_config()->pagecache_time == 0){
-                    $cache_time = 1;
-                }else{
-                    $cache_time = $CI->Csz_model->load_config()->pagecache_time;
-                }
+                ($CI->Csz_model->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $CI->Csz_model->load_config()->pagecache_time;
                 $CI->cache->save('backend_rssfeed_news', $return, ($cache_time * 60));
             }
             return $CI->cache->get('backend_rssfeed_news');

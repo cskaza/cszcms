@@ -28,21 +28,17 @@ class Navigation extends CI_Controller{
 
     function __construct(){
         parent::__construct();
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init(){
-        $row = $this->Csz_admin_model->load_config();
-        $totSegments = $this->uri->total_segments();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | '.$row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
         $this->all_lang = $this->Csz_model->loadAllLang();
     }
     
@@ -165,7 +161,7 @@ class Navigation extends CI_Controller{
             $this->Csz_admin_model->updateMenu($this->uri->segment(4));
             //Return to navigation list
             $this->db->cache_delete_all();
-            $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
+            $this->Csz_model->clear_all_cache();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
@@ -182,7 +178,7 @@ class Navigation extends CI_Controller{
         }
         //Return to user list
         $this->db->cache_delete_all();
-        $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
+        $this->Csz_model->clear_all_cache();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }

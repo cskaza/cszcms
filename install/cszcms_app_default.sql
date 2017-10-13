@@ -61,18 +61,19 @@ CREATE TABLE IF NOT EXISTS `form_field` (
   `field_label` varchar(255),
   `sel_option_val` text,
   `field_required` int(11),
+  `arrange` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`form_field_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
-INSERT INTO `form_field` (`form_field_id`, `form_main_id`, `field_type`, `field_name`, `field_id`, `field_class`, `field_placeholder`, `field_value`, `field_label`, `sel_option_val`, `field_required`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 1, 'text', 'name', 'name', 'form-control', '', '', 'Name', '', 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
-(2, 1, 'email', 'email', 'email', 'form-control', '', '', 'Email Address', '', 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
-(3, 1, 'selectbox', 'contact_type', 'contact_type', 'form-control', '-- Choose Type --', '', 'Contact Type', 'question=>Question, contact us=>Contact Us, service=>Service', 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
-(4, 1, 'textarea', 'message', 'message', 'form-control', '', '', 'Message', '', 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
-(5, 1, 'submit', 'submit', 'submit', 'btn btn-primary', '', 'Send now', '', '', 0, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
-(6, 1, 'reset', 'reset', 'reset', 'btn btn-default', '', 'Reset', '', '', 0, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
+INSERT INTO `form_field` (`form_field_id`, `form_main_id`, `field_type`, `field_name`, `field_id`, `field_class`, `field_placeholder`, `field_value`, `field_label`, `sel_option_val`, `field_required`, `arrange`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 1, 'text', 'name', 'name', 'form-control', '', '', 'Name', '', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
+(2, 1, 'email', 'email', 'email', 'form-control', '', '', 'Email Address', '', 1, 2, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
+(3, 1, 'selectbox', 'contact_type', 'contact_type', 'form-control', '-- Choose Type --', '', 'Contact Type', 'question=>Question, contact us=>Contact Us, service=>Service', 1, 3, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
+(4, 1, 'textarea', 'message', 'message', 'form-control', '', '', 'Message', '', 1, 4, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
+(5, 1, 'submit', 'submit', 'submit', 'btn btn-primary', '', 'Send now', '', '', 0, 5, '2016-05-02 19:15:50', '2016-05-02 19:15:50'),
+(6, 1, 'reset', 'reset', 'reset', 'btn btn-default', '', 'Reset', '', '', 0, 6, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
 
 DROP TABLE IF EXISTS `form_main`;
 CREATE TABLE IF NOT EXISTS `form_main` (
@@ -128,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `page_keywords` varchar(255),
   `page_desc` text,
   `content` text,
+  `more_metatag` text,
   `custom_css` text,
   `custom_js` text,
   `active` int(11),
@@ -138,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_title`, `page_keywords`, `page_desc`, `content`, `custom_css`, `custom_js`, `active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header id="myCarousel" class="carousel slide">\r\n<ol class="carousel-indicators">\r\n<li data-target="#myCarousel" data-slide-to="0" class="active"></li>\r\n<li data-target="#myCarousel" data-slide-to="1"></li>\r\n<li data-target="#myCarousel" data-slide-to="2"></li>\r\n</ol>\r\n<!-- Wrapper for slides -->\r\n<div class="carousel-inner">\r\n<div class="item active">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide One" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 1</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Two" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 2</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="http://placehold.it/1900x540&text=Slide Three" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 3</h2>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- Controls --> <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <span class="icon-prev"></span> </a> <a class="right carousel-control" href="#myCarousel" data-slide="next"> <span class="icon-next"></span> </a></header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- /container -->', '', '', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
+(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header id="myCarousel" class="carousel slide">\r\n<ol class="carousel-indicators">\r\n<li data-target="#myCarousel" data-slide-to="0" class="active"></li>\r\n<li data-target="#myCarousel" data-slide-to="1"></li>\r\n<li data-target="#myCarousel" data-slide-to="2"></li>\r\n</ol>\r\n<!-- Wrapper for slides -->\r\n<div class="carousel-inner">\r\n<div class="item active">\r\n<div class="fill"><img src="https://placehold.it/1900x540&text=Slide One" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 1</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="https://placehold.it/1900x540&text=Slide Two" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 2</h2>\r\n</div>\r\n</div>\r\n<div class="item">\r\n<div class="fill"><img src="https://placehold.it/1900x540&text=Slide Three" class="img-responsive" width="100%"></div>\r\n<div class="carousel-caption">\r\n<h2>Caption 3</h2>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- Controls --> <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <span class="icon-prev"></span> </a> <a class="right carousel-control" href="#myCarousel" data-slide="next"> <span class="icon-next"></span> </a></header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- /container -->', '', '', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
 (2, 'About Us', 'about-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', '', '', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
 (3, 'Contact Us', 'contact-us', 'en', 'CSZ-CMS Contact us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, contact us', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>Contact us!</h1>\r\n<p>If you want to contact us please use this form below. Or send the email to <a href="mailto:info@cszcms.com">info[at]cszcms.com</a></p>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<h2>Google Map</h2>\r\n<p><iframe width="100%" height="315" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.168282092751!2d98.37285931425068!3d7.877454308128998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zN8KwNTInMzguOCJOIDk4wrAyMiczMC4yIkU!5e0!3m2!1sen!2sth!4v1462104596003" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>\r\n</div>\r\n<div class="col-md-6">\r\n<h2>Contact Form</h2>\r\n<p>If you have any question please send this from.</p>\r\n<p>[?]{=forms:contactus_en}[?]</p>\r\n</div>\r\n</div>\r\n</div>\r\n<p></p>\r\n<p></p>', '', '', 1, '2016-04-30 16:57:16', '2016-05-12 17:59:41');
 
@@ -203,12 +205,16 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `gsearch_cxid` varchar(255),
   `maintenance_active` int(11),
   `html_optimize_disable` int(11),
+  `adobe_cc_apikey` varchar(255),
+  `facebook_page_id` varchar(255),
+  `assets_static_active` int(11),
+  `assets_static_domain` varchar(255),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `timestamp_update`) VALUES
-(1, 'CSZ CMS Starter', '', '', '', '&copy; %YEAR CSZ CMS Starter', 'demo@cszcms.com', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, '2016-05-19 15:08:31');
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', 'demo@cszcms.com', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, '2016-05-19 15:08:31');
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -522,7 +528,7 @@ CREATE TABLE `user_perms` (
   `definition` text,
   `permstype` varchar(100),
   PRIMARY KEY (`user_perms_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=27;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=29;
 
 INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VALUES
 (1, 'save', 'For save permission on backend', 'backend'),
@@ -550,7 +556,9 @@ INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VA
 (23, 'social', 'For social settings access permission on backend', 'backend'),
 (24, 'profile save', 'For user profile save permission on frontend', 'frontend'),
 (25, 'pm', 'For private message access permission on frontend', 'frontend'),
-(26, 'banner', 'For banner manager access permission on backend', 'backend');
+(26, 'banner', 'For banner manager access permission on backend', 'backend'),
+(27, 'file manager', 'For file manager access permission on backend', 'backend'),
+(28, 'pages cssjs additional', 'For pages content css js metatag additional access permission on backend', 'backend');
 
 DROP TABLE IF EXISTS `user_perm_to_group`;
 CREATE TABLE `user_perm_to_group` (
@@ -595,7 +603,8 @@ INSERT INTO `user_perm_to_group` (`user_perms_id`, `user_groups_id`) VALUES
 (25, 3),
 (25, 4),
 (26, 2),
-(26, 4);
+(26, 4),
+(27, 2);
 
 DROP TABLE IF EXISTS `user_to_group`;
 CREATE TABLE `user_to_group` (

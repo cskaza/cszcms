@@ -1,4 +1,53 @@
 <?php $config = $this->Csz_admin_model->load_config(); ?>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-server"></i> <?php echo $this->lang->line('serverstatus_header') ?></h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12" style="word-wrap:break-word;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <h1><i class="fa fa-microchip"></i></h1>
+                                    </div>
+                                    <div class="col-xs-10 text-right">
+                                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></small></div>
+                                        <div><?php echo $this->lang->line('serverstatus_phpmem_use') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <h1><i class="fa fa-hdd-o"></i></h1>
+                                    </div>
+                                    <div class="col-xs-10 text-right">
+                                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->usageSpace() ?></small></div>
+                                        <div><?php echo $this->lang->line('serverstatus_disk_use') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.box -->
 <div class="row">
     <div class="col-md-6">
         <div class="row">
@@ -27,7 +76,6 @@
                         <h2 class="box-title"><i><span class="glyphicon glyphicon-dashboard"></span></i> <?php echo $this->lang->line('nav_dash') ?></h2>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                         </div>
                     </div>
                     <div class="box-body">
@@ -109,7 +157,6 @@
                 <h3 class="box-title"><i><span class="fa fa-rss"></span></i> <?php echo $this->lang->line('dashboard_rssnews') ?></h3>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                 </div>
             </div>
             <div class="box-body">

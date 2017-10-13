@@ -25,7 +25,7 @@ $lang['nav_gel_settings']	= "Algemeen Menu";
 $lang['nav_analytics']		= "Analytics";
 
 // Google Analytics
-$lang['ga_last30']		= "Google Analytics Laatste 30 dagen";
+$lang['ga_last30']		= "Google Analytics";
 $lang['ga_maps']		= "Google Analytics Maps";
 $lang['ga_sessions']            = "Google Analytics Sessies";
 $lang['ga_devices']		= "Google Analytics Toestellen";
@@ -33,6 +33,8 @@ $lang['ga_sources']		= "Google Analytics Bronnen";
 $lang['ga_refer']               = "Google Analytics Referrer";
 $lang['ga_allpage']               = "Google Analytics All Pages Content";
 $lang['ga_no_settings']         = 'Google Analytics niet geconfigureerd in <a href="'.get_instance()->Csz_model->base_link().'/'.'admin/settings#ga_client_id" title="Site Settings"><b>Site instellingen</b></a>!';
+$lang['ga_days']		= "Days";
+$lang['ga_last_txt']		= "Last";
 
 //Users - All Users
 $lang['user_header']			= "Alle Gebruikers";
@@ -224,6 +226,7 @@ $lang['settings_smtp_user']             = "SMTP Username";
 $lang['settings_smtp_pass']             = "SMTP Wachtwoord";
 $lang['settings_smtp_port']             = "SMTP Poort";
 $lang['settings_sendmail_path']         = "Sendmail Path";
+$lang['settings_email_testbtn']          = "Test Send!";
 $lang['settings_sitemap_header']        = "Sitemaps Generator";
 $lang['settings_sitemap_runnow']        = "Start Nu";
 $lang['settings_sitemap_lasttime']      = "Laatste update";
@@ -248,6 +251,10 @@ $lang['settings_gmaps_key']		= "Google Maps API Key";
 $lang['settings_gmaps_key_remark']	= 'How to getting a Google API key? <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank"><b>See here</b></a>';
 $lang['settings_gmaps_lat']		= "Default Latitude";
 $lang['settings_gmaps_lng']		= "Default Longitude";
+$lang['settings_facebook_page_id']	= "Facebook Pages ID";
+$lang['settings_facebook_page_id_remark']	= "You can get Facebook Pages ID at 'Page ID' section in 'About' page from your facebook pages";
+$lang['settings_assets_static_domain']	= "Static resources from a different cdn domain for assets";
+$lang['settings_assets_static_domain_remark']	= "(Example: https://cdn.cszcms.com) This static domain required to same route with origin domain only";
 
 //Navigation Page
 $lang['navpage_header']                 = "Hoofdmenu";
@@ -362,7 +369,7 @@ $lang['field_placeholder']		= "Veld Placeholder";
 $lang['field_value']                    = "Veld Waarde";
 $lang['field_label']                    = "VeldLabel";
 $lang['sel_option_val']                 = "Selecteer Waarde Optie";
-$lang['sel_option_val_info']            = "Voorbeeld: Als je wilt dat de waarde 'voorbeeldwaarde' is en label 'voorbeeldlabel' is kan je dit als volgt typen: waarde1=>label1, waard2=>label2";
+$lang['sel_option_val_info']            = "Voorbeeld: Als je wilt dat de waarde 'voorbeeldwaarde' is en label 'voorbeeldlabel' is kan je dit als volgt typen: waarde1=>label1, waard2=>label2. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
 $lang['field_require']                  = "Veld verplicht";
 $lang['field_addtxtinfo']               = '<span class="remark">Klik <i class="glyphicon glyphicon-plus"></i> om meer velden toe te voegen.</span>';
 
@@ -514,3 +521,35 @@ $lang['banner_date_period']            = "Date Periode";
 $lang['banner_nofollow']            = "No Follow Link";
 $lang['banner_expired']            = "Banner Verlopen";
 $lang['banner_indexremark']		= "<i>Gebruik dit label voor steek de banner in de inhoud. Zie Banner ID #<br><b>Label:</b></i> [?]{=banner:<b>banner_id</b>}[?]";
+
+// Export CSV
+$lang['export_csv_header']                = "CSV Export";
+$lang['db_table_name']                = "Table Name";
+$lang['export_csv_field_sel']                = "Fields Select";
+$lang['export_csv_field_sel_remark']                = "If want to export all field. Please blank on this 'Fields Select' box and click on the button to export.";
+$lang['export_csv_orderby']                = "Sort by";
+$lang['export_csv_btn']                = "Export to CSV";
+$lang['export_import_csv_btn']                = "CSV Export / Import";
+
+// Import CSV
+$lang['import_csv_header']                = "CSV Import";
+$lang['import_csv_upload']                = "CSV Upload";
+$lang['import_csv_btn']                = "Import Now";
+$lang['import_csv_upload_remark']            = 'The CSV file can import only UTF-8 type. Can use Delimiter (,) and Newline character (\\n) and Enclosure (") only';
+$lang['import_csv_ignore']            = "Checking the primary key for insertion. (Data is inserted into the database without entering the primary key)";
+
+// File Manager
+$lang['filemanager_header']                = "File Manager";
+$lang['settings_other_api']                = "Other API";
+$lang['filemanager_cc_apikey']                = "Adobe Creative Cloud API Key";
+$lang['filemanager_cc_apikey_remark']                = 'Set API key to enable Creative Cloud image editor for elFinder file manager. See detail at <a href="https://console.adobe.io/" target="_blank" rel="nofollow external">https://console.adobe.io/</a>';
+$lang['filemanager_template_name']                = "Template Name";
+$lang['filemanager_template_create']                = "Create Template";
+
+// Server Status
+$lang['serverstatus_header']                = "Server Status";
+$lang['serverstatus_phpmem_use']                = "PHP Memory Usage";
+$lang['serverstatus_disk_use']                = "Disk Space Usage";
+$lang['serverstatus_os']                = "OS";
+$lang['serverstatus_php_version']                = "PHP Version";
+$lang['serverstatus_php_disabled']                = "PHP Function Disabled";

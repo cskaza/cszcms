@@ -4,7 +4,7 @@
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2016 - 2017, Astian Foundation.
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -13,7 +13,7 @@
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2016 - 2017, Astian Foundation.
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -25,6 +25,11 @@ class Csz_model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->database();
+        if (CACHE_TYPE == 'file') {
+            $this->load->driver('cache', array('adapter' => 'file'));
+        } else {
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+        }
     }
 
     /**
@@ -36,19 +41,28 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function getVersion($version_test = '') {
-        $con_version = $this->config->item('csz_version'); /* For CMS Version */
-        $con_release = $this->config->item('csz_release'); /* For release or beta */
-        $version = '';
-        if($version_test) {
-            $version = $version_test;               
-        }else{
-            if($con_release == 'beta'){
-                $version = $con_version.' Beta';
+        if (!$this->cache->get('getVersion'.$version_test)) {
+            $con_version = $this->config->item('csz_version'); /* For CMS Version */
+            $con_release = $this->config->item('csz_release'); /* For release or beta */
+            $version = '';
+            if($version_test) {
+                $version = $version_test;               
             }else{
-                $version = $con_version;
+                if($con_release == 'beta'){
+                    $version = $con_version.' Beta';
+                }else{
+                    $version = $con_version;
+                }
             }
+            if($this->load_config()->pagecache_time == 0){
+                $cache_time = 1;
+            }else{
+                $cache_time = $this->load_config()->pagecache_time;
+            }
+            $this->cache->save('getVersion'.$version_test, $version, ($cache_time * 60));
+            unset($version, $con_version, $con_release, $cache_time);
         }
-        return $version;
+        return $this->cache->get('getVersion'.$version_test);
     }
 
     /**
@@ -61,19 +75,51 @@ class Csz_model extends CI_Model {
      * @return	FALSE if can't download
      */
     public function downloadFile($url, $newfname) {
-        $file = fopen($url, 'rb') or die("Can't open file");
-        if (!$file) {
-            fclose($file);
-            return FALSE;
-        } else {
-            $newf = fopen($newfname, 'wb') or die("Can't create file");
-            if ($newf) {
-                while (!feof($file)) {
-                    fwrite($newf, fread($file, 1024 * 1024 * 10), 1024 * 1024 * 10); /* 10MB */
-                }
-                fclose($newf);
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if(ini_get('allow_url_fopen')){
+            if (stripos($url, 'https://') !== FALSE) {
+                $default_opts = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    )
+                );
+                stream_context_set_default($default_opts);
             }
-            fclose($file);
+            $file = fopen($url, 'rb') or die("Can't open file");
+            if (!$file) {
+                fclose($file);
+                unset($url,$newfname,$newf,$file);
+                return FALSE;
+            } else {
+                $newf = fopen($newfname, 'wb') or die("Can't create file");
+                if ($newf) {
+                    while (!feof($file)) {
+                        fwrite($newf, fread($file, 1024 * 1024 * 100), 1024 * 1024 * 100); /* 100MB */
+                    }
+                    fclose($newf);
+                }
+                fclose($file);
+            }
+        }else{
+            $ch = curl_init($url);
+            $newf = fopen($newfname, 'wb') or die("Can't create file");
+            if(stripos($url, 'https://') !== FALSE){
+                curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            }
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_FILE, $newf);
+            $result = curl_exec($ch);
+            fclose($newf);
+            if($result === false) {
+                log_message('error', 'Unable to perform the request : ' . curl_error($ch) . ' ['.$url.']');
+                return FALSE;
+            }
         }
     }
 
@@ -85,7 +131,7 @@ class Csz_model extends CI_Model {
      * @param	string	$table   DB Table
      * @param	string	$search_sql    For sql where Ex. "field1 = '1' AND field2 = '1'" or NULL
      * @param	string	$groupby   Group by field or NULL
-     * @param	string	$orderby   Order by field or NULL
+     * @param	string|array	$orderby   Order by field or NULL
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$join_db   Table to join or NULL 
      * @param	string	$join_where   Join condition or NULL 
@@ -111,10 +157,16 @@ class Csz_model extends CI_Model {
         if ($groupby){
             $this->db->group_by($groupby);
         }
-        if($orderby && $sort){
-            $this->db->order_by($orderby, $sort);
-        }elseif($orderby){
-            $this->db->order_by($orderby);
+        if(is_array($orderby)){
+            foreach ($orderby as $value) {
+                $this->db->order_by($value, $sort);
+            }
+        }else{
+            if ($orderby && $sort) {
+                $this->db->order_by($orderby, $sort);
+            }elseif($orderby){
+                $this->db->order_by($orderby);
+            }
         }
         $query = $this->db->get($table);
         if (!empty($query)) {
@@ -122,7 +174,7 @@ class Csz_model extends CI_Model {
         } else {
             return FALSE;
         }
-        $this->db->close();
+        unset($query);        
     }
 
     /**
@@ -133,21 +185,22 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function getCurPages() {
+        $pageURL = '';
         $totSegments = $this->uri->total_segments();
         if (!is_numeric($this->uri->segment($totSegments))) {
             $pageURL = $this->uri->segment($totSegments);
         } else if (is_numeric($this->uri->segment($totSegments))) {
             $pageURL = $this->uri->segment($totSegments - 1);
         }
-        if ($pageURL == "") {
+        if ($pageURL == '') {
             $defaultpage = $this->getDefualtPage($this->session->userdata('fronlang_iso'));
             if ($defaultpage !== FALSE) {
-                $pageURL = &$defaultpage;
+                $pageURL = $defaultpage;
             } else {
                 $pageURL = $this->getDefualtPage($this->getDefualtLang());
             }
         }
-        return $pageURL;
+        return str_replace(array('.php','.html'), '', strtolower($pageURL));
     }
 
     /**
@@ -159,7 +212,7 @@ class Csz_model extends CI_Model {
      * @param	string	$table    DB table
      * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
      * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
-     * @param	string	$orderby   Order by field or NULL 
+     * @param	string|array	$orderby   Order by field or NULL 
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$groupby   Group by field or NULL 
      * @param	string	$join_db   Table to join or NULL 
@@ -177,6 +230,10 @@ class Csz_model extends CI_Model {
                 for ($i = 0; $i < count($where_field); $i++) {
                     $this->db->where($where_field[$i], $where_val[$i]);
                 }
+            } else if(is_array($where_field) && !is_array($where_val)) {
+                foreach ($where_field as $value) {
+                    $this->db->where($value);
+                }
             } else {
                 if($where_val){
                     $this->db->where($where_field, $where_val);
@@ -188,10 +245,16 @@ class Csz_model extends CI_Model {
         if ($groupby) {
             $this->db->group_by($groupby);
         }
-        if ($orderby && $sort) {
-            $this->db->order_by($orderby, $sort);
-        }elseif($orderby){
-            $this->db->order_by($orderby);
+        if(is_array($orderby)){
+            foreach ($orderby as $value) {
+                $this->db->order_by($value, $sort);
+            }
+        }else{
+            if ($orderby && $sort) {
+                $this->db->order_by($orderby, $sort);
+            }elseif($orderby){
+                $this->db->order_by($orderby);
+            }
         }
         if ($limit) {
             $this->db->limit($limit, 0);
@@ -200,18 +263,17 @@ class Csz_model extends CI_Model {
         if (!empty($query)) {
             if ($query->num_rows() !== 0) {
                 if ($query->num_rows() === 1) {
-                    $row = $query->first_row();
+                    return $query->first_row();
                 } else {
-                    $row = $query->result();
+                    return $query->result();
                 }
-                return $row;
             } else {
                 return FALSE;
             }
         } else {
             return FALSE;
         }
-        $this->db->close();
+        unset($query, $row);       
     }
 
     /**
@@ -223,15 +285,16 @@ class Csz_model extends CI_Model {
      * @param	string	$table    DB table
      * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
      * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
-     * @param	string	$orderby   Order by field or NULL 
+     * @param	string|array	$orderby   Order by field or NULL 
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$groupby   Group by field or NULL  
      * @param	string	$join_db   Table to join or NULL 
      * @param	string	$join_where   Join condition or NULL  
      * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL
+     * @param	bool	$onlyone   TRUE for get only one result with out loop, FALSE get result with loop
      * @return	Array or FALSE
      */
-    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '', $join_type = '') {
+    public function getValueArray($sel_field = '*', $table, $where_field, $where_val, $limit = 0, $orderby = '', $sort = '', $groupby = '', $join_db = '', $join_where = '', $join_type = '', $onlyone = FALSE) {
         $this->db->select($sel_field);
         if($join_db && $join_where){
             $this->db->join($join_db, $join_where, $join_type);
@@ -240,6 +303,10 @@ class Csz_model extends CI_Model {
             if (is_array($where_field) && is_array($where_val)) {
                 for ($i = 0; $i < count($where_field); $i++) {
                     $this->db->where($where_field[$i], $where_val[$i]);
+                }
+            } else if(is_array($where_field) && !is_array($where_val)) {
+                foreach ($where_field as $value) {
+                    $this->db->where($value);
                 }
             } else {
                 if($where_val){
@@ -252,10 +319,16 @@ class Csz_model extends CI_Model {
         if ($groupby) {
             $this->db->group_by($groupby);
         }
-        if ($orderby && $sort) {
-            $this->db->order_by($orderby, $sort);
-        }elseif($orderby){
-            $this->db->order_by($orderby);
+        if(is_array($orderby)){
+            foreach ($orderby as $value) {
+                $this->db->order_by($value, $sort);
+            }
+        }else{
+            if ($orderby && $sort) {
+                $this->db->order_by($orderby, $sort);
+            }elseif($orderby){
+                $this->db->order_by($orderby);
+            }
         }
         if ($limit) {
             $this->db->limit($limit, 0);
@@ -263,14 +336,18 @@ class Csz_model extends CI_Model {
         $query = $this->db->get($table);
         if (!empty($query)) {
             if ($query->num_rows() !== 0) {
-                return $query->result_array();
+                if ($onlyone === TRUE && $query->num_rows() === 1) {
+                    return $query->first_row('array');
+                } else {
+                    return $query->result_array();
+                }
             } else {
                 return FALSE;
             }
         } else {
             return FALSE;
         }
-        $this->db->close();
+        unset($query);    
     }
 
     /**
@@ -304,7 +381,7 @@ class Csz_model extends CI_Model {
         } else {
             return 0;
         }
-        $this->db->close();
+        unset($query, $row);   
     }
     
     /**
@@ -340,7 +417,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
-        $this->db->close();
+        unset($query, $row);
     }
 
     /**
@@ -351,7 +428,6 @@ class Csz_model extends CI_Model {
      * @return	Object or FALSE
      */
     public function load_config() {
-        $this->load->driver('cache', array('adapter' => 'file'));
         if (!$this->cache->get('config')) {
             $cache_time = 1;
             $this->db->limit(1, 0);
@@ -364,7 +440,7 @@ class Csz_model extends CI_Model {
             }
             if($cache_time == 0) $cache_time = 1;
             $this->cache->save('config', $row, ($cache_time * 60));
-            $this->db->close();
+            unset($query, $row);
         }
         return $this->cache->get('config');
     }
@@ -377,13 +453,14 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     function getLang() {
-        $this->db->limit(1, 0);
-        $query = $this->db->get('settings');
-        if ($query->num_rows() !== 0) {
-            $row = $query->row();
-            return $row->admin_lang;
+        if (!$this->cache->get('backendLang')) {
+            $config = $this->load_config();
+            $cache_time = $config->pagecache_time;
+            if($cache_time == 0) $cache_time = 1;
+            $this->cache->save('backendLang', $config->admin_lang, ($cache_time * 60));
+            unset($cache_time, $config);
         }
-        $this->db->close();
+        return $this->cache->get('backendLang');
     }
 
     /**
@@ -404,6 +481,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
+        unset($query, $row);
     }
 
     /**
@@ -424,6 +502,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
+        unset($query, $row);
     }
     
     /**
@@ -442,8 +521,9 @@ class Csz_model extends CI_Model {
             $row = $query->row();
             return $row->page_url;
         } else {
-            return FALSE;
+            return $this->getPageUrlFromID(1);
         }
+        unset($query, $row);
     }
 
     /**
@@ -456,14 +536,18 @@ class Csz_model extends CI_Model {
      */
     public function getDefualtPage($lang) {
         if(!$lang){ $lang = $this->getDefualtLang(); }
-        $nav = $this->getValue('pages_id', 'page_menu', "lang_iso = '" . $lang . "' AND active = '1' AND drop_page_menu_id = '0' AND pages_id != '0' AND position = '0'", '', 1, 'arrange', 'asc');
+        $nav = $this->getValue('*', 'page_menu', "lang_iso = '" . $lang . "' AND active = '1' AND drop_page_menu_id = '0' AND position = '0'", '', 1, 'arrange', 'asc');
         if($nav !== FALSE){
-            $this->db->where("pages_id", $nav->pages_id);
-            $this->db->limit(1, 0);
-            $query = $this->db->get('pages');
-            if (!empty($query) && $query->num_rows() !== 0) {
-                return $query->row()->page_url;
-            } else {
+            if($nav->pages_id){
+                $page_url = $this->getPageUrlFromID($nav->pages_id);
+                if ($page_url !== FALSE) {
+                    return $page_url;
+                } else {
+                    return $this->getFirstPagesActive();
+                }
+            }else if(!$nav->pages_id && $nav->plugin_menu && $nav->plugin_menu != NULL){
+                return 'plugin/' . $nav->plugin_menu;
+            }else{
                 return $this->getFirstPagesActive();
             }
         }else{
@@ -476,7 +560,8 @@ class Csz_model extends CI_Model {
             } else {
                 return $this->getFirstPagesActive();
             }
-        }       
+        }
+        unset($query);
     }
 
     /**
@@ -495,6 +580,7 @@ class Csz_model extends CI_Model {
             $row = $query->row();
             return $row->lang_iso;
         }
+        unset($query, $row);
     }
 
     /**
@@ -509,11 +595,12 @@ class Csz_model extends CI_Model {
         $this->db->where("lang_iso", $lang_iso);
         $this->db->where("active", 1);
         $query = $this->db->get('lang_iso');
-        if(!empty($query)){
+        if(!empty($query) && $query->num_rows() !== 0){
             return $query->num_rows();
         }else{
             return 0;
         }
+        unset($query);
     }
 
     /**
@@ -534,6 +621,7 @@ class Csz_model extends CI_Model {
             }
         }
         $this->session->set_userdata('fronlang_iso', $set_lang_iso);
+        unset($set_lang_iso);
     }
 
     /**
@@ -556,6 +644,7 @@ class Csz_model extends CI_Model {
         } else {
             return FALSE;
         }
+        unset($query, $row);
     }
 
     /**
@@ -567,7 +656,6 @@ class Csz_model extends CI_Model {
      * @return	Object or FALSE id not found
      */
     public function load_page($pageurl) {
-        $this->load->driver('cache', array('adapter' => 'file'));
         if (!$this->cache->get('file_'.$this->encodeURL($pageurl))) {
             $this->db->where("page_url", $pageurl);
             $this->db->where("active", 1);
@@ -584,6 +672,7 @@ class Csz_model extends CI_Model {
                 $cache_time = $this->load_config()->pagecache_time;
             }
             $this->cache->save('file_'.$this->encodeURL($pageurl), $row, ($cache_time * 60));
+            unset($query, $row);
         }
         return $this->cache->get('file_'.$this->encodeURL($pageurl));
     }
@@ -614,26 +703,34 @@ class Csz_model extends CI_Model {
         } else {
             return FALSE;
         }
+        unset($query, $row);
     }
 
     /**
      * getSocial
      *
      * Function for get social link
-     *
+     * 
+     * @param	bool	$activeonly    TRUE for get the social with active only, FALSE is get all data
      * @return	Object or FALSE id not found
      */
-    public function getSocial() {
-        $this->db->select("*");
-        $this->db->where("active", 1);
-        $this->db->order_by("social_name", "asc");
-        $query = $this->db->get('footer_social');
-        if (!empty($query) && $query->num_rows() !== 0) {
-            $row = $query->result();
-            return $row;
-        } else {
-            return FALSE;
+    public function getSocial($activeonly = TRUE) {
+        ($activeonly) ? $cachename = 'getsocial_active' : $cachename = 'getsocial';        
+        if (!$this->cache->get($cachename)) {
+            $this->db->select("*");
+            if($activeonly) $this->db->where("active", 1);
+            $this->db->order_by("footer_social_id", "asc");
+            $query = $this->db->get('footer_social');
+            if (!empty($query) && $query->num_rows() !== 0) {
+                $row = $query->result();
+            } else {
+                $row = FALSE;
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            $this->cache->save($cachename, $row, ($cache_time * 60));
+            unset($query, $row, $activeonly);
         }
+        return $this->cache->get($cachename);
     }
 
     /**
@@ -643,10 +740,14 @@ class Csz_model extends CI_Model {
      * Please do not remove or change the fuction $this->Csz_admin_model->cszCopyright()
      *
      */
-    public function cszCopyright() {
-        $row = $this->Csz_model->load_config();
-        $html = '<span class="copyright">' . str_replace(' %YEAR ', ' ' . date('Y') . ' ', $row->site_footer) . '</span>
-                <small style="color:gray;">' . $this->Csz_admin_model->cszCopyright() . '</small>'; /* Please do not remove or change the fuction $this->Csz_admin_model->cszCopyright() */
+    public function cszCopyright($copyright_txt = '') {
+        if(!$copyright_txt) {
+            $copyright_txt = $this->Csz_admin_model->cszCopyright();
+        }
+        $row = $this->load_config();
+        $html = '<span class="copyright">' . str_replace(array('%YEAR%', '%YEAR', '%Y%', '%y%'), date('Y'), $row->site_footer) . '</span>
+                <small style="color:gray;">' . $copyright_txt . '</small>'; /* Please do not remove or change the fuction $this->Csz_admin_model->cszCopyright() */
+        unset($row);
         return $html;
     }
 
@@ -655,16 +756,17 @@ class Csz_model extends CI_Model {
      *
      * Function for load core css and more css
      *
-     * @param	string	$more_css    additional css (string type for single css file or text style only. If you hve many css file please use array)
+     * @param	string	$more_css    additional css (string type for single css file or text style only. If you have many css file please use array)
      * @param	bool	$more_include    for include the css file or FALSE
      * @return	String
      */
     public function coreCss($more_css = '', $more_include = TRUE) {
-        $core_css = '<link rel="canonical" href="' . base_url(uri_string()) . '" />' . "\n";
-        $core_css.= '<link href="' . $this->Csz_model->base_link().'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
-        $core_css.= link_tag($this->config->item('assets_url').'/font-awesome/css/font-awesome.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/js/plugins/select2/select2.min.css');
+        $core_css = '<link rel="canonical" href="' . $this->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
+        $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+        $core_css.= '<link href="' . $this->base_link(TRUE).'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -694,10 +796,9 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE) {
-        $config = $this->load_config();
-        $core_js = '<script type="text/javascript" src="' . $this->Csz_model->base_link().'/'. 'corejs.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . $this->config->item('assets_url'). '/js/jquery.lazy.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/plugins/select2/select2.full.min.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE).'/'. 'corejs.js"></script>';
+        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});</script>';
         if (!empty($more_js)) {
             if($more_include !== FALSE){
@@ -754,35 +855,48 @@ class Csz_model extends CI_Model {
             }
         }
         $meta = array(
-            array('name' => 'robots', 'content' => 'no-cache, no-cache'),
+            array('name' => 'content-language', 'content' => $this->session->userdata('fronlang_iso'), 'type' => 'equiv'),
             array('name' => 'description', 'content' => $desc_txt),
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
             array('name' => 'author', 'content' => $config->site_name),
-            array('name' => 'generator', 'content' => 'CSZ CMS | Version '.$this->Csz_model->getVersion()),
+            array('name' => 'generator', 'content' => $this->Csz_admin_model->cszGenerateMeta()),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'og:site_name', 'content' => $config->site_name, 'type' => 'property'),
             array('name' => 'og:title', 'content' => $title, 'type' => 'property'),
             array('name' => 'og:type', 'content' => $og_type, 'type' => 'property'),
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
-            array('name' => 'og:url', 'content' => $this->Csz_model->base_link(). '/' . $this->uri->uri_string(), 'type' => 'property'),
+            array('name' => 'og:url', 'content' => $this->base_link(). '/' . $this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
             array('name' => 'twitter:card', 'content' => 'summary'),
             array('name' => 'twitter:title', 'content' => $title),
             array('name' => 'twitter:description', 'content' => $desc_txt),
             array('name' => 'twitter:image', 'content' => $og_image),
-            array('name' => 'name', 'content' => $title, 'type' => 'itemprop'),
-            array('name' => 'description', 'content' => $desc_txt, 'type' => 'itemprop'),
-            array('name' => 'image', 'content' => $og_image, 'type' => 'itemprop')
         );
         $return_meta = meta($meta);
+        $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Article Feed" href="'.$this->base_link(). '/plugin/article/rss/" />';
+        $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Gallery Feed" href="'.$this->base_link(). '/plugin/gallery/rss/" />';
         if ($config->fbapp_id) {
             $return_meta.= '<meta property="fb:app_id" content="' . $config->fbapp_id . '" />' . "\n";
+        }
+        if ($config->facebook_page_id) {
+            $return_meta.= '<meta property="fb:pages" content="' . $config->facebook_page_id . '" />' . "\n";
+        }
+        $gplus = $this->Csz_model->getValue('social_url', 'footer_social', "social_name = 'google' AND active = '1'", '', 1);
+        if($gplus !== FALSE && $gplus->social_url){
+            $return_meta.= '<link href="' . $gplus->social_url . '" rel="publisher"/>' . "\n";
+        }
+        $twitter = $this->Csz_model->getValue('social_url', 'footer_social', "social_name = 'twitter' AND active = '1'", '', 1);
+        if($twitter !== FALSE && $twitter->social_url){ $twitter_username = basename($twitter->social_url);}
+        if($twitter !== FALSE && $twitter->social_url && $twitter_username){
+            $return_meta.= '<meta name="twitter:site" content="@' . $twitter_username . '"/>' . "\n";
+            $return_meta.= '<meta name="twitter:creator" content="@' . $twitter_username . '"/>' . "\n";
         }
         if($more_meta){
             $return_meta.= $more_meta . "\n";
         }
+        unset($config,$og_image,$og_type,$img_path,$meta,$gplus,$twitter,$twitter_username,$more_meta,$desc_txt,$title,$keywords);
         return $return_meta;
     }
 
@@ -792,15 +906,15 @@ class Csz_model extends CI_Model {
      * Function for url rewrite from string
      *
      * @param	string	$val    Title name or string
+     * @param	int	$char_limit    Charector limit default is 2048
      * @return	String
      */
-    public function rw_link($val) {
-        $val = trim(strtolower(strip_tags($val)));    
-        $val = str_replace('&amp', 'and', $val);
-        $val_arr = array('–',' ',"'s-","’s-",'!','@','#','$','%','^','&','*','(',')','_','+','|','{','}',':','"','‘','’','<','>','?','/','.',',',"'",';',']','[','=','----','---','--');
-        $val = str_replace($val_arr, '-', $val);
-        $val = strip_tags(iconv_substr($val,0,255,'UTF-8')); /* cut char limit 255 char */
-        return $val;
+    public function rw_link($val, $char_limit = 2048) {
+        $this->load->helper("text");
+        $val1 = convert_accented_characters(url_title($val, '-', TRUE));
+        $val2 = character_limiter($val1, $char_limit); /* cut char limit 2048 char */
+        unset($char_limit,$val,$val1);
+        return $val2;
     }
 
     /**
@@ -816,7 +930,49 @@ class Csz_model extends CI_Model {
         $ori_content = $this->frmNameInHtml($ori_content, $url_segment);
         $ori_content = $this->widgetInHtml($ori_content);
         $ori_content = $this->bannerInHtml($ori_content);
+        $ori_content = $this->formTagToHTML($ori_content);
         return $ori_content;
+    }
+    
+    /**
+     * formTagToHTML
+     *
+     * Function for find form tag with only post 
+     * [?startform_post:form_name{action_url}][/?endform] AND [?startform_get:form_name{action_url}][/?endform]
+     * Action url without base url Ex. [?startform_post:formtest{member/login/check}] Your html form [/?endform]
+     * And set the current url into session (cszfrm_cururl) for use to return page. 
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
+    public function formTagToHTML($content) { /* Find the banner in content */
+        $txt_nonhtml = strip_tags($content);
+        if (strpos($txt_nonhtml, '[?startform_') !== false && strpos($txt_nonhtml, '[/?endform]') !== false) {
+            $this->load->helper('form');
+            $output_array = array();
+            preg_match("/\[\?startform_(.*?)\:(.*?)\{(.*?)\}\]/", $txt_nonhtml, $output_array);
+            $html = '';
+            if($this->session->flashdata('formtag_error_message')){
+                $html = '<div class="text-center">'.$this->session->flashdata('formtag_error_message').'</div><br>';
+            }
+            if(!empty($output_array) && strtolower($output_array[1]) == 'post'){
+                $content = $html.str_replace($output_array[0], form_open_multipart($output_array[3], ' name="'.$output_array[2].'"'), $content);
+            }else if(!empty($output_array) && strtolower($output_array[1]) == 'get'){
+                $content = $html.str_replace($output_array[0], form_open_multipart($output_array[3], ' name="'.$output_array[2].'" method="get"'), $content);
+            }
+            $content1 = str_replace('[/?endform]', form_close(), $content);
+            $content = str_replace(array('[textarea','[/textarea'), array('<textarea','</textarea'), $content1);
+            $cururl = str_replace($this->base_link(). '/', '', current_url());
+            $totSegments = $this->uri->total_segments();
+            if (is_numeric($this->uri->segment($totSegments))) {
+                $cururl = str_replace('/'.$this->uri->segment($totSegments), '', $cururl);
+            }
+            $sess_data = array('cszfrm_cururl' => $cururl);
+            $this->session->set_userdata($sess_data);
+            unset($output_array, $cururl, $totSegments, $sess_data);
+        }
+        unset($txt_nonhtml);
+        return $content;
     }
     
     /**
@@ -841,7 +997,9 @@ class Csz_model extends CI_Model {
                     }
                 }
             }
+            unset($array);
         }
+        unset($txt_nonhtml);
         return $content;
     }
 
@@ -855,7 +1013,6 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function addBannerToHTML($content, $id) {
-        $this->load->driver('cache', array('adapter' => 'file'));
         if (!$this->cache->get('banner_'.$id)) {
             $this->db->where('NOW() BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)', '', FALSE); /* For date range between start to end */
             $getBanner = $this->getValue('*', 'banner_mgt', "active = '1' AND banner_mgt_id = '" . $id . "'", '', 1);
@@ -864,17 +1021,20 @@ class Csz_model extends CI_Model {
                 ($getBanner->nofollow && $getBanner->nofollow != NULL) ? $nofol = ' rel="nofollow external"' : $nofol = '';
                 ($getBanner->width && $getBanner->width != NULL) ? $width = ' width="' . $getBanner->width . '"' : $width = '';
                 ($getBanner->height && $getBanner->height != NULL) ? $height = ' height="' . $getBanner->height . '"' : $height = '';
-                $html = '<a target="_blank" href="' . $this->Csz_model->base_link(). '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '"></a>';
-                $content = str_replace('[?]{=banner:' . $getBanner->banner_mgt_id . '}[?]', $html, $content);
-            }            
+                $html = '<a target="_blank" href="' . $this->base_link(). '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '"></a>';
+                
+            }else{
+                $html = '[?]{=banner:' . $id . '}[?]';
+            }
             if($this->load_config()->pagecache_time == 0){
                 $cache_time = 1;
             }else{
                 $cache_time = $this->load_config()->pagecache_time;
             }
-            $this->cache->save('banner_'.$id, $content, ($cache_time * 60));
+            $this->cache->save('banner_'.$id, $html, ($cache_time * 60));
+            unset($html, $cache_time, $getBanner);
         }
-        return $this->cache->get('banner_'.$id);
+        return str_replace('[?]{=banner:' . $id . '}[?]', $this->cache->get('banner_'.$id), $content);
     }
 
 
@@ -901,6 +1061,7 @@ class Csz_model extends CI_Model {
                 }
             }
         }
+        unset($array, $txt_nonline, $txt_nonhtml);
         return $content;
     }
     
@@ -913,31 +1074,17 @@ class Csz_model extends CI_Model {
      * @return	object or FALSE
      */
     public function getWidgetFromName($wid_name) {
-        $widget = $this->getValue('*', 'widget_xml', "active = '1' AND widget_name = '" . $wid_name . "' AND xml_url != '' AND limit_view != '0'", '', 1);
-        if ($widget !== FALSE) {
-            if(empty($widget->widget_open) || $widget->widget_open == NULL){
-            $widget->widget_open = '<div class="panel panel-default">
-                                    <div class="panel-heading"><b>{widget_header_name}</b></div>
-                                    <div class="panel-body">';
+        if (!$this->cache->get('widget_sql_'.md5($wid_name))) {
+            $widget = $this->getValue('*', 'widget_xml', "active = '1' AND widget_name = '" . $wid_name . "' AND xml_url != '' AND limit_view != '0'", '', 1);            
+            if($this->load_config()->pagecache_time == 0){
+                $cache_time = 1;
+            }else{
+                $cache_time = $this->load_config()->pagecache_time;
             }
-            if(empty($widget->widget_content) || $widget->widget_content == NULL){
-                $widget->widget_content = '<div class="row">
-                                                <div class="col-md-3">
-                                                    <a href="{sub_url}" title="{title}"><img class="lazy img-responsive img-thumbnail" data-src="{photo}" alt="{title}"></a>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <a href="{sub_url}" title="{title}"><h4>{title}</h4></a><br>
-                                                    <p>{short_desc}</p>
-                                                </div>
-                                            </div><hr>';
-            }
-            if(empty($widget->widget_close) || $widget->widget_close == NULL){
-                $widget->widget_close = '</div></div>';
-            }
-            return $widget;
-        }else{
-            return FALSE;
+            $this->cache->save('widget_sql_'.md5($wid_name), $widget, ($cache_time * 60));
+            unset($cache_time, $widget);
         }
+        return $this->cache->get('widget_sql_'.md5($wid_name));
     }
     
     /**
@@ -975,40 +1122,52 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function addWidgetToHTML($content, $wid_name) {
-        $this->load->driver('cache', array('adapter' => 'file'));
-        if (!$this->cache->get('widget_'.$this->encodeURL($wid_name))) {
+        if (!$this->cache->get('widget_'.md5($wid_name))) {
             $getWidget = $this->getWidgetFromName($wid_name);
             if ($getWidget !== FALSE) {
                 $html = str_replace('{widget_header_name}', $getWidget->widget_name, $getWidget->widget_open);
                 if ($this->is_url_exist($getWidget->xml_url) !== FALSE) {
-                    $xml = @simplexml_load_file($getWidget->xml_url);
-                    if ($xml !== FALSE) {
-                        if ($xml->plugin[0]->null == 0) {
-                            $i = 1;
-                            foreach ($xml->plugin[0]->item as $item) {
-                                $html.= $this->replaceTagInWidget($getWidget->widget_content, $item);
-                                if ($i == $getWidget->limit_view) {
-                                    break;
+                    $xml_url = $this->get_contents_url($getWidget->xml_url);
+                    if($xml_url !== FALSE){
+                        $xml = simplexml_load_string($xml_url);
+                        if ($xml !== FALSE) {
+                            if ($xml->plugin[0]->null == 0) {
+                                $i = 1;
+                                foreach ($xml->plugin[0]->item as $item) {
+                                    $html.= $this->replaceTagInWidget($getWidget->widget_content, $item);
+                                    if ($i == $getWidget->limit_view) {
+                                        break;
+                                    }
+                                    $i++;
                                 }
-                                $i++;
+                            } else {
+                                $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                             }
-                        } else {
-                            $html.= '<h4 class="error">' . $this->getLabelLang('shop_notfound') . '</h4>';
+                            $html.= str_replace(array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')), $getWidget->widget_seemore);         
+                        }else{
+                            $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                         }
-                        $html.= str_replace(array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')), $getWidget->widget_seemore);         
+                        unset($xml);
+                    }else{
+                        $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                     }
+                    unset($xml_url);
+                }else{
+                    $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                 }
                 $html.= $getWidget->widget_close;
-                $content = str_replace('[?]{=widget:' . $getWidget->widget_name . '}[?]', $html, $content);
-            }            
+            }else{
+                $html = '[?]{=widget:' . $wid_name . '}[?]';
+            }
             if($this->load_config()->pagecache_time == 0){
                 $cache_time = 1;
             }else{
                 $cache_time = $this->load_config()->pagecache_time;
             }
-            $this->cache->save('widget_'.$this->encodeURL($wid_name), $content, ($cache_time * 60));
+            $this->cache->save('widget_'.md5($wid_name), $html, ($cache_time * 60));
+            unset($html, $cache_time, $getWidget);
         }
-        return $this->cache->get('widget_'.$this->encodeURL($wid_name));
+        return str_replace('[?]{=widget:' . $wid_name . '}[?]', $this->cache->get('widget_'.md5($wid_name)), $content);
     }
 
     /**
@@ -1050,36 +1209,33 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function addFrmToHtml($content, $frm_name, $status = '') { /* Add the form in content */
-        $CI =& get_instance();
-        $row_config = $this->load_config();
         $where_arr = array('form_name', 'active');
         $val_arr = array($frm_name, 1);
         $form_data = $this->getValue('*', 'form_main', $where_arr, $val_arr, 1);
         if ($form_data && $form_data !== FALSE) {
             $html_btn = '';
-            if ($status == 1) {
-                $sts_msg = '<div class="text-center"><div class="alert alert-success" role="alert">' . $form_data->success_txt . '</div></div><br>';
-            } else if ($status == 2) {
-                $sts_msg = '<div class="text-center"><div class="alert alert-danger" role="alert">' . $form_data->captchaerror_txt . '</div></div><br>';
-            } else if ($status == 3) {
-                $sts_msg = '<div class="text-center"><div class="alert alert-danger" role="alert">' . $form_data->error_txt . '</div></div><br>';
-            } else {
-                $sts_msg = '';
+            $html = '';
+            if($this->session->flashdata('formtag_error_message')){
+                $html = '<div class="text-center">'.$this->session->flashdata('formtag_error_message').'</div><br>';
             }
-            $html = $sts_msg;
-            $action_url = $this->Csz_model->base_link(). '/formsaction/' . $form_data->form_main_id;
+            $action_url = $this->base_link(). '/formsaction/' . $form_data->form_main_id;
+            $fiels_file_count = $this->Csz_admin_model->countTable('form_field', "form_main_id = '".$form_data->form_main_id."' AND field_type = 'file'");
+            if($fiels_file_count !== FALSE && $fiels_file_count != 0 && ($form_data->form_enctype == NULL || empty($form_data->form_enctype))){
+                $form_data->form_enctype = 'multipart/form-data';
+            }
+            unset($fiels_file_count);
             $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
-            if ($CI->config->item('csrf_protection') === TRUE && strpos($action_url, $CI->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get')) {
-                $html.= '<input type="hidden" name="'.$CI->security->get_csrf_token_name().'" id="'.$CI->security->get_csrf_token_name().'" value="' . $CI->security->get_csrf_hash() . '">';
+            if ($this->config->item('csrf_protection') === TRUE && strpos($action_url, $this->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get')) {
+                $html.= '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" id="'.$this->security->get_csrf_token_name().'" value="' . $this->security->get_csrf_hash() . '">';
             }
-            $cururl = str_replace($this->Csz_model->base_link(). '/', '', current_url());
+            $cururl = str_replace($this->base_link(). '/', '', current_url());
             $totSegments = $this->uri->total_segments();
             if (is_numeric($this->uri->segment($totSegments))) {
                 $cururl = str_replace('/'.$this->uri->segment($totSegments), '', $cururl);
             }
             $sess_data = array('cszfrm_cururl' => $cururl);
             $this->session->set_userdata($sess_data);
-            $field_data = $this->getValueArray('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', 'form_field_id', 'asc');
+            $field_data = $this->getValueArray('*', 'form_field', 'form_main_id', $form_data->form_main_id, '', array('arrange','form_field_id'), 'asc');
             if($field_data && $field_data !== FALSE){
                 foreach ($field_data as $field) {
                     if ($field['field_required']) {
@@ -1094,10 +1250,17 @@ class Csz_model extends CI_Model {
                     } else {
                         $maxlength = '';
                     }
-                    if ($field['field_type'] == 'checkbox' || $field['field_type'] == 'email' || $field['field_type'] == 'password' || $field['field_type'] == 'radio' || $field['field_type'] == 'text') {
+                    if ($field['field_type'] == 'checkbox' || $field['field_type'] == 'email' || $field['field_type'] == 'file' || $field['field_type'] == 'password' || $field['field_type'] == 'radio' || $field['field_type'] == 'text') {
+                        if ($field['field_type'] == 'file' && ($field['sel_option_val'] == NULL || empty($field['sel_option_val']))) {
+                            $accept = ' accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls"';
+                        }else if ($field['field_type'] == 'file' && ($field['sel_option_val'] != NULL && $field['sel_option_val'])){
+                            $accept = ' accept="' . $field['sel_option_val'] . '"';
+                        }else{
+                            $accept = '';
+                        }
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="controls">
-                            <input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $maxlength . '/>
+                            <input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $maxlength . $accept . '/>
                         </div>';
                     } else if ($field['field_type'] == 'datepicker') {
                         if ($field['field_class']) {
@@ -1137,7 +1300,7 @@ class Csz_model extends CI_Model {
                 }
             }
             if ($form_data->captcha) {
-                $html.= $this->showCaptcha();
+                $html.= '<br>'.$this->showCaptcha();
             }
             $html.= '<br><div class="form-actions">' . $html_btn . '</div>';
             $html.= '</form>';
@@ -1191,6 +1354,7 @@ class Csz_model extends CI_Model {
             }
         }
         closedir($handle);
+        $this->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
     }
 
     /**
@@ -1210,6 +1374,7 @@ class Csz_model extends CI_Model {
             }
         }
         closedir($handle);
+        $this->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
     }
 
     /**
@@ -1219,6 +1384,8 @@ class Csz_model extends CI_Model {
      *
      */
     public function clear_all_cache() {
+        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
+        $this->cache->clean();
         $path = $this->config->item('cache_path');
         $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
         $handle = opendir($cache_path);
@@ -1247,6 +1414,7 @@ class Csz_model extends CI_Model {
         }else{
             @array_map('unlink', glob($cache_path.'/'.$filename));
         }
+        $this->cache->clean();
     }
 
     /**
@@ -1260,6 +1428,7 @@ class Csz_model extends CI_Model {
         $path = $this->config->item('cache_path');
         $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
         if($uri) @unlink($cache_path . '/' . md5($uri));
+        $this->cache->clean();
     }
 
     /**
@@ -1271,13 +1440,7 @@ class Csz_model extends CI_Model {
      * @return	string or FALSE if reCaptcha wrong
      */
     private function getCurlreCaptData($url) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
+        $result = $this->get_contents_url($url);
         $obj = json_decode($result);
         if (!empty($obj)) {
             return $obj->success;
@@ -1294,11 +1457,14 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function chkCaptchaRes() {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
         $config = $this->load_config();
         $respone = '';
         if ($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey) {
-            //$recaptcha = $_POST['g-recaptcha-response'];   
-            $recaptcha = $this->input->post('g-recaptcha-response', TRUE);
+            $recaptcha = $this->input->post_get('g-recaptcha-response', TRUE);
             if ($recaptcha != null && strlen($recaptcha) != 0) {
                 $ip = $this->input->ip_address();
                 $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $ip;
@@ -1314,6 +1480,7 @@ class Csz_model extends CI_Model {
         } else {
             $respone = 'NOT_ACTIVE';
         }
+        unset($res);
         return $respone;
     }
 
@@ -1327,8 +1494,8 @@ class Csz_model extends CI_Model {
     public function showCaptcha() {
         $config = $this->load_config();
         $html = '';
+        $hl = '';
         if ($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey) {
-            $hl = '';
             if($this->uri->segment(1) == 'admin'){
                 if($this->Csz_admin_model->getLang()){
                     $hl = '?hl='.$this->Csz_admin_model->getLangISOfromName($this->Csz_admin_model->getLang());
@@ -1340,8 +1507,13 @@ class Csz_model extends CI_Model {
             }
             $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
             $html.= '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+            if (!$this->cache->get('showCaptcha_' . $hl)) {
+                ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
+                $this->cache->save('showCaptcha_' . $hl, $html, ($cache_time * 60));
+                unset($html, $config, $cache_time);
+            }
+            return $this->cache->get('showCaptcha_' . $hl);
         }
-        return $html;
     }
 
     /**
@@ -1407,6 +1579,7 @@ class Csz_model extends CI_Model {
         $query = $this->db->get("user_admin");
         $return['row'] = $query->row();
         $return['num_rows'] = $query->num_rows();
+        unset($query);
         return $return;
     }
 
@@ -1455,7 +1628,7 @@ class Csz_model extends CI_Model {
                 return 'IP_BANNED';
             }
         }
-        $this->db->close();
+        unset($query);
     }
     
     /**
@@ -1476,9 +1649,12 @@ class Csz_model extends CI_Model {
         );
         $this->session->unset_userdata($data);
         unset($data);
+        $this->load->model('Csz_startup');
+        $this->Csz_startup->clearStartup();
         if($url){
             redirect($url);
         }
+        
     }
 
     /**
@@ -1489,20 +1665,23 @@ class Csz_model extends CI_Model {
      * @param	string	$email    email address
      * @param	string	$note    note text
      * @param	string	$result    result text
+     * @param	string	$user_agent    user agent
+     * @param	string	$ip_address    ip address
      */
-    public function saveLogs($email, $note = '', $result = '') {
+    public function saveLogs($email = '', $note = '', $result = '', $user_agent = '', $ip_address = '') {
+        if(!$user_agent) $user_agent = $this->input->user_agent();
+        if(!$ip_address) $ip_address = $this->input->ip_address();
         if($result != 'IP_BANNED'){
             $data = array(
                 'email_login' => $email,
                 'note' => $note,
                 'result' => $result,
             );
-            $this->db->set('user_agent', $this->input->user_agent(), TRUE);
-            $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+            $this->db->set('user_agent', $user_agent, TRUE);
+            $this->db->set('ip_address', $ip_address, TRUE);
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->insert('login_logs', $data);
             unset($data);
-            $this->db->close();
         }
     }
 
@@ -1526,16 +1705,22 @@ class Csz_model extends CI_Model {
             $this->db->limit(1, 0);
             $query = $this->db->get("general_label");
             if (!empty($query) && $query->num_rows() !== 0) {
-                if ($query->row()->$sel_name)
+                if ($query->row()->$sel_name){
                     return $query->row()->$sel_name;
-                else
-                    return "This label is untranslated on General Label!";
+                }else{
+                    $error_txt = "This label is untranslated on General Label! (".$name.")";
+                    log_message('error', $error_txt);
+                    return $error_txt;
+                }
             }else {
-                return "This language isn't sync! (lang_" . $lang . ")";
+                $error_txt = "This language isn't sync! (lang_" . $lang . ")";
+                log_message('error', $error_txt);
+                return $error_txt;
             }
         } else {
             return FALSE;
         }
+        unset($query);
     }
 
     /**
@@ -1565,6 +1750,7 @@ class Csz_model extends CI_Model {
             $this->db->set('user_admin_id', $this->db->insert_id());
             $this->db->set('user_groups_id', 3);
             $this->db->insert('user_to_group');
+            unset($data);
             return $md5_hash;
         }
     }
@@ -1591,7 +1777,7 @@ class Csz_model extends CI_Model {
                 @unlink('photo/profile/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('picture');
-                if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
                     $paramiter = '_1';
                     $photo_id = time();
                     $uploaddir = 'photo/profile/';
@@ -1617,6 +1803,7 @@ class Csz_model extends CI_Model {
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
+            $this->clear_file_cache('getUserEmail*', TRUE);
             return TRUE;
         } else {
             return FALSE;
@@ -1648,6 +1835,7 @@ class Csz_model extends CI_Model {
             $protocal = 'mail';
         }
         $config = array();
+        $config['useragent'] = $this->Csz_admin_model->cszGenerateMeta();
         $config['protocol'] = $protocal;  /* mail, sendmail, smtp */
         if ($protocal == 'smtp') {
             $config['smtp_host'] = $load_conf->smtp_host;
@@ -1677,7 +1865,7 @@ class Csz_model extends CI_Model {
         }
         if (is_array($attach_file) && !empty($attach_file)) {
             foreach ($attach_file as $value) {
-                $this->email->attach($value);
+                $this->email->attach($value, 'attachment');
             }
         }
         if ($this->email->send()) {
@@ -1698,7 +1886,10 @@ class Csz_model extends CI_Model {
             $this->db->set('ip_address', $this->input->ip_address(), TRUE);
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->insert('email_logs', $data);
+            $this->db->cache_delete_all();
+            unset($data);
         }
+        unset($to_email, $subject, $message, $from_email, $from_name, $bcc, $reply_to, $alt_message, $attach_file, $save_log, $config, $load_conf, $protocal);
         return $result;
     }
 
@@ -1711,36 +1902,45 @@ class Csz_model extends CI_Model {
      * @return	ARRAY or FALSE
      */
     public function my_get_headers($url) {
-        $url_info = parse_url($url);
-        if (isset($url_info['scheme']) && $url_info['scheme'] == 'https') {
-            $port = 443;
-            $fp = @fsockopen('ssl://' . $url_info['host'], $port, $errno, $errstr, 10);
-        } else {
-            $port = isset($url_info['port']) ? $url_info['port'] : 80;
-            $fp = @fsockopen($url_info['host'], $port, $errno, $errstr, 10);
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
         }
-        if ($fp) {
-            $headers = array();
-            stream_set_timeout($fp, 10);
-            $head = "HEAD " . @$url_info['path'] . "?" . @$url_info['query'];
-            $head .= " HTTP/1.0\r\nHost: " . @$url_info['host'] . "\r\n\r\n";
-            @fputs($fp, $head);
-            while (!feof($fp)) {
-                if ($header = trim(fgets($fp, 1024))) {
-                    $sc_pos = strpos($header, ':');
-                    if ($sc_pos === false) {
-                        $headers['status'] = $header;
-                    } else {
-                        $label = substr($header, 0, $sc_pos);
-                        $value = substr($header, $sc_pos + 1);
-                        $headers[strtolower($label)] = trim($value);
-                    }
-                }
+        if (ini_get('allow_url_fopen') && function_exists('get_headers')) {
+            if (stripos($url, 'https://') !== FALSE) {
+                $default_opts = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    )
+                );
+                stream_context_set_default($default_opts);
             }
-            return $headers;
+            $headers1 = @get_headers($url);
+            $headers = substr($headers1[0], 9, 3);
+            unset($url, $headers1, $default_opts);
+        } else if (function_exists('curl_version')) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_HEADER => true,
+            CURLOPT_NOBODY => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $url));
+            if (stripos($url, 'https://') !== FALSE) {
+                curl_setopt($curl, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            }
+            $headers1 = explode("\n", curl_exec($curl));
+            $headers = substr($headers1[0], 9, 3);
+            curl_close($curl);
+            unset($url, $curl, $headers1);
         } else {
-            return false;
+            log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
+            $headers = FALSE;
+            unset($url);
         }
+        return $headers;
     }
 
     /**
@@ -1753,13 +1953,9 @@ class Csz_model extends CI_Model {
      */
     public function is_url_exist($url) {
         $headers = $this->my_get_headers($url);
-        if(isset($headers["status"])){
-            if ($headers !== FALSE && (@stripos($headers["status"], '200') || stripos($headers["status"], '301') || stripos($headers["status"], '302'))) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        }else{
+        if ($headers !== FALSE && ($headers == 200 || $headers == 301 || $headers == 302)) {
+            return TRUE;
+        } else {
             return FALSE;
         }
     }
@@ -1807,7 +2003,7 @@ class Csz_model extends CI_Model {
     }
 
     /**
-     * createAsCopy
+     * insertAsCopy
      *
      * Function for create new content as copy
      *
@@ -1820,7 +2016,32 @@ class Csz_model extends CI_Model {
             $this->db->set('timestamp_create', 'NOW()', FALSE);
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->insert($table, $data);
+            unset($data, $table);
             return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * findNameAsCopy
+     *
+     * Function for find the name to create new content as copy with new name
+     *
+     * @param	string	$table  for database table
+     * @param	string	$field_id  ID field
+     * @param	string	$value  Value to replace name
+     * @param	bool	$is_url  Value is url. Default is FALSE
+     * @param	string	$separator  What should the duplicate number be appended with
+     * @return	string or FALSE
+     */
+    public function findNameAsCopy($table, $field_id, $value, $is_url = FALSE, $separator = '-') {
+        if($table && $field_id && $value){
+            $value = preg_replace('/'.$separator.'(copy)'.$separator.'([0-9]+)$/', '', $value);
+            $lastid = $this->getLastID($table, $field_id);
+            $value = $value.$separator.'copy'.$separator.($lastid + 1);
+            unset($table,$field_id,$separator,$lastid);
+            return ($is_url === TRUE) ? $this->rw_link($value) : $value;
         }else{
             return FALSE;
         }
@@ -1837,6 +2058,7 @@ class Csz_model extends CI_Model {
     public function cleanEmailFormat($email){
         $search = array('&','/',';','\\','"',"'",'|',' ','{','}');
         $email = str_replace($search, '', trim($email));
+        unset($search);
         return $this->security->xss_clean($email);
     }
     
@@ -1851,6 +2073,7 @@ class Csz_model extends CI_Model {
     public function cleanOSCommand($string){
         $search = array('&','/',';','\\','"','|',"'",'{','}');
         $string = str_replace($search, '', $string);
+        unset($search);
         return $this->security->xss_clean($string);
     }
     
@@ -1860,14 +2083,28 @@ class Csz_model extends CI_Model {
      * Function for find forms tag from content html
      *
      * @param	string	$content  for content html
+     * @param	bool	$html  for use html tag or [?] tag. Default FALSE is use [?] tag
      * @return	TRUE or FALSE
      */
-    public function findFrmTag($content) {
-        $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
-            return TRUE;
+    public function findFrmTag($content, $html = FALSE) {
+        @ini_set("pcre.recursion_limit", "16777");
+        if($html === TRUE){
+            if (strpos($content, '<form ') !== false && strpos($content, ' name="csrf_csz"') !== false) {
+                unset($content,$html);
+                return TRUE;
+            }else{
+                unset($content,$html);
+                return FALSE;
+            }
         }else{
-            return FALSE;
+            $txt_nonhtml = strip_tags($content);
+            if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
+                unset($content,$html);
+                return TRUE;
+            }else{
+                unset($content,$html);
+                return FALSE;
+            }
         }
     }
     
@@ -1879,14 +2116,23 @@ class Csz_model extends CI_Model {
      * @return	Object or FALSE
      */
     public function load_bf_config() {
-        $this->db->limit(1, 0);
-        $query = $this->db->get('login_security_config');
-        if ($query->num_rows() !== 0) {
-            $row = $query->row();
-            return $row;
-        } else {
-            return FALSE;
+        if (!$this->cache->get('loadBFconfig')) {
+            $this->db->limit(1, 0);
+            $query = $this->db->get('login_security_config');
+            if ($query->num_rows() !== 0) {
+                $row = $query->row();
+            } else {
+                $row = FALSE;
+            }
+            if($this->load_config()->pagecache_time == 0){
+                $cache_time = 1;
+            }else{
+                $cache_time = $this->load_config()->pagecache_time;
+            }
+            $this->cache->save('loadBFconfig', $row, ($cache_time * 60));
+            unset($query, $cache_time, $row);
         }
+        return $this->cache->get('loadBFconfig');
     }
     
     /**
@@ -1897,7 +2143,8 @@ class Csz_model extends CI_Model {
      * @param	string	$ip_address  for ip address
      * @return	TRUE or FALSE
      */
-    public function chkBFwhitelistIP($ip_address) {
+    public function chkBFwhitelistIP($ip_address = '') {
+        if(!$ip_address) $ip_address = $this->input->ip_address();
         $ip_count = $this->countData('whitelist_ip', "ip_address = '".$ip_address."'");
         if($ip_count !== FALSE && $ip_count !== 0){
             return TRUE;
@@ -1914,7 +2161,8 @@ class Csz_model extends CI_Model {
      * @param	string	$ip_address  for ip address
      * @return	TRUE or FALSE
      */
-    public function chkBFblacklistIP($ip_address) {
+    public function chkBFblacklistIP($ip_address = '') {
+        if(!$ip_address) $ip_address = $this->input->ip_address();
         $ip_count = $this->countData('blacklist_ip', "ip_address = '".$ip_address."'");
         if($ip_count !== FALSE && $ip_count !== 0){
             return TRUE;
@@ -1931,13 +2179,13 @@ class Csz_model extends CI_Model {
      * @param	string	$ip_address  for ip address
      * @param	string	$email  for email address
      */
-    public function saveBFloginIP($ip_address, $email) {
+    public function saveBFloginIP($ip_address = '', $email = '') {
         if(!$ip_address) $ip_address = $this->input->ip_address();
         $config = $this->load_bf_config();
         if($this->chkBFwhitelistIP($ip_address) === FALSE){
-            $search_sql = "ip_address = '".$ip_address."' AND result = 'INVALID' AND timestamp_create >= DATE_SUB(NOW(),INTERVAL ".$config->bf_protect_period." MINUTE)";
+            $search_sql = "ip_address = '".$ip_address."' AND (result = 'INVALID' OR result = 'CSRF_INVALID') AND timestamp_create >= DATE_SUB(NOW(),INTERVAL ".$config->bf_protect_period." MINUTE)";
             $ip_count = $this->countData('login_logs', $search_sql);
-            if($ip_count !== FALSE  && $ip_count !== 0 && $ip_count > ($config->max_failure-1) && $this->chkBFblacklistIP($ip_address) === FALSE){
+            if($ip_count !== FALSE  && $ip_count !== 0 && $ip_count >= ($config->max_failure) && $this->chkBFblacklistIP($ip_address) === FALSE){
                 $this->db->set('ip_address', $ip_address, TRUE);
                 $this->db->set('note', 'Automatic add this IP from brute force', TRUE);
                 $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -1951,6 +2199,9 @@ class Csz_model extends CI_Model {
                 $this->db->set('ip_address', $this->input->ip_address(), TRUE);
                 $this->db->set('timestamp_create', 'NOW()', FALSE);
                 $this->db->insert('login_logs', $data);
+                unset($data);
+                $this->clear_all_cache();
+                $this->db->cache_delete_all();
             }
         }
     }
@@ -1964,6 +2215,7 @@ class Csz_model extends CI_Model {
      * @return	TRUE or FALSE
      */
     public function chkIPBaned($email = '') {
+        $this->db->cache_delete_all();
         $cur_ip = $this->input->ip_address();
         $this->saveBFloginIP($cur_ip, $email);
         if($this->chkBFblacklistIP($cur_ip) === TRUE){
@@ -1976,37 +2228,61 @@ class Csz_model extends CI_Model {
     /**
      * getPluginConfig
      *
-     * Function for check the IP from blacklist
+     * Function for get plugin config
      *
      * @param	string	$config_filename  for plugin config file name
      * @param	string	$index_name for plugin config file name
      * @return	string or FALSE
      */
     public function getPluginConfig($config_filename, $index_name) {
-        $plugin_config = array();
-        $file_path = APPPATH.'/config/plugin/'.str_replace('.php', '', $config_filename).'.php';
-        if (!file_exists($file_path)){
-            return FALSE;
-	}else{
-            include($file_path);
-            if (isset($plugin_config) && is_array($plugin_config) && array_key_exists($index_name, $plugin_config) === TRUE) {
-                return $plugin_config[strval($index_name)];
+        if (!$this->cache->get('pluginconfig_'.md5($config_filename.$index_name))) {
+            $plugin_config = array();
+            $file_path = APPPATH.'/config/plugin/'.str_replace('.php', '', $config_filename).'.php';
+            if (!file_exists($file_path)){
+                $return = FALSE;
             }else{
-                return FALSE;
+                include($file_path);
+                if (isset($plugin_config) && is_array($plugin_config) && array_key_exists($index_name, $plugin_config) === TRUE) {
+                    $return = $plugin_config[strval($index_name)];
+                }else{
+                    $return = FALSE;
+                }
             }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            $this->cache->save('pluginconfig_'.md5($config_filename.$index_name), $return, ($cache_time * 60));
+            unset($return, $cache_time, $plugin_config, $file_path);
         }
+        return $this->cache->get('pluginconfig_'.md5($config_filename.$index_name));
     }
     
     /**
      * base_link
      *
      * Function for get the base url link
+     * 
+     * @param	bool	$static for assets static resources from a different cdn domain
      *
      * @return	string
      */
-    public function base_link() {
-        $baseurl = rtrim(base_url(), '/');
-        return (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
+    public function base_link($static = FALSE) {
+        if($static === TRUE){
+            $baseurl = rtrim($this->config->base_url('', '', TRUE), '/');
+            $cachename = '_static';
+        }else{
+            $baseurl = rtrim(BASE_URL, '/');
+            $cachename = '';
+        }
+        if (!$this->cache->get('base_link'.$cachename)) {
+            $return = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
+            if($this->load_config()->pagecache_time == 0){
+                $cache_time = 1;
+            }else{
+                $cache_time = $this->load_config()->pagecache_time;
+            }
+            $this->cache->save('base_link'.$cachename, $return, ($cache_time * 60));
+            unset($return, $cache_time, $baseurl);
+        }
+        return $this->cache->get('base_link'.$cachename);
     }
     
     /**
@@ -2027,6 +2303,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
+        unset($query);       
     }
     
     /**
@@ -2087,5 +2364,302 @@ class Csz_model extends CI_Model {
             return FALSE;
         }
     }
+    
+    /**
+     * compress_html
+     *
+     * Function for compress the html
+     *
+     * @param	string	$html    html text
+     * @return	string
+     */
+    public function compress_html($html){
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        $search = array(
+            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+            '/(\s)+/s',         // shorten multiple whitespace sequences
+            '/<!--(.|\s)*?-->/' // Remove HTML comments
+        );
+        $replace = array(
+            '>',
+            '<',
+            '\\1',
+            ''
+        );
+        return preg_replace($search, $replace, $html);
+    }
+    
+    private function compress_js_css($val){
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        /* Function for compress js or css file */
+        $config = $this->load_config();
+        if($config->html_optimize_disable != 1 && $val){
+            $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $val);
+            $buffer = preg_replace('/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/', ';', $buffer);
+            $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '     '), '', $buffer);
+            $buffer = preg_replace(array('(( )+{)', '({( )+)'), '{', $buffer);
+            $buffer = preg_replace(array('(( )+})', '(}( )+)', '(;( )*})'), '}', $buffer);
+            $buffer = preg_replace(array('(;( )+)', '(( )+;)'), ';', $buffer);
+            $buffer = str_replace(': ', ':', $buffer);
+            $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
+            unset($val, $config);
+            return trim($buffer);
+        }else{
+            unset($config);
+            return $val;
+        }
+    }
+    
+    /**
+     * setJSCSScache
+     *
+     * Function for set js or css cache file
+     *
+     * @param	array	$files    file path
+     * @param	string	$cache_name    cache filename
+     * @param	string	$type    file type [js or css]
+     * @param	int	$expires    expire time
+     * @return	string
+     */
+    public function setJSCSScache($files, $cache_name, $type, $expires){
+        if(is_array($files) && !$this->cache->get($cache_name)){
+            $buffer = '';
+            foreach ($files as $file) {
+                $buffer .= file_get_contents($file);
+            }
+            $buffer1 = $this->compress_js_css($buffer);
+            if ($type == 'css') {
+                $buffer = str_replace("url(../", "url(" . base_url() . "assets/", $buffer1);
+            }
+            $this->cache->save($cache_name, $buffer, $expires);
+            unset($buffer, $buffer1, $files);
+        }
+        return $this->cache->get($cache_name);
+    }
+    
+    /**
+     * setJSCSSheader
+     *
+     * Function for set js or css http header
+     *
+     * @param	int	$modefied    file modified time
+     * @param	int	$expires    expire time
+     * @param	string	$etag    etag MD5 from file
+     * @param	string	$type    file type [text/js or application/javascript or text/css]
+     * @return  void    No value is returned.
+     */
+    public function setJSCSSheader($modefied, $expires, $etag, $type){
+	@ob_start("ob_gzhandler"); // Gzip compress
+	header("Accept-Ranges: bytes");
+	header("Etag: {$etag}");
+        header("Content-type: {$type}");
+	header("Pragma: public; maxage={$expires}");
+        header("Expires: " . gmdate ("D, d M Y H:i:s", time() + ($expires)) . " GMT");
+	header("Last-Modified: ".gmdate("D, d M Y H:i:s", $modefied).' GMT');
+        header("Cache-Control: max-age={$expires}");
+        header("Cache-Control: public");
+    }
+    
+    /**
+     * get_contents_url
+     *
+     * Function for get the content from url
+     *
+     * @param	string	$url    content full url path
+     * @return  string or FALSE
+     */
+    public function get_contents_url($url = '') {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if($url){
+            if (ini_get('allow_url_fopen')) {
+                if (stripos($url, 'https://') !== FALSE) {
+                    $default_opts = array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        )
+                    );
+                    stream_context_set_default($default_opts);
+                }
+                $content = @file_get_contents($url);
+            }else if (function_exists('curl_version')) {
+                // create a new cURL resource
+                $ch = curl_init();
+                // set URL and other appropriate options
+                curl_setopt($ch, CURLOPT_URL, $url);
+                if(stripos($url, 'https://') !== FALSE){
+                    curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                }
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                $content = curl_exec($ch);
+                curl_close($ch);
+                unset($url, $ch);
+            } else {
+                log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
+                $content = FALSE;
+                unset($url);
+            }
+            return $content;
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
+     * rmdir_recursive
+     *
+     * Function for remove directory with recursive
+     *
+     * @param	string	$dir    Directory path want to remove with recursive
+     */
+    public function rmdir_recursive($dir) {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
+                        $this->rmdir_recursive($dir . DIRECTORY_SEPARATOR . $object);
+                    } else {
+                        if( is_file($dir . DIRECTORY_SEPARATOR . $object) ) {
+                            if(!@unlink($dir . DIRECTORY_SEPARATOR . $object)) {
+                                log_message('error', "Can't remove file at ". $dir . DIRECTORY_SEPARATOR . $object);
+                            }
+                        } else {
+                            log_message('error', "File permission issues at ". $dir . DIRECTORY_SEPARATOR . $object);
+                        }
+                    }
+                }
+            }
+            unset($objects, $object);
+            rmdir($dir);
+        }
+    }
+    /**
+     * copy_recursive
+     *
+     * Function for copy directory and file with recursive
+     *
+     * @param	string	$src    Source full path want to copy with recursive
+     * @param	string	$dst    Destination full path want to paste with recursive
+     */
+    public function copy_recursive($src, $dst) {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        $src = rtrim(rtrim($src, '/'), '\\');
+        $dst = rtrim(rtrim($dst, '/'), '\\');
+        if(is_dir($src)) {
+            if (!is_dir($dst)) {
+                @mkdir($dst, 0755, true);
+            }
+            $dir_items = array_diff(scandir($src), array('..', '.'));
+            if (count($dir_items) > 0) {
+                foreach ($dir_items as $v) {
+                    $this->copy_recursive($src . DIRECTORY_SEPARATOR . $v, $dst . DIRECTORY_SEPARATOR . $v);
+                }
+            }
+        } elseif(is_file($src)) {
+            @copy($src, $dst);
+        }
+    }
+    
+    /**
+     * Runs the file through the XSS clean function (Only images)
+     *
+     * This prevents people from embedding malicious code in their files.
+     * I'm not sure that it won't negatively affect certain files in unexpected ways,
+     * but so far I haven't found that it causes trouble.
+     *
+     * @param srting $file From $_FILE['fieldname']['tmp_name']
+     * @return	string or FALSE
+     */
+    public function photo_xss_clean($file) {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if (filesize($file) == 0) {
+            return FALSE;
+        }
+        if (memory_get_usage() && ($memory_limit = ini_get('memory_limit')) > 0) {
+            $memory_limit = str_split($memory_limit, strspn($memory_limit, '1234567890'));
+            if (!empty($memory_limit[1])) {
+                switch ($memory_limit[1][0]) {
+                    case 'g':
+                    case 'G':
+                        $memory_limit[0] *= 1024 * 1024 * 1024;
+                        break;
+                    case 'm':
+                    case 'M':
+                        $memory_limit[0] *= 1024 * 1024;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            $memory_limit = (int) ceil(filesize($file) + $memory_limit[0]);
+            ini_set('memory_limit', $memory_limit); // When an integer is used, the value is measured in bytes. - PHP.net
+        }
+        // If the file being uploaded is an image, then we should have no problem with XSS attacks (in theory), but
+        // IE can be fooled into mime-type detecting a malformed image as an html file, thus executing an XSS attack on anyone
+        // using IE who looks at the image. It does this by inspecting the first 255 bytes of an image. To get around this
+        // CI will itself look at the first 255 bytes of an image to determine its relative safety. This can save a lot of
+        // processor power and time if it is actually a clean image, as it will be in nearly all instances _except_ an
+        // attempted XSS attack.
+
+        if (function_exists('getimagesize') && @getimagesize($file) !== FALSE) {
+            if (($file = @fopen($file, 'rb')) === FALSE) { // "b" to force binary
+                return FALSE; // Couldn't open the file, return FALSE
+            }
+            
+            $opening_bytes = fread($file, 256);
+            fclose($file);
+            
+            // These are known to throw IE into mime-type detection chaos
+            // <a, <body, <head, <html, <img, <plaintext, <pre, <script, <table, <title
+            // title is basically just in SVG, but we filter it anyhow
+            // if it's an image or no "triggers" detected in the first 256 bytes - we're good
+            return !preg_match('/<(a|body|head|html|img|plaintext|pre|script|table|title)[\s>]/i', $opening_bytes);
+        }
+        if (($data = @file_get_contents($file)) === FALSE) {
+            return FALSE;
+        }
+        return $this->security->xss_clean($data, TRUE);
+    }
+    
+    /**
+    * Remove the nested HTML empty tags from the string.
+    *
+    * @param    string  $string String to remove tags
+    * @return   mixed   Cleaned string
+    */
+   public function remove_empty_htmltags($string) {
+       // Return if string not given or empty
+       if (!is_string($string) || trim($string) == ''){
+            return $string;
+       }else{
+            return preg_replace('/<(\w+)\b(?:\s+[\w\-.:]+(?:\s*=\s*(?:"[^"]*"|"[^"]*"|[\w\-.:]+))?)*\s*\/?>\s*<\/\1\s*>/', '', $string);
+       }
+   }
     
 }

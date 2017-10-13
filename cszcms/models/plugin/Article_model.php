@@ -34,7 +34,7 @@ class Article_model extends CI_Model {
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
         $upload_file = '';
-        if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+        if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
             $paramiter = '_1';
             $photo_id = time();
             $uploaddir = 'photo/plugin/article/';
@@ -94,7 +94,7 @@ class Article_model extends CI_Model {
                 @unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('mainPicture');
-                if ($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
+                if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
                     $paramiter = '_1';
                     $photo_id = time();
                     $uploaddir = 'photo/plugin/article/';
@@ -111,8 +111,7 @@ class Article_model extends CI_Model {
                 'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
             );
-            $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
-            $this->Csz_model->clear_uri_cache($this->config->item('base_url') . urldecode('plugin/article/view/' . $id . '/' . $this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1)->url_rewrite)); /* Clear Page Cache when update */
+            $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));           
             $this->db->set('url_rewrite', $url_rewrite);
             $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
             $this->db->set('active', $active);
@@ -122,6 +121,7 @@ class Article_model extends CI_Model {
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where("article_db_id", $id);
             $this->db->update('article_db', $data);
+            $this->Csz_model->clear_uri_cache($this->config->item('base_url') . urldecode('plugin/article/view/' . $id . '/' . $this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1)->url_rewrite)); /* Clear Page Cache when update */
         }
     }
 
@@ -223,13 +223,20 @@ class Article_model extends CI_Model {
         if ($maincat === FALSE) {
             $html.= '<li role="presentation" class="text-left"><a><b>' . $this->Csz_model->getLabelLang('article_cat_not_found') . '</b></a></li>';
         } else {
-            foreach ($maincat as $mc) {
-                $html.= '<li role="presentation" class="text-left"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $mc['url_rewrite'] . '"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $mc['category_name'] . '</b></a></li>';
+            foreach ($maincat as $mc) { 
                 $subcat = $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '" . $mc['article_db_id'] . "'", '', 0, 'arrange', 'ASC');
-                if (!empty($subcat)) {
-                    foreach ($subcat as $sc) {
-                        $html.= '<li role="presentation" class="text-left" style="margin-left:40px;line-height:8px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $sc['url_rewrite'] . '">' . $sc['category_name'] . '</a></li>';
+                if (!empty($subcat) && $subcat !== FALSE) {
+                    $html.= '<li role="presentation" class="text-left"><a onclick="ChkHideShow(' . $mc['article_db_id'] . ');"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $mc['category_name'] . '</b></a></li>';
+                    $html.= '<div id="' . $mc['article_db_id'] . '" style="display:none;">';
+                    if($this->countArtInCat($mc['article_db_id']) > 0){
+                        $html.= '<li role="presentation" class="text-left" style="margin-left:30px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $mc['url_rewrite'] . '">' . $mc['category_name'] . '</a></li>';
                     }
+                    foreach ($subcat as $sc) {
+                        $html.= '<li role="presentation" class="text-left" style="margin-left:30px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $mc['url_rewrite'] . '/' . $sc['url_rewrite'] . '">' . $sc['category_name'] . '</a></li>';
+                    }
+                    $html.= '</div>';
+                }else{
+                    $html.= '<li role="presentation" class="text-left"><a href="' . $this->Csz_model->base_link(). '/plugin/article/category/' . $mc['url_rewrite'] . '"><b>' . $mc['category_name'] . '</b></a></li>';
                 }
             }
         }
@@ -245,16 +252,21 @@ class Article_model extends CI_Model {
             $html.= '<li role="presentation" class="text-left"><a><b>' . $this->Csz_model->getLabelLang('article_not_found') . '</b></a></li>';
         } else {
             foreach ($archive as $ac) {
+                $month_arr = array();
                 $html.= '<li role="presentation" class="text-left"><a onclick="ChkHideShow(' . $ac['article_year'] . ');"><b><i class="glyphicon glyphicon-triangle-bottom"></i> ' . $ac['article_year'] . '</b></a></li>';
-                $html.= '<div id="' . $ac['article_year'] . '" style="display:none;margin-left:30px;line-height:25px;">';
-                $subarchive = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS article_month_name, MONTH(timestamp_create) AS article_month", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '" . $lang_iso . "' AND YEAR(timestamp_create) = '" . $ac['article_year'] . "'", '', 0, 'article_month', 'DESC', 'article_month');
+                $html.= '<div id="' . $ac['article_year'] . '" style="display:none;">';
+                $subarchive = $this->Csz_model->getValueArray("MONTH(timestamp_create) AS article_month, MONTHNAME(timestamp_create) AS article_month_name", 'article_db', "is_category = '0' AND active = '1' AND lang_iso = '" . $lang_iso . "' AND YEAR(timestamp_create) = '" . $ac['article_year'] . "'", '', 0, 'article_month', 'DESC'); /* Can't group with sql only_full_group_by sql mode */
                 if (!empty($subarchive)) {
                     foreach ($subarchive as $sa) {
-                        $html.= '<li role="presentation" class="text-left" style="padding-left:10px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/archive/' . $ac['article_year'] . '-' . $sa['article_month'] . '">' . $sa['article_month_name'] . '</a></li>';
+                        if(!in_array($sa['article_month_name'], $month_arr)){
+                            $month_arr[] = $sa['article_month_name'];
+                            $html.= '<li role="presentation" class="text-left" style="padding-left:30px;"><a href="' . $this->Csz_model->base_link(). '/plugin/article/archive/' . $ac['article_year'] . '-' . $sa['article_month'] . '">' . $sa['article_month_name'] . '</a></li>';
+                        }
                     }
                 }
                 $html.= '</div>';
             }
+            unset($month_arr, $archive, $subarchive);
         }
         $html.= '</ul>
                 </div>
@@ -275,6 +287,19 @@ class Article_model extends CI_Model {
             return $id;
         }
         
+    }
+    
+    public function countArtInCat($cat_id){
+        if($cat_id){
+            $art_num = $this->Csz_model->countData('article_db', "is_category = '0' AND active = '1' AND cat_id = '" . $cat_id . "'");
+            if($art_num !== FALSE){
+                return $art_num;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
     }
 
 }

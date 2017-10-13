@@ -62,27 +62,6 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <?php
-        if(empty($widget->widget_open) || $widget->widget_open == NULL){
-            $widget->widget_open = '<div class="panel panel-default">
-                                    <div class="panel-heading"><b>{widget_header_name}</b></div>
-                                    <div class="panel-body">';
-        }
-        if(empty($widget->widget_content) || $widget->widget_content == NULL){
-            $widget->widget_content = '<div class="row">
-                                            <div class="col-md-3">
-                                                <a href="{sub_url}" title="{title}"><img class="lazy img-responsive img-thumbnail" data-src="{photo}" alt="{title}"></a>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <a href="{sub_url}" title="{title}"><h4>{title}</h4></a><br>
-                                                <p>{short_desc}</p>
-                                            </div>
-                                        </div><hr>';
-        }
-        if(empty($widget->widget_close) || $widget->widget_close == NULL){
-            $widget->widget_close = '</div></div>';
-        }
-        ?>
         <div class="control-group">            
             <label class="control-label" for="widget_open"><?php echo $this->lang->line('widget_widget_open'); ?></label>
             <?php

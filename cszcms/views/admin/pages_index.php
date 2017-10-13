@@ -67,9 +67,9 @@
                 </tbody>
             </table>
         </div>
-        <?php echo $this->pagination->create_links(); ?>
+        <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
         <!-- /widget-content --> 
-        <br>
+        <br><br>
         <span class="warning"><i class="glyphicon glyphicon-lock"></i> <?php echo  $this->lang->line('default_data_remark') ?></span>
     </div>
 </div>

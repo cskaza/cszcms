@@ -29,21 +29,15 @@ class Member_helper{
     */
     static function is_logged_in($email){
         $CI =& get_instance();
-        $CI->load->library('session');
         if(!$email){
             $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $sess_data = array('cszflogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
-            $redirect= $CI->Csz_model->base_link().'/member/login';
-            header("Location: $redirect");
-            exit;
+            redirect($CI->Csz_model->base_link().'/member/login', 'refresh');
         }else if($email && $_SESSION['session_id']){
-            $CI->load->model('Csz_admin_model');
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
-                $redirect= $CI->Csz_model->base_link().'/member/logout';
-                header("Location: $redirect");	
-                exit;
+                redirect($CI->Csz_model->base_link().'/member/logout', 'refresh');
             }
         }
     }
@@ -58,9 +52,7 @@ class Member_helper{
     static function login_already($email_session){
         if($email_session){
             $CI =& get_instance();
-            $redirect= $CI->Csz_model->base_link().'/member';
-            header("Location: $redirect");
-            exit;
+            redirect($CI->Csz_model->base_link().'/member', 'refresh');
         }
     }
     
@@ -73,18 +65,12 @@ class Member_helper{
     */
     static function plugin_not_active($plugin_config_filename){
         $CI =& get_instance();
-        $CI->load->model('Csz_model');
-        $CI->load->model('Csz_admin_model');
         if($CI->Csz_model->load_config()->maintenance_active){
-            //Return to home page
-            redirect('./', 'refresh');
-            exit;
+            redirect($CI->Csz_model->base_link(), 'refresh');
         }
         $chkactive = $CI->Csz_admin_model->chkPluginActive($plugin_config_filename);
         if($chkactive === FALSE){
-            $redirect= $CI->Csz_model->base_link().'/';
-            header("Location: $redirect");
-            exit;
+            redirect($CI->Csz_model->base_link(), 'refresh');
         }
     }
     
@@ -98,14 +84,9 @@ class Member_helper{
     static function is_allowchk($perms_name){
         $CI =& get_instance();
         if($perms_name){
-            $CI->load->model('Csz_auth_model');
-            $CI->load->model('Csz_model');
             if($CI->Csz_auth_model->is_group_allowed($perms_name, 'frontend') === FALSE){
-                $CI->load->library('session');
                 $CI->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$CI->Csz_model->getLabelLang('not_permission_txt').'</div>');
-                $redirect= $CI->Csz_model->base_link().'/member';
-                header("Location: $redirect");
-                exit;
+                redirect($CI->Csz_model->base_link().'/member', 'refresh');
             }
         }
     }

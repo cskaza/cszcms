@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $plugin_config['plugin_name']  = 'Article';
 $plugin_config['plugin_urlrewrite']  = 'article'; /* Please don't have any blank space */
 $plugin_config['plugin_author']  = 'CSZCMS'; /* For your name */
-$plugin_config['plugin_version']   = '1.0.4';
+$plugin_config['plugin_version']   = '1.0.5';
 $plugin_config['plugin_description']   = 'aricle plugin for make blog'; /* For your plugin description */
 
 /* for menu inside member zone. If not have please blank. 
@@ -55,7 +55,7 @@ $plugin_config['plugin_file_path']   = array(
     FCPATH . '/cszcms/controllers/admin/plugin/Article.php',
     FCPATH . '/cszcms/models/plugin/Article_model.php',
     FCPATH . '/cszcms/modules/plugin/controllers/Article.php',
-    FCPATH . '/cszcms/modules/plugin/views/article/',
+    FCPATH . '/cszcms/modules/plugin/views/templates/cszdefault/article/',
     FCPATH . '/cszcms/views/admin/plugin/article/',
     FCPATH . '/cszcms/language/dutch/plugin/article_lang.php',
     FCPATH . '/cszcms/language/english/plugin/article_lang.php',

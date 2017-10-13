@@ -25,26 +25,24 @@ class Pages extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('pages content');
         $this->load->library('pagination');
+        $this->load->helper('form');
         $this->db->cache_on();
         $this->csz_referrer->setIndex();
         // Pages variable
@@ -65,6 +63,7 @@ class Pages extends CI_Controller {
         //Get users from database
         $this->template->setSub('pages', $this->Csz_admin_model->getIndexData('pages', $result_per_page, $pagination, 'pages_id', 'asc', $search_arr));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+        $this->template->setSub('total_row', $total_row);
         //Load the view
         $this->template->loadSub('admin/pages_index');
     }
@@ -182,13 +181,16 @@ class Pages extends CI_Controller {
             $page = $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1);
             if($page !== FALSE){
                 $data = array(
-                    'page_name' => $page->page_name.'-copy',
-                    'page_url' => $page->page_url.'-copy',
+                    'page_name' => $this->Csz_model->findNameAsCopy('pages', 'pages_id', $page->page_name),
+                    'page_url' => $this->Csz_model->findNameAsCopy('pages', 'pages_id', $page->page_url, TRUE),
                     'lang_iso' => $page->lang_iso,
                     'page_title' => $page->page_title,
                     'page_keywords' => $page->page_keywords,
                     'page_desc' => $page->page_desc,
                     'content' => $page->content,
+                    'more_metatag' => $page->more_metatag,
+                    'custom_css' => $page->custom_css,
+                    'custom_js' => $page->custom_js,
                     'active' => 0,
                 );
                 $this->Csz_model->insertAsCopy('pages', $data);

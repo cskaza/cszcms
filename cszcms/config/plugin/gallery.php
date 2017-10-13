@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $plugin_config['plugin_name']  = 'Gallery';
 $plugin_config['plugin_urlrewrite']  = 'gallery'; /* Please don't have any blank space */
 $plugin_config['plugin_author']  = 'CSZCMS'; /* For your name */
-$plugin_config['plugin_version']   = '1.0.3';
+$plugin_config['plugin_version']   = '1.0.4';
 $plugin_config['plugin_description']   = 'gallery plugin'; /* For your plugin description */
 
 /* for menu inside member zone. If not have please blank. 
@@ -56,7 +56,7 @@ $plugin_config['plugin_file_path']   = array(
     FCPATH . '/cszcms/controllers/admin/plugin/Gallery.php',
     FCPATH . '/cszcms/models/plugin/Gallery_model.php',
     FCPATH . '/cszcms/modules/plugin/controllers/Gallery.php',
-    FCPATH . '/cszcms/modules/plugin/views/gallery/',
+    FCPATH . '/cszcms/modules/plugin/views/templates/cszdefault/gallery/',
     FCPATH . '/cszcms/views/admin/plugin/gallery/',
     FCPATH . '/cszcms/language/dutch/plugin/gallery_lang.php',
     FCPATH . '/cszcms/language/english/plugin/gallery_lang.php',

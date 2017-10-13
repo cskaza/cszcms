@@ -5,7 +5,7 @@
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2016 - 2017, Astian Foundation.
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -14,7 +14,7 @@
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2016 - 2017, Astian Foundation.
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -26,7 +26,11 @@ class Csz_admin_model extends CI_Model{
     function __construct(){
         parent::__construct();
         $this->load->model('Csz_model');
-        $this->load->database();
+        if (CACHE_TYPE == 'file') {
+            $this->load->driver('cache', array('adapter' => 'file'));
+        } else {
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+        }
     }
 
     /**
@@ -54,9 +58,13 @@ class Csz_admin_model extends CI_Model{
         }
         $xml_url_bak = $this->config->item('csz_chkverxmlurl_backup');
         if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
-            $xml = @simplexml_load_file($xml_url);
+            $xml_file = $this->Csz_model->get_contents_url($xml_url);
+            $xml = simplexml_load_string($xml_file);
+            unset($xml_file, $xml_url);
         }else if($this->Csz_model->is_url_exist($xml_url) === FALSE && $this->Csz_model->is_url_exist($xml_url_bak) !== FALSE){
-            $xml = @simplexml_load_file($xml_url_bak);
+            $xml_file = $this->Csz_model->get_contents_url($xml_url_bak);
+            $xml = simplexml_load_string($xml_file);
+            unset($xml_file, $xml_url_bak);
         }else{
             $xml = FALSE;
         }
@@ -68,8 +76,10 @@ class Csz_admin_model extends CI_Model{
                 $vercur = str_replace(' Beta', '', $xml_cur);
                 $cur_xml = explode('.', $vercur);
                 $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2] - 1);
+                unset($xml_cur, $vercur, $cur_xml);
             }else{
                 $xml_version = $xml_cur;
+                unset($xml_cur);
             }
             return $xml_version;
         }
@@ -212,13 +222,14 @@ class Csz_admin_model extends CI_Model{
         $config['num_tag_close'] = '</li>';
         $config["uri_segment"] = $uri_segment;
         $this->pagination->initialize($config);
+        unset($config, $suffix_url);
     }
 
     /**
      * getIndexData
      *
      * Function for get data for index page (support pageination)
-     *
+     * 
      * @param	string	$table    DB table
      * @param	string	$limit    DB limit
      * @param	string	$offset   DB offset
@@ -229,12 +240,13 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$join_db   Table to join or NULL 
      * @param	string	$join_where   Join condition or NULL  
      * @param	string	$join_type   Join type ('LEFT', 'RIGHT', 'OUTER', 'INNER', 'LEFT OUTER', 'RIGHT OUTER') or NULL
+     * @param	string	$sel_field   DB field select. Default is (*)
      * @return	array
      */
-    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = '', $sort = '', $search_sql = '', $groupby = '', $join_db = '', $join_where = '', $join_type = ''){
+    public function getIndexData($table, $limit = 0, $offset = 0, $orderby = '', $sort = '', $search_sql = '', $groupby = '', $join_db = '', $join_where = '', $join_type = '', $sel_field = '*'){
         // Get a list of all user accounts
         $count = $this->Csz_model->countData($table, $search_sql, $groupby, $orderby, $sort, $join_db, $join_where, $join_type);
-        $this->db->select('*');
+        $this->db->select($sel_field);
         if($join_db && $join_where){
             $this->db->join($join_db, $join_where, $join_type);
         }
@@ -273,7 +285,7 @@ class Csz_admin_model extends CI_Model{
         }else{
             return FALSE;
         }
-        $this->db->close();
+        unset($query, $row);
     }
 
     /**
@@ -308,12 +320,18 @@ class Csz_admin_model extends CI_Model{
      */
     public function getUserEmail($id){
         // Get the user email address
-        $rows = $this->Csz_model->getValue('email', 'user_admin', "user_admin_id", $id, 1);
-        if($rows !== FALSE){
-            return $rows->email;
-        }else{
-            return FALSE;
+        if (!$this->cache->get('getUserEmail_'.$id)) {
+            $rows = $this->Csz_model->getValue('email', 'user_admin', "user_admin_id", $id, 1);
+            if($rows !== FALSE){
+                $return = $rows->email;
+            }else{
+                $return = FALSE;
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            $this->cache->save('getUserEmail_'.$id, $return, ($cache_time * 60));
+            unset($return, $cache_time, $rows);
         }
+        return $this->cache->get('getUserEmail_'.$id);
     }
 
     /**
@@ -335,7 +353,7 @@ class Csz_admin_model extends CI_Model{
             $birthday = '';
         }
         $upload_file = '';
-        if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+        if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
             $paramiter = '_1';
             $photo_id = time();
             $uploaddir = 'photo/profile/';
@@ -398,7 +416,7 @@ class Csz_admin_model extends CI_Model{
                 @unlink('photo/profile/'.$this->input->post('del_file', TRUE));
             }else{
                 $upload_file = $this->input->post('picture');
-                if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+                if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
                     $paramiter = '_1';
                     $photo_id = time();
                     $uploaddir = 'photo/profile/';
@@ -443,6 +461,7 @@ class Csz_admin_model extends CI_Model{
                     $this->db->update('user_to_group');
                 }
             }
+            $this->clear_file_cache('getUserEmail*', TRUE);
             return TRUE;
         }else{
             return FALSE;
@@ -461,12 +480,13 @@ class Csz_admin_model extends CI_Model{
         if($id != 1){
             $this->removeData('user_admin', array('user_admin_id' => $id));
         }
+        $this->clear_file_cache('getUserEmail*', TRUE);
     }
 
     /**
      * removeData
      *
-     * Function for remove the user
+     * Function for remove the data
      *
      * @param	string	$table    DB table
      * @param	string	$id_field    DB id field
@@ -485,6 +505,36 @@ class Csz_admin_model extends CI_Model{
             return FALSE;
         }
     }
+    
+    /**
+     * removeDataAndFile
+     *
+     * Function for remove the data and file
+     *
+     * @param	string	$table    DB table
+     * @param	string	$id_field    DB id field
+     * @param	string	$id_val    DB id value
+     * @param	string	$file_path    file upload path
+     * @param	string	$file_sql_field    DB field name of file
+     */
+    public function removeDataAndFile($table, $id_field, $id_val, $file_path, $file_sql_field){
+        if($table && $id_field && $file_path && $file_sql_field){
+            $file = $this->Csz_model->getValue($file_sql_field, $table, $id_field, $id_val, 1);
+            if($file !== FALSE && $file->$file_sql_field){
+                @unlink(FCPATH . "/photo/" . str_replace(FCPATH . "/photo/", '', rtrim($file_path, '/')) . '/' . $file->$file_sql_field);
+            }
+            if(is_array($id_field)){
+                // Delete a data from table
+                $this->db->delete($table, $id_field);
+            }else{
+                // Delete a data from table
+                $this->db->delete($table, array($id_field => $id_val));
+            }
+            unset($table, $id_field, $id_val, $file_path, $file_sql_field, $file);
+        }else{
+            return FALSE;
+        }
+    }
 
     /**
      * dropTable
@@ -497,6 +547,7 @@ class Csz_admin_model extends CI_Model{
         $this->load->dbforge();
         if($table_name){
             $this->dbforge->drop_table($table_name, TRUE);
+            unset($table_name);
         }else{
             return FALSE;
         }
@@ -561,7 +612,11 @@ class Csz_admin_model extends CI_Model{
         /* Get Language ISO from language config file (for backend system) */
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
-        return $lang_config[$lang_name];
+        if($lang_name){
+            return $lang_config[$lang_name];
+        }else{
+            return $lang_config['english'];
+        }
     }
 
     /**
@@ -593,7 +648,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function cszCopyright(){
         /* Please do not remove or change this function */
-        $csz_copyright = '<br><span class="copyright">Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> Version '.$this->Csz_model->getVersion().'</span>';
+        $csz_copyright = '<br><span class="copyright">'.$this->cszCredit().'</span>';
         return $csz_copyright;
     }
 
@@ -607,11 +662,13 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreCss($more_css = '', $more_include = TRUE){
-        $core_css = link_tag($this->config->item('assets_url').'/css/bootstrap.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/font-awesome/css/font-awesome.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/css/flag-icon.min.css');
-        $core_css.= link_tag($this->config->item('assets_url').'/js/plugins/select2/select2.min.css');
+        $core_css = '<link rel="canonical" href="' . $this->Csz_model->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
+        $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+        $core_css.= link_tag('assets/css/bootstrap.min.css');
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+        $core_css.= link_tag('assets/css/flag-icon.min.css');
+        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -641,12 +698,12 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE){
-        $core_js = '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-1.12.4.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/bootstrap.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery-ui.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/jquery.ui.touch-punch.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/tinymce/tinymce.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="'.$this->config->item('assets_url').'/js/plugins/select2/select2.full.min.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-1.12.4.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/bootstrap.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-ui.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.ui.touch-punch.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/tinymce/tinymce.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
         if (!empty($more_js)) {
             if($more_include !== FALSE){
@@ -677,13 +734,14 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreMetatags($desc_txt, $more_metatags = ''){
+        $config = $this->load_config();
         $meta = array(
-            array('name' => 'robots', 'content' => 'no-cache, no-cache'),
+            array('name' => 'content-language', 'content' => $this->getLangISOfromName($this->getLang()), 'type' => 'equiv'),
             array('name' => 'description', 'content' => $desc_txt),
-            array('name' => 'keywords', 'content' => $this->load_config()->keywords),
+            array('name' => 'keywords', 'content' => $config->keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
-            array('name' => 'author', 'content' => 'CSKAZA'),
-            array('name' => 'generator', 'content' => 'CSZ CMS | Version '.$this->Csz_model->getVersion()),
+            array('name' => 'author', 'content' => $config->site_name),
+            array('name' => 'generator', 'content' => $this->cszGenerateMeta()),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv')
         );
@@ -710,15 +768,7 @@ class Csz_admin_model extends CI_Model{
      * @return	object or FALSE
      */
     public function getSocial(){
-        $this->db->select("*");
-        $this->db->order_by("footer_social_id", "asc");
-        $query = $this->db->get('footer_social');
-        if($query->num_rows() !== 0){
-            $row = $query->result();
-            return $row;
-        }else{
-            return FALSE;
-        }
+        return $this->Csz_model->getSocial(FALSE);
     }
 
     /**
@@ -743,6 +793,7 @@ class Csz_admin_model extends CI_Model{
                 $this->db->update('footer_social', $data);
             }
         }
+        $this->Csz_model->clear_file_cache('getsocial*', TRUE);
     }
 
     /**
@@ -781,13 +832,17 @@ class Csz_admin_model extends CI_Model{
             'gsearch_cxid' => trim($this->input->post('gsearch_cxid', TRUE)),
             'maintenance_active' => $this->input->post('maintenance_active', TRUE),
             'html_optimize_disable' => $this->input->post('html_optimize_disable', TRUE),
+            'adobe_cc_apikey' => $this->input->post('adobe_cc_apikey', TRUE),
+            'facebook_page_id' => $this->input->post('facebook_page_id', TRUE),
+            'assets_static_active' => $this->input->post('assets_static_active', TRUE),
+            'assets_static_domain' => $this->input->post('assets_static_domain', TRUE),
         );
+        $upload_file = '';
         if($this->input->post('del_file')){
-            $upload_file = '';
             @unlink('photo/logo/'.$this->input->post('del_file', TRUE));
-        }else{
+        }else if(isset($_FILES['file_upload'])){
             $upload_file = $this->input->post('siteLogo');
-            if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg'){
+            if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg'){
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/logo/';
@@ -797,12 +852,12 @@ class Csz_admin_model extends CI_Model{
             }
         }
         $data['site_logo'] = $upload_file;
+        $upload_file1 = '';
         if($this->input->post('del_og_image')){
-            $upload_file1 = '';
             @unlink('photo/logo/'.$this->input->post('del_og_image', TRUE));
-        }else{
+        }elseif(isset($_FILES['og_image'])){
             $upload_file1 = $this->input->post('ogImage');
-            if($_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg'){
+            if(!empty($_FILES['og_image']) && $_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg'){
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/logo/';
@@ -819,6 +874,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
+        unset($data,$upload_file,$upload_file1,$additional_js);
     }
 
     /**
@@ -833,74 +889,93 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$photo_id    New file name
      * @param	string	$paramiter    Other paramiter for new file name. Can null if noting
      * @param	string	$yearR    Year for directory
-     * @param	string	$maxSizeR    Max the photo size (pixel). For image file only. Default 1900px
+     * @param	int	$maxSizeR    Max the photo size (pixel). For image file only. Default 1900px
+     * @param	bool	$resize    for resize enable. Default is TRUE (enable)
+     * @param	int	$limitsize    Limit file size to upload (Mega Byte). Default 100 MB
      * @return	String (New filename)
      */
-    public function file_upload($photo, $photo_name1, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1900){
-        $photo_name = $this->security->sanitize_filename($photo_name1);
-        if($yearR){
-            $year = $yearR."/";
-        }else{
-            $year = date("Y")."/";
+    public function file_upload($photo, $photo_name1, $tmp_photo, $uploaddir, $photo_id, $paramiter, $yearR = '', $maxSizeR = 1900, $resize = TRUE, $limitsize = 100){
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','512M');
         }
+        $photo_name = $this->security->sanitize_filename($photo_name1);
+        ($yearR) ? $year = $yearR . DIRECTORY_SEPARATOR : $year = date("Y") . DIRECTORY_SEPARATOR;
         if($uploaddir){
-            if(file_exists($uploaddir) === FALSE){
-                mkdir($uploaddir, 0777);
-            }
+            $uploaddir = rtrim(rtrim($uploaddir, '/'), '\\') . DIRECTORY_SEPARATOR; /* remove last / and add new / */
+            if(file_exists($uploaddir) === FALSE){ mkdir($uploaddir, 0777, TRUE); }
             if(file_exists($uploaddir.$year) === FALSE){
-                mkdir($uploaddir.$year, 0777);
+                if(mkdir($uploaddir.$year, 0777, TRUE) === FALSE){ $year = ''; }
             }
         }
         if(!$photo){
             $photo = $tmp_photo;
-        }else{
-            $ext = explode(".", $photo_name);
-            $ext_n = count($ext) - 1;
-            if(strtoupper($ext[$ext_n]) == "JPG" || strtoupper($ext[$ext_n]) == "JPEG" || strtoupper($ext[$ext_n]) == "PNG" || strtoupper($ext[$ext_n]) == "GIF"){
-                $org_filename = $photo_id.$paramiter."-org.".$ext[$ext_n];
-                $newfile = $uploaddir.$year.$org_filename;
-                if(is_uploaded_file($photo)){ // upload original image
-                    if(!copy($photo, "$newfile")){
-                        echo "<script>alert('Error: File not uploaded!');</script>";
-                    }
-                }
-                if(@filesize($newfile) > (1024 * 1024 * 5)){
+        } else {
+            $ext = str_replace('.', '', strrchr($photo_name, "."));
+            if (strtoupper($ext) == "JPG" || strtoupper($ext) == "JPEG" || strtoupper($ext) == "PNG" || strtoupper($ext) == "GIF" || strtoupper($ext) == "BMP") {
+                /*
+		 * Run the file through the XSS hacking filter
+		 * This helps prevent malicious code from being
+		 * embedded within a file. Scripts can easily
+		 * be disguised as images or other file types.
+		 */
+                if ($this->Csz_model->photo_xss_clean($photo) === FALSE) {
+                    log_message('error', "Error: upload unable to write file (XSS Protection)");
                     $photo = "";
-                    @unlink($newfile);
                 }else{
-                    list($w, $h) = @getimagesize($newfile);
-                    if(($w > $maxSizeR) || ($h > $maxSizeR) && (!strtoupper($ext[$ext_n]) == "GIF")){
-                        $im = $this->thumbnail($org_filename, $uploaddir.$year, $maxSizeR); //resize image
-                        $small_filename = $photo_id.$paramiter.".".$ext[$ext_n];
-                        $this->imageToFile($im, $uploaddir.$year.$small_filename); //make image to file for resize
-                        $photo = $year.$small_filename;
+                    $org_filename = $photo_id . $paramiter . "-org." . $ext;
+                    $newfile = $uploaddir . $year . $org_filename;
+                    if (is_uploaded_file($photo)) { // upload original image
+                        if (!copy($photo, "$newfile")) {
+                            log_message('error', "Error: File not uploaded or directory permission been deny: " . $newfile);
+                            $photo = "";
+                        }
+                    }
+                    if (@filesize($newfile) > (1024 * 1024 * $limitsize)) {
+                        log_message('error', "Error: File size is over limit: " . $newfile);
+                        $photo = "";
                         @unlink($newfile);
-                    }else{
-                        $photo = $year.$org_filename;
+                    } else {
+                        list($w, $h) = @getimagesize($newfile);
+                        if ($resize === TRUE && ($w > $maxSizeR) || ($h > $maxSizeR) && (!strtoupper($ext) == "GIF")) {
+                            $im = $this->thumbnail($org_filename, $uploaddir . $year, $maxSizeR); //resize image
+                            $small_filename = $photo_id . $paramiter . "." . $ext;
+                            if ($this->imageToFile($im, $uploaddir . $year . $small_filename) !== FALSE) {
+                                $photo = $year . $small_filename;
+                                @unlink($newfile);
+                            } else {
+                                $photo = $year . $org_filename;
+                            }
+                        } else {
+                            $photo = $year . $org_filename;
+                        }
+                    }
+                    if ($tmp_photo)
+                        @unlink($uploaddir . $tmp_photo);
+                }
+            } else if (strtoupper($ext) == "PDF" || strtoupper($ext) == "DOC" || strtoupper($ext) == "DOCX" || strtoupper($ext) == "ODT" || strtoupper($ext) == "TXT" || strtoupper($ext) == "ODG" || strtoupper($ext) == "ODP" || strtoupper($ext) == "ODS" || strtoupper($ext) == "ZIP" || strtoupper($ext) == "RAR" || strtoupper($ext) == "PSD" || strtoupper($ext) == "CSV" || strtoupper($ext) == "XLS" || strtoupper($ext) == "XLSX" || strtoupper($ext) == "PPT" || strtoupper($ext) == "PPTX" || strtoupper($ext) == "MP3" || strtoupper($ext) == "WAV" || strtoupper($ext) == "MP4" || strtoupper($ext) == "FLV" || strtoupper($ext) == "WMA" || strtoupper($ext) == "AVI" || strtoupper($ext) == "MOV" || strtoupper($ext) == "M4V" || strtoupper($ext) == "WMV" || strtoupper($ext) == "M3U" || strtoupper($ext) == "PLS") {
+                $final_filename = $photo_id . $paramiter . "." . $ext;
+                $newfile = $uploaddir . $year . $final_filename;
+                if (is_uploaded_file($photo)) {
+                    if (!copy($photo, "$newfile")) {
+                        log_message('error', "Error: File not uploaded or directory permission been deny: " . $newfile);
+                        $photo = "";
                     }
                 }
-                if($tmp_photo)
-                    @unlink($uploaddir.$tmp_photo);
-            } else if(strtoupper($ext[$ext_n]) == "PDF" || strtoupper($ext[$ext_n]) == "DOC" || strtoupper($ext[$ext_n]) == "DOCX" || strtoupper($ext[$ext_n]) == "ODT" || strtoupper($ext[$ext_n]) == "TXT" || strtoupper($ext[$ext_n]) == "ODG" || strtoupper($ext[$ext_n]) == "ODP" || strtoupper($ext[$ext_n]) == "ODS" || strtoupper($ext[$ext_n]) == "ZIP" || strtoupper($ext[$ext_n]) == "RAR" || strtoupper($ext[$ext_n]) == "PSD" || strtoupper($ext[$ext_n]) == "CSV" || strtoupper($ext[$ext_n]) == "XLS" || strtoupper($ext[$ext_n]) == "XLSX" || strtoupper($ext[$ext_n]) == "PPT" || strtoupper($ext[$ext_n]) == "PPTX" || strtoupper($ext[$ext_n]) == "MP3" || strtoupper($ext[$ext_n]) == "WAV" || strtoupper($ext[$ext_n]) == "MP4" || strtoupper($ext[$ext_n]) == "FLV" || strtoupper($ext[$ext_n]) == "WMA" || strtoupper($ext[$ext_n]) == "AVI" || strtoupper($ext[$ext_n]) == "MOV" || strtoupper($ext[$ext_n]) == "M4V" || strtoupper($ext[$ext_n]) == "WMV" || strtoupper($ext[$ext_n]) == "M3U" || strtoupper($ext[$ext_n]) == "PLS"){
-                $final_filename = $photo_id.$paramiter.".".$ext[$ext_n];
-                $newfile = $uploaddir.$year.$final_filename;
-                if(is_uploaded_file($photo)){
-                    if(!copy($photo, "$newfile")){
-                        echo "<script>alert('Error: File not uploaded!');</script>";
-                    }
-                }
-                $photo = $year.$final_filename;
-                if(@filesize($newfile) > (1024 * 1024 * 100)){ // Limit 100 MB
+                $photo = $year . $final_filename;
+                if (@filesize($newfile) > (1024 * 1024 * $limitsize)) {
+                    log_message('error', "Error: File size is over limit: " . $newfile);
                     $photo = "";
                     @unlink($newfile);
                 }
-                if($tmp_photo)
-                    @unlink($uploaddir.$tmp_photo);
-            }else{
+                if ($tmp_photo) {
+                    @unlink($uploaddir . $tmp_photo);
+                }
+            } else {
                 $photo = "";
             }
         }
-        return $photo;
+        return str_replace('\\', '/', $photo);
     }
 
     /**
@@ -1337,7 +1412,7 @@ class Csz_admin_model extends CI_Model{
                 $page_name_input == 'search' || $page_name_input == 'admin' || 
                 $page_name_input == 'ci_session' || $page_name_input == 'member' || 
                 $page_name_input == 'plugin' || $page_name_input == 'link' || $page_name_input == 'banner') {
-            return 'pages_'.$this->input->post('page_name', TRUE);
+            return 'pages_'.$page_name_input;
         } else{
             return $page_name_input;
         }
@@ -1349,26 +1424,29 @@ class Csz_admin_model extends CI_Model{
      * Function for create new page
      */
     public function insertPage(){
-        $page_name_input = $this->chkPageName($this->input->post('page_name', TRUE));
+        $page_name_input = str_replace('&amp;', '&', $this->chkPageName($this->input->post('page_name', TRUE)));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-        $page_url = $this->Csz_model->rw_link($page_name_input);
+        $page_url = $this->chkPageName($this->Csz_model->rw_link($page_name_input));
         $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
-        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
-        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js'));
+        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
+        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
         $data = array(
             'page_name' => $page_name_input,
             'page_url' => $page_url,
             'lang_iso' => $this->input->post('lang_iso', TRUE),
-            'page_title' => $this->input->post('page_title', TRUE),
+            'page_title' => str_replace('&amp;', '&', $this->input->post('page_title', TRUE)),
             'page_keywords' => $this->input->post('page_keywords', TRUE),
             'page_desc' => $this->input->post('page_desc', TRUE),
             'content' => $content,
-            'custom_css' => $custom_css,
-            'custom_js' => $custom_js,
             'active' => $active,
         );
+        if($this->Csz_auth_model->is_group_allowed('pages cssjs additional', 'backend') !== FALSE){
+            $data['more_metatag'] = $this->input->post('more_metatag', FALSE);
+            $data['custom_css'] = $custom_css;
+            $data['custom_js'] = $custom_js;
+        }
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('pages', $data);
@@ -1383,31 +1461,33 @@ class Csz_admin_model extends CI_Model{
      */
     public function updatePage($id){
         // Update the page
-        $page_name_input = $this->chkPageName($this->input->post('page_name', TRUE));
+        $page_name_input = str_replace('&amp;', '&', $this->chkPageName($this->input->post('page_name', TRUE)));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-        $page_url = $this->Csz_model->rw_link($page_name_input);
+        $page_url = $this->chkPageName($this->Csz_model->rw_link($page_name_input));
         $content2 = $this->input->post('content', FALSE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
-        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css'));
-        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js'));
+        $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
+        $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
         $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE), TRUE);
-        $this->db->set('page_title', $this->input->post('page_title', TRUE), TRUE);
+        $this->db->set('page_title', str_replace('&amp;', '&', $this->input->post('page_title', TRUE)), TRUE);
         $this->db->set('page_keywords', $this->input->post('page_keywords', TRUE), TRUE);
         $this->db->set('page_desc', $this->input->post('page_desc', TRUE), TRUE);
-        $this->db->set('content', $content, TRUE);
-        $this->db->set('custom_css', $custom_css, TRUE);
-        $this->db->set('custom_js', $custom_js, TRUE);
+        $this->db->set('content', $content);
+        if($this->Csz_auth_model->is_group_allowed('pages cssjs additional', 'backend') !== FALSE){
+            $this->db->set('more_metatag', $this->input->post('more_metatag', FALSE), TRUE);
+            $this->db->set('custom_css', $custom_css, TRUE);
+            $this->db->set('custom_js', $custom_js, TRUE);
+        }
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
-        $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode($page_url));
-        $this->Csz_model->clear_file_cache('file_'.$this->Csz_model->encodeURL($page_url));
+        $this->Csz_model->clear_all_cache();
     }
 
     /**
@@ -1479,8 +1559,9 @@ class Csz_admin_model extends CI_Model{
         );
         $this->dbforge->add_field($fields);
         if(count($field_name) > 0){
+            $arrange = 1;
             for($i = 0; $i < count($field_name); $i++){
-                if($field_name[$i]){
+                if($field_name[$i] && $form_main_id){
                     $data = array(
                         'form_main_id' => $form_main_id,
                         'field_type' => $field_type[$i],
@@ -1492,12 +1573,14 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label[$i],
                         'sel_option_val' => $sel_option_val[$i],
                         'field_required' => $field_required[$i],
+                        'arrange' => $arrange,
                     );
                     $this->db->set('timestamp_create', 'NOW()', FALSE);
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->insert('form_field', $data);
                     $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
                     $this->dbforge->add_field($fields);
+                    $arrange++;
                 }
             }
         }
@@ -1565,8 +1648,9 @@ class Csz_admin_model extends CI_Model{
         $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
         $field_required1 = $this->input->post('field_required1', TRUE);
         if(count($field_oldname) > 0){
+            $arrange = 1;
             for($i = 0; $i < count($field_oldname); $i++){
-                if($field_oldname[$i]){
+                if($field_oldname[$i] && $form_field_id[$i]){
                     $data = array(
                         'form_main_id' => $id,
                         'field_type' => $field_type1[$i],
@@ -1578,18 +1662,27 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label1[$i],
                         'sel_option_val' => $sel_option_val1[$i],
                         'field_required' => $field_required1[$i],
+                        'arrange' => $arrange,
                     );
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
                     $this->db->where('form_field_id', $form_field_id[$i]);
                     $this->db->update('form_field', $data);
+                    $arrange++;
                     if($field_oldname[$i] != $field_name1[$i]){
-                        if($field_oldtype[$i] != 'button' && $field_oldtype[$i] != 'reset' && $field_oldtype[$i] != 'submit' && $field_oldtype[$i] != 'label'){
+                        if($field_oldtype[$i] != 'button' && $field_oldtype[$i] != 'reset' && $field_oldtype[$i] != 'submit' && $field_oldtype[$i] != 'label' && $field_oldtype[$i] != 'file'){
                             if($field_type1[$i] == 'button' || $field_type1[$i] == 'reset' || $field_type1[$i] == 'submit' || $field_type1[$i] == 'label'){
                                 $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);
                             }else{
                                 $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
                                 $this->dbforge->modify_column('form_'.$form_name, $fields);
                             }
+                        }else if($field_oldtype[$i] == 'file'){
+                            delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]), TRUE);
+                            delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
+                            rmdir(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
+                            $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
+                            $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);                           
+                            $this->dbforge->add_column('form_'.$form_name, $fields);
                         }else{
                             if($field_type1[$i] != 'button' && $field_type1[$i] != 'reset' && $field_type1[$i] != 'submit' && $field_type1[$i] != 'label'){
                                 $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
@@ -1612,8 +1705,10 @@ class Csz_admin_model extends CI_Model{
         $sel_option_val = $this->input->post('sel_option_val', TRUE);
         $field_required = $this->input->post('field_required', TRUE);
         if(count($field_name) > 0){
+            $last_arrange = $this->Csz_model->getLastID('form_field', 'arrange', "form_main_id = '".$id."'");
             for($i = 0; $i < count($field_name); $i++){
                 if($field_name[$i]){
+                    $last_arrange++;
                     $data = array(
                         'form_main_id' => $id,
                         'field_type' => $field_type[$i],
@@ -1625,6 +1720,7 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label[$i],
                         'sel_option_val' => $sel_option_val[$i],
                         'field_required' => $field_required[$i],
+                        'arrange' => $last_arrange,
                     );
                     $this->db->set('timestamp_create', 'NOW()', FALSE);
                     $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -1667,6 +1763,7 @@ class Csz_admin_model extends CI_Model{
                 );
                 break;
             case 'email':
+            case 'file':
             case 'password':
             case 'radio':
             case 'selectbox':
@@ -1726,6 +1823,7 @@ class Csz_admin_model extends CI_Model{
                 );
                 break;
             case 'email':
+            case 'file':
             case 'password':
             case 'radio':
             case 'selectbox':
@@ -1881,6 +1979,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("login_security_config_id", 1);
         $this->db->update('login_security_config');
+        $this->Csz_model->clear_file_cache('loadBFconfig');
     }
 
     /**
@@ -1930,7 +2029,7 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('nofollow')) ? $nofollow = $this->input->post('nofollow', TRUE) : $nofollow = 0;
         $upload_file = '';
-        if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+        if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
             $paramiter = '_1';
             $photo_id = time();
             $uploaddir = 'photo/banner/';
@@ -1970,7 +2069,7 @@ class Csz_admin_model extends CI_Model{
             @unlink('photo/banner/'.$this->input->post('del_file', TRUE));
         }else{
             $upload_file = $this->input->post('picture');
-            if($_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
+            if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
                 $paramiter = '_1';
                 $photo_id = time();
                 $uploaddir = 'photo/banner/';
@@ -2136,6 +2235,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where("login_security_config_id", 1);
         $this->db->update('login_security_config');
+        $this->Csz_model->clear_file_cache('loadBFconfig');
     }
     
     /**
@@ -2163,34 +2263,78 @@ class Csz_admin_model extends CI_Model{
     }
     
     /**
+     * getIndexDataFromObj
+     *
+     * Function for get data for index page from object data (support pageination)
+     *
+     * @param	object	$data    Object data from xml
+     * @param	int	$limit    limit [show limit]
+     * @param	int	$page   page index
+     * @return	object or FALSE
+     */
+    public function getIndexDataFromObj($data, $limit = 0, $offset = 1){
+        if($data && is_object($data) && $data !== FALSE){
+            if($limit && $limit != 0){
+                $data_r = (array)$data->plugin;
+                $count = count($data_r);
+                if($offset > ceil((intval($count) / intval($limit)))) $offset = ceil((intval($count) / intval($limit)));
+                $start = (intval($offset) * intval($limit)) - intval($limit);
+                if($start < 0) $start = 0;
+                $outArray = array_slice($data_r, $start, ($start+($limit)));
+                unset($limit,$offset,$data_r,$data,$start,$count);
+                return (object)$outArray;
+            }else{
+                unset($limit,$offset);
+                return $data->plugin;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+    
+    /**
      * getPluginXML
      *
      * Function for get latest version from xml url
      *
      * @param	string	$xml_url    xml url file
+     * @param	string	$key_search    key search from xml
+     * @param	string	$search    search from xml
      * @return	object or FALSE
      */
-    public function getPluginXML($xml_url = ''){
-        $this->load->driver('cache', array('adapter' => 'file'));
-        if (!$this->cache->get('plugin_list_xml')) {
-            if(!$xml_url) $xml_url = $this->config->item('csz_pluginxmlurl_main');
+    public function getPluginXML($xml_url = '', $key_search = '', $search = ''){       
+        if(!$xml_url) $xml_url = $this->config->item('csz_pluginxmlurl_main');
+        if (!$this->cache->get('plugin_list_xml' . md5($xml_url))) {
             $xml_url_bak = $this->config->item('csz_pluginxmlurl_backup');
             if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
-                $xml = file_get_contents($xml_url);
+                $return = $this->Csz_model->get_contents_url($xml_url);
             }else if($this->Csz_model->is_url_exist($xml_url) === FALSE && $this->Csz_model->is_url_exist($xml_url_bak) !== FALSE){
-                $xml = file_get_contents($xml_url_bak);
-            }else{
-                $xml = FALSE;
-            }
-            if(!empty($xml) && $xml !== FALSE){               
-                $return = &$xml;
+                $return = $this->Csz_model->get_contents_url($xml_url_bak);
             }else{
                 $return = FALSE;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;               
-            $this->cache->save('plugin_list_xml', $return, ($cache_time * 60));
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            if($return !== FALSE){
+                $this->cache->save('plugin_list_xml' . md5($xml_url), $return, ($cache_time * 60));
+            }
+            unset($xml_url_bak,$cache_time,$return);
         }
-        return simplexml_load_string($this->cache->get('plugin_list_xml'));
+        if($this->cache->get('plugin_list_xml' . md5($xml_url)) !== FALSE && $key_search && $search){
+            $xml = simplexml_load_string($this->cache->get('plugin_list_xml' . md5($xml_url)));
+            $plugin = $xml->xpath("//cszcms/plugin/" . $key_search . "[.='$search']/parent::*");
+            if (count($plugin) > 0) { // if found
+                unset($key_search, $search, $xml);
+                return (object) array('plugin' => json_decode(str_replace('"comment":[{},{},{}],', '', json_encode($plugin))));
+            } else {
+                unset($key_search, $search, $xml);
+                return FALSE;
+            }
+        }else if($this->cache->get('plugin_list_xml' . md5($xml_url)) !== FALSE && (!$key_search || !$search)){
+            $plugin_list = simplexml_load_string($this->cache->get('plugin_list_xml' . md5($xml_url)));
+            return (object) json_decode(str_replace('"comment":[{},{},{}],', '', json_encode($plugin_list)));
+        }else{
+            return FALSE;
+        }
     }
     
     /**
@@ -2201,19 +2345,19 @@ class Csz_admin_model extends CI_Model{
      * @return	array
      */
     private function setLatestVer(){
-        $this->load->driver('cache', array('adapter' => 'file'));
         if (!$this->cache->get('plugin_list_version')) {
             $plugin_list = $this->getPluginXML();
             if ($plugin_list !== FALSE) {
                 $ver_arr = array();
-                foreach ($plugin_list as $xml) {
-                    $ver_arr[strval($xml->filename)] = strval($xml->version);
+                foreach ($plugin_list->plugin as $xml) {
+                    if($xml->filename && $xml->version) $ver_arr[strval($xml->filename)] = strval($xml->version);
                 }
             }else{
                 $ver_arr = FALSE;
             }
             ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;               
             $this->cache->save('plugin_list_version', $ver_arr, ($cache_time * 60));
+            unset($plugin_list, $ver_arr, $cache_time);
         }
         return $this->cache->get('plugin_list_version');
     }
@@ -2228,8 +2372,8 @@ class Csz_admin_model extends CI_Model{
      */
     public function pluginLatestVer($plugin_config_filename){
         $ver_arr = $this->setLatestVer();
-        if($ver_arr !== FALSE && is_array($ver_arr)){
-            return $ver_arr[strval($plugin_config_filename)]; 
+        if($ver_arr !== FALSE && is_array($ver_arr) && !empty($ver_arr)){
+            return $ver_arr[$plugin_config_filename]; 
         }else{
             return FALSE;
         }
@@ -2244,10 +2388,12 @@ class Csz_admin_model extends CI_Model{
      * @return	TRUE or FALSE
      */
     public function chkPluginInst($plugin_config_filename){
-        $count = $this->Csz_model->countData('plugin_manager', "plugin_config_filename = '".$plugin_config_filename."'");
+        $count = $this->Csz_model->countData('plugin_manager', "plugin_config_filename = '".$plugin_config_filename."'");        
         if($count != 0){
+            unset($plugin_config_filename, $count);
             return TRUE;
         }else{
+            unset($plugin_config_filename, $count);
             return FALSE;
         }
     }
@@ -2277,5 +2423,217 @@ class Csz_admin_model extends CI_Model{
     public function pluginNextVer($cur_txt, $last_ver){
         return $this->Csz_model->findNextVersion($cur_txt, $last_ver);
     }
+    
+    private function cszCredit(){
+        /* Please do not remove or change this function */
+        return $this->config->item('cszcms_credit').' Version '.$this->Csz_model->getVersion();
+    }
+    
+    public function cszGenerateMeta(){
+        /* Please do not remove or change this function */
+        return 'CSZ CMS | Version '.$this->Csz_model->getVersion();
+    }
+    
+    /**
+     * Export the database to csv
+     *
+     * @param   srting $filename  Filename
+     * @param   srting $table  Database Table to export
+     * @param   array $field_sel  Database field to select to export
+     * @param   srting $where  Where condition
+     * @param   string	$orderby   Order by field or NULL 
+     * @param   string	$sort   asc or desc or NULL
+     * @param	string	$groupby   Group by field or NULL 
+     * @return  string  File download
+     */
+    public function exportCSV($filename, $table, $field_sel = "", $where = "", $orderby = "", $sort = "ASC", $groupby = '') {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','512M');
+        }
+        if(!$field_sel) $field_sel = "*";
+        $this->load->dbutil();
+        $this->load->helper('file');
+        $this->load->helper('download');
+        $delimiter = ",";
+        $newline = "\r\n";
+        if(is_string($field_sel)){
+            $field_sel = array($field_sel);
+        }
+        $this->db->select($field_sel);
+        if ($where) {
+            if (is_array($where)) {
+                /* $search = array('field'=>'value') */
+                foreach ($where as $key => $value) {
+                    $this->db->where($key, $value);
+                }
+            } else {
+                /* $search = "name='Joe' AND status LIKE '%boss%' OR status1 LIKE '%active%'") */
+                $this->db->where($where);
+            }
+        }
+        if ($groupby){
+            $this->db->group_by($groupby);
+        }
+        if(is_array($orderby)){
+            foreach ($orderby as $value) {
+                $this->db->order_by($value, $sort);
+            }
+        }else{
+            if ($orderby && $sort) {
+                $this->db->order_by($orderby, $sort);
+            }elseif($orderby){
+                $this->db->order_by($orderby);
+            }
+        }
+        $result = $this->db->get($table);
+        $data = $this->dbutil->csv_from_result($result, $delimiter, $newline);
+        $filename1 = str_replace('.csv', '', $filename);
+        $csv_filename = EMAIL_DOMAIN . '_csv_'.$filename1.'_'.date('Ymd').'.csv';
+        write_file(FCPATH.$csv_filename, $data);
+        unset($table, $field_sel, $where, $orderby, $sort, $groupby, $delimiter, $newline, $result, $data, $filename, $filename1);
+        force_download($csv_filename, NULL);
+    }
+    
+    /**
+     * Find the primary key from db table
+     *
+     * @param srting $table  Database Table
+     * @return string|array
+     */
+    public function findPrimaryKey($table) {
+        if (!$this->cache->get('findPrimaryKey_'.$table)) {
+            $field_data = $this->db->field_data($table);
+            $return_arr = array();
+            foreach ($field_data as $field) {
+                if($field->primary_key) {
+                    $return_arr[] = $field->name;
+                }
+            }
+            unset($field_data, $field);
+            if(count($return_arr) == 1){ /* have only one primary key return string */
+                $return = $return_arr[0];
+            }else{ /* have many primary key return array */
+                $return = $return_arr;
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            $this->cache->save('findPrimaryKey_'.$table, $return, ($cache_time * 60));
+            unset($return, $cache_time, $return_arr);
+        }
+        return $this->cache->get('findPrimaryKey_'.$table);
+    }
+    
+    /**
+     * pluginUninstall
+     *
+     * Function for clean uninstall the plugin from the CMS
+     *
+     * @param	string	$plugin_config_filename    for plugin config filename
+     * @return	TRUE or FALSE
+     */
+    public function pluginUninstall($plugin_config_filename){
+        $plugin_file_path = $this->Csz_model->getPluginConfig($plugin_config_filename, 'plugin_file_path');
+        $plugin_db_table = $this->Csz_model->getPluginConfig($plugin_config_filename, 'plugin_db_table');
+        if($plugin_file_path !== FALSE && is_array($plugin_file_path) && $plugin_config_filename != 'article' && $plugin_config_filename != 'gallery'){
+            foreach ($plugin_file_path as $value) {
+                if($value && is_file($value) && is_writable($value)){
+                    @unlink($value);
+                }else if($value && is_dir($value)) {
+                    $this->Csz_model->rmdir_recursive($value);
+                }
+            }
+            if($plugin_db_table !== FALSE && is_array($plugin_db_table)){
+                $this->load->dbforge();
+                foreach ($plugin_db_table as $value) {
+                    if($value) {
+                        $this->dbforge->drop_table($value, TRUE);
+                    }
+                }
+            }
+            $this->removeData('general_label', "name LIKE '".$plugin_config_filename."%'");
+            $this->removeData('user_perms', "name LIKE '".$plugin_config_filename."%'");
+            $this->removeData('plugin_manager', 'plugin_config_filename', $plugin_config_filename);
+            unset($plugin_config_filename,$plugin_file_path,$plugin_db_table,$value);
+            return TRUE;
+        }else{
+            unset($plugin_config_filename,$plugin_file_path,$plugin_db_table);
+            return FALSE;
+        }
+    }
+
+    private function getNiceFileSize($bytes) {
+        $unit = array('B', 'K', 'M', 'G', 'T', 'P');
+        if ($bytes == 0){ return '0 ' . $unit[0]; }
+        return @round($bytes / pow(1024, ($i = floor(log($bytes, 1024)))), 2) . (isset($unit[$i]) ? $unit[$i] : 'B');
+    }
+    
+    public function getServerIp() {
+        return @getenv('SERVER_ADDR');
+    }
+
+    /**
+     * Returns information about the operating system PHP is running on
+     * @param string $mode [optional] <p>
+     * <i>mode</i> is a single character that defines what
+     * information is returned:
+     * 'a': This is the default. Contains all modes in
+     * the sequence "s n r v m".
+     * @return string the description, as a string.
+     */
+    public function getSoftwareInfo($mode = 'a') {
+        return @php_uname($mode);
+    }
+    
+    /**
+    * Get the directory size
+    * @param directory $directory
+    * @return integer
+    */
+   public function dirSize($directory) {       
+        if (!$this->cache->get('chkDirSize_' . md5($directory))) {
+            $size = 0;
+            foreach(@new RecursiveIteratorIterator(@new RecursiveDirectoryIterator($directory)) as $file){
+                 if($filesize = @$file->getSize()){
+                     $size += $filesize;
+                 }else{
+                     $size += 0;
+                 }
+            }
+            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+            $this->cache->save('chkDirSize_' . md5($directory), $size, ($cache_time * 60));
+            unset($file, $filesize, $cache_time, $size);
+        }
+        return $this->cache->get('chkDirSize_' . md5($directory));
+   } 
+
+    public function usageSpace() {
+        return $this->getNiceFileSize(@$this->dirSize(FCPATH));
+    }
+
+    public function memUsage() {
+        $memuse = @memory_get_usage(TRUE);
+        if($memuse){
+            return $this->getNiceFileSize($memuse);
+        }else{
+            return "-";
+        }
+    }
+    
+    public function getMemLimit() {
+        if (!ini_get('memory_limit')) {
+            return "-";
+        } else {
+            return @ini_get('memory_limit');
+        }
+    }
+
+    public function getDisabledFunctions() {
+        if (!ini_get('disable_functions')) {
+            return "-";
+        } else {
+            return @ini_get('disable_functions');
+        }
+    }
+
 
 }

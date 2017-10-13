@@ -230,85 +230,90 @@
         </div> <!-- /control-group -->
         <div class="h2 sub-header"><?php echo  $this->lang->line('field_editheader') ?></div>
         <div class="addfields">
-            <?php if(!empty($field_rs)){
-            foreach ($field_rs as $field_val) { ?>    
-            <div class="panel panel-primary">
-                <div class="panel-body row">
-                    <div class="col-md-6">
-                        <input type="hidden" name="form_field_id[]" id="form_field_id" value="<?php echo $field_val['form_field_id']?>">
-                        <div class="control-group">
-                            <label class="control-label" for="field_type1"><?php echo $this->lang->line('field_type'); ?></label>
-                            <?php
-                            $att = 'id="field_type1" class="form-control"';
-                            $data = array();
-                            $data['button'] = 'button';
-                            $data['checkbox'] = 'checkbox';
-                            $data['datepicker'] = 'datepicker';
-                            $data['email'] = 'email';
-                            $data['label'] = 'label';
-                            $data['password'] = 'password';
-                            $data['radio'] = 'radio';
-                            $data['reset'] = 'reset';
-                            $data['submit'] = 'submit';
-                            $data['selectbox'] = 'selectbox';
-                            $data['text'] = 'text';
-                            $data['textarea'] = 'textarea';
-                            echo form_dropdown('field_type1[]', $data, $field_val['field_type'], $att);
-                            ?>
-                            <input type="hidden" name="field_oldtype[]" id="field_oldtype" value="<?php echo $field_val['field_type']?>">
-                        </div>            
-                        <div class="control-group">	
-                            <label class="control-label" for="field_name1"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name1[]" id="field_name1" class="form-control" maxlength="255" value="<?php echo $field_val['field_name']?>">
-                            <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?php echo $field_val['field_name']?>">
-                        </div>
-                        <div class="control-group">	
-                            <label class="control-label" for="field_id1"><?php echo $this->lang->line('field_id'); ?></label>
-                            <input type="text" name="field_id1[]" id="field_id1" class="form-control" maxlength="255" value="<?php echo $field_val['field_id']?>">
-                        </div>
-                        <div class="control-group">	
-                            <label class="control-label" for="field_class1"><?php echo $this->lang->line('field_class'); ?></label>
-                            <input type="text" name="field_class1[]" id="field_class1" class="form-control" maxlength="255" value="<?php echo $field_val['field_class']?>">
-                        </div>
-                        <div class="control-group">	
-                            <label class="control-label" for="field_placeholder1"><?php echo $this->lang->line('field_placeholder'); ?></label>
-                            <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" maxlength="255" value="<?php echo $field_val['field_placeholder']?>">
+            <?php if(!empty($field_rs)){ ?>
+            <div class="ui-sortable">
+                <?php foreach ($field_rs as $field_val) { ?>    
+                    <div class="panel panel-primary ui-state-default">
+                        <div class="panel-body row">
+                            <div class="col-md-6">
+                                <i class="glyphicon glyphicon-sort"></i><br>
+                                <input type="hidden" name="form_field_id[]" id="form_field_id" value="<?php echo $field_val['form_field_id']?>">
+                                <div class="control-group">
+                                    <label class="control-label" for="field_type1"><?php echo $this->lang->line('field_type'); ?></label>
+                                    <?php
+                                    $att = 'id="field_type1" class="form-control"';
+                                    $data = array();
+                                    $data['button'] = 'button';
+                                    $data['checkbox'] = 'checkbox';
+                                    $data['datepicker'] = 'datepicker';
+                                    $data['email'] = 'email';
+                                    $data['file'] = 'file';
+                                    $data['label'] = 'label';
+                                    $data['password'] = 'password';
+                                    $data['radio'] = 'radio';
+                                    $data['reset'] = 'reset';
+                                    $data['submit'] = 'submit';
+                                    $data['selectbox'] = 'selectbox';
+                                    $data['text'] = 'text';
+                                    $data['textarea'] = 'textarea';
+                                    echo form_dropdown('field_type1[]', $data, $field_val['field_type'], $att);
+                                    ?>
+                                    <input type="hidden" name="field_oldtype[]" id="field_oldtype" value="<?php echo $field_val['field_type']?>">
+                                </div>            
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_name1"><?php echo $this->lang->line('field_name'); ?>*</label>
+                                    <input type="text" name="field_name1[]" id="field_name1" class="form-control" maxlength="255" value="<?php echo $field_val['field_name']?>">
+                                    <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?php echo $field_val['field_name']?>">
+                                </div>
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_id1"><?php echo $this->lang->line('field_id'); ?></label>
+                                    <input type="text" name="field_id1[]" id="field_id1" class="form-control" maxlength="255" value="<?php echo $field_val['field_id']?>">
+                                </div>
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_class1"><?php echo $this->lang->line('field_class'); ?></label>
+                                    <input type="text" name="field_class1[]" id="field_class1" class="form-control" maxlength="255" value="<?php echo $field_val['field_class']?>">
+                                </div>
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_placeholder1"><?php echo $this->lang->line('field_placeholder'); ?></label>
+                                    <input type="text" name="field_placeholder1[]" id="field_placeholder1" class="form-control" maxlength="255" value="<?php echo $field_val['field_placeholder']?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_value1"><?php echo $this->lang->line('field_value'); ?></label>
+                                    <input type="text" name="field_value1[]" id="field_value1" class="form-control" maxlength="255" value="<?php echo $field_val['field_value']?>">
+                                </div>
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_label1"><?php echo $this->lang->line('field_label'); ?></label>
+                                    <input type="text" name="field_label1[]" id="field_label1" class="form-control" maxlength="255" value="<?php echo $field_val['field_label']?>">
+                                </div>
+                                <div class="control-group">	
+                                    <label class="control-label" for="sel_option_val1"><?php echo $this->lang->line('sel_option_val'); ?></label>
+                                    <input type="text" name="sel_option_val1[]" id="sel_option_val1" class="form-control" value="<?php echo $field_val['sel_option_val']?>">
+                                    <span class="remark"><em><?php echo $this->lang->line('sel_option_val_info'); ?></em></span>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="field_required1"><?php echo $this->lang->line('field_require'); ?></label>
+                                    <?php
+                                    $att = 'id="field_required1" class="form-control"';
+                                    $data = array();
+                                    $data['0'] = 'No';
+                                    $data['1'] = 'Yes';
+                                    echo form_dropdown('field_required1[]', $data, $field_val['field_required'], $att);
+                                    ?>
+                                </div>
+                                <br>
+                                <div class="control-group text-right">
+                                    <a class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->lang->line('forms_delete_msg')?>')" href="<?php echo $this->Csz_model->base_link().'/admin/forms/deleteField/'.$form_rs->form_main_id.'/'.$field_val['form_field_id']?>">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </a>
+                                </div>
+                            </div>                   
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="control-group">	
-                            <label class="control-label" for="field_value1"><?php echo $this->lang->line('field_value'); ?></label>
-                            <input type="text" name="field_value1[]" id="field_value1" class="form-control" maxlength="255" value="<?php echo $field_val['field_value']?>">
-                        </div>
-                        <div class="control-group">	
-                            <label class="control-label" for="field_label1"><?php echo $this->lang->line('field_label'); ?></label>
-                            <input type="text" name="field_label1[]" id="field_label1" class="form-control" maxlength="255" value="<?php echo $field_val['field_label']?>">
-                        </div>
-                        <div class="control-group">	
-                            <label class="control-label" for="sel_option_val1"><?php echo $this->lang->line('sel_option_val'); ?></label>
-                            <input type="text" name="sel_option_val1[]" id="sel_option_val1" class="form-control" value="<?php echo $field_val['sel_option_val']?>">
-                            <span class="remark"><em><?php echo $this->lang->line('sel_option_val_info'); ?></em></span>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="field_required1"><?php echo $this->lang->line('field_require'); ?></label>
-                            <?php
-                            $att = 'id="field_required1" class="form-control"';
-                            $data = array();
-                            $data['0'] = 'No';
-                            $data['1'] = 'Yes';
-                            echo form_dropdown('field_required1[]', $data, $field_val['field_required'], $att);
-                            ?>
-                        </div>
-                        <br>
-                        <div class="control-group text-right">
-                            <a class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->lang->line('forms_delete_msg')?>')" href="<?php echo $this->Csz_model->base_link().'/admin/forms/deleteField/'.$form_rs->form_main_id.'/'.$field_val['form_field_id']?>">
-                                <span class="glyphicon glyphicon-minus"></span>
-                            </a>
-                        </div>
-                    </div>                   
+                <?php } ?>
                 </div>
-            </div>
-            <?php }} ?>
+            <?php } ?>
             <div class="entry panel panel-default">
                 <div class="panel-body row">
                     <div class="col-md-6">
@@ -319,6 +324,7 @@
                                 <option value="checkbox">checkbox</option>
                                 <option value="datepicker">datepicker</option>
                                 <option value="email">email</option>
+                                <option value="file">file</option>
                                 <option value="label">label</option>
                                 <option value="password">password</option>
                                 <option value="radio">radio</option>

@@ -72,7 +72,13 @@
                             echo '<span style="color:red;"><small><em>'.$u['keyword'].'</em></small></span><br>';
                             echo $u['short_desc'];
                             echo '</td>';
-                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $cat_arr[$u['cat_id']] . '</td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">';
+                            if($u['cat_id'] && $u['cat_id'] != NULL){
+                                echo $cat_arr[$u['cat_id']];
+                            }else{
+                                echo '-';
+                            }
+                            echo '</td>';
                             echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . ucfirst($this->Csz_admin_model->getUser($u['user_admin_id'])->name) . '</td>';
                             echo '<td class="text-center"'.$inactive.' style="vertical-align: middle;"><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
                             echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['timestamp_update'] . '</td>';

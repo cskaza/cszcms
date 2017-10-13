@@ -68,6 +68,12 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('pluginmgr_store') ?></div>
+        <form action="<?php echo $this->Csz_model->base_link(). '/admin/plugin/'; ?>" method="get">
+            <div class="control-group">
+                <label class="control-label" for="search"><?php echo $this->lang->line('pluginmgr_config_filename').' '.$this->lang->line('search'); ?>:</label><br><input type="text" name="search" id="search" class="form-control-static" value="<?php echo $this->input->get('search');?>"> &nbsp;&nbsp;&nbsp; <input type="submit" name="submit" id="submit" class="btn btn-default" value="<?php echo $this->lang->line('search'); ?>">
+            </div>
+        </form>
+        <br><br>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -80,13 +86,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($plugin_list === FALSE) { ?>
+                    <?php
+                    if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){ ?>
                         <tr>
-                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
-                        </tr>                           
+                            <td colspan="5" class="text-center"><a href="<?php echo $this->Csz_model->base_link()?>/admin/upgrade"><span class="h6 error"><?php echo $this->lang->line('upgrade_newlast_alert') ?></span></a></td>
+                        </tr>
+                    <?php }
+                    if ($plugin_list === FALSE) { ?>
+                        <tr>
+                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo $this->lang->line('data_notfound') ?></span></td>
+                        </tr>
                     <?php } else { ?>
                         <?php
-                        $p_count = 0;
                         foreach ($plugin_list as $xml) {
                             $last_ver = &$xml->version;
                             $filename = &$xml->filename;
@@ -107,25 +118,23 @@
                             }
                             echo '</td>';
                             echo '<td class="text-center" style="vertical-align: middle;">';
-                            if($this->Csz_admin_model->chkPluginInst($filename) !== FALSE){
-                                if($this->Csz_admin_model->chkPluginUpdate($cur_ver, $last_ver) !== FALSE){
-                                    echo '<a role="button" class="btn btn-info btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/plugin/upgrade/'.$filename.'">'.$this->lang->line('pluginmgr_upgrade').'</a>';
-                                }else{
-                                    echo '-';
+                            if ($this->Csz_admin_model->chkPluginInst($filename) !== FALSE) {
+                                if ($this->Csz_admin_model->chkPluginUpdate($cur_ver, $last_ver) !== FALSE && $this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) === FALSE) {
+                                    echo '<a role="button" class="btn btn-warning btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/upgrade/' . $filename . '">' . $this->lang->line('pluginmgr_upgrade') . '</a> &nbsp;&nbsp; ';
                                 }
-                            }else{
-                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/plugin/install/'.$filename.'">'.$this->lang->line('btn_install').'</a>';
+                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/uninstall/' . $filename . '" title="' . $this->lang->line('btn_delete') . '"><i class="glyphicon glyphicon-trash"></i></a>';
+                            } else {
+                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/install/' . $filename . '">' . $this->lang->line('btn_install') . '</a>';
                             }
                             echo '</td>';
                             echo '</tr>';
-                            $p_count++;
                         }
                         ?>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
-        <b><?php echo $this->lang->line('total').' '.$p_count.' '.$this->lang->line('records');?></b>
+        <?php echo $this->pagination->create_links(); ?> <b><?php echo $this->lang->line('total').' '.$total_xml.' '.$this->lang->line('records');?></b>
     </div>
 </div>
 <!-- /.row -->

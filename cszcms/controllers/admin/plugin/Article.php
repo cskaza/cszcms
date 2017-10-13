@@ -25,11 +25,9 @@ class Article extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->helper('form');
         $this->load->helper('file');
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
-        $this->lang->load('plugin/article', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
+        $this->lang->load('plugin/article', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->load->model('plugin/Article_model');
         $this->_init();
@@ -37,13 +35,11 @@ class Article extends CI_Controller {
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -91,7 +87,7 @@ class Article extends CI_Controller {
 
         //Get users from database
         $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
-        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
         $this->template->setSub('total_row', $total_row);
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
@@ -121,7 +117,7 @@ class Article extends CI_Controller {
         
         //Get users from database
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', $search_arr, '', 0, 'arrange', 'asc'));
-        $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+        $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", '', 0, 'arrange', 'asc'));
         $this->template->setSub('total_row', $total_row);
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
@@ -159,7 +155,7 @@ class Article extends CI_Controller {
         $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Load the form helper
         $this->load->helper('form');
-        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
         $this->template->loadSub('admin/plugin/article/article_add');
@@ -170,7 +166,7 @@ class Article extends CI_Controller {
         admin_helper::is_allowchk('article');
         //Load the form helper
         $this->load->helper('form');
-        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+        $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", '', 0, 'arrange', 'asc'));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
         //Load the view
         $this->template->loadSub('admin/plugin/article/article_addcat');
@@ -193,7 +189,7 @@ class Article extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Article_model->insert();
-            $this->output->delete_cache('plugin/article/rss');
+            $this->output->delete_cache('/plugin/article/rss');
             $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
@@ -226,7 +222,7 @@ class Article extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
-            $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1'));
+            $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
@@ -254,7 +250,7 @@ class Article extends CI_Controller {
                     //Validation passed
                     //Add the user
                     $this->Article_model->artupdate($this->uri->segment(5));
-                    $this->output->delete_cache('plugin/article/rss');
+                    $this->output->delete_cache('/plugin/article/rss');
                     $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
                     $this->db->cache_delete_all();
                     redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
@@ -270,7 +266,7 @@ class Article extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
-            $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", ''));
+            $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", '', 0, 'arrange', 'asc'));
             $this->template->setSub('category', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             //Load the view
@@ -308,7 +304,7 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
-            $this->output->delete_cache('plugin/article/rss');
+            $this->output->delete_cache('/plugin/article/rss');
             $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
@@ -338,8 +334,8 @@ class Article extends CI_Controller {
             if($article !== FALSE){
                 $data = array(
                     'main_picture' => '',
-                    'title' => $article->title.'-copy',
-                    'url_rewrite' => $article->url_rewrite.'-copy',
+                    'title' => $this->Csz_model->findNameAsCopy('article_db', 'article_db_id', $article->title),
+                    'url_rewrite' => $this->Csz_model->findNameAsCopy('article_db', 'article_db_id', $article->url_rewrite, TRUE),
                     'keyword' => $article->keyword,
                     'short_desc' => $article->short_desc,
                     'content' => $article->content,

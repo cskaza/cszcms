@@ -34,7 +34,6 @@ class Article extends CI_Controller {
         $this->load->model('plugin/Article_model');
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
-            define('THEME', $row->themes_config);
         }
         if(!$this->session->userdata('fronlang_iso')){ 
             $this->Csz_model->setSiteLang();
@@ -55,6 +54,11 @@ class Article extends CI_Controller {
         $this->page_url = $this->uri->segment(2);	
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
+        if (CACHE_TYPE == 'file') {
+            $this->load->driver('cache', array('adapter' => 'file'));
+        } else {
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+        }
     }
 
     public function index() {
@@ -81,12 +85,22 @@ class Article extends CI_Controller {
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
-        $this->template->loadSub('article/article_index');
+        $this->template->loadFrontPlugin('article/article_index');
     }
     
     public function category() {
         if($this->uri->segment(4)){
-            $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
+            if($this->uri->segment(5)){
+                $maincat_row = $this->Csz_model->getValue('article_db_id', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
+                if($maincat_row !== FALSE){
+                    $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '".$maincat_row->article_db_id."' AND url_rewrite = '".$this->uri->segment(5)."'", '', 1);
+                }else{
+                    $cat_row = FALSE;
+                }
+                unset($maincat_row);
+            }else{
+                $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
+            }
             if($cat_row !== FALSE){
                 if($this->session->userdata('fronlang_iso') != $cat_row->lang_iso){
                     $this->Csz_model->setSiteLang($cat_row->lang_iso);
@@ -103,19 +117,28 @@ class Article extends CI_Controller {
                 $result_per_page = 10;
                 $total_row = $this->Csz_model->countData('article_db', $search_arr);
                 $num_link = 10;
-                $base_url = $this->Csz_model->base_link(). '/plugin/article/category/'.$this->uri->segment(4).'/';
+                if($this->uri->segment(5)){
+                    $base_url = $this->Csz_model->base_link(). '/plugin/article/category/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/';
 
-                // Pageination config
-                $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
-                ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
+                    // Pageination config
+                    $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 6);
+                    ($this->uri->segment(6)) ? $pagination = $this->uri->segment(6) : $pagination = 0;
+                    $this->template->setSub('category_name', $this->Article_model->getCatNameFromID($cat_row->main_cat_id) . ' -> ' . $cat_row->category_name);
+                }else{
+                    $base_url = $this->Csz_model->base_link(). '/plugin/article/category/'.$this->uri->segment(4).'/';
 
+                    // Pageination config
+                    $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 5);
+                    ($this->uri->segment(5)) ? $pagination = $this->uri->segment(5) : $pagination = 0;
+                    $this->template->setSub('category_name', $cat_row->category_name);
+                }
                 //Get users from database
                 $this->template->setSub('article', $this->Csz_admin_model->getIndexData('article_db', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
                 $this->template->setSub('total_row', $total_row);
-                $this->template->setSub('category_name', $cat_row->category_name);
+                
 
                 //Load the view
-                $this->template->loadSub('article/article_category');
+                $this->template->loadFrontPlugin('article/article_category');
             }else{
                 redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
             }
@@ -150,7 +173,7 @@ class Article extends CI_Controller {
             $this->template->setSub('searchtxt', $p);
 
             //Load the view
-            $this->template->loadSub('article/article_search');
+            $this->template->loadFrontPlugin('article/article_search');
         } else {
             redirect($this->Csz_model->base_link(). '/plugin/article', 'refresh');
         }
@@ -191,7 +214,7 @@ class Article extends CI_Controller {
                 
 
                 //Load the view
-                $this->template->loadSub('article/article_archive');
+                $this->template->loadFrontPlugin('article/article_archive');
             }else{
                 redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
             }
@@ -213,25 +236,67 @@ class Article extends CI_Controller {
                     $this->db->cache_off();
                 }
                 $this->output->cache($row->pagecache_time);
-                $title = $art_row->title.' | ' . $row->site_name;
-                $this->template->set('title', $title);
-                $more_meta = '<link rel="amphtml" href="'.$this->Csz_model->base_link().'/plugin/article/amp/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'">' . "\n";
+                $this->template->set('title', $art_row->title.' | ' . $row->site_name);
+                $more_meta = '<link rel="amphtml" href="'.$this->Csz_model->base_link().'/plugin/article/amp/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/" />' . "\n";
                 $more_meta.= '<meta property="article:published_time" content="'.date('c', strtotime($art_row->timestamp_create)).'" />' . "\n";
                 $more_meta.= '<meta property="article:modified_time" content="'.date('c', strtotime($art_row->timestamp_update)).'" />' . "\n";
                 $facebook = $this->Csz_model->getValue('*', 'footer_social', "social_name = 'facebook' AND active = '1'", '', 1);
                 if($facebook !== FALSE && $facebook->social_url){
                     $more_meta.= '<meta property="article:author" content="' . $facebook->social_url . '" />' . "\n";
                 }
-                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword,$title,'plugin/article/' . $art_row->main_picture,$more_meta));
+                if ($row->site_logo) {
+                    $site_logo = base_url() . 'photo/logo/' . $row->site_logo;
+                } else {
+                    $site_logo = base_url() . 'photo/no_image.png';
+                }
+                $more_meta.= '<script type="application/ld+json">
+                {
+                    "@context": "http://schema.org",
+                    "@type": "NewsArticle",
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": "' . $this->Csz_model->base_link() . '/plugin/article/view/' . $this->uri->segment(4) . '/' . $this->uri->segment(5) . '"
+                    },
+                    "headline": "' . $art_row->title . '",
+                    "image": {
+                        "@type": "ImageObject",
+                        "url": "' . base_url() . 'photo/plugin/article/' . $art_row->main_picture . '",
+                        "width": 800,
+                        "height": 800
+                    },
+                    "datePublished": "'.date('c', strtotime($art_row->timestamp_create)).'",
+                    "dateModified": "'.date('c', strtotime($art_row->timestamp_update)).'",
+                    "author": {
+                        "@type": "Person",
+                        "name": "' . ucfirst($this->Csz_admin_model->getUser($art_row->user_admin_id)->name) . '"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "' . $row->site_name . '",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "' . $site_logo . '",
+                            "width": 200,
+                            "height": 50
+                        }
+                    },
+                    "description": "' . $art_row->short_desc . '"
+                }
+                </script>';
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($art_row->short_desc,$art_row->keyword,$art_row->title,'plugin/article/' . $art_row->main_picture,$more_meta));
                 $this->template->set('cur_page', $this->page_url);
 
                 //Get users from database
                 $this->template->setSub('article', $art_row);
-                $cat_row = $this->Csz_model->getValue('category_name', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);
-                $this->template->setSub('category_name', $cat_row->category_name);
-
+                $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);                
+                if($cat_row->main_cat_id != '0' && $cat_row->main_cat_id != NULL){
+                    $main_cat_name = $this->Article_model->getCatNameFromID($cat_row->main_cat_id);
+                    $this->template->setSub('category_name', '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($main_cat_name) . '/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $main_cat_name . ' -> ' . $cat_row->category_name.'">' . $main_cat_name . ' -> ' . $cat_row->category_name.'</a>');
+                }else{
+                    $this->template->setSub('category_name', '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $cat_row->category_name . '">' . $cat_row->category_name . '</a>');
+                }
                 //Load the view
-                $this->template->loadSub('article/article_view');
+                $this->template->loadFrontPlugin('article/article_view');
             }else{
                 redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
             }
@@ -253,18 +318,93 @@ class Article extends CI_Controller {
                     $this->db->cache_off();
                 }
                 $this->output->cache($row->pagecache_time);
-                $title = $art_row->title.' | ' . $row->site_name;
-                $this->template->set('title', $title);
+                $this->template->set('title', $art_row->title.' | ' . $row->site_name);
                 $canonical = '<link rel="canonical" href="'.$this->Csz_model->base_link().'/plugin/article/view/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'">' . "\n";               
                 $this->template->set('canonical', $canonical);
-
+                if ($row->site_logo) {
+                    $site_logo = base_url() . 'photo/logo/' . $row->site_logo;
+                } else {
+                    $site_logo = base_url() . 'photo/no_image.png';
+                }
+                $schematag = '<script type="application/ld+json">
+                {
+                    "@context": "http://schema.org",
+                    "@type": "NewsArticle",
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": "' . $this->Csz_model->base_link() . '/plugin/article/amp/' . $this->uri->segment(4) . '/' . $this->uri->segment(5) . '"
+                    },
+                    "headline": "' . $art_row->title . '",
+                    "image": {
+                        "@type": "ImageObject",
+                        "url": "' . base_url() . 'photo/plugin/article/' . $art_row->main_picture . '",
+                        "width": 800,
+                        "height": 800
+                    },
+                    "datePublished": "'.date('c', strtotime($art_row->timestamp_create)).'",
+                    "dateModified": "'.date('c', strtotime($art_row->timestamp_update)).'",
+                    "author": {
+                        "@type": "Person",
+                        "name": "' . ucfirst($this->Csz_admin_model->getUser($art_row->user_admin_id)->name) . '"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "' . $row->site_name . '",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "' . $site_logo . '",
+                            "width": 200,
+                            "height": 50
+                        }
+                    },
+                    "description": "' . $art_row->short_desc . '"
+                }
+                </script>';
+                $this->template->set('schematag', $schematag);
                 //Get users from database
                 $this->template->setSub('article', $art_row);
-                $cat_row = $this->Csz_model->getValue('category_name', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);
-                $this->template->setSub('category_name', $cat_row->category_name);
+                $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);                
+                if($cat_row->main_cat_id != '0' && $cat_row->main_cat_id != NULL){
+                    $main_cat_name = $this->Article_model->getCatNameFromID($cat_row->main_cat_id);
+                    $this->template->setSub('category_name', '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($main_cat_name) . '/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $main_cat_name . ' -> ' . $cat_row->category_name.'">' . $main_cat_name . ' -> ' . $cat_row->category_name.'</a>');
+                }else{
+                    $this->template->setSub('category_name', '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $cat_row->category_name . '">' . $cat_row->category_name . '</a>');
+                }
 
                 //Load the view
-                $this->template->loadSub('article/article_view_amp', 'frontpage/amp');
+                $this->template->loadFrontPlugin('article/article_view_amp', 'frontpage/amp');
+            }else{
+                redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
+            }
+        }else{
+            redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
+        }
+    }
+    
+    public function markupview() {
+        if($this->uri->segment(4)){
+            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
+            if($art_row !== FALSE){
+                $data = array();
+                if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
+                    $this->Csz_model->setSiteLang($art_row->lang_iso);
+                }
+                $row = $this->Csz_model->load_config();
+                $this->db->cache_on();
+                $this->template->setSub('title', $art_row->title.' | ' . $row->site_name);
+                $this->template->setSub('canonical', '<link rel="canonical" href="'.$this->Csz_model->base_link().'/plugin/article/markupview/'.$this->uri->segment(4).'">' . "\n");
+                $this->template->setSub('article', $art_row);
+                $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);                
+                if($cat_row->main_cat_id != '0' && $cat_row->main_cat_id != NULL){
+                    $main_cat_name = $this->Article_model->getCatNameFromID($cat_row->main_cat_id);
+                    $category_name = '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($main_cat_name) . '/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $main_cat_name . ' -> ' . $cat_row->category_name.'">' . $main_cat_name . ' -> ' . $cat_row->category_name.'</a>';
+                }else{
+                    $category_name = '<a href="' . $this->Csz_model->base_link().'/plugin/article/category/' . $this->Csz_model->rw_link($cat_row->category_name) . '" title="' . $cat_row->category_name . '">' . $cat_row->category_name . '</a>';
+                }
+                $this->template->setSub('category_name', $category_name);
+                $this->template->setSub('config', $row);
+                //Load the view
+                $this->template->loadFrontViews('static/opmarkup', 'frontpage/opmarkup');
             }else{
                 redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
             }
@@ -296,9 +436,11 @@ class Article extends CI_Controller {
         if($article !== FALSE){
             foreach ($article as $a)
             {
+		$content = $this->Csz_model->get_contents_url($this->Csz_model->base_link().'/plugin/article/markupview/'.$a['article_db_id']);
                 // set item's title, author, url, pubdate and description
                 $url = $this->Csz_model->base_link().'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'];
-                $feed->add($a['title'], $row->site_name, $url, $a['timestamp_create'], $a['short_desc']);
+                $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+                $feed->add($a['title'], $row->site_name, $url, $a['timestamp_create'], $a['short_desc'], $content);
             }
         }
         // show your feed (options: 'atom' (recommended) or 'rss')
@@ -307,8 +449,8 @@ class Article extends CI_Controller {
     
     public function getWidget() {
         $config = $this->Csz_model->load_config();
-        $this->db->cache_on();
-        $this->load->driver('cache', array('adapter' => 'file'));
+        $this->db->cache_on();       
+        
         if (!$this->cache->get('article_getWidget_'.$this->uri->segment(4).'_'.$this->uri->segment(5))) {
             // For New Category
             $this->load->library('Xml_writer');

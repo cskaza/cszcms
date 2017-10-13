@@ -22,6 +22,7 @@
                                 'class' => 'form-control',
                                 'required' => 'required',
                                 'autofocus' => 'true',
+                                'autocomplete' => 'off',
                                 'value' => set_value('email'),
                                 'placeholder' => $this->lang->line('forgot_email')
                             );

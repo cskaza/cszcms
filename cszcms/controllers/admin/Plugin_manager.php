@@ -28,20 +28,17 @@ class Plugin_manager extends CI_Controller {
         $this->load->helper('form');
         $this->load->helper('file');
         $this->load->library('unzip');
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -50,14 +47,27 @@ class Plugin_manager extends CI_Controller {
         $this->db->cache_on();
         $this->csz_referrer->setIndex();
         $this->load->helper('form');
-        
+        $this->load->library('pagination');
         $total_row = $this->Csz_model->countData('plugin_manager');
-        
         //Get users from database
         $this->template->setSub('plugin_mgr', $this->Csz_model->getValueArray('*', 'plugin_manager', '', ''));
         $this->template->setSub('total_row', $total_row);
-        $this->template->setSub('plugin_list', $this->Csz_admin_model->getPluginXML());
+        $xml_data = $this->Csz_admin_model->getPluginXML('', 'filename', $this->input->get('search', TRUE));
+        // Pages variable
+        $result_per_page = 20;
+        if($xml_data !== FALSE){
+            $total_xml = count((array)$xml_data->plugin);
+        }else{
+            $total_xml = 0;
+        }
+        $num_link = 10;
+        $base_url = $this->Csz_model->base_link(). '/admin/plugin/';
 
+        // Pageination config
+        $this->Csz_admin_model->pageSetting($base_url, $total_xml, $result_per_page, $num_link);
+        ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 0;
+        $this->template->setSub('plugin_list', $this->Csz_admin_model->getIndexDataFromObj($xml_data, $result_per_page, $pagination));
+        $this->template->setSub('total_xml', $total_xml);
         //Load the view
         $this->template->loadSub('admin/plugin_mgr_index');
     }
@@ -93,7 +103,7 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_allowchk('save');
         if (function_exists('ini_set')) {
             @ini_set('max_execution_time', 600);
-            @ini_set('memory_limit','1024M');
+            @ini_set('memory_limit','512M');
         }
         if ($this->uri->segment(4) && $this->Csz_admin_model->chkPluginInst($this->uri->segment(4)) === FALSE) {
             $version = $this->Csz_admin_model->pluginLatestVer($this->uri->segment(4));
@@ -111,8 +121,7 @@ class Plugin_manager extends CI_Controller {
                     if(!empty($unzip)){
                         if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
                             $this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
-                            delete_files(FCPATH . 'plugin_sql', TRUE);
-                            rmdir(FCPATH . 'plugin_sql');
+                            $this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
                         }
                         if(is_writable($newfname)){
                             @unlink($newfname);
@@ -142,9 +151,13 @@ class Plugin_manager extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('plugin manager');
         admin_helper::is_allowchk('save');
+        if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('upgrade_newlast_alert').'</div>');
+            redirect($this->Csz_model->base_link().'/admin/upgrade', 'refresh');
+        }
         if (function_exists('ini_set')) {
             @ini_set('max_execution_time', 600);
-            @ini_set('memory_limit','1024M');
+            @ini_set('memory_limit','512M');
         }
         if ($this->uri->segment(4) && $this->Csz_admin_model->chkPluginInst($this->uri->segment(4)) !== FALSE) {
             $last_ver = $this->Csz_admin_model->pluginLatestVer($this->uri->segment(4));
@@ -165,8 +178,7 @@ class Plugin_manager extends CI_Controller {
                         if(!empty($unzip)){
                             if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
                                 $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                                delete_files(FCPATH . 'upgrade_sql', TRUE);
-                                rmdir(FCPATH . 'upgrade_sql');
+                                $this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
                             }
                             if(is_writable($newfname)){
                                 @unlink($newfname);
@@ -194,6 +206,25 @@ class Plugin_manager extends CI_Controller {
                 }
             }else{
                 $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('pluginmgr_latest_already').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
+        } else {
+            $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+    
+    public function uninstall() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin manager');
+        admin_helper::is_allowchk('delete');
+        if ($this->uri->segment(4)) {
+            if($this->Csz_admin_model->pluginUninstall($this->uri->segment(4)) !== FALSE){
+                $this->db->cache_delete_all();
+                $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }else{
+                $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
             }
         } else {

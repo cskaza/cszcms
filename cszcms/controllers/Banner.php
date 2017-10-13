@@ -31,9 +31,13 @@ class Banner extends CI_Controller {
         $this->CI = & get_instance();
         $this->load->database();
         $row = $this->Csz_model->load_config();
+        if($row->maintenance_active){
+            //Return to home page
+            redirect('./', 'refresh');
+            exit;
+        }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
-            define('THEME', $row->themes_config);
         }
         if(!$this->session->userdata('fronlang_iso')){ 
             $this->Csz_model->setSiteLang();
@@ -52,7 +56,11 @@ class Banner extends CI_Controller {
             $this->db->where('NOW() BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)', '', FALSE); /* For date range between start to end */
             $getLink = $this->Csz_model->getValue('*', 'banner_mgt', "active = '1' AND banner_mgt_id = '".$id."'", '', 1);
             if(!empty($getLink) && $getLink !== FALSE){
-                $this->url_go = $getLink->link;
+                if($getLink->link == '' || $getLink->link == '#'){
+                    $this->url_go = base_url();
+                }else{
+                    $this->url_go = $getLink->link;
+                }
                 $redirectmeta = '<meta http-equiv="refresh" content="0;url='.$this->url_go.'">'."\n";
                 $this->Csz_model->saveBannerStats($getLink->banner_mgt_id);
             }else{
@@ -79,20 +87,10 @@ class Banner extends CI_Controller {
     }
 
     public function index() {
-        $config = $this->Csz_model->load_config();
-        if($config->maintenance_active){
-            $data = array('default_email' => $config->default_email, 'site_name' => $config->site_name, 'site_footer' => $config->site_footer);
-            $this->load->view('frontpage/maintenance', $data);
-        }else{
-            $this->template->setSub('is_linkstat', TRUE);
-            $this->template->setSub('url', $this->url_go);
-            $this->page_rs = FALSE;
-            $this->template->setSub('page', $this->page_url);
-            $this->template->setSub('page_rs', $this->page_rs);
-
-            //Load the view
-            $this->template->loadSub('frontpage/getpage');
-        }
+        $html = '<br><br><center><h3>Please Wait... ,Redirect to ' . $this->url_go . '</h3></center>';
+        $this->template->setSub('content', $html);
+        //Load the view
+        $this->template->loadFrontViews('static/banner');
     }
 
 }

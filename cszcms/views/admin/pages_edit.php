@@ -94,30 +94,44 @@
                 echo form_dropdown('lang_iso', $data, $pages->lang_iso, $att);
             ?>	
         </div> <!-- /control-group -->
-        <div class="control-group">            
-            <label class="control-label" for="custom_css"><?php echo $this->lang->line('pages_custom_css'); ?></label>
-            <?php
-            $data = array(
-                'name' => 'custom_css',
-                'id' => 'custom_css',
-                'class' => 'form-control',
-                'value' => set_value('custom_css', $pages->custom_css, FALSE)
-            );
-            echo form_textarea($data);
-            ?>			
-        </div> <!-- /control-group -->
-        <div class="control-group">            
-            <label class="control-label" for="custom_js"><?php echo $this->lang->line('pages_custom_js'); ?></label>
-            <?php
-            $data = array(
-                'name' => 'custom_js',
-                'id' => 'custom_js',
-                'class' => 'form-control',
-                'value' => set_value('custom_js', $pages->custom_js, FALSE)
-            );
-            echo form_textarea($data);
-            ?>			
-        </div> <!-- /control-group -->
+        <?php if($this->Csz_auth_model->is_group_allowed('pages cssjs additional', 'backend') !== FALSE){ ?>
+            <div class="control-group">            
+                <label class="control-label" for="more_metatag"><?php echo $this->lang->line('settings_add_meta'); ?></label>
+                <?php
+                $data = array(
+                    'name' => 'more_metatag',
+                    'id' => 'more_metatag',
+                    'class' => 'form-control',
+                    'value' => set_value('more_metatag', $pages->more_metatag, FALSE)
+                );
+                echo form_textarea($data);
+                ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">            
+                <label class="control-label" for="custom_css"><?php echo $this->lang->line('pages_custom_css'); ?></label>
+                <?php
+                $data = array(
+                    'name' => 'custom_css',
+                    'id' => 'custom_css',
+                    'class' => 'form-control',
+                    'value' => set_value('custom_css', $pages->custom_css, FALSE)
+                );
+                echo form_textarea($data);
+                ?>			
+            </div> <!-- /control-group -->
+            <div class="control-group">            
+                <label class="control-label" for="custom_js"><?php echo $this->lang->line('pages_custom_js'); ?></label>
+                <?php
+                $data = array(
+                    'name' => 'custom_js',
+                    'id' => 'custom_js',
+                    'class' => 'form-control',
+                    'value' => set_value('custom_js', $pages->custom_js, FALSE)
+                );
+                echo form_textarea($data);
+                ?>			
+            </div> <!-- /control-group -->
+        <?php } ?>
         <div class="control-group">	
             <label class="control-label" for="content"><?php echo $this->lang->line('pages_content'); ?></label>
             <textarea name="content" id="content" class="form-control body-tinymce"><?php echo  $pages->content ?></textarea>

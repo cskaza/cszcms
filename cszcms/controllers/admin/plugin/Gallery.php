@@ -27,9 +27,8 @@ class Gallery extends CI_Controller {
         parent::__construct();
         $this->load->helper('form');
         $this->load->helper('file');
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
-        $this->lang->load('plugin/gallery', LANG);
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
+        $this->lang->load('plugin/gallery', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->load->model('plugin/Gallery_model');
         $this->_init();
@@ -37,13 +36,11 @@ class Gallery extends CI_Controller {
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -51,7 +48,7 @@ class Gallery extends CI_Controller {
         admin_helper::is_allowchk('gallery');
         $this->db->cache_on();
         $this->csz_referrer->setIndex('gallery'); /* Set index page when redirect after save */
-        $search_arr = "gallery_db_id != '' ";
+        $search_arr = "1";
         if ($this->input->get('search')) {
             $search_arr.= " AND album_name LIKE '%" . $this->input->get('search', TRUE) . "%' OR short_desc LIKE '%" . $this->input->get('search', TRUE) . "%'";          
         }
@@ -99,7 +96,7 @@ class Gallery extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Gallery_model->insert();
-            $this->output->delete_cache('plugin/gallery/rss');
+            $this->output->delete_cache('/plugin/gallery/rss');
             $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
@@ -146,7 +143,7 @@ class Gallery extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Gallery_model->update($this->uri->segment(5));
-                $this->output->delete_cache('plugin/gallery/rss');
+                $this->output->delete_cache('/plugin/gallery/rss');
                 $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
                 $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
@@ -179,7 +176,7 @@ class Gallery extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('gallery');
         admin_helper::is_allowchk('save');
-        if ($this->uri->segment(5)) {
+        if ($this->uri->segment(5) && !empty($_FILES['files'])) {
             $gallery_type = $this->input->post('gallery_type', TRUE);
             $path = FCPATH . "/photo/plugin/gallery/";
             $files = $_FILES;
@@ -296,7 +293,7 @@ class Gallery extends CI_Controller {
                 }
             }
             $this->Gallery_model->delete($this->uri->segment(5));
-            $this->output->delete_cache('plugin/gallery/rss');
+            $this->output->delete_cache('/plugin/gallery/rss');
             $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');

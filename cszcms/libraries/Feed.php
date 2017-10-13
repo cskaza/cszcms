@@ -93,11 +93,11 @@ class Feed
         if (empty($this->pubdate)) $this->pubdate = date('D, d M Y H:i:s O');
         foreach($this->items as $k => $v)
         {
-            $this->items[$k]['title'] = html_entity_decode(strip_tags($this->items[$k]['title']));
+            $this->items[$k]['title'] = $CI->security->entity_decode(strip_tags($this->items[$k]['title']));
             $this->items[$k]['pubdate'] = $this->formatDate($this->items[$k]['pubdate'], $format);
         }
         $channel = array(
-            'title'=>html_entity_decode(strip_tags($this->title)),
+            'title'=>$CI->security->entity_decode(strip_tags($this->title)),
             'description'=>$this->description,
             'logo' => $this->logo,
             'icon' => $this->icon,

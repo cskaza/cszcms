@@ -2663,7 +2663,7 @@ a:focus {
   margin-top: 5px;
 }
 .table-bordered {
-  border: 1px solid #f4f4f4;
+  border: 1px solid #eeeefd;
 }
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
@@ -2671,7 +2671,7 @@ a:focus {
 .table-bordered > thead > tr > td,
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > td {
-  border: 1px solid #f4f4f4;
+  border: 1px solid #eeeefd;
 }
 .table-bordered > thead > tr > th,
 .table-bordered > thead > tr > td {
@@ -4878,8 +4878,8 @@ table.text-center th {
 }
 .chart {
   position: relative;
-  overflow: hidden;
   width: 100%;
+  overflow: scroll;
 }
 .chart svg,
 .chart canvas {

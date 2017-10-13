@@ -24,51 +24,56 @@ if (!defined('BASEPATH'))
 class Admin extends CI_Controller {
 
     function __construct() {
-        parent::__construct();      
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        parent::__construct();
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
+        if (CACHE_TYPE == 'file') {
+            $this->load->driver('cache', array('adapter' => 'file'));
+        } else {
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+        }
     }
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        $config = $this->Csz_admin_model->load_config();
         $this->db->cache_on();
+        $this->load->model('Csz_startup');
+        $this->Csz_startup->chkStartRun(TRUE);
         $this->csz_referrer->setIndex();
         $this->template->setSub('email_logs', $this->Csz_model->getValueArray('*', 'email_logs', "ip_address != ''", '', 10, 'timestamp_create', 'desc'));
         $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
         $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
         $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
-        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
+        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));        
         $this->load->library('RSSParser');
-        if($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE){
-            $url = $this->config->item('csz_backend_feed_url'); /* Main Link */
-        }else{
-            $url = $this->config->item('csz_backend_feed_backup_url'); /* Backup Link */
-        }
+        ($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE) ? $url = $this->config->item('csz_backend_feed_url') /* Main Link */ : $url = $this->config->item('csz_backend_feed_backup_url'); /* Backup Link */
         $this->rssparser->set_feed_url($url);  /* get feed from CSZ CMS Article */
-        $config = $this->Csz_model->load_config();
         $this->rssparser->set_cache_life($config->pagecache_time); /* Set cache life time in minutes */
-        $this->template->setSub('rss', $this->rssparser->runFeedBackend(6));
+        $this->template->setSub('rss', $this->rssparser->runFeedBackend(6)); /* have function cache (backend_rssfeed_news) */
         $this->template->loadSub('admin/home');
     }
     
     public function analytics() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('analytics');
-        $this->db->cache_on();
+        $this->load->helper('form');
         $settings = $this->Csz_admin_model->load_config();
         $this->csz_referrer->setIndex();
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            $days = $this->uri->segment(3);
+        }else{
+            $days = 30;
+        }
         $this->template->setJS('<!-- Step 2: Load the library. -->
         <script>
         (function(w,d,s,g,js,fjs){
@@ -98,7 +103,7 @@ class Admin extends CI_Controller {
               "ids": VIEW_ID,
               "dimensions": "ga:fullReferrer",
               "metrics": "ga:sessions,ga:pageviews",
-              "start-date": "30daysAgo",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
               "sort": "-ga:sessions",
             },
@@ -113,7 +118,7 @@ class Admin extends CI_Controller {
               "ids": VIEW_ID,
               "dimensions": "ga:country",
               "metrics": "ga:sessions",
-              "start-date": "30daysAgo",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
             },
             chart: {
@@ -129,7 +134,7 @@ class Admin extends CI_Controller {
               "ids": VIEW_ID,
               "dimensions": "ga:date",
               "metrics": "ga:sessions",
-              "start-date": "30daysAgo",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
             },
             chart: {
@@ -143,7 +148,7 @@ class Admin extends CI_Controller {
               "ids": VIEW_ID,
               "dimensions": "ga:browser",
               "metrics": "ga:sessions",
-              "start-date": "30daysAgo",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
             },
             chart: {
@@ -157,7 +162,7 @@ class Admin extends CI_Controller {
               "ids": VIEW_ID,
               "dimensions": "ga:source",
               "metrics": "ga:sessions",
-              "start-date": "30daysAgo",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
             },
             chart: {
@@ -170,14 +175,29 @@ class Admin extends CI_Controller {
             query: {
               "ids": VIEW_ID,
               "dimensions": "ga:pagePath",
-              "metrics": "ga:sessions,ga:pageviews",
-              "start-date": "30daysAgo",
+              "metrics": "ga:sessions,ga:pageviews,ga:bounceRate",
+              "start-date": "'.$days.'daysAgo",
               "end-date": "today",
               "sort": "-ga:sessions",
             },
             chart: {
               type: "TABLE",
               container: "timeline-allpage"
+            }
+          });
+          var allkeyworddata = new gapi.analytics.googleCharts.DataChart({
+            reportType: "ga",
+            query: {
+              "ids": VIEW_ID,
+              "dimensions": "ga:keyword",
+              "metrics": "ga:sessions,ga:organicSearches",
+              "start-date": "'.$days.'daysAgo",
+              "end-date": "today",
+              "sort": "-ga:sessions",
+            },
+            chart: {
+              type: "TABLE",
+              container: "timeline-allkeyword"
             }
           });
           /* Step 6: Hook up the components to work together. */
@@ -188,11 +208,16 @@ class Admin extends CI_Controller {
             referdata.set().execute();
             timeline4.set().execute();
             allpagedata.set().execute();
+            allkeyworddata.set().execute();
           });
         });
         </script>');
         $this->template->setSub('settings', $settings);
         $this->template->loadSub('admin/analytics');
+        if ($settings->pagecache_time != 0) {
+            $this->db->cache_on();
+            $this->output->cache($settings->pagecache_time);
+        }
     }
     
     public function deleteEmailLogs() {
@@ -212,10 +237,11 @@ class Admin extends CI_Controller {
     public function login() {
         admin_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
-
+        $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
         $this->template->setSub('error', '');
         $this->load->helper('form');
         $this->template->loadSub('admin/login');
+        $this->db->cache_on();
     }
 
     public function loginCheck() {
@@ -251,7 +277,7 @@ class Admin extends CI_Controller {
     }
 
     public function logout() {
-        $this->Csz_model->logout($this->Csz_model->base_link().'/admin');
+        $this->Csz_model->logout($this->Csz_model->base_link().'/admin/login');
     }
 
     public function social() {
@@ -285,6 +311,22 @@ class Admin extends CI_Controller {
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
+    
+    public function testSendMail() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('site settings');
+        admin_helper::is_allowchk('save');
+        $config = $this->Csz_admin_model->load_config();
+        $message_html = 'Dear ' . $config->default_email . ',<br><br>Test send email from ' . $config->site_name . '.<br>Your email config on Site Settings been successful!<br><br>Best Regards,<br><a href="' . $this->Csz_model->base_link(). '" target="_blank"><b>' . $config->site_name . '</b></a>';
+        $mailrs = @$this->Csz_model->sendEmail($config->default_email, 'Test send email from '.$config->site_name, $message_html, 'no-reply@' . EMAIL_DOMAIN, $config->site_name);
+        if($mailrs == 'success'){
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">Error! '.$mailrs.'</div>');
+        }
+        $this->db->cache_delete_all();
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
 
     public function settings() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
@@ -295,8 +337,8 @@ class Admin extends CI_Controller {
         $this->load->helper('form');
         $this->load->helper('directory');
         $this->load->model('Csz_sitemap');
-        $this->template->setSub('themesdir', directory_map(APPPATH . '/views/templates/', 1));
-        $this->template->setSub('langdir', directory_map(APPPATH . '/language/', 1));
+        $this->template->setSub('themesdir', directory_map(APPPATH . 'views/templates/', 1, TRUE));
+        $this->template->setSub('langdir', directory_map(APPPATH . 'language/', 1, TRUE));
         $this->template->setSub('sitemaptime', $this->Csz_sitemap->getFileTime());
         $this->template->setSub('settings', $this->Csz_admin_model->load_config());
         $this->template->loadSub('admin/settings');
@@ -321,20 +363,17 @@ class Admin extends CI_Controller {
         $this->csz_referrer->setIndex();
         $this->load->helper('form');
         $this->load->library('pagination');
-        $search_arr = '';
+        $search_arr = ' 1=1 ';
         if($this->input->get('search')){
-            $search_arr.= ' 1=1 ';
             if($this->input->get('search')){
                 $search_arr.= " AND year LIKE '%".$this->input->get('search', TRUE)."%' OR remark LIKE '%".$this->input->get('search', TRUE)."%' OR file_upload LIKE '%".$this->input->get('search', TRUE)."%'";
             }
         }
-
         // Pages variable
         $result_per_page = 20;
         $total_row = $this->Csz_model->countData('upload_file', $search_arr);
         $num_link = 10;
         $base_url = $this->Csz_model->base_link(). '/admin/uploadindex/';
-
         // Pageination config
         $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link);
         ($this->uri->segment(3)) ? $pagination = ($this->uri->segment(3)) : $pagination = 0;
@@ -404,22 +443,26 @@ class Admin extends CI_Controller {
         } else {
             $year = date("Y");
         }
-        $path = FCPATH . "/photo/upload/";
+        $path = FCPATH . "photo/upload/";
         $files = $_FILES;
-        $cpt = count($_FILES['files']['name']);
-        for($i=0; $i<$cpt; $i++) {   
-            if($files['files']['name'][$i]){
-                $file_id = time() . "_" . rand(1111, 9999);
-                $photo_name = $files['files']['name'][$i];
-                $photo = $files['files']['tmp_name'][$i];
-                $file_id1 = $this->Csz_admin_model->file_upload($photo, $photo_name, '', $path, $file_id, '', $year);
-                if ($file_id1) {
-                    $this->Csz_admin_model->insertFileUpload($year, $file_id1);
+        if(!empty($files)){
+            $cpt = count($_FILES['files']['name']);
+            for($i=0; $i<$cpt; $i++) {   
+                if($files['files']['name'][$i]){
+                    $file_id = time() . "_" . rand(1111, 9999);
+                    $photo_name = $files['files']['name'][$i];
+                    $photo = $files['files']['tmp_name'][$i];
+                    $file_id1 = $this->Csz_admin_model->file_upload($photo, $photo_name, '', $path, $file_id, '', $year);
+                    if ($file_id1) {
+                        $this->Csz_admin_model->insertFileUpload($year, $file_id1);
+                    }
                 }
             }
+            $this->db->cache_delete_all();
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
         }
-        $this->db->cache_delete_all();
-        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
@@ -494,6 +537,100 @@ class Admin extends CI_Controller {
             echo "FAIL";
         }
         exit(1);
+    }
+    
+    public function manifest() {
+        $config = $this->Csz_model->load_config();
+        ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
+        $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
+        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
+        if(!$this->cache->get('backend_manifest')){      
+            $manifest = '{
+                "name": "('.$config->site_name.') Backend System",
+                "short_name": "CSZCMS Backend",
+                "icons": [{
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_128.png",
+                      "type": "image/png",
+                      "sizes": "128x128"
+                    }, {
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_152.png",
+                      "type": "image/png",
+                      "sizes": "152x152"
+                    }, {
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_144.png",
+                      "type": "image/png",
+                      "sizes": "144x144"
+                    }, {
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_192.png",
+                      "type": "image/png",
+                      "sizes": "192x192"
+                    },
+                    {
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_256.png",
+                      "type": "image/png",
+                      "sizes": "256x256"
+                    },
+                    {
+                      "src": "'.base_url('', '', TRUE).'templates/admin/img/cszcms_icon_512.png",
+                      "type": "image/png",
+                      "sizes": "512x512"
+                    }],
+                "start_url": "'.$this->Csz_model->base_link().'/admin",
+                "scope": "'.$this->Csz_model->base_link().'",
+                "display": "standalone",
+                "orientation": "portrait",
+                "background_color": "#337ab7",
+                "theme_color": "#337ab7",
+                "related_applications": [{
+                    "platform": "web"
+                }],
+                "related_applications": [],
+                "prefer_related_applications": false
+              }';
+            
+            $this->cache->save('backend_manifest', $manifest, $cache_time);
+            unset($manifest);
+        }
+        header('Content-Type: application/json');
+        header("Accept-Ranges: bytes");
+	header("Pragma: public; maxage={$expires}");
+        header("Expires: " . gmdate ("D, d M Y H:i:s", time() + ($expires)) . " GMT");
+        header("Cache-Control: max-age={$expires}");
+        header("Cache-Control: public");
+        echo $this->cache->get('backend_manifest');
+        $this->output->cache($cache_time);
+        unset($cache_time, $expires, $config);
+	exit(0);
+    }
+    
+    public function serviceWorker() {
+        $config = $this->Csz_model->load_config();
+        ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
+        $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
+        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
+        if(!$this->cache->get('backend_serviceWorker')){      
+            $service = 'var filesToCache = [
+                        "'.base_url('', '', TRUE).'/templates/admin",
+                        "'.base_url('', '', TRUE).'/assets",
+                      ];
+                      var staticCacheName = "pages-cache-v1";
+                      self.addEventListener("install", function(event) {
+                        console.log("Attempting to install service worker and cache static assets");
+                        event.waitUntil(
+                          caches.open(staticCacheName)
+                          .then(function(cache) {
+                            return cache.addAll(filesToCache);
+                          })
+                        );
+                      });';            
+            $this->cache->save('backend_serviceWorker', $service, $cache_time);
+            unset($service);
+        }
+        header('Content-Type: text/javascript');
+        echo $this->cache->get('backend_serviceWorker');
+        $this->output->cache($cache_time);
+        unset($cache_time, $expires, $config);
+	exit(0);
     }
 
 }

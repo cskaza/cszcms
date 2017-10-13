@@ -14,6 +14,7 @@
             <div class="panel-heading"><h3 class="panel-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('widget_xml_url') ?></h3></div>
             <div class="panel-body">
                 <h5><b><?php echo $this->lang->line('gallery_header') ?>:</b> <?php echo $this->Csz_model->base_link().'/plugin/gallery/getWidget' ?>/{language_iso}</h5>
+                <h5><b><?php echo $this->lang->line('gallery_header') ?>:</b> <?php echo $this->Csz_model->base_link().'/plugin/gallery/viewxml' ?>/{album_id}</h5>
                 <span class="remark"><em><?php echo $this->lang->line('gallery_widget_remark') ?></em></span>
             </div>
         </div>
@@ -42,7 +43,8 @@
                 <thead>
                     <tr>
                         <th width="2%" class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-sort"></i></th>
-                        <th width="55%" class="text-center"><?php echo $this->lang->line('gallery_album'); ?></th>
+                        <th width="8%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
+                        <th width="47%" class="text-center"><?php echo $this->lang->line('gallery_album'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
                         <th width="18%" class="text-center"><?php echo $this->lang->line('gallery_datetime'); ?></th>
                         <th width="17%"></th>
@@ -66,6 +68,7 @@
                                     <i class="glyphicon glyphicon-resize-vertical"></i>
                                     <input type="hidden" name="gallery_db_id[]" value="'.$u['gallery_db_id'].'">
                                 </td>';
+                            echo '<td'.$inactive.' class="text-center" style="vertical-align: middle;">' . $u['gallery_db_id'] . '</td>';
                             echo '<td'.$inactive.' width="55%">';
                             echo '<b>'.$u['album_name'].'</b><br>';
                             echo '<span style="color:red;"><small><em>'.$u['keyword'].'</em></small></span><br>';

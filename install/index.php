@@ -1,4 +1,6 @@
 <?php
+$fullurl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . str_replace(array('/install','/index.php'), '', $_SERVER['REQUEST_URI']);
+$curdomain = rtrim(preg_replace('/\\?.*/', '', $fullurl),'/');
 header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
 header("Pragma: no-cache"); /* HTTP 1.0. */
 header("Expires: 0"); /* Proxies. */
@@ -6,6 +8,7 @@ if (file_exists('../config.inc.php')) {
     header("Location: ../?nocache=" . time());
     exit();
 }
+/* Start register the varible same CI index */
 /**
  * CSZ CMS
  *
@@ -22,13 +25,22 @@ if (file_exists('../config.inc.php')) {
  * @author	CSKAZA
  * @copyright   Copyright (c) 2016, Astian Foundation.
  * @license	http://astian.org/about-ADPL	ADPL License
- * @link	https://www.cszcms.com
- * @since	Version 1.0.0
+ * @link        https://www.cszcms.com
+ * 
  */
+
+// Path to the system directory
+define('BASEPATH', '../system');
+/* End register the varible same CI index */
+
 require './include/Database.php';
 $success = 0;
 $chk_pass = 0;
 if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbpass'] && $_POST['dbname']) {
+    if (function_exists('ini_set')) {
+        @ini_set('max_execution_time', 600);
+        @ini_set('memory_limit','512M');
+    }
     /* Prepare Input Data */
     /* $dbdsn = $_POST['dbdsn']; */
     $url_replace = array('https://', 'http://');
@@ -49,8 +61,8 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         /* Database Insert */
         $filename = 'cszcms_app.sql';
         $db->mysqli_multi_query_file($mysqli, $filename);
-
-        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '" . $email . "', '" . hash('sha512', sha1(md5($_POST['password']))) . "', 'admin', 1, '" . md5(time() + mt_rand(1, 99999999)) . "', NOW(), NOW(), NOW())";
+        $cszmodel = new Cszmodel;
+        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '" . $email . "', '" . $cszmodel->pwdEncypt($_POST['password']) . "', 'admin', 1, '" . md5(time() + mt_rand(1, 99999999)) . "', NOW(), NOW(), NOW())";
         $mysqli->query($insert_user);
         $update_sql = "UPDATE `settings` SET `default_email` = '" . $email . "' WHERE `settings_id` = 1";
         $mysqli->query($update_sql);
@@ -109,8 +121,9 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         fclose($fopen1);
         $success = 1;
         $db->closeDB();
-        if (isset($_COOKIE['csrf_cookie_csz'])) {
+        if (isset($_COOKIE['csrf_cookie_csz']) || isset($_SESSION['csrf_cookie_csz'])) {
             unset($_COOKIE['csrf_cookie_csz']);
+            unset($_SESSION['csrf_cookie_csz']);
             setcookie('csrf_cookie_csz', null, -1, '/');
         }
     }
@@ -122,23 +135,24 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
+        <link rel="canonical" href="<?php echo $curdomain; ?>/install/"/>
         <meta name="robots" content="no-cache" />
         <meta name="description" content="Backend System for CSZ Content Management" />
         <meta name="keywords" content="CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="CSKAZA" />
+        <meta name="author" content="CSZCMS" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        <link href="../templates/admin/imgs/favicon.ico" rel="shortcut icon" type="image/ico" />
-        <title>Install System | CSZ CMS System</title>
+        <link href="<?php echo $curdomain; ?>/templates/admin/favicon.ico" rel="shortcut icon" type="image/ico" />
+        <title>Installation System | CSZ CMS</title>
 
         <!-- Bootstrap Core CSS -->
-        <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="../assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-        <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />         
+        <link href="<?php echo $curdomain; ?>/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo $curdomain; ?>/assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo $curdomain; ?>/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />         
 
         <!-- Custom CSS -->
-        <link href="assets/css/styles.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo $curdomain; ?>/install/assets/css/styles.css" rel="stylesheet" type="text/css" />
 
         <!-- Custom Fonts -->        
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
@@ -164,7 +178,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><a href="<?php echo $baseurl; ?>/?nocache=<?php echo time() ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
+                        <div class="text-center"><a href="<?php echo $baseurl; ?>/?nocache=<?php echo time() ?>" target="_blank" title="Home"><img alt="Site Logo" class="site-logo" src="<?php echo $curdomain; ?>/install/assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
                             <div class="well"><h3 class="form-signin-heading success">Installation Completed!</h3></div>
@@ -187,10 +201,10 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                 <div class="row">
                     <div class="col-md-12">
                         <br><br>
-                        <div class="text-center"><a href="https://www.cszcms.com" target="_blank" title="CSZ CMS Official Website"><img alt="Site Logo" class="site-logo" src="assets/images/logo.png"></a></div>
+                        <div class="text-center"><a href="https://www.cszcms.com" target="_blank" title="CSZ CMS Official Website"><img alt="Site Logo" class="site-logo" src="<?php echo $curdomain; ?>/install/assets/images/logo.png"></a></div>
                         <br><br>
                         <div class="text-center">
-                            <div class="well"><h3 class="form-signin-heading">Install CSZ CMS</h3></div>
+                            <div class="well"><h3 class="form-signin-heading">CSZ CMS Installation!</h3></div>
                         </div>
                     </div>
                 </div>
@@ -198,8 +212,8 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                     <div class="col-md-12">
                         <b><u>System Checking</u></b><br><br>
                         <b>
-                            PHP 5.3.7 or higher [<?php
-                            if (version_compare(phpversion(), '5.3.7', '>=') !== FALSE) {
+                            PHP 5.4.0 or higher [<?php
+                            if (version_compare(phpversion(), '5.4.0', '>=') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $php = 1;
                             } else {
@@ -280,6 +294,28 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                     }
                                 ?>]
                             <?php } ?>
+                                <br>
+                                .htaccess is supported [<?php
+                                $url = $curdomain . "/admin/login";
+                                $ch = curl_init();
+                                // set URL and other appropriate options
+                                curl_setopt($ch, CURLOPT_URL, $url);
+                                if(stripos($url, 'https://') !== FALSE){
+                                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                                }
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                                curl_setopt($ch, CURLOPT_HEADER, 0);
+                                $content = curl_exec($ch);
+                                $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                                curl_close($ch);
+                                if($code == 404) {
+                                    echo '<span class="error">FAIL</span>';
+                                } else {
+                                    echo '<span class="success">PASS</span>';
+                                }
+                                unset($url, $ch, $code);
+                                ?>]
                             <?php
                             if ($sqli == 1 && $php == 1 && $curl == 1 && $gd == 1 && $config_per == 1 && $sess_per == 1 && $cache_per == 1 && $dbcache_per == 1) {
                                 $chk_pass = 1;
@@ -308,10 +344,10 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
                                         <br><span class="text-info">
                                             <b>Your PHP Version: <u><?php echo phpversion(); ?></u></b><br>
-                                            <b>* Required for <u>MySQLi</u> (PHP 5.3.7 or higher, MySQL 5.0 or higher)</b><br>
+                                            <b>* Required for <u>MySQLi</u> (PHP 5.4.0 or higher, MySQL 5.0 or higher)</b><br>
                                             <b>* Please create the database on your hosting control panel.</b><br><br>
                                             <b>When you have problem or question. Please contact us at</b><br>
-                                            <a href="https://www.cszcms.com/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
+                                            <a href="https://www.cszcms.com/about/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>
                                         </span>
                                     </div>
                                 </div>
@@ -381,7 +417,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                     <div class="col-md-8 div-copyright">
                         <?php $version->setTimezone('Asia/Bangkok'); ?>
                         <span class="copyright">Copyright &copy; <?php echo date('Y'); ?> CSZ CMS Installer</span>
-                        <small style="color:gray;"><br><span class="copyright">Installer for CSZ CMS Version <?php echo $version->getVersion(); ?></span></small>
+                        <small style="color:gray;"><br><span class="copyright">Installer for <a href="https://www.cszcms.com" target="_blank" title="CSZ CMS Official Website">CSZ CMS</a> Version <?php echo $version->getVersion(); ?></span></small>
                     </div>
                 </div>
             </footer>            

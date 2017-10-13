@@ -31,7 +31,7 @@ class Csz_sitemap extends CI_Model {
         parent::__construct();
         if (function_exists('ini_set')) {
             @ini_set('max_execution_time', 600);
-            @ini_set('memory_limit','1024M');
+            @ini_set('memory_limit','512M');
         }
         $this->load->database();
         $this->load->helper('file');

@@ -18,7 +18,7 @@ defined('FCPATH') OR exit('No direct script access allowed');
 */
 $proxy_ip_arr = array(
     /* Important! Please not remove this! */
-    /* (Start Cloudflare) */
+    /* (Start Cloudflare) From https://www.cloudflare.com/ips/ */
     /* IPv4 */
     '103.21.244.0/22',
     '103.22.200.0/22',

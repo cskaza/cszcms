@@ -28,22 +28,30 @@
                 <ul class="nav nav-stacked">
                     <?php if($this->uri->segment(5)){ 
                         if ($bannerstat !== FALSE) {
-                            foreach ($bannerstat as $u) { 
-                                $search_arr_d = "banner_mgt_id = '".$this->uri->segment(4)."' AND timestamp_create LIKE '".$u['bannerdate']."%'";
-                                $count_d = $this->Csz_model->countData('banner_statistic', $search_arr_d); ?>
-                                <li><a><?php echo $u['bannerdateF'] ?> <span class="pull-right badge bg-aqua-gradient"><?php echo $count_d ?></span></a></li>
+                            $bannerdate_arr = array();
+                            foreach ($bannerstat as $u) {
+                                if(!in_array($u['bannerdate'], $bannerdate_arr)){
+                                    $bannerdate_arr[] = $u['bannerdate'];
+                                    $search_arr_d = "banner_mgt_id = '".$this->uri->segment(4)."' AND timestamp_create LIKE '".$u['bannerdate']."%'";
+                                    $count_d = $this->Csz_model->countData('banner_statistic', $search_arr_d); ?>
+                                    <li><a><?php echo $u['bannerdateF'] ?> <span class="pull-right badge bg-aqua-gradient"><?php echo $count_d ?></span></a></li>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     <?php }else{ ?>
                         <?php if ($year !== FALSE) { ?>
-                            <?php foreach ($year as $u) { 
+                            <?php foreach ($year as $u) {
+                                $bannermonth_arr = array();
                                 $search_arr_y = "banner_mgt_id = '".$this->uri->segment(4)."' AND YEAR(timestamp_create) = '".$u['banner_year']."'"; 
-                                $month = $this->Csz_model->getValueArray("MONTHNAME(STR_TO_DATE(MONTH(timestamp_create), '%m')) AS banner_month_name, MONTH(timestamp_create) AS banner_month", 'banner_statistic', $search_arr_y, '', 0, 'banner_month', 'DESC', 'banner_month'); 
+                                $month = $this->Csz_model->getValueArray("MONTHNAME(timestamp_create) AS banner_month_name, MONTH(timestamp_create) AS banner_month", 'banner_statistic', $search_arr_y, '', 0, 'banner_month', 'DESC'); /* Can't group with sql only_full_group_by sql mode */
                                 if ($month !== FALSE) { 
-                                    foreach ($month as $m) { 
-                                        $search_arr_m = "banner_mgt_id = '".$this->uri->segment(4)."' AND YEAR(timestamp_create) = '".$u['banner_year']."' AND MONTH(timestamp_create) = '".$m['banner_month']."'";
-                                        $count_m = $this->Csz_model->countData('banner_statistic', $search_arr_m); ?>
-                                        <li><a href="<?php echo $this->Csz_model->base_link().'/admin/banner/view/' . $this->uri->segment(4) . '/' . $u['banner_year'] . '-' . str_pad($m['banner_month'], 2, '0', STR_PAD_LEFT) ; ?>"><?php echo $u['banner_year'].' '.$m['banner_month_name'] ?> <span class="pull-right badge bg-red"><?php echo $count_m ?></span></a></li>
+                                    foreach ($month as $m) {
+                                        if(!in_array($m['banner_month'], $bannermonth_arr)){
+                                            $bannermonth_arr[] = $m['banner_month'];
+                                            $search_arr_m = "banner_mgt_id = '".$this->uri->segment(4)."' AND YEAR(timestamp_create) = '".$u['banner_year']."' AND MONTH(timestamp_create) = '".$m['banner_month']."'";
+                                            $count_m = $this->Csz_model->countData('banner_statistic', $search_arr_m); ?>
+                                            <li><a href="<?php echo $this->Csz_model->base_link().'/admin/banner/view/' . $this->uri->segment(4) . '/' . $u['banner_year'] . '-' . str_pad($m['banner_month'], 2, '0', STR_PAD_LEFT) ; ?>"><?php echo $u['banner_year'].' '.$m['banner_month_name'] ?> <span class="pull-right badge bg-red"><?php echo $count_m ?></span></a></li>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
                             <?php } ?>

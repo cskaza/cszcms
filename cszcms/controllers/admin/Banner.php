@@ -24,21 +24,18 @@ if (!defined('BASEPATH'))
 class Banner extends CI_Controller {
 
     function __construct() {
-        parent::__construct();      
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        parent::__construct();
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -167,7 +164,7 @@ class Banner extends CI_Controller {
         if($this->uri->segment(4)){
             if($this->uri->segment(5)){
                 $search_arr = "banner_mgt_id = '".$this->uri->segment(4)."' AND timestamp_create LIKE '".$this->uri->segment(5)."%'";
-                $bannerstat = $this->Csz_model->getValueArray("DATE(timestamp_create) AS bannerdate, DATE_FORMAT(timestamp_create, '%d %M %Y') AS bannerdateF", 'banner_statistic', $search_arr, '', 0, 'bannerdate', 'DESC', 'bannerdate');
+                $bannerstat = $this->Csz_model->getValueArray("DATE(timestamp_create) AS bannerdate, DATE_FORMAT(timestamp_create, '%d %M %Y') AS bannerdateF", 'banner_statistic', $search_arr, '', 0, 'bannerdate', 'DESC'); /* Can't group with sql only_full_group_by sql mode */
                 if ($bannerstat === FALSE) { 
                     redirect($this->csz_referrer->getIndex('view'), 'refresh');
                     exit();

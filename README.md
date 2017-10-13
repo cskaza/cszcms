@@ -19,8 +19,8 @@ See more at https://www.cszcms.com
 Server Recommend Requirements:
 - Best on browsers FireFox, Chrome, Safari, IE9.
 - Apache Server.
-- PHP 5.4.0 or higher.
-- MySQL 5.0 or higher (Required for MySQLi Driver).
+- PHP 5.4.0 or higher. (It should work on 5.3.7 as well, but we strongly advise you NOT to run such old versions of PHP, because of potential security and performance issues, as well as missing features)
+- MySQL 5.0 or higher (Required for MySQLi Driver)
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled.
 - gZip Compression Enabled.

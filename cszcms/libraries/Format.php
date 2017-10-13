@@ -173,6 +173,7 @@ class Format {
      */
     public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
     {
+        $CI =& get_instance();
         if ($data === NULL && func_num_args() === 0)
         {
             $data = $this->_data;
@@ -232,7 +233,7 @@ class Format {
             else
             {
                 // add single node.
-                $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+                $value = htmlspecialchars($CI->security->entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
 
                 $structure->addChild($key, $value);
             }

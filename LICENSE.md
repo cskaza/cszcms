@@ -2,7 +2,7 @@
 
 Astian Public Licence (ADPL)
 
-Copyright (c) 2016, Astian Foundation
+Copyright (c) 2016 - 2017, Astian Foundation
 
 Astian Develop Public License (ADPL)
 

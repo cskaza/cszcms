@@ -3,6 +3,52 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
+                <i><span class="fa fa-server"></span></i> <?php echo $this->lang->line('serverstatus_header') ?>
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Info boxes -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <h1><i class="fa fa-microchip"></i></h1>
+                    </div>
+                    <div class="col-xs-10 text-right">
+                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></small></div>
+                        <div><?php echo $this->lang->line('serverstatus_phpmem_use') ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+    <div class="col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <h1><i class="fa fa-hdd-o"></i></h1>
+                    </div>
+                    <div class="col-xs-10 text-right">
+                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->usageSpace() ?></small></div>
+                        <div><?php echo $this->lang->line('serverstatus_disk_use') ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-lg-12">
+        <ol class="breadcrumb">
+            <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo  $this->lang->line('uploadfile_header') ?>
             </li>
         </ol>

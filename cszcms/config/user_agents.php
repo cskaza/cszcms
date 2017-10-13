@@ -125,6 +125,7 @@ $mobiles = array(
 	'mda'			=> 'MDA',
 	'vario'			=> 'Vario',
 	'htc'			=> 'HTC',
+        'huawei'                => 'HUAWEI',
 	'samsung'		=> 'Samsung',
 	'sharp'			=> 'Sharp',
 	'sie-'			=> 'Siemens',
@@ -210,5 +211,7 @@ $robots = array(
 	'curious george'	=> 'Curious George',
 	'ia_archiver'		=> 'Alexa Crawler',
 	'MJ12bot'		=> 'Majestic-12',
-	'Uptimebot'		=> 'Uptimebot'
+	'Uptimebot'		=> 'Uptimebot',
+        'Facebot'               => 'Facebot',
+        'facebookexternalhit'   => 'The Facebook Crawler'
 );

@@ -40,6 +40,7 @@
                     $data['360'] = '360 '.$this->lang->line('settings_pagecache_time_min');
                     $data['720'] = '720 '.$this->lang->line('settings_pagecache_time_min');
                     $data['1440'] = '1440 '.$this->lang->line('settings_pagecache_time_min');
+                    $data['14400'] = '14400 '.$this->lang->line('settings_pagecache_time_min');
                 echo form_dropdown('bf_protect_period', $data, $settings->bf_protect_period, $att); ?>
             </div> <!-- /controls -->
         </div> <!-- /control-group -->
@@ -49,19 +50,18 @@
                 <?php
                     $att = 'id="max_failure" class="form-control"';
                     $data = array();
-                    $data['2'] = '2';
-                    $data['3'] = '3';
-                    $data['4'] = '4';
                     $data['5'] = '5';
                     $data['10'] = '10';
                     $data['15'] = '15';
                     $data['20'] = '20';
                     $data['30'] = '30';
+                    $data['40'] = '40';
                     $data['50'] = '50';
-                    $data['70'] = '70';
+                    $data['75'] = '75';
                     $data['100'] = '100';
                     $data['150'] = '150';
                     $data['200'] = '200';
+                    $data['500'] = '500';
                 echo form_dropdown('max_failure', $data, $settings->max_failure, $att); ?>
             </div> <!-- /controls -->
         </div> <!-- /control-group -->

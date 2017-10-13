@@ -38,7 +38,6 @@ class Linkstats extends CI_Controller {
         }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
-            define('THEME', $row->themes_config);
         }
         if(!$this->session->userdata('fronlang_iso')){ 
             $this->Csz_model->setSiteLang();
@@ -56,7 +55,11 @@ class Linkstats extends CI_Controller {
         if ($id && is_numeric($id)) {
             $getLink = $this->Csz_model->getValue('url', 'link_stat_mgt', 'link_stat_mgt_id', $id, 1);
             if(!empty($getLink) && $getLink !== FALSE){
-                $this->url_go = $getLink->url;
+                if($getLink->url == '' || $getLink->url == '#'){
+                    $this->url_go = base_url();
+                }else{
+                    $this->url_go = $getLink->url;
+                }
                 $redirectmeta = '<meta http-equiv="refresh" content="0;url='.$this->url_go.'">'."\n";
                 $this->Csz_model->saveLinkStats($this->url_go);
             }else{
@@ -83,14 +86,10 @@ class Linkstats extends CI_Controller {
     }
 
     public function index() {
-        $this->template->setSub('is_linkstat', TRUE);
-        $this->template->setSub('url', $this->url_go);
-        $this->page_rs = FALSE;
-        $this->template->setSub('page', $this->page_url);
-        $this->template->setSub('page_rs', $this->page_rs);
-
+        $html = '<br><br><center><h3>Please Wait... ,Redirect to ' . $this->url_go . '</h3></center>';
+        $this->template->setSub('content', $html);
         //Load the view
-        $this->template->loadSub('frontpage/getpage');
+        $this->template->loadFrontViews('static/linkstats');
     }
 
 }

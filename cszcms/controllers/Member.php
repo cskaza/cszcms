@@ -35,7 +35,6 @@ class Member extends CI_Controller {
         }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
-            define('THEME', $row->themes_config);
         }
         if (!$this->session->userdata('fronlang_iso')) {
             $this->Csz_model->setSiteLang();
@@ -62,13 +61,16 @@ class Member extends CI_Controller {
 
     public function index() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        $this->load->model('Csz_startup');
+        $this->Csz_startup->chkStartRun(FALSE);
         $this->csz_referrer->setIndex('member');
         $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
-        $this->template->loadSub('frontpage/member/home');
+        $this->template->loadFrontViews('member/home');
     }
     
     public function memberList() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
         $this->load->library('pagination');
         $this->csz_referrer->setIndex('member');
         // Pages variable
@@ -84,14 +86,14 @@ class Member extends CI_Controller {
         $this->template->setSub('users', $this->Csz_admin_model->getIndexData('user_admin', $result_per_page, $pagination, 'user_admin_id', 'desc', $search_arr));
         $this->template->setSub('total_row',$total_row);
         //Load the view
-        $this->template->loadSub('frontpage/member/memberlist');
+        $this->template->loadFrontViews('member/memberlist');
     }
     
     public function viewUser() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(3)){
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->uri->segment(3)));
-            $this->template->loadSub('frontpage/member/viewuser');
+            $this->template->loadFrontViews('member/viewuser');
         }else{
             redirect($this->Csz_model->base_link().'/member', 'refresh');
         }
@@ -104,7 +106,7 @@ class Member extends CI_Controller {
         $this->template->setSub('config', $this->Csz_model->load_config());
         $this->template->setSub('error', '');
         $this->load->helper('form');
-        $this->template->loadSub('frontpage/member/login');
+        $this->template->loadFrontViews('member/login');
     }
 
     public function loginCheck() {
@@ -124,7 +126,7 @@ class Member extends CI_Controller {
             $this->template->setSub('config', $this->Csz_model->load_config());
             $this->template->setSub('error', $result);
             $this->load->helper('form');
-            $this->template->loadSub('frontpage/member/login');
+            $this->template->loadFrontViews('member/login');
         }
     }
 
@@ -144,7 +146,7 @@ class Member extends CI_Controller {
             $this->load->helper('form');
             //Load the view
             $this->template->setSub('chksts', 0);
-            $this->template->loadSub('frontpage/member/regist');
+            $this->template->loadFrontViews('member/regist');
         }
     }
 
@@ -161,10 +163,10 @@ class Member extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->form_validation->set_message('email', $this->Csz_model->getLabelLang('email_already'));
-            $this->template->loadSub('frontpage/member/regist');
+            $this->template->loadFrontViews('member/regist');
         } else if ($this->Csz_model->chkCaptchaRes() == '') {
             $this->template->setSub('chksts', 0);
-            $this->template->loadSub('frontpage/member/regist');
+            $this->template->loadFrontViews('member/regist');
         } else {
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $md5_hash = $this->Csz_model->createMember();
@@ -180,7 +182,7 @@ class Member extends CI_Controller {
                     $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . $this->Csz_model->base_link(). '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . $this->Csz_model->base_link(). '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . $this->Csz_model->base_link(). '" target="_blank"><b>' . $config->site_name . '</b></a>';
                     @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
                     $this->template->setSub('chksts', 1);
-                    $this->template->loadSub('frontpage/member/regist');
+                    $this->template->loadFrontViews('member/regist');
                 }else{
                     redirect($this->Csz_model->base_link(). '/member/confirm/' . $md5_hash, 'refresh');
                     exit();
@@ -222,7 +224,7 @@ class Member extends CI_Controller {
             //Get user details from database
             $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
             //Load the view
-            $this->template->loadSub('frontpage/member/edit');
+            $this->template->loadFrontViews('member/edit');
         }
     }
 
@@ -255,7 +257,7 @@ class Member extends CI_Controller {
                     $this->template->setSub('users', $this->Csz_admin_model->getUser($this->session->userdata('user_admin_id')));
                     //Load the view
                     $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('login_incorrect').'</div>');
-                    $this->template->loadSub('frontpage/member/edit');
+                    $this->template->loadFrontViews('member/edit');
                 }
             }
             
@@ -272,11 +274,11 @@ class Member extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 0);
-            $this->template->loadSub('frontpage/member/email_forgot');
+            $this->template->loadFrontViews('member/email_forgot');
         } else if ($this->Csz_model->chkCaptchaRes() == '') {
             $this->template->setSub('chksts', 0);
             $this->template->setSub('error_chk', 1);
-            $this->template->loadSub('frontpage/member/email_forgot');
+            $this->template->loadFrontViews('member/email_forgot');
         } else {
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
@@ -298,7 +300,7 @@ class Member extends CI_Controller {
             @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
             $this->template->setSub('error_chk', 0);
             $this->template->setSub('chksts', 1);
-            $this->template->loadSub('frontpage/member/email_forgot');
+            $this->template->loadFrontViews('member/email_forgot');
         }
     }
 
@@ -331,7 +333,7 @@ class Member extends CI_Controller {
             $this->form_validation->set_rules('con_password', 'Password Confirmation', 'trim|required');
             if ($this->form_validation->run() == FALSE) {
                 $this->template->setSub('success_chk', 0);
-                $this->template->loadSub('frontpage/member/resetform');
+                $this->template->loadFrontViews('member/resetform');
             } else {
                 if (!$user_rs->email) {
                     show_error('Sorry!!! Invalid Request!');
@@ -345,7 +347,7 @@ class Member extends CI_Controller {
                     $this->db->update('user_admin', $data);
                     
                     $this->template->setSub('success_chk', 1);
-                    $this->template->loadSub('frontpage/member/resetform');
+                    $this->template->loadFrontViews('member/resetform');
                 }
             }
         }
@@ -370,7 +372,7 @@ class Member extends CI_Controller {
         $this->template->setSub('msg', $this->Csz_admin_model->getIndexData('user_pms', $result_per_page, $pagination, 'id', 'desc', $search_arr));
         $this->template->setSub('total_row',$total_row);
         //Load the view
-        $this->template->loadSub('frontpage/member/pm_index');
+        $this->template->loadFrontViews('member/pm_index');
     }
     
     public function sendIndexPM() {
@@ -392,7 +394,7 @@ class Member extends CI_Controller {
         $this->template->setSub('msg', $this->Csz_admin_model->getIndexData('user_pms', $result_per_page, $pagination, 'id', 'desc', $search_arr));
         $this->template->setSub('total_row',$total_row);
         //Load the view
-        $this->template->loadSub('frontpage/member/pm_send_index');
+        $this->template->loadFrontViews('member/pm_send_index');
     }
     
     public function viewPM() {
@@ -404,7 +406,7 @@ class Member extends CI_Controller {
             if($pm !== FALSE){
                 $this->template->setSub('pm', $pm);
                 //Load the view
-                $this->template->loadSub('frontpage/member/pm_view');
+                $this->template->loadFrontViews('member/pm_view');
             }else{
                 redirect($this->csz_referrer->getIndex('member'), 'refresh');
             }
@@ -420,7 +422,7 @@ class Member extends CI_Controller {
         $this->load->helper('form');
         $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
         //Load the view
-        $this->template->loadSub('frontpage/member/pm_add');
+        $this->template->loadFrontViews('member/pm_add');
     }
 
     public function insertPM() {

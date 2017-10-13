@@ -97,10 +97,49 @@ class Template {
         return $this->load($view, $this->data_sub, '', '', $othermainfile);
     }
     
+    /**
+     * loadFrontPlugin
+     *
+     * Load view with sub views for frontend plugin with templates detected.
+     *
+     * @param	string	$view    View file for load
+     * @param	string	$othermainfile    Other main view file path
+     */
+    function loadFrontPlugin($view = '', $othermainfile = '')
+    {
+        $CI =& get_instance();
+        $config = $CI->Csz_model->load_config();
+        if(file_exists(FCPATH . 'cszcms/modules/plugin/views/templates/'.$config->themes_config.'/'.$view.'.php') !== FALSE){
+            return $this->load('templates/'.$config->themes_config.'/'.$view, $this->data_sub, '', '', $othermainfile);
+        }else{
+            return $this->load('templates/cszdefault/'.$view, $this->data_sub, '', '', $othermainfile);
+        }
+    }
+    
+    /**
+     * loadFrontViews
+     *
+     * Load view with sub views for frontend with templates detected.
+     *
+     * @param	string	$view    View file for load
+     * @param	string	$othermainfile    Other main view file path
+     */
+    function loadFrontViews($view = '', $othermainfile = '')
+    {
+        $CI =& get_instance();
+        $config = $CI->Csz_model->load_config();
+        if(file_exists(FCPATH . 'cszcms/views/frontpage/templates/'.$config->themes_config.'/'.$view.'.php') !== FALSE){
+            return $this->load('frontpage/templates/'.$config->themes_config.'/'.$view, $this->data_sub, '', '', $othermainfile);
+        }else{
+            return $this->load('frontpage/templates/cszdefault/'.$view, $this->data_sub, '', '', $othermainfile);
+        }
+    }
+    
     private function load($view = '' , $view_data = array(), $template = '', $return = FALSE, $othermainfile = '')
     {
         $this->CI =& get_instance();
         $this->set($this->CI->config->item('data_container'), $this->CI->load->view($view, array_merge($view_data, array ('template' => $this->template_data)), true));
+        unset($view_data, $view);
         if(!$othermainfile){
             if (empty($this->use_template_file)) {
                 $template_file = $this->CI->config->item('template_master');

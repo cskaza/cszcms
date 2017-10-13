@@ -336,4 +336,7 @@ if (function_exists('ini_set')) {
 @date_default_timezone_set(TIME_ZONE);
 include FCPATH.'proxy.inc.php';
 include FCPATH.'htaccess.config.inc.php';
+include FCPATH.'cache.config.inc.php';
+include FCPATH.'memcached.config.inc.php';
+include FCPATH.'redis.config.inc.php';
 require_once BASEPATH.'core/CodeIgniter.php';

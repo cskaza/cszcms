@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-3 hidden-sm hidden-xs"></div>
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <center><span style="font-size:36px;color:#ff6f00;"><a href="<?php echo $this->Csz_model->base_link() ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></center>
+            <center><span style="font-size:36px;"><a href="<?php echo $this->Csz_model->base_link() ?>" target="_blank"><?php echo $this->Headfoot_html->getLogo(); ?></a></span></center>
             <br><br>
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
@@ -39,6 +39,7 @@
                             'class' => 'form-control',
                             'required' => 'required',
                             'autofocus' => 'true',
+                            'autocomplete' => 'off',
                             'value' => set_value('email'),
                             'placeholder' => $this->lang->line('login_email')
                         );
@@ -75,3 +76,28 @@
         <div class="col-md-3 hidden-sm hidden-xs"></div>
     </div>
 </div>
+<?php if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){ ?>
+<script type="text/javascript">
+            if ('serviceWorker' in navigator) {
+               console.log("Will the service worker register?");
+               navigator.serviceWorker.register('<?php echo $this->Csz_model->base_link().'/admin/service_worker.js'; ?>')
+                .then(function(reg) {
+                   console.log("Yes, it did.");
+                })
+                .catch(function(err) {
+                   console.log("No it didn't. This happened:", err);
+                });
+            }
+            window.addEventListener('beforeinstallprompt', function(e) {
+              e.userChoice.then(function(choiceResult) {
+                console.log(choiceResult.outcome);
+                if(choiceResult.outcome == 'dismissed') {
+                  console.log('User cancelled home screen install');
+                }
+                else {
+                  console.log('User added to home screen');
+                }
+              });
+            });
+</script>
+<?php }

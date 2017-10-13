@@ -1,4 +1,36 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.1.8
+- Add more meta tag field on content page.
+- Add plugin frontend view for support the custom template.
+- Add content support with [?startform_post:form_name{action_url}][/?endform] and [?startform_get:form_name{action_url}][/?endform].
+- Add widget xml for album view in gallery plugin.
+- Add Form Builder with upload files option and can sort the field on form edit page.
+- Add test send email to default email in 'Site Settings'.
+- Add export and import function on backend with CSV file.
+- Add uninstall the plugin function on plugin store and plugin search.
+- Add file manager for template and cms config (elFinder).
+- Add member frontend view for support the custom template.
+- Add app manifest (add to homescreen) on mobile for backend.
+- Add static frontend view for support the custom template (Error 404, Banner, Linkstats, Maintenance).
+- Add template generater tools in file manager page on backend.
+- Add startup function for run after login. For plugin config $plugin_config['backend_startup'] and $plugin_config['frontend_startup'].
+- Add facebook page id in Site Settings.
+- Add static resources from a different cdn domain setting in Site Settings.
+- Update TinyMCE to 4.6.6.
+- Update Codeigniter to 3.1.6.
+- Improve performance.
+- Support with APC or Memcached or Redis.
+- Improve SEO support.
+- Improve IP deny system for CSRF and Brute Force attack.
+- Fixed article rss feed to support 'Facebook Instant Articles'.
+- Fixed for error 404 override page.
+- Fixed for hosting been disabled allow_url_fopen.
+- Fixed article plugin bug.
+- Fixed plugin backend language to default when the language file not found.
+- Fixed the csz cms version checking on plugin store. The plugin can't update if not upgrade the csz cms.
+- Fixed for curl error 60 on windows when the php been disabled allow_url_fopen.
+- Fixed default page with plugin and pages content.
+
 CSZ-CMS V.1.1.7
 - Add custom js on content page and change the custom css function.
 - Add pageview with pagepath on Google Analytics.

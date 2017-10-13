@@ -1,5 +1,5 @@
 <?php
-
+defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * CSZ CMS
  *
@@ -109,10 +109,6 @@ class Database{
 
 class Version{
     
-    function __construct() {
-        define('BASEPATH', 'cszcms');
-    }
-    
     private function getVersionConfig(){
         $config = array();
         require '../cszcms/config/systemconfig.php';
@@ -142,6 +138,22 @@ class Version{
             ini_set('max_execution_time', 300);
             ini_set('date.timezone', $timezone);
         }
+    }
+
+}
+
+class Cszmodel{
+    
+    /**
+     * pwdEncypt
+     *
+     * Function for encyption the password with 3 step
+     *
+     * @param	string	$password    password
+     * @return	string
+     */
+    public function pwdEncypt($password) {
+        return hash('sha512', sha1(md5($password)));
     }
 
 }

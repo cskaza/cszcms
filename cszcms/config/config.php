@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = BASE_URL;
+$config['base_url'] = ltrim(BASE_URL, '/').'/';
 
 /*
 |--------------------------------------------------------------------------
@@ -383,7 +383,7 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'csz_sess';
-$config['sess_expiration'] = 3600;
+$config['sess_expiration'] = 7200;
 $config['sess_save_path'] = FCPATH.'/ci_session';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
@@ -404,8 +404,10 @@ $config['sess_regenerate_destroy'] = TRUE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
+$find_arr = @parse_url(BASE_URL);
+$domain = @$find_arr['host'];
 $config['cookie_prefix']	= 'cszcookie';
-$config['cookie_domain']	= '';
+$config['cookie_domain']	= $domain;
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= isset($_SERVER['HTTPS']) ? TRUE : FALSE;
 $config['cookie_httponly'] 	= TRUE;
@@ -422,7 +424,7 @@ $config['cookie_httponly'] 	= TRUE;
 | (usually \n) and Windows (\r\n).
 |
 */
-$config['standardize_newlines'] = FALSE;
+$config['standardize_newlines'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -455,13 +457,15 @@ $config['global_xss_filtering'] = FALSE;
 $config['csrf_protection'] = TRUE;
 $config['csrf_token_name'] = 'csrf_csz';
 $config['csrf_cookie_name'] = 'csrf_cookie_csz';
-$config['csrf_expire'] = 3600;
+$config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array(
     'admin/upgrade/downloadErrLog',
     'plugin/[A-z0-9]+/success/[A-z0-9]+',
     'plugin/[A-z0-9]+/paypalIPN/[A-z0-9]+',
     'admin/admin/saveDraft',
+    'admin/filemanager/[A-z0-9]+',
+    'admin/filemanager',
 );
 
 /*

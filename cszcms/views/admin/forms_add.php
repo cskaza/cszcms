@@ -40,7 +40,7 @@
                 'id' => 'form_enctype',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('form_enctype', '', FALSE)
+                'value' => set_value('form_enctype', 'multipart/form-data', FALSE)
             );
             echo form_input($data);
             ?>				
@@ -200,6 +200,7 @@
                                 <option value="checkbox">checkbox</option>
                                 <option value="datepicker">datepicker</option>
                                 <option value="email">email</option>
+                                <option value="file">file</option>
                                 <option value="label">label</option>
                                 <option value="password">password</option>
                                 <option value="radio">radio</option>

@@ -23,8 +23,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.1.7'; /* For CMS Version */
+$config['csz_version'] = '1.1.8'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
+
+/* 
+ * For CSZ CMS Credit
+ * Please do not remove or change this credit
+ */
+$config['cszcms_credit'] = 'Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a>'; /* Please do not remove or change this credit */
 
 /* 
  * For CSZ CMS check lastest version xml url
@@ -47,7 +53,7 @@ $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
  * Defualt Url https://www.cszcms.com/plugin/article/rss
  */
 $config['csz_backend_feed_url'] = 'https://www.cszcms.com/plugin/article/rss';
-$config['csz_backend_feed_backup_url'] = 'http://astian.org/plugin/article/rss';
+$config['csz_backend_feed_backup_url'] = 'https://www.astian.org/plugin/article/rss';
 
 /* 
  * For CSZ CMS plugin version checking xml url
@@ -72,3 +78,4 @@ $config['csz_plugin_install_server_2'] = 'https://www.cszcms.com/downloads/plugi
  */
 $config['csz_plugin_upgrade_server_1'] = 'http://jaist.dl.sourceforge.net/project/cszcms-plugin/upgrade/';
 $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugins/upgrade/';
+

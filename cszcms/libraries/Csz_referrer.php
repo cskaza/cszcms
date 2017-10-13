@@ -41,6 +41,7 @@ class Csz_referrer {
             $param = '';
         }
         $_SESSION[$key] = current_url().$param;
+        unset($index,$key,$paramiter_url,$param);
     }
     
     /**
@@ -49,26 +50,48 @@ class Csz_referrer {
      * Function for get page from session
      *
      * @param	string	$index    session name
+     * @param	bool	$backend    Is for backend
      * @return	string
      */
-    public function getIndex($index = '') {
+    public function getIndex($index = '', $backend = TRUE) {
+        $this->CI =& get_instance();
+        $this->CI->load->library('user_agent');
+        if($backend){
+            $topage = '/admin';
+        }else{
+            $topage = '/member';
+        }
         if(!$index){
             $key = 'referred_index';
         }else{
             $key = 'referred_'.$index;
         }
+        $baseurl = rtrim(BASE_URL, '/');
+        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
         if(isset($_SESSION[$key])){
             $referred_from = $_SESSION[$key];
         }else{
-            $referred_from = current_url();
-            if(!empty($_SERVER["HTTP_REFERER"])) {
-                $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-                $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
-                if(($referer_host && $referer_host === $own_host)){
-                    $referred_from = $_SERVER["HTTP_REFERER"];
-                }
+            if($this->CI->agent->is_referral()) {
+                $referred_from = $this->CI->agent->referrer();
+            }else{
+                $referred_from = $base_url.$topage;
             }
         }
+        unset($index,$key,$base_url,$baseurl,$topage);
+        return $referred_from;
+    }
+    
+    public function getReferrer() {
+        $this->CI =& get_instance();
+        $this->CI->load->library('user_agent');
+        $baseurl = rtrim(BASE_URL, '/');
+        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
+        if ($this->CI->agent->is_referral()) {
+            $referred_from = $this->CI->agent->referrer();
+        } else {
+            $referred_from = $base_url;
+        }
+        unset($base_url,$baseurl);
         return $referred_from;
     }
     

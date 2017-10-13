@@ -34,7 +34,6 @@ class Search extends CI_Controller {
         }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
-            define('THEME', $row->themes_config);
         }
         if (!$this->session->userdata('fronlang_iso')) {
             $this->Csz_model->setSiteLang();
@@ -63,7 +62,8 @@ class Search extends CI_Controller {
         $config = $this->Csz_admin_model->load_config();
         if($config->gsearch_active && !empty($config->gsearch_cxid) && $config->gsearch_cxid !== NULL){
             $this->template->setSub('config', $config);
-            $this->template->loadSub('frontpage/search');
+            $this->template->loadFrontViews('search/search');
+            $this->output->cache($config->pagecache_time);
         }else{
             redirect(BASE_URL, 'refresh');
         }

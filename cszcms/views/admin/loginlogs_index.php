@@ -24,6 +24,7 @@
                         <option value="INVALID"<?php echo ($this->input->get('result') == 'INVALID')?' selected="selected"':''?>>INVALID</option>
                         <option value="IP_BANNED"<?php echo ($this->input->get('result') == 'IP_BANNED')?' selected="selected"':''?>>IP_BANNED</option>
                         <option value="SUCCESS"<?php echo ($this->input->get('result') == 'SUCCESS')?' selected="selected"':''?>>SUCCESS</option>
+                        <option value="CSRF_INVALID"<?php echo ($this->input->get('result') == 'CSRF_INVALID')?' selected="selected"':''?>>CSRF_INVALID</option>
                     </select>	
                 </label> &nbsp;&nbsp;&nbsp; 
                 <input type="submit" name="submit" id="submit" class="btn btn-default" value="<?php echo $this->lang->line('search'); ?>">

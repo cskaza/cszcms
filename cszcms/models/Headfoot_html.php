@@ -27,7 +27,13 @@ class Headfoot_html extends CI_Model{
         parent::__construct();
         $this->load->model('Csz_admin_model');
         $this->lang->load('admin', $this->Csz_admin_model->getLang());
+        if (CACHE_TYPE == 'file') {
+            $this->load->driver('cache', array('adapter' => 'file'));
+        } else {
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+        }
     }
+    
 
     /**
      * getLogo
@@ -40,10 +46,11 @@ class Headfoot_html extends CI_Model{
         $row = $this->Csz_model->load_config();
         $logo = '';
         if($row->site_logo){
-            $logo = '<img alt="Site Logo" class="site-logo img-responsive" src="'.base_url().'photo/logo/'.$row->site_logo.'">';
+            $logo = '<img alt="Site Logo" class="site-logo img-responsive" src="'.base_url('', '', TRUE).'photo/logo/'.$row->site_logo.'">';
         }else{
             $logo = $row->site_name;
         }
+        unset($row);
         return $logo;
     }
 
@@ -58,7 +65,7 @@ class Headfoot_html extends CI_Model{
      * @return  string
      */
     public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a'){
-        $config = $this->Csz_admin_model->load_config();
+        $config = $this->Csz_model->load_config();
         $menu_list = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
         if($cur_page_lang === FALSE){
@@ -67,7 +74,6 @@ class Headfoot_html extends CI_Model{
             $cur_page_lang_iso = $cur_page_lang->lang_iso;
             $this->Csz_model->setSiteLang($cur_page_lang_iso);
         }
-        $this->load->driver('cache', array('adapter' => 'file'));
         if(!$this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page))){
             $get_mainmenu = $this->Csz_model->main_menu('', $cur_page_lang_iso);
             if($get_mainmenu === FALSE){
@@ -164,8 +170,8 @@ class Headfoot_html extends CI_Model{
                 $cache_time = $config->pagecache_time;
             }
             $this->cache->save('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page), $menu_list, ($cache_time * 60));
+            unset($menu_list,$cache_time,$config,$drop_menu,$get_mainmenu,$cur_page_lang,$page_url_rs,$active,$otherlink_host,$own_host,$otherlink_array,$target_sub,$target,$page_link_sub,$page_url_rs_sub);
         }
-        
         return $this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page));
     }
     
@@ -178,7 +184,7 @@ class Headfoot_html extends CI_Model{
      * @return  string
      */
     public function bottomnav($cur_page){
-        $config = $this->Csz_admin_model->load_config();
+        $config = $this->Csz_model->load_config();
         $menu_list1 = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
         if($cur_page_lang === FALSE){
@@ -187,7 +193,6 @@ class Headfoot_html extends CI_Model{
             $cur_page_lang_iso = $cur_page_lang->lang_iso;
             $this->Csz_model->setSiteLang($cur_page_lang_iso);
         }
-        $this->load->driver('cache', array('adapter' => 'file'));
         if(!$this->cache->get('bottomnav_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page))){
             $get_mainmenu1 = $this->Csz_model->main_menu('', $cur_page_lang_iso, 1);
             if($get_mainmenu1 === FALSE){
@@ -258,8 +263,8 @@ class Headfoot_html extends CI_Model{
                 $cache_time = $config->pagecache_time;
             }
             $this->cache->save('bottomnav_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page), $menu_list1, ($cache_time * 60));
+            unset($menu_list1,$cache_time,$config,$drop_menu1,$get_mainmenu1,$cur_page_lang,$page_url_rs,$target_sub,$target,$page_link_sub,$page_url_rs_sub);
         }
-        
         return $this->cache->get('bottomnav_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page));
     }
 
@@ -287,6 +292,7 @@ class Headfoot_html extends CI_Model{
         $html = '<ul class="list-inline social-buttons">
                     '.$social_list.'
                 </ul>';
+        unset($social_list,$socail_url,$target);
         return $html;
     }
 
@@ -317,6 +323,7 @@ class Headfoot_html extends CI_Model{
                 $i++;
             }
             ($i > 1) ? $html = '<ul class="list-inline" id="lang-menu">'.$lang_list.'</ul>' : $html = '';
+            unset($lang_list,$i,$lang,$rs,$type,$lang_url);
             return $html;
         }
     }
@@ -368,7 +375,7 @@ class Headfoot_html extends CI_Model{
      * @return  string
      */
     public function admin_leftmenu($cur_page){
-        $config = $this->Csz_admin_model->load_config();
+        $config = $this->Csz_model->load_config();
         $html = $this->admin_leftli($cur_page, 'admin', 'admin', $this->lang->line('nav_dash'), 'fa fa-dashboard');
         if($this->Csz_auth_model->is_group_allowed('analytics', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'analytics', 'admin/analytics', $this->lang->line('nav_analytics'), 'fa fa-google');
         /* Start Private Message Menu */
@@ -384,7 +391,7 @@ class Headfoot_html extends CI_Model{
         $html.= '</ul></li>';
         /* End Private Message Menu */      
         /* Start Content Menu */
-        if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'banner'){
+        if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'banner' || $cur_page == 'filemanager'){
             $content_display = "active ";
         }else{
             $content_display = "";
@@ -392,16 +399,17 @@ class Headfoot_html extends CI_Model{
         $html.= '<li class="'.$content_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
         $html.= '<ul class="treeview-menu">';
         if($this->Csz_auth_model->is_group_allowed('forms builder', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'forms', 'admin/forms', $this->lang->line('forms_header'), 'glyphicon glyphicon-modal-window');
-        if($this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'widget', 'admin/widget', $this->lang->line('widget_header'), 'glyphicon glyphicon-gift');
-        if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-picture');
-        if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-file');
-        if($this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'navigation', 'admin/navigation', $this->lang->line('nav_nav_header'), 'glyphicon glyphicon-object-align-top');
+        if($this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'widget', 'admin/widget', $this->lang->line('widget_header'), 'glyphicon glyphicon-gift');               
         if($this->Csz_auth_model->is_group_allowed('linkstats', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'linkstats', 'admin/linkstats', $this->lang->line('linkstats_header'), 'glyphicon glyphicon-stats');
         if($this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'banner', 'admin/banner', $this->lang->line('banner_header'), 'glyphicon glyphicon-stats');
+        if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-file');
+        if($this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'navigation', 'admin/navigation', $this->lang->line('nav_nav_header'), 'glyphicon glyphicon-object-align-top');
+        if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-picture');
+        if($this->Csz_auth_model->is_group_allowed('file manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'filemanager', 'admin/filemanager', $this->lang->line('filemanager_header'), 'glyphicon glyphicon-cloud');
         $html.= '</ul></li>';
         /* End Content Menu */
         /* Start General Menu */
-        if($cur_page == 'users' || $cur_page == 'members' || $cur_page == 'groups' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin'){
+        if($cur_page == 'users' || $cur_page == 'members' || $cur_page == 'groups' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin' || $cur_page == 'export'){
             $gel_settings_display = "active ";
         }else{
             $gel_settings_display = "";
@@ -410,13 +418,14 @@ class Headfoot_html extends CI_Model{
         $html.= '<ul class="treeview-menu">';
         if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'lang', 'admin/lang', $this->lang->line('lang_header'), 'glyphicon glyphicon-globe');
         if($this->Csz_auth_model->is_group_allowed('general label', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'genlabel', 'admin/genlabel', $this->lang->line('genlabel_header'), 'glyphicon glyphicon-globe');
-        if($this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'settings', 'admin/settings', $this->lang->line('settings_header'), 'glyphicon glyphicon-cog');
-        if($this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'social', 'admin/social', $this->lang->line('social_header'), 'glyphicon glyphicon-share');
-        if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'upgrade', 'admin/upgrade', $this->lang->line('maintenance_header'), 'glyphicon glyphicon-compressed');
+        if($this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'social', 'admin/social', $this->lang->line('social_header'), 'glyphicon glyphicon-share');       
         if($this->Csz_auth_model->is_group_allowed('plugin manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'plugin', 'admin/plugin', $this->lang->line('pluginmgr_header'), 'glyphicon glyphicon-gift');
         if($this->Csz_auth_model->is_group_allowed('admin users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'users', 'admin/users', $this->lang->line('user_admin_txt'), 'fa fa-user');
         if($this->Csz_auth_model->is_group_allowed('member users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'members', 'admin/members', $this->lang->line('user_member_txt'), 'fa fa-user');
         if($this->Csz_auth_model->is_group_allowed('user groups', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'groups', 'admin/groups', $this->lang->line('user_group_txt'), 'fa fa-users');
+        if($this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'settings', 'admin/settings', $this->lang->line('settings_header'), 'glyphicon glyphicon-cog');
+        if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'upgrade', 'admin/upgrade', $this->lang->line('maintenance_header'), 'glyphicon glyphicon-compressed');
+        $html.= $this->admin_leftli($cur_page, 'export', 'admin/export', $this->lang->line('export_import_csv_btn'), 'glyphicon glyphicon-export');
         $html.= '</ul></li>';
         /* End General Menu */
         /* Start Plugin Menu */
@@ -453,6 +462,7 @@ class Headfoot_html extends CI_Model{
             /* End brute force login protection Menu */
         }
         $html.= '<br><li><a href="'.$this->Csz_model->base_link().'/'.'admin/logout"><i class="fa fa-sign-out text-red"></i> <span>'.$this->lang->line('nav_logout').'</span></a></li>';
+        unset($config,$cur_page,$gel_settings_display,$pm_display,$content_display,$plugin_arr,$plugin_menu,$plugin_url,$plugin_display,$bf_login_display);
         return $html;
     }
 
@@ -522,8 +532,10 @@ class Headfoot_html extends CI_Model{
         if($this->session->userdata('admin_type') == 'admin'){
             $html.= '<li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/admin" target="_blank"><i class="glyphicon glyphicon-briefcase"></i> '.$this->Csz_model->getLabelLang('backend_system').'</a></li>';
         }
-        $html.= '<li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member/list"><i class="glyphicon glyphicon-list-alt"></i> '.$this->Csz_model->getLabelLang('users_list_txt').'</a></li>
-                        <li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member"><i class="glyphicon glyphicon-user"></i> '.$this->Csz_model->getLabelLang('your_profile').'</a></li>
+        if($this->Csz_auth_model->is_group_allowed('pm', 'frontend') !== FALSE){
+            $html.= '<li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member/list"><i class="glyphicon glyphicon-list-alt"></i> '.$this->Csz_model->getLabelLang('users_list_txt').'</a></li>';
+        }
+        $html.= '<li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member"><i class="glyphicon glyphicon-user"></i> '.$this->Csz_model->getLabelLang('your_profile').'</a></li>
                         <li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member/edit"><i class="glyphicon glyphicon-edit"></i> '.$this->Csz_model->getLabelLang('edit_profile').'</a></li>
                         <li role="presentation" class="text-left"><a href="'.$this->Csz_model->base_link().'/member/logout"><b><i class="glyphicon glyphicon-log-out"></i> '.$this->Csz_model->getLabelLang('log_out').'</b></a></li>
                     </ul>
@@ -555,6 +567,7 @@ class Headfoot_html extends CI_Model{
             }
         }
         /* End Plugin Menu */
+        unset($unread,$unreadhtml,$plugin_arr,$plugin_member_menu,$perms,$perm_chk,$plugin_menu,$value);
         return $html;
     }
 

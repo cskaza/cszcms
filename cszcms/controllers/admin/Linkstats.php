@@ -24,21 +24,18 @@ if (!defined('BASEPATH'))
 class Linkstats extends CI_Controller {
 
     function __construct() {
-        parent::__construct();      
-        define('LANG', $this->Csz_admin_model->getLang());
-        $this->lang->load('admin', LANG);
+        parent::__construct();
+        $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
     }
 
     public function _init() {
-        $row = $this->Csz_admin_model->load_config();
-        $pageURL = $this->Csz_admin_model->getCurPages();
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
         $this->template->set('core_js', $this->Csz_admin_model->coreJs());
-        $this->template->set('title', 'Backend System | ' . $row->site_name);
-        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management'));
-        $this->template->set('cur_page', $pageURL);
+        $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
+        $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
+        $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
     }
 
     public function index() {
@@ -46,7 +43,6 @@ class Linkstats extends CI_Controller {
         admin_helper::is_allowchk('linkstats');
         $this->load->helper('form');
         $this->load->library('pagination');
-        $this->db->cache_on();
         $this->csz_referrer->setIndex();
         $search_arr = '';
         if($this->input->get('search')){
@@ -107,7 +103,6 @@ class Linkstats extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('linkstats');
         if($this->uri->segment(4)){
-            $this->db->cache_on();
             $this->csz_referrer->setIndex('view');
             $this->load->helper('form');
             $this->load->library('pagination');   

@@ -66,17 +66,16 @@
                 $data = array();
                 if(!empty($themesdir)){
                     foreach($themesdir as $t){
-                        if(!is_dir($t)){
-                            $t = str_replace("\\", "", $t);
-                            $t = str_replace("/", "", $t);
-                            if(($t != "index.html") && ($t != "admin") && (strpos($t, 'admin') === false)){
+                        $t = str_replace("\\", "", $t);
+                        $t = str_replace("/", "", $t);
+                        if(($t[0] != ".") && ($t != "index.html") && ($t != "admin") && (strpos($t, 'admin') === false) && is_dir(APPPATH . '/views/templates/'.$t)){
                                 $data[$t] = $t;
-                            }
                         }
                     }
                 }
                 echo form_dropdown('siteTheme', $data, $settings->themes_config, $att);
                 ?>
+                <span class="remark"><em><a href="<?php echo $this->Csz_model->base_link(); ?>/admin/filemanager" title="<?php echo $this->lang->line('filemanager_template_create').' '.$this->lang->line('banner_link'); ?>!"><b><?php echo $this->lang->line('filemanager_template_create').' '.$this->lang->line('banner_link'); ?>!</b></a></em></span>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
         <div class="control-group">
@@ -87,12 +86,10 @@
                 $data = array();
                 if(!empty($langdir)){
                     foreach($langdir as $l){
-                        if(!is_dir($l)){
-                            $l = str_replace("\\", "", $l);
-                            $l = str_replace("/", "", $l);
-                            if($l != "index.html"){
+                        $l = str_replace("\\", "", $l);
+                        $l = str_replace("/", "", $l);
+                        if(($l[0] != ".") && ($l != "index.html") && is_dir(APPPATH . '/language/'.$l)){
                                 $data[$l] = $l;
-                            }
                         }
                     }
                 }
@@ -160,6 +157,41 @@
                 <span class="remark"><em><?php echo $this->lang->line('settings_pagecache_time_remark'); ?></em></span>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="assets_static_domain"><?php echo $this->lang->line('settings_assets_static_domain'); ?></label>
+            <div class="controls">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <label for="assets_static_active"><?php
+                        if ($settings->assets_static_active) {
+                            $checked = 'checked';
+                        } else {
+                            $checked = '';
+                        }
+                        $data = array(
+                            'name' => 'assets_static_active',
+                            'id' => 'assets_static_active',
+                            'value' => '1',
+                            'checked' => $checked
+                        );
+                        echo form_checkbox($data);
+                        ?> <?php echo $this->lang->line('lang_active'); ?></label>
+                    </div>
+                    <?php
+                    $data = array(
+                        'name' => 'assets_static_domain',
+                        'id' => 'assets_static_domain',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('assets_static_domain', $settings->assets_static_domain, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                </div>
+                <span class="remark"><em><?php echo $this->lang->line('settings_assets_static_domain_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <br>
         <div class="control-group">										
             <label class="form-control-static" for="maintenance_active">
                 <?php
@@ -282,28 +314,11 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('settings_member_close_regist'); ?></label>
         </div> <!-- /control-group -->
-        <div class="h2 sub-header"><?php echo $this->lang->line('settings_fbappid_header') ?></div>    
-        <div class="control-group">	
-            <label class="control-label" for="googlecapt_secretkey"><?php echo $this->lang->line('settings_fbapp_id'); ?></label>
-            <div class="controls">
-                <?php
-                $data = array(
-                    'name' => 'fbapp_id',
-                    'id' => 'fbapp_id',
-                    'class' => 'form-control',
-                    'maxlength' => '255',
-                    'value' => set_value('fbapp_id', $settings->fbapp_id, FALSE)
-                );
-                echo form_input($data);
-                ?>
-                <span class="remark"><em><?php echo $this->lang->line('settings_fbappid_remark'); ?></em></span>
-            </div> <!-- /controls -->				
-        </div> <!-- /control-group -->
         <br>   
     </div>
     <div class="col-lg-6 col-md-6">
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_sitemap_header') ?></div>
-        <a href="<?php echo $this->Csz_model->base_link().'/admin/settings/gensitemap' ?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_header') ?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
+        <a href="<?php echo $this->Csz_model->base_link().'/admin/settings/gensitemap' ?>" class="btn btn-success" title="<?php echo $this->lang->line('settings_sitemap_runnow') ?>"><?php echo $this->lang->line('settings_sitemap_runnow') ?></a><br>
         <b><?php echo $this->lang->line('settings_sitemap_lasttime') ?>: </b><b><?php if($sitemaptime !== FALSE){
                     echo '<span class="success"><em>'.$sitemaptime.'</em></span>';
                 }else{
@@ -314,22 +329,25 @@
         <div class="control-group">	
             <label class="control-label" for="siteEmail"><?php echo $this->lang->line('settings_email'); ?></label>
             <div class="controls">
-                <?php
-                $data = array(
-                    'name' => 'siteEmail',
-                    'id' => 'siteEmail',
-                    'class' => 'form-control',
-                    'maxlength' => '255',
-                    'value' => set_value('siteEmail', $settings->default_email, FALSE)
-                );
-                echo form_input($data);
-                ?>
+                <div class="input-group">
+                    <?php
+                    $data = array(
+                        'name' => 'siteEmail',
+                        'id' => 'siteEmail',
+                        'class' => 'form-control',
+                        'maxlength' => '255',
+                        'value' => set_value('siteEmail', $settings->default_email, FALSE)
+                    );
+                    echo form_input($data);
+                    ?>
+                    <div class="input-group-btn"><a href="<?php echo $this->Csz_model->base_link().'/admin/settings/testsendmail' ?>" class="btn btn-primary" title="<?php echo $this->lang->line('settings_email_testbtn') ?>"><?php echo $this->lang->line('settings_email_testbtn') ?></a></div>
+                </div>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
         <div class="control-group">										
             <label class="control-label" for="email_protocal"><?php echo $this->lang->line('settings_email_protocal'); ?></label>
             <?php
-            $att = 'id="email_protocal" class="form-control"';
+            $att = 'id="email_protocal" class="form-control" onchange="mailConfig(this.value)"';
             $data = array();
             $data['mail'] = 'Mail';
             $data['sendmail'] = 'Sendmail';
@@ -337,7 +355,7 @@
             echo form_dropdown('email_protocal', $data, $settings->email_protocal, $att);
             ?>		
         </div> <!-- /control-group -->
-        <div class="control-group">	
+        <div class="control-group" id="smtp1" style="display:none;">	
             <label class="control-label" for="smtp_host"><?php echo $this->lang->line('settings_smtp_host'); ?></label>
             <div class="controls">
                 <?php
@@ -352,7 +370,7 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <div class="control-group">	
+        <div class="control-group" id="smtp2" style="display:none;">	
             <label class="control-label" for="smtp_user"><?php echo $this->lang->line('settings_smtp_user'); ?></label>
             <div class="controls">
                 <?php
@@ -367,7 +385,7 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <div class="control-group">	
+        <div class="control-group" id="smtp3" style="display:none;">	
             <label class="control-label" for="smtp_pass"><?php echo $this->lang->line('settings_smtp_pass'); ?></label>
             <div class="controls">
                 <?php
@@ -382,7 +400,7 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <div class="control-group">	
+        <div class="control-group" id="smtp4" style="display:none;">	
             <label class="control-label" for="smtp_port"><?php echo $this->lang->line('settings_smtp_port'); ?></label>
             <div class="controls">
                 <?php
@@ -397,7 +415,7 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
-        <div class="control-group">	
+        <div class="control-group" id="sendmail" style="display:none;">	
             <label class="control-label" for="sendmail_path"><?php echo $this->lang->line('settings_sendmail_path'); ?></label>
             <div class="controls">
                 <?php
@@ -579,6 +597,58 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
+        <br>
+        <div class="h2 sub-header"><?php echo $this->lang->line('settings_fbappid_header') ?></div>    
+        <div class="control-group">	
+            <label class="control-label" for="fbapp_id"><?php echo $this->lang->line('settings_fbapp_id'); ?></label>
+            <div class="controls">
+                <?php
+                $data = array(
+                    'name' => 'fbapp_id',
+                    'id' => 'fbapp_id',
+                    'class' => 'form-control',
+                    'maxlength' => '255',
+                    'value' => set_value('fbapp_id', $settings->fbapp_id, FALSE)
+                );
+                echo form_input($data);
+                ?>
+                <span class="remark"><em><?php echo $this->lang->line('settings_fbappid_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="facebook_page_id"><?php echo $this->lang->line('settings_facebook_page_id'); ?></label>
+            <div class="controls">
+                <?php
+                $data = array(
+                    'name' => 'facebook_page_id',
+                    'id' => 'facebook_page_id',
+                    'class' => 'form-control',
+                    'maxlength' => '255',
+                    'value' => set_value('facebook_page_id', $settings->facebook_page_id, FALSE)
+                );
+                echo form_input($data);
+                ?>
+                <span class="remark"><em><?php echo $this->lang->line('settings_facebook_page_id_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
+        <br>
+        <div class="h2 sub-header"><?php echo $this->lang->line('settings_other_api') ?></div>
+        <div class="control-group">	
+            <label class="control-label" for="adobe_cc_apikey"><?php echo $this->lang->line('filemanager_cc_apikey'); ?></label>
+            <div class="controls">
+                <?php
+                $data = array(
+                    'name' => 'adobe_cc_apikey',
+                    'id' => 'adobe_cc_apikey',
+                    'class' => 'form-control',
+                    'maxlength' => '255',
+                    'value' => set_value('adobe_cc_apikey', $settings->adobe_cc_apikey, FALSE)
+                );
+                echo form_input($data);
+                ?>
+                <span class="remark"><em><?php echo $this->lang->line('filemanager_cc_apikey_remark'); ?></em></span>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
     </div>
 </div>
 <div class="row">
@@ -596,3 +666,30 @@
     </div>
 </div>
 <?php echo form_close(); ?>
+<script type="text/javascript">
+window.onload = function() {
+    var mailconfig = document.getElementById('email_protocal').value;
+    mailConfig(mailconfig);
+};
+function mailConfig(val){
+    if(val == 'sendmail'){
+            document.getElementById('sendmail').style.display = 'block';
+            document.getElementById('smtp1').style.display = 'none';
+            document.getElementById('smtp2').style.display = 'none';
+            document.getElementById('smtp3').style.display = 'none';
+            document.getElementById('smtp4').style.display = 'none';
+    }else if(val == 'smtp'){
+            document.getElementById('smtp1').style.display = 'block';
+            document.getElementById('smtp2').style.display = 'block';
+            document.getElementById('smtp3').style.display = 'block';
+            document.getElementById('smtp4').style.display = 'block';
+            document.getElementById('sendmail').style.display = 'none';
+    }else{
+            document.getElementById('sendmail').style.display = 'none';
+            document.getElementById('smtp1').style.display = 'none';
+            document.getElementById('smtp2').style.display = 'none';
+            document.getElementById('smtp3').style.display = 'none';
+            document.getElementById('smtp4').style.display = 'none';
+    }
+}
+</script>
