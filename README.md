@@ -1,7 +1,3 @@
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/aXTh6QLYkHUhSraJAthg6gHM/cskaza/cszcms'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/aXTh6QLYkHUhSraJAthg6gHM/cskaza/cszcms.svg' />
-</a>
-
 Dependency Status
 ---------------------
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/566/badge)](https://bestpractices.coreinfrastructure.org/projects/566)
@@ -18,11 +14,12 @@ See more at https://www.cszcms.com
 
 Server Recommend Requirements:
 - Best on browsers FireFox, Chrome, Safari, IE9.
-- Apache Server.
-- PHP 5.4.0 or higher. (It should work on 5.3.7 as well, but we strongly advise you NOT to run such old versions of PHP, because of potential security and performance issues, as well as missing features)
+- Apache Server/IIS.
+- PHP 5.4.0 or higher
 - MySQL 5.0 or higher (Required for MySQLi Driver)
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled.
+- PHP GD library Enabled.
 - gZip Compression Enabled.
 
 Installation Instructions:
@@ -32,3 +29,4 @@ Installation Instructions:
 - In 'Base Url' please input http://localhost or http://localhost/yourcmsdir. Or real hosting is http://www.example.com or http://www.example.com/yourcmsdir
 - Click 'Install' button. And enjoy with your web applications.
 
+If you find the hosting for run your website with CSZ CMS. Please see at https://www.cskaza.com
