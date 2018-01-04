@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-edit"></span></i> <?php echo $this->lang->line('btn_edit').' '.$this->lang->line('gallery_new_header'); ?>
+                <i><span class="glyphicon glyphicon-pencil"></span></i> <?php echo $this->lang->line('carousel_edit'); ?>
             </li>
         </ol>
     </div>
@@ -11,68 +11,29 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('btn_edit').' '.$this->lang->line('gallery_new_header'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
-        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/editSave/'.$this->uri->segment(5)); ?>
+        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_edit'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/carousel/update/'.$this->uri->segment(4)); ?>
         <div class="control-group">	
-            <?php echo form_error('album_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
-            <label class="control-label" for="album_name"><?php echo $this->lang->line('gallery_albumname'); ?>*</label>
+            <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+            <label class="control-label" for="name"><?php echo $this->lang->line('carousel_name'); ?>*</label>
             <?php
             $data = array(
-                'name' => 'album_name',
-                'id' => 'album_name',
+                'name' => 'name',
+                'id' => 'name',
                 'required' => 'required',
                 'autofocus' => 'true',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('album_name', $album->album_name, FALSE)
+                'value' => set_value('name', $carousel->name, FALSE)
             );
             echo form_input($data);
             ?>			
-        </div> <!-- /control-group -->
-        <div class="control-group">	
-            <label class="control-label" for="keyword"><?php echo $this->lang->line('gallery_keyword'); ?></label>
-            <?php
-            $data = array(
-                'name' => 'keyword',
-                'id' => 'keyword',
-                'class' => 'form-control',
-                'maxlength' => '255',
-                'value' => set_value('keyword', $album->keyword, FALSE)
-            );
-            echo form_input($data);
-            ?>			
-        </div> <!-- /control-group -->
-        <div class="control-group">	
-            <?php echo form_error('short_desc', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
-            <label class="control-label" for="short_desc"><?php echo $this->lang->line('gallery_short_desc'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'short_desc',
-                'id' => 'short_desc',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'class' => 'form-control',
-                'value' => set_value('short_desc', $album->short_desc, FALSE)
-            );
-            echo form_input($data);
-            ?>
-        </div> <!-- /control-group -->
-        <div class="control-group">	
-            <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>
-            <?php
-            $att = 'id="lang_iso" class="form-control"';
-            $data = array();
-            foreach ($lang as $lg) {
-                $data[$lg->lang_iso] = $lg->lang_name;
-            }
-            echo form_dropdown('lang_iso', $data, $album->lang_iso, $att);
-            ?>	
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">
                 <?php
-                if($album->active){
+                if($carousel->active){
                     $checked = 'checked';
                 }else{
                     $checked = '';
@@ -97,25 +58,25 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
-        <!-- /widget-content --> 
+        <!-- /widget-content -->
     </div>
 </div>
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('gallery_picture') ?></div>
+    <div class="col-md-12">
+        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_picture') ?></div>
         <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="h4 sub-header"><?php echo  $this->lang->line('gallery_youtube_head') ?></div>
-                <?php echo  form_open($this->Csz_model->base_link(). '/admin/plugin/gallery/addYoutube/'.$this->uri->segment(5)) ?>
-                <input type="hidden" name="gallery_type" value="youtubevideos">
+            <div class="col-md-4">
+                <div class="h4 sub-header"><?php echo  $this->lang->line('carousel_youtube_head') ?></div>
+                <?php echo form_open($this->Csz_model->base_link(). '/admin/carousel/addYoutube/'.$this->uri->segment(4)) ?>
+                <input type="hidden" name="carousel_type" value="youtubevideos">
                 <div class="form-group has-feedback">
                     <div class="input-group">
-                        <div class="input-group-addon"><b><?php echo  $this->lang->line('gallery_youtube_url') ?></b></div>
-                        <input style="z-index: 1;" type="text" class="form-control" id="youtube_url" name="youtube_url" required>
+                        <div class="input-group-addon"><b><?php echo  $this->lang->line('carousel_youtube_url') ?></b></div>
+                        <input style="z-index: 1;" type="text" class="form-control" id="youtube_url" name="youtube_url" maxlength="255" required>
                     </div>
                 </div>
                 <?php
@@ -127,14 +88,35 @@
                 );
                 echo form_submit($data);
                 ?> 
-                <?php echo form_close(); ?>               
+                <?php echo form_close(); ?>
             </div>
-            <div class="col-lg-6 col-md-6">  
+            <div class="col-md-4">
+                <div class="h4 sub-header"><?php echo  $this->lang->line('carousel_url_head') ?></div>
+                <?php echo form_open($this->Csz_model->base_link(). '/admin/carousel/addUrl/'.$this->uri->segment(4)) ?>
+                <input type="hidden" name="carousel_type" value="multiimages">
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <div class="input-group-addon"><b><?php echo  $this->lang->line('carousel_photo_url') ?></b></div>
+                        <input style="z-index: 1;" type="text" class="form-control" id="photo_url" name="photo_url" maxlength="512" required>
+                    </div>
+                </div>
+                <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-primary',
+                    'value' => $this->lang->line('btn_add'),
+                );
+                echo form_submit($data);
+                ?> 
+                <?php echo form_close(); ?>
+            </div>
+            <div class="col-md-4">  
                 <div class="h4 sub-header"><?php echo  $this->lang->line('uploadfile_uploadtools') ?></div>
-                <?php echo  form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/htmlUpload/'.$this->uri->segment(5)) ?>
-                <input type="hidden" name="gallery_type" value="multiimages">
+                <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/carousel/filesUpload/'.$this->uri->segment(4)) ?>
+                <input type="hidden" name="carousel_type" value="multiimages">
                 <div class="row form-control-static">
-                    <div class="col-lg-12 col-md-12">
+                    <div class="col-md-12">
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
                             <span><?php echo  $this->lang->line('uploadfile_add_file') ?></span>
@@ -151,14 +133,14 @@
                         <pre id="filelist" style="display:none;"></pre>
                     </div>
                 </div>
-                <?php echo form_close(); ?>       
+                <?php echo form_close(); ?>
+                <br>
+                <blockquote class="remark">
+                    <em><?php echo  $this->lang->line('carousel_fileallow') ?></em>
+                </blockquote>
             </div>
         </div>
-        <br>
-        <blockquote class="remark">
-            <em><?php echo  $this->lang->line('gallery_fileallow') ?></em>
-        </blockquote>
-        <?php echo  form_open($this->Csz_model->base_link(). '/admin/plugin/gallery/uploadIndexSave'); ?>
+        <?php echo  form_open($this->Csz_model->base_link(). '/admin/carousel/filesSave'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
@@ -181,14 +163,16 @@
                             <tr class="ui-state-default">
                                 <td class="text-center" style="vertical-align:middle;"><i class="glyphicon glyphicon-resize-vertical"></i></td>
                                 <td class="text-center" style="vertical-align:middle;">
-                                    <input type="hidden" name="gallery_picture_id[]" value="<?php echo $file["gallery_picture_id"]?>">
-                                    <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?php echo $file["gallery_picture_id"] ?>">
+                                    <input type="hidden" name="carousel_picture_id[]" value="<?php echo $file["carousel_picture_id"]?>">
+                                    <input type="checkbox" name="filedel[]" id="filedel" class="selall-chkbox" value="<?php echo $file["carousel_picture_id"] ?>">
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
                                     <?php 
                                     $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
-                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' && $file["gallery_type"] == 'multiimages'){ ?>
-                                    <img src="<?php echo base_url() .'photo/plugin/gallery/'.$file["file_upload"]?>" width="100">
+                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' && $file["carousel_type"] == 'multiimages' && $file["file_upload"] && $file["file_upload"] != NULL){ ?>
+                                    <img src="<?php echo base_url() .'photo/carousel/'.$file["file_upload"]?>" width="100" class="img-responsive img-thumbnail">
+                                    <?php }else if($file["carousel_type"] == 'multiimages' && $file["photo_url"] && $file["photo_url"] != NULL){ ?>
+                                    <img src="<?php echo $file["photo_url"] ?>" width="100" class="img-responsive img-thumbnail">
                                     <?php }else{ ?>
                                         <i class="glyphicon glyphicon-facetime-video"></i> YOUTUBE
                                     <?php } ?>
@@ -196,21 +180,23 @@
                                 <td style="vertical-align:middle;">
                                     <span class="h5"><b>
                                         <?php 
-                                        if($file["gallery_type"] == 'multiimages'){
+                                        if($file["carousel_type"] == 'multiimages' && $file["file_upload"] && $file["file_upload"] != NULL){
                                             echo $file["file_upload"];
-                                        }else if($file["gallery_type"] == 'youtubevideos'){ ?>
+                                        }else if($file["carousel_type"] == 'multiimages' && $file["photo_url"] && $file["photo_url"] != NULL){ ?>
+                                            <a href="<?php echo $file["photo_url"]; ?>" target="_blank"><?php echo $file["photo_url"]; ?></a>
+                                        <?php }else if($file["carousel_type"] == 'youtubevideos'){ ?>
                                             <a href="<?php echo $file["youtube_url"]; ?>" target="_blank"><?php echo $file["youtube_url"]; ?></a>
                                         <?php } ?>
                                     </b></span><?php if($file['arrange'] == 1){ ?> <i class="glyphicon glyphicon-book"></i><?php } ?>
                                     <div class="form-group has-feedback">
                                         <div class="input-group">
-                                            <div class="input-group-addon"><b><?php echo  $this->lang->line('gallery_caption') ?></b></div>
-                                            <input style="z-index: 1;" type="text" class="form-control" id="caption" name="caption[<?php echo $file["gallery_picture_id"] ?>]" value="<?php echo $file["caption"] ?>">
+                                            <div class="input-group-addon"><b><?php echo  $this->lang->line('carousel_caption') ?></b></div>
+                                            <input style="z-index: 1;" type="text" class="form-control" id="caption" name="caption[<?php echo $file["carousel_picture_id"] ?>]" value="<?php echo $file["caption"] ?>">
                                         </div>
                                     </div>
                                 </td>
                                 <td class="text-center" style="vertical-align:middle;">
-                                    <span class="h5"><b><?php echo  $file["timestamp_create"] ?></b></span>
+                                    <span class="h5"><b><?php echo $file["timestamp_create"] ?></b></span>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -219,11 +205,7 @@
             </table>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12">                
-                <span class="warning">
-                    <i class="glyphicon glyphicon-book"></i> <?php echo  $this->lang->line('gallery_list_remark') ?><br>
-                </span>
-                <br><br>
+            <div class="col-lg-12 col-md-12">
                 <?php
                 $data = array(
                     'name' => 'submit',
@@ -234,7 +216,7 @@
                 );
                 echo form_submit($data);
                 ?>
-                <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+                <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
             </div>
         </div>
         <?php echo  form_close(); ?>
@@ -271,7 +253,7 @@ fl.onchange = function(e){
             case 'gif':
             break;
         default:
-            alert('<?php echo  $this->lang->line('gallery_fileallow') ?>');
+            alert('<?php echo  $this->lang->line('carousel_fileallow') ?>');
             this.value='';
             var list = document.getElementById('filelist');
             list.innerHTML = '';

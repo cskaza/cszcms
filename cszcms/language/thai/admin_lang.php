@@ -255,6 +255,8 @@ $lang['settings_facebook_page_id']	= "Facebook Pages ID";
 $lang['settings_facebook_page_id_remark']	= "คุณสามารถรับ Facebook Pages ID ได้ที่ส่วน 'Page ID' ในหน้า 'About' จาก Facebook Pages ของคุณ";
 $lang['settings_assets_static_domain']	= "แหล่งข้อมูลแบบคงที่จากโดเมน cdn อื่นสำหรับ asset";
 $lang['settings_assets_static_domain_remark']	= "(ตัวอย่าง: https://cdn.cszcms.com) โดเมนแบบคงที่นี้ต้องใช้เส้นทางเดียวกับโดเมนต้นทาง";
+$lang['settings_fb_messenger']		= "เปิดใช้งาน Facebook Messenger";
+$lang['settings_fb_messenger_remark']	= 'วิธีการเพิ่มโดเมนของเว็บไซต์ของคุณไว้ในหน้า Facebook ของคุณ? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>คลิกที่นี่</b></a>';
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";
@@ -468,7 +470,7 @@ $lang['widget_widget_open']                 = "HTML ส่วนเปิด";
 $lang['widget_widget_content']                 = "HTML ส่วนเนื้อหา";
 $lang['widget_widget_seemore']                 = "HTML ปุ่มดูเพิ่มเติม";
 $lang['widget_widget_close']                 = "HTML ส่วนปิด";
-$lang['widget_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่ม widget ปลั๊กอินเข้าไปยังหน้าเนื้อหา. กรุณาดูที่ชื่อ widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+    $lang['widget_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่ม widget ปลั๊กอินเข้าไปยังหน้าเนื้อหา. กรุณาดูที่ไอดี widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_ID</b>}[?]";
 
 // Facebook Comments
 $lang['fb_comment_active']               = "เปิดใช้งาน Facebook Comments";
@@ -511,6 +513,7 @@ $lang['pm_new_msg']                    = "เขียนข้อความ�
 // Banner Mgt
 $lang['banner_header']                = "การจัดการแบนเนอร์";
 $lang['banner_new']             = "แบนเนอร์ใหม่";
+$lang['banner_edit']             = "แก้ไขแบนเนอร์";
 $lang['banner_name']                 = "ชื่อแบนเนอร์";
 $lang['banner_img']                 = "รูปแบนเนอร์";
 $lang['banner_width']                 = "กว้าง";
@@ -553,3 +556,18 @@ $lang['serverstatus_disk_use']                = "การใช้พื้น�
 $lang['serverstatus_os']                = "OS";
 $lang['serverstatus_php_version']                = "เวอร์ชั่น PHP";
 $lang['serverstatus_php_disabled']                = "ฟังก์ชัน PHP ที่ปิดการใช้งาน";
+
+// Carousel Widget
+$lang['carousel_header']                = "Widget ของ Carousel";
+$lang['carousel_new']             = "Carousel ใหม่";
+$lang['carousel_edit']             = "แก้ไข Carousel";
+$lang['carousel_name']                 = "ชื่อ Carousel";
+$lang['carousel_picture']                = "อัพโหลดรูปภาพ";
+$lang['carousel_fileallow']              = "สำหรับไฟล์ (jpg, jpeg, png, gif) เท่านั้นจะได้รับอนุญาต. ขนาดของภาพไม่เกิน 1900px กับความกว้างหรือความสูง.";
+$lang['carousel_caption']                = "คำอธิบายภาพ";
+$lang['carousel_indexremark']		= "<i>กรุณาใช้ Tag นี้ในการเพิ่ม Carousel เข้าไปยังหน้าเนื้อหา. กรุณาดูที่ไอดี Carousel<br><b>Tag:</b></i> [?]{=carousel:<b>carousel_id</b>}[?]";
+$lang['carousel_addremark']                = "อัปโหลดภาพ โปรดแก้ไข carousel นี้.";
+$lang['carousel_youtube_head']            = "เพิ่ม Youtube ใหม่";
+$lang['carousel_youtube_url']            = "Youtube URL";
+$lang['carousel_url_head']            = "เพิ่ม URL รูปภาพใหม่";
+$lang['carousel_photo_url']            = "URL รูปภาพ";

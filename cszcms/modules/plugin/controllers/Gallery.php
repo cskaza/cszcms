@@ -57,9 +57,9 @@ class Gallery extends CI_Controller {
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
 

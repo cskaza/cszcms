@@ -153,7 +153,8 @@ class Cszmodel{
      * @return	string
      */
     public function pwdEncypt($password) {
-        return hash('sha512', sha1(md5($password)));
+        $options = array('cost' => 12);
+        return password_hash($password, PASSWORD_BCRYPT, $options);
     }
 
 }

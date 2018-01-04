@@ -255,6 +255,8 @@ $lang['settings_facebook_page_id']	= "Facebook Pages ID";
 $lang['settings_facebook_page_id_remark']	= "You can get Facebook Pages ID at 'Page ID' section in 'About' page from your facebook pages";
 $lang['settings_assets_static_domain']	= "Static resources from a different cdn domain for assets";
 $lang['settings_assets_static_domain_remark']	= "(Example: https://cdn.cszcms.com) This static domain required to same route with origin domain only";
+$lang['settings_fb_messenger']		= "Facebook Messenger Active";
+$lang['settings_fb_messenger_remark']	= 'How to whitelist the domain of your website on your Facebook pages? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>Click here</b></a>';
 
 //Navigation Page
 $lang['navpage_header']                 = "Menu Principal";
@@ -468,7 +470,7 @@ $lang['widget_widget_open']                 = "Abrir HTML";
 $lang['widget_widget_content']                 = "Contenido HTML";
 $lang['widget_widget_seemore']                 = "HTML See more Button";
 $lang['widget_widget_close']                 = "Cerrar HTML";
-$lang['widget_indexremark']		= "<i>Utilice esta etiqueta para insertar el widget de complemento en el contenido. Vea el nombre del widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_name</b>}[?]";
+$lang['widget_indexremark']		= "<i>Utilice esta etiqueta para insertar el widget de complemento en el contenido. Vea el ID del widget<br><b>Tag:</b></i> [?]{=widget:<b>widget_ID</b>}[?]";
 
 // Facebook Comments
 $lang['fb_comment_active']               = "Comentarios de Facebook";
@@ -511,6 +513,7 @@ $lang['pm_new_msg']                    = "Nuevo mensaje";
 // Banner Mgt
 $lang['banner_header']                = "Administrador de Banner";
 $lang['banner_new']             = "Nueva Banner";
+$lang['banner_edit']             = "Editar Banner";
 $lang['banner_name']                 = "Nombre de Banner";
 $lang['banner_img']                 = "Banner Image";
 $lang['banner_width']                 = "Ancho";
@@ -553,3 +556,18 @@ $lang['serverstatus_disk_use']                = "Disk Space Usage";
 $lang['serverstatus_os']                = "OS";
 $lang['serverstatus_php_version']                = "PHP Version";
 $lang['serverstatus_php_disabled']                = "PHP Function Disabled";
+
+// Carousel Widget
+$lang['carousel_header']                = "Carousel Widget";
+$lang['carousel_new']             = "Nueva Carousel";
+$lang['carousel_edit']             = "Editar Carousel";
+$lang['carousel_name']                 = "Carousel Name";
+$lang['carousel_picture']                = "Pictures Upload";
+$lang['carousel_fileallow']              = "Only files (jpg, jpeg, png, gif) are allowed. Image size is not over 1900px on width or height.";
+$lang['carousel_caption']                = "Caption";
+$lang['carousel_indexremark']		= "<i>Please use this tag for insert the carousel into the content. Please see Carousel ID#<br><b>Tag:</b></i> [?]{=carousel:<b>carousel_id</b>}[?]";
+$lang['carousel_addremark']                = "Upload the picture. Please edit this carousel.";
+$lang['carousel_youtube_head']            = "Add New Youtube";
+$lang['carousel_youtube_url']            = "Youtube URL";
+$lang['carousel_url_head']            = "Add New Photo URL";
+$lang['carousel_photo_url']            = "Photo URL";

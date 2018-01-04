@@ -77,7 +77,7 @@ class Forms extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('form_name', 'Forms Name', 'trim|required');
+        $this->form_validation->set_rules('form_name', 'Forms Name', 'trim|required|is_unique[form_main.form_name]');
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
             $this->addForms();
@@ -123,7 +123,7 @@ class Forms extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('form_name', 'Forms Name', 'trim|required');
+        $this->form_validation->set_rules('form_name', 'Forms Name', 'trim|required|is_unique[form_main.form_name.form_main_id.'.$this->uri->segment(4).']');
 
         if ($this->form_validation->run() == FALSE) {
             //Validation failed

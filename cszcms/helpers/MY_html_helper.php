@@ -46,7 +46,7 @@ if ( ! function_exists('link_tag'))
 				{
 					if ($index_page === TRUE)
 					{
-						$link .= 'href="'.$CI->config->site_url($v).'" ';
+						$link .= 'href="'.rtrim(BASE_URL, '/').'/'.$CI->config->item('index_page').'/'.$v.'" ';
 					}
 					else
 					{
@@ -67,7 +67,7 @@ if ( ! function_exists('link_tag'))
 			}
 			elseif ($index_page === TRUE)
 			{
-				$link .= 'href="'.$CI->config->site_url($href).'" ';
+				$link .= 'href="'.rtrim(BASE_URL, '/').'/'.$CI->config->item('index_page').'/'.$href.'" ';
 			}
 			else
 			{

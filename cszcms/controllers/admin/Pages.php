@@ -88,7 +88,7 @@ class Pages extends CI_Controller {
         //Load the form validation library       
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('page_name', 'Pages Name', 'required');
+        $this->form_validation->set_rules('page_name', 'Pages Name', 'required|is_unique[pages.page_name]');
         $this->form_validation->set_rules('page_title', 'Pages Title', 'required');
         $this->form_validation->set_rules('page_keywords', 'Pages Keywords', 'required');
         $this->form_validation->set_rules('page_desc', 'Pages Description', 'required');
@@ -135,7 +135,7 @@ class Pages extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('page_name', 'Pages Name', 'required');
+        $this->form_validation->set_rules('page_name', 'Pages Name', 'required|is_unique[pages.page_name.pages_id.'.$this->uri->segment(4).']');
         $this->form_validation->set_rules('page_title', 'Pages Title', 'required');
         $this->form_validation->set_rules('page_keywords', 'Pages Keywords', 'required');
         $this->form_validation->set_rules('page_desc', 'Pages Description', 'required');

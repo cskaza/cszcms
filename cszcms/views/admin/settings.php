@@ -631,6 +631,24 @@
                 <span class="remark"><em><?php echo $this->lang->line('settings_facebook_page_id_remark'); ?></em></span>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
+        <div class="control-group">										
+            <label class="form-control-static" for="fb_messenger">
+                <?php
+                if($settings->fb_messenger){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'fb_messenger',
+                    'id' => 'fb_messenger',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_fb_messenger'); ?></label>
+            <br><span class="remark"><em><?php echo $this->lang->line('settings_fb_messenger_remark'); ?></em></span>
+        </div> <!-- /control-group -->
         <br>
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_other_api') ?></div>
         <div class="control-group">	

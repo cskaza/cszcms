@@ -28,6 +28,7 @@ class Pm extends CI_Controller {
         $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
+        admin_helper::is_allowchk('pm');
     }
 
     public function _init() {
@@ -103,6 +104,9 @@ class Pm extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
+        if($this->uri->segment(4)){
+            $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(4)));
+        }
         //Load the view
         $this->template->loadSub('admin/pm_add');
     }

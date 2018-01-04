@@ -22,7 +22,7 @@ class MY_Config Extends MX_Config {
                 if($static && $cszconfig->assets_static_active && $cszconfig->assets_static_domain){
                     $base_url = rtrim($cszconfig->assets_static_domain, '/').'/';
                 }else{
-                    $base_url = $this->slash_item('base_url');
+                    $base_url = (HTACCESS_FILE === FALSE) ? $this->slash_item('base_url').'index.php/' : $this->slash_item('base_url');
                 }
                 if($protocol == NULL){
                     $protocol = parse_url($base_url, PHP_URL_SCHEME);
@@ -42,7 +42,7 @@ class MY_Config Extends MX_Config {
 
 		if (empty($uri))
 		{
-			return $base_url.$this->item('index_page');
+			return $base_url;
 		}
 
 		$uri = $this->_uri_string($uri);
@@ -63,14 +63,14 @@ class MY_Config Extends MX_Config {
 				}
 			}
 
-			return $base_url.$this->slash_item('index_page').$uri;
+			return $base_url.$uri;
 		}
 		elseif (strpos($uri, '?') === FALSE)
 		{
 			$uri = '?'.$uri;
 		}
 
-		return $base_url.$this->item('index_page').$uri;
+		return $base_url.$uri;
 	}
 
 	// -------------------------------------------------------------

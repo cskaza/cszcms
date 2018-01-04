@@ -28,9 +28,9 @@ class Headfoot_html extends CI_Model{
         $this->load->model('Csz_admin_model');
         $this->lang->load('admin', $this->Csz_admin_model->getLang());
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
     
@@ -62,9 +62,10 @@ class Headfoot_html extends CI_Model{
      * @param	string	$cur_page    current page
      * @param	string	$active_type    for active 'class' or 'id'. Default is 'id'.
      * @param	string	$active_tag     for active 'a' or 'li'. Default is 'a'.
+     * @param	string	$more_id_class     for more $active_type in $active_tag.
      * @return  string
      */
-    public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a'){
+    public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a', $more_id_class = ''){
         $config = $this->Csz_model->load_config();
         $menu_list = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
@@ -103,14 +104,19 @@ class Headfoot_html extends CI_Model{
                     $otherlink_host = @parse_url($rs->other_link, PHP_URL_HOST);
                     $own_host = @parse_url(config_item('base_url'), PHP_URL_HOST);
                     $otherlink_array = explode('/',$rs->other_link);
-                    if($page_url_rs == $cur_page){
-                        $active = ' '.$active_type.'="active"';
-                    }else if($rs->plugin_menu && $rs->plugin_menu == $this->uri->segment(2)){
-                        $active = ' '.$active_type.'="active"';
-                    }else if(($otherlink_host && $otherlink_host === $own_host) && end($otherlink_array) === $this->Csz_model->getCurPages()){
-                        $active = ' '.$active_type.'="active"';
+                    if($more_id_class){
+                        $more_id_class_new = ' '.$more_id_class;
                     }else{
-                        $active = "";
+                        $more_id_class_new = '';
+                    }
+                    if($page_url_rs == $cur_page){
+                        $active = ' '.$active_type.'="active'.$more_id_class_new.'"';
+                    }else if($rs->plugin_menu && $rs->plugin_menu == $this->uri->segment(2)){
+                        $active = ' '.$active_type.'="active'.$more_id_class_new.'"';
+                    }else if(($otherlink_host && $otherlink_host === $own_host) && end($otherlink_array) === $this->Csz_model->getCurPages()){
+                        $active = ' '.$active_type.'="active'.$more_id_class_new.'"';
+                    }else{
+                        $active = ' '.$active_type.'="'.$more_id_class.'"';
                     }
                     if($rs->drop_menu){
                         $menu_list.= '<li class="dropdown">
@@ -141,15 +147,15 @@ class Headfoot_html extends CI_Model{
                                 }else{
                                     $page_link_sub = '#';
                                 }
-                                $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.$rs_sub->menu_name.'">'.$rs_sub->menu_name.'</a></li>';
+                                $menu_list.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.strip_tags($rs_sub->menu_name).'">'.$rs_sub->menu_name.'</a></li>';
                             }
                         }
                         $menu_list.= '</ul></li>';
                     }else{
                         if($active_tag == 'a'){
-                            $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.' title="'.$rs->menu_name.'">'.$rs->menu_name.'</a></li>';
+                            $menu_list.= '<li><a'.$active.' href="'.$page_link.'"'.$target.' title="'.strip_tags($rs->menu_name).'">'.$rs->menu_name.'</a></li>';
                         }elseif($active_tag == 'li'){
-                            $menu_list.= '<li'.$active.'><a href="'.$page_link.'"'.$target.' title="'.$rs->menu_name.'">'.$rs->menu_name.'</a></li>';
+                            $menu_list.= '<li'.$active.'><a href="'.$page_link.'"'.$target.' title="'.strip_tags($rs->menu_name).'">'.$rs->menu_name.'</a></li>';
                         }
                     }
                 }
@@ -248,12 +254,12 @@ class Headfoot_html extends CI_Model{
                                 }else{
                                     $page_link_sub = '#';
                                 }
-                                $menu_list1.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.$rs_sub->menu_name.'">'.$rs_sub->menu_name.'</a></li>';
+                                $menu_list1.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.strip_tags($rs_sub->menu_name).'">'.$rs_sub->menu_name.'</a></li>';
                             }
                         }
                         $menu_list1.= '</ul></li>';
                     }else{
-                        $menu_list1.= '<li><a href="'.$page_link.'"'.$target.' title="'.$rs->menu_name.'">'.$rs->menu_name.'</a></li>';
+                        $menu_list1.= '<li><a href="'.$page_link.'"'.$target.' title="'.strip_tags($rs->menu_name).'">'.$rs->menu_name.'</a></li>';
                     }
                 }
             }
@@ -378,33 +384,36 @@ class Headfoot_html extends CI_Model{
         $config = $this->Csz_model->load_config();
         $html = $this->admin_leftli($cur_page, 'admin', 'admin', $this->lang->line('nav_dash'), 'fa fa-dashboard');
         if($this->Csz_auth_model->is_group_allowed('analytics', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'analytics', 'admin/analytics', $this->lang->line('nav_analytics'), 'fa fa-google');
-        /* Start Private Message Menu */
-        if($cur_page == 'pm' || $cur_page == 'sendpm'){
-            $pm_display = "active ";
-        }else{
-            $pm_display = "";
+        if($this->Csz_auth_model->is_group_allowed('pm', 'backend') !== FALSE){
+            /* Start Private Message Menu */
+            if($cur_page == 'pm' || $cur_page == 'sendpm'){
+                $pm_display = "active ";
+            }else{
+                $pm_display = "";
+            }
+            $html.= '<li class="'.$pm_display.'treeview"><a href="#"><span>'.$this->lang->line('pm_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
+            $html.= $this->admin_leftli($cur_page, 'pm', 'admin/pm', $this->lang->line('pm_inbox'), 'glyphicon glyphicon-envelope');
+            $html.= $this->admin_leftli($cur_page, 'sendpm', 'admin/pm/sendpm', $this->lang->line('pm_send'), 'glyphicon glyphicon-send');
+            $html.= '</ul></li>';
+            /* End Private Message Menu */
         }
-        $html.= '<li class="'.$pm_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('pm_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
-        $html.= '<ul class="treeview-menu">';
-        $html.= $this->admin_leftli($cur_page, 'pm', 'admin/pm', $this->lang->line('pm_inbox'), 'glyphicon glyphicon-envelope');
-        $html.= $this->admin_leftli($cur_page, 'sendpm', 'admin/pm/sendpm', $this->lang->line('pm_send'), 'glyphicon glyphicon-send');
-        $html.= '</ul></li>';
-        /* End Private Message Menu */      
         /* Start Content Menu */
-        if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'banner' || $cur_page == 'filemanager'){
+        if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'banner' || $cur_page == 'filemanager' || $cur_page == 'carousel'){
             $content_display = "active ";
         }else{
             $content_display = "";
         }
-        $html.= '<li class="'.$content_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+        $html.= '<li class="'.$content_display.'treeview"><a href="#"><span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
         $html.= '<ul class="treeview-menu">';
         if($this->Csz_auth_model->is_group_allowed('forms builder', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'forms', 'admin/forms', $this->lang->line('forms_header'), 'glyphicon glyphicon-modal-window');
         if($this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'widget', 'admin/widget', $this->lang->line('widget_header'), 'glyphicon glyphicon-gift');               
         if($this->Csz_auth_model->is_group_allowed('linkstats', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'linkstats', 'admin/linkstats', $this->lang->line('linkstats_header'), 'glyphicon glyphicon-stats');
-        if($this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'banner', 'admin/banner', $this->lang->line('banner_header'), 'glyphicon glyphicon-stats');
-        if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-file');
+        if($this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'banner', 'admin/banner', $this->lang->line('banner_header'), 'glyphicon glyphicon-usd');
+        if($this->Csz_auth_model->is_group_allowed('carousel', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'carousel', 'admin/carousel', $this->lang->line('carousel_header'), 'glyphicon glyphicon-picture');
+        if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-blackboard');
         if($this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'navigation', 'admin/navigation', $this->lang->line('nav_nav_header'), 'glyphicon glyphicon-object-align-top');
-        if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-picture');
+        if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-file');
         if($this->Csz_auth_model->is_group_allowed('file manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'filemanager', 'admin/filemanager', $this->lang->line('filemanager_header'), 'glyphicon glyphicon-cloud');
         $html.= '</ul></li>';
         /* End Content Menu */
@@ -414,9 +423,9 @@ class Headfoot_html extends CI_Model{
         }else{
             $gel_settings_display = "";
         }
-        $html.= '<li class="'.$gel_settings_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('nav_gel_settings').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+        $html.= '<li class="'.$gel_settings_display.'treeview"><a href="#"><span>'.$this->lang->line('nav_gel_settings').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
         $html.= '<ul class="treeview-menu">';
-        if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'lang', 'admin/lang', $this->lang->line('lang_header'), 'glyphicon glyphicon-globe');
+        if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'lang', 'admin/lang', $this->lang->line('lang_header'), 'glyphicon glyphicon-flag');
         if($this->Csz_auth_model->is_group_allowed('general label', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'genlabel', 'admin/genlabel', $this->lang->line('genlabel_header'), 'glyphicon glyphicon-globe');
         if($this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'social', 'admin/social', $this->lang->line('social_header'), 'glyphicon glyphicon-share');       
         if($this->Csz_auth_model->is_group_allowed('plugin manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'plugin', 'admin/plugin', $this->lang->line('pluginmgr_header'), 'glyphicon glyphicon-gift');
@@ -425,7 +434,7 @@ class Headfoot_html extends CI_Model{
         if($this->Csz_auth_model->is_group_allowed('user groups', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'groups', 'admin/groups', $this->lang->line('user_group_txt'), 'fa fa-users');
         if($this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'settings', 'admin/settings', $this->lang->line('settings_header'), 'glyphicon glyphicon-cog');
         if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'upgrade', 'admin/upgrade', $this->lang->line('maintenance_header'), 'glyphicon glyphicon-compressed');
-        $html.= $this->admin_leftli($cur_page, 'export', 'admin/export', $this->lang->line('export_import_csv_btn'), 'glyphicon glyphicon-export');
+        if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'export', 'admin/export', $this->lang->line('export_import_csv_btn'), 'glyphicon glyphicon-export');
         $html.= '</ul></li>';
         /* End General Menu */
         /* Start Plugin Menu */
@@ -437,7 +446,7 @@ class Headfoot_html extends CI_Model{
                 $plugin_menu.= $this->admin_leftli($this->uri->segment(3), $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), 'admin/plugin/' . $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_name'), 'glyphicon glyphicon-gift');
             }
             (in_array($this->uri->segment(3), $plugin_url)) ? $plugin_display = "active " : $plugin_display = "";
-            $html.= '<li class="'.$plugin_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('pluginmgr_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<li class="'.$plugin_display.'treeview"><a href="#"><span>'.$this->lang->line('pluginmgr_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
             $html.= '<ul class="treeview-menu">';
             $html.= $plugin_menu;
             $html.= '</ul></li>';
@@ -450,7 +459,7 @@ class Headfoot_html extends CI_Model{
             }else{
                 $bf_login_display = "";
             }
-            $html.= '<li class="'.$bf_login_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-hamburger"></i><span>'.$this->lang->line('bf_protection_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<li class="'.$bf_login_display.'treeview"><a href="#"><span>'.$this->lang->line('bf_protection_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
             $html.= '<ul class="treeview-menu">';
             if($this->Csz_auth_model->is_group_allowed('email logs', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'emaillogs', 'admin/emaillogs', $this->lang->line('emaillogs_header'), 'glyphicon glyphicon-envelope');
             if($this->Csz_auth_model->is_group_allowed('login logs', 'backend') !== FALSE){

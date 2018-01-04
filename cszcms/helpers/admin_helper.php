@@ -89,5 +89,22 @@ class Admin_helper{
         if($chkactive === FALSE){
             redirect($CI->Csz_model->base_link().'/admin', 'refresh');
         }
-    }  
+    }
+    
+    /**
+    * chk_reset_password
+    *
+    * Function for check the password change
+    *
+    */
+    static function chk_reset_password(){
+        if($_SESSION['admin_logged_in'] && $_SESSION['session_id'] && $_SESSION['user_admin_id']){
+            $CI =& get_instance();
+            $user = $CI->Csz_admin_model->getUser($_SESSION['user_admin_id'], 'admin');
+            if($user !== FALSE && $user->pass_change != 1){
+                unset($user);
+                redirect($CI->Csz_model->base_link().'/admin/users/edit/'.$_SESSION['user_admin_id'], 'refresh');
+            }
+        }
+    }
 } 

@@ -26,7 +26,11 @@ tinymce.PluginManager.add('form_insert', function (editor) {
 
     function displayHtml(type, name) {
         var newTable;
-        newTable = '[?]{='+type+':'+name+'}[?]';
+        if(type == 'carousel header'){
+            newTable = '<header>[?]{=carousel:'+name+'}[?]</header>';
+        }else{
+            newTable = '[?]{='+type+':'+name+'}[?]';
+        }
         return newTable;
     }
     function showPopup() {
@@ -34,10 +38,12 @@ tinymce.PluginManager.add('form_insert', function (editor) {
         var selType = [
             {text: 'Forms', value: 'forms'},
             {text: 'Widget', value: 'widget'},
-            {text: 'Banner', value: 'banner'}
+            {text: 'Banner', value: 'banner'},
+            {text: 'Carousel', value: 'carousel'},
+            {text: 'Carousel Header', value: 'carousel header'}
         ];
         editor.windowManager.open({
-            title: 'CSZ-CMS Forms/Widget/Banner',
+            title: 'CSZ-CMS Forms/Widget/Banner/Carousel',
             body: [
                 {
                     name: 'type',
@@ -59,7 +65,7 @@ tinymce.PluginManager.add('form_insert', function (editor) {
     editor.addButton('form_insert', {
         /*text: 'PN',*/
         icon: 'glyphicons guicon guicon-form',
-        tooltip: 'Insert Forms/Widget/Banner',
+        tooltip: 'Insert Forms/Widget/Banner/Carousel',
         onclick: function () {
             showPopup();
         }

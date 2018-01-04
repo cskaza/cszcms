@@ -87,7 +87,7 @@
                         <?php echo  form_close() ?>
                     <?php }if($chksts){ ?>
                         <div class="text-center">
-                            <p class="success"><?php echo $this->Csz_model->getLabelLang('member_forget_chkmail'); ?></p>
+                            <p class="success"><?php echo $this->Csz_model->getLabelLang('member_forget_chkmail').' '.$this->Csz_model->getLabelLang('email_confirm_message'); ?></p>
                             <br>
                             <a class="btn btn-lg btn-primary" name="reset_back" id="reset_back" href="<?php echo $this->Csz_model->base_link(). '/member'?>"><?php echo $this->Csz_model->getLabelLang('btn_back'); ?></a>
                         </div>

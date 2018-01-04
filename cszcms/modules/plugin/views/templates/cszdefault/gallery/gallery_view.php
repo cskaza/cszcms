@@ -22,7 +22,7 @@
                     <?php }else if($value['gallery_type'] == 'youtubevideos'){ 
                         $youtube_script_replace = array("http://youtu.be/", "http://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/watch?v=", "http://www.youtube.com/embed/", "https://www.youtube.com/embed/");
                         $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']); ?>
-                        <a href="http://www.youtube.com/embed/<?php echo $youtube_value?>" data-toggle="lightbox" data-gallery="youtubevideos"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
+                        <a href="https://www.youtube.com/embed/<?php echo $youtube_value?>" data-toggle="lightbox" data-gallery="youtubevideos"<?php echo ($value['caption'])?' data-title="'.$value['caption'].'"' : '' ?>>
                             <span style="position:absolute;margin-top:30px;margin-left:15px;z-index:10;font-size:44px;" class="fa fa-youtube-play"></span>
                             <img class="lazy img-responsive img-thumbnail" data-src="<?php echo ($value['youtube_url']) ? '//i1.ytimg.com/vi/'.$youtube_value.'/mqdefault.jpg' : base_url() .'photo/no_image.png' ?>" alt="<?php echo $value['caption'] ?>">
                         </a>

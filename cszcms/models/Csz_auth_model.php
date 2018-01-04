@@ -393,10 +393,12 @@ class Csz_auth_model extends CI_Model {
     /**
      * Send multiple Private Messages
      * Send multiple private messages to another users
+     * 
+     * @param array $receiver_ids Array of User ids of private message receiver 
+     * @param string $title Title/subject
+     * @param string $message Message
      * @param int $sender_id User id of private message sender
-     * @param array $receiver_id Array of User ids of private message receiver 
-     * @param string $title Message title/subject
-     * @param string $message Message body/content
+     * 
      * @return array/bool Array with User ID's as key and TRUE or a specific error message OR FALSE if sender doesn't exist
      */
     public function send_pm($receiver_ids, $title, $message, $sender_id = '') {
@@ -415,6 +417,13 @@ class Csz_auth_model extends CI_Model {
                     'date_sent' => date('Y-m-d H:i:s')
                 );
                 $this->db->insert('user_pms', $data);
+                $sender_user = $this->Csz_admin_model->getUser($sender_id);
+                $receive_user = $this->Csz_admin_model->getUser($receiver_ids);
+                if($receive_user->pm_sendmail == '1'){
+                    $config = $this->Csz_model->load_config();
+                    $message_html = 'Dear ' . $receive_user->name . ',<br><br>' . $message . '<br><br>Best Regards,<br>'.$sender_user->name;
+                    @$this->Csz_model->sendEmail($receive_user->email, '[PM] ' . $title . ' ('.$config->site_name.')', $message_html, $sender_user->email, $sender_user->name);
+                }
                 return TRUE;
             }else{
                 return FALSE;

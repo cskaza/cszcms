@@ -50,6 +50,24 @@
                         ?>				
                     </div> <!-- /control-group -->
                     <br>
+                    <div class="control-group">										
+                        <label class="form-control-static" for="pm_sendmail">
+                        <?php
+                        if($users->pm_sendmail){
+                            $checked = 'checked';
+                        }else{
+                            $checked = '';
+                        }
+                        $data = array(
+                            'name' => 'pm_sendmail',
+                            'id' => 'pm_sendmail',
+                            'value' => '1',
+                            'checked' => $checked
+                        );
+                        echo form_checkbox($data);
+                        ?> <?php echo $this->Csz_model->getLabelLang('pm_txt'); ?> (<i class="glyphicon glyphicon-envelope"></i> <?php echo $this->Csz_model->getLabelLang('email_address'); ?>)</label>	
+                    </div> <!-- /control-group -->
+                    <br>
                     <div class="panel panel-default">
                         <div class="panel-heading" onclick="ChkHideShow('newpassword');"><a href="#"><b><?php echo $this->Csz_model->getLabelLang('change_password'); ?></b></a></div>
                         <div class="panel-body" id="newpassword" style="display:none;">

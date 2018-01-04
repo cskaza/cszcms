@@ -192,7 +192,7 @@ class Banner extends CI_Controller {
     
     public function deleteIndex() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('linkstats');
+        admin_helper::is_allowchk('banner');
         admin_helper::is_allowchk('delete');
         $delR = $this->input->post('delR');
         if(isset($delR)){

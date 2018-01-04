@@ -29,18 +29,21 @@ class Csz_referrer {
      * @param	string	$index    Session name
      */
     public function setIndex($index = '') {
+        $this->CI =& get_instance();
         if(!$index){
             $key = 'referred_index';
         }else{
             $key = 'referred_'.$index;
         }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
+        $baseurl = rtrim(BASE_URL, '/');
+        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php/' : $baseurl.'/';
         if(strpos($paramiter_url, '?') !== false){ /* Find ? in string */
             $param = strstr($paramiter_url,'?'); /* Remove string before ? */
         }else{
             $param = '';
         }
-        $_SESSION[$key] = current_url().$param;
+        $_SESSION[$key] = $base_url.$this->CI->uri->uri_string().$param;
         unset($index,$key,$paramiter_url,$param);
     }
     

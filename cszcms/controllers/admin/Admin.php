@@ -37,14 +37,15 @@ class Admin extends CI_Controller {
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
         $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::chk_reset_password();
         $config = $this->Csz_admin_model->load_config();
         $this->db->cache_on();
         $this->load->model('Csz_startup');
@@ -543,7 +544,6 @@ class Admin extends CI_Controller {
         $config = $this->Csz_model->load_config();
         ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
         $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
-        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
         if(!$this->cache->get('backend_manifest')){      
             $manifest = '{
                 "name": "('.$config->site_name.') Backend System",
@@ -607,7 +607,6 @@ class Admin extends CI_Controller {
         $config = $this->Csz_model->load_config();
         ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
         $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
-        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
         if(!$this->cache->get('backend_serviceWorker')){      
             $service = 'var filesToCache = [
                         "'.base_url('', '', TRUE).'/templates/admin",

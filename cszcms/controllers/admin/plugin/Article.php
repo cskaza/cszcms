@@ -203,7 +203,7 @@ class Article extends CI_Controller {
         //Load the form validation library
         $this->load->library('form_validation');
         //Set validation rules
-        $this->form_validation->set_rules('category_name', 'Category Name', 'required');
+        $this->form_validation->set_rules('category_name', 'Category Name', 'required|is_unique[article_db.category_name]');
         if ($this->form_validation->run() == FALSE) {
             //Validation failed
             $this->catadd();
@@ -283,7 +283,7 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             $this->load->library('form_validation');
             //Set validation rules
-            $this->form_validation->set_rules('category_name', 'Category Name', 'required');
+            $this->form_validation->set_rules('category_name', 'Category Name', 'required|is_unique[article_db.category_name.article_db_id.'.$this->uri->segment(5).']');
             if ($this->form_validation->run() == FALSE) {
                 //Validation failed
                 $this->catedit();

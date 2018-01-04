@@ -110,6 +110,23 @@
         </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
+            <label class="form-control-static" for="pm_sendmail">
+            <?php
+            if($users->pm_sendmail){
+                $checked = 'checked';
+            }else{
+                $checked = '';
+            }
+            $data = array(
+                'name' => 'pm_sendmail',
+                'id' => 'pm_sendmail',
+                'value' => '1',
+                'checked' => $checked
+            );
+            echo form_checkbox($data);
+            ?> <?php echo $this->lang->line('pm_header'); ?> (<i class="glyphicon glyphicon-envelope"></i> <?php echo $this->lang->line('login_email'); ?>)</label>	
+        </div> <!-- /control-group -->
+        <div class="control-group">										
             <label class="form-control-static" for="active">
             <?php
             if($users->active){

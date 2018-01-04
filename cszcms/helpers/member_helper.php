@@ -90,4 +90,21 @@ class Member_helper{
             }
         }
     }
+    
+    /**
+    * chk_reset_password
+    *
+    * Function for check the password change
+    *
+    */
+    static function chk_reset_password(){
+        if($_SESSION['session_id'] && $_SESSION['user_admin_id']){
+            $CI =& get_instance();
+            $user = $CI->Csz_admin_model->getUser($_SESSION['user_admin_id'], 'member');
+            if($user !== FALSE && $user->pass_change != 1){
+                unset($user);
+                redirect($CI->Csz_model->base_link().'/member/edit', 'refresh');
+            }
+        }
+    }
 } 

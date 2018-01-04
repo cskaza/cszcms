@@ -17,6 +17,8 @@ $row = $this->Csz_admin_model->load_config();
         <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
         <?php echo $meta_tags ?>
         <?php echo link_tag('templates/admin/favicon.ico', 'shortcut icon', 'image/ico'); ?>
+        <!-- Bootstrap Core CSS -->
+        <?php echo $core_css ?>
         <link rel="icon" type="image/x-icon" href="<?php echo base_url('', '', TRUE) ?>templates/admin/favicon.ico" />
 	<link rel="icon" sizes="192x192" href="<?php echo base_url('', '', TRUE) ?>templates/admin/img/cszcms_icon_192.png">
 	<link rel="apple-touch-icon" sizes="128x128" href="<?php echo base_url('', '', TRUE) ?>templates/admin/img/cszcms_icon_128.png" />
@@ -57,47 +59,49 @@ $row = $this->Csz_admin_model->load_config();
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
                                 <!-- Messages: style can be found in dropdown.less-->
-                                <?php $unread = $this->Csz_auth_model->count_unread_pms(); ?>
-                                <li class="dropdown messages-menu">
-                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-envelope"></i>
-                                    <?php if($unread != 0){ ?><span class="label label-danger"><b><?php echo $unread ?></b></span><?php } ?>
-                                  </a>
-                                  <ul class="dropdown-menu">
-                                    <li class="header"><b><?php echo sprintf($this->lang->line('pm_unread_txt'), $unread) ?></b></li>
-                                    <li>
-                                      <!-- inner menu: contains the actual data -->
-                                      <ul class="menu">
-                                        <?php $unread_msg = $this->Csz_auth_model->list_pms(10, 0, $this->session->userdata('user_admin_id'), '', TRUE);
-                                        if($unread_msg !== FALSE){
-                                        foreach($unread_msg as $value){ ?>
-                                            <!-- start message -->
-                                            <li>
-                                              <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm/view/<?php echo $value['id']; ?>">
-                                                  <div class="pull-left" style="margin-top:-5px;">
-                                                    <i class="fa fa-envelope"></i>
-                                                </div>
-                                                  <h4 style="margin: 0 0 0 20px;">
-                                                  <?php echo $this->Csz_admin_model->getUser($value['sender_id'])->name ?>
-                                                  <small><i class="fa fa-clock-o"></i> <?php echo $value['date_sent'] ?></small>
-                                                </h4>
-                                                <p style="margin:0;white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;"><?php echo $value['title'] ?></p>
-                                              </a>
-                                            </li>
-                                            <!-- end message -->
-                                        <?php } 
-                                        }else{?>
-                                            <!-- start message -->
-                                            <span class="text-center">
-                                                <h4><?php echo $this->lang->line('pm_nomsg_alert') ?></h4>
-                                            </span>
-                                            <!-- end message -->
-                                        <?php } ?>
+                                <?php if($this->Csz_auth_model->is_group_allowed('pm', 'backend') !== FALSE){
+                                    $unread = $this->Csz_auth_model->count_unread_pms(); ?>
+                                    <li class="dropdown messages-menu">
+                                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-envelope"></i>
+                                        <?php if($unread != 0){ ?><span class="label label-danger"><b><?php echo $unread ?></b></span><?php } ?>
+                                      </a>
+                                      <ul class="dropdown-menu">
+                                        <li class="header"><b><?php echo sprintf($this->lang->line('pm_unread_txt'), $unread) ?></b></li>
+                                        <li>
+                                            <!-- inner menu: contains the actual data -->
+                                            <ul class="menu">
+                                              <?php $unread_msg = $this->Csz_auth_model->list_pms(10, 0, $this->session->userdata('user_admin_id'), '', TRUE);
+                                              if($unread_msg !== FALSE){
+                                              foreach($unread_msg as $value){ ?>
+                                                  <!-- start message -->
+                                                  <li>
+                                                    <a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm/view/<?php echo $value['id']; ?>">
+                                                        <div class="pull-left" style="margin-top:-5px;">
+                                                          <i class="fa fa-envelope"></i>
+                                                      </div>
+                                                        <h4 style="margin: 0 0 0 20px;">
+                                                        <?php echo $this->Csz_admin_model->getUser($value['sender_id'])->name ?>
+                                                        <small><i class="fa fa-clock-o"></i> <?php echo $value['date_sent'] ?></small>
+                                                      </h4>
+                                                      <p style="margin:0;white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;"><?php echo $value['title'] ?></p>
+                                                    </a>
+                                                  </li>
+                                                  <!-- end message -->
+                                              <?php } 
+                                              }else{?>
+                                                  <!-- start message -->
+                                                  <span class="text-center">
+                                                      <h4><?php echo $this->lang->line('pm_nomsg_alert') ?></h4>
+                                                  </span>
+                                                  <!-- end message -->
+                                              <?php } ?>
+                                            </ul>
+                                        </li>
+                                        <li class="footer"><a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm"><b><?php echo $this->lang->line('pm_seeall_msg') ?></b></a></li>
                                       </ul>
                                     </li>
-                                    <li class="footer"><a href="<?php echo $this->Csz_model->base_link(); ?>/admin/pm"><b><?php echo $this->lang->line('pm_seeall_msg') ?></b></a></li>
-                                  </ul>
-                                </li>
+                                <?php } ?>
                                 <li>
                                     <a href="<?php echo base_url(); ?>" target="_blank">
                                         <i class="fa fa-eye"></i>
@@ -144,7 +148,7 @@ $row = $this->Csz_admin_model->load_config();
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearallcache') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('btn_clear_sess') ?></a></li>
-                                        <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/export' ?>"><i class="glyphicon glyphicon-export"></i> <?php echo $this->lang->line('export_import_csv_btn') ?></a></li>
+                                        <?php if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE){ ?><li><a href="<?php echo $this->Csz_model->base_link(). '/admin/export' ?>"><i class="glyphicon glyphicon-export"></i> <?php echo $this->lang->line('export_import_csv_btn') ?></a></li><?php } ?>
                                     </ul>
                                 </li>
                                 <!-- Control Sidebar Toggle Button -->
@@ -269,8 +273,6 @@ $row = $this->Csz_admin_model->load_config();
             <br><br><br>
             <?php echo $this->Headfoot_html->admin_footer() ?>
         <?php } ?>
-        <!-- Bootstrap Core CSS -->
-        <?php echo $core_css ?>
         <!-- Theme style -->
         <?php echo link_tag('templates/admin/css/AdminLTE.min.css') ?>
         <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->

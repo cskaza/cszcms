@@ -298,6 +298,7 @@ class Users extends CI_Controller {
                     $data = array(
                         'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
                         'md5_hash' => md5(time()+mt_rand(1, 99999999)),
+                        'pass_change' => 1,
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);

@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('banner_new') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/banner/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('banner_new') ?></a></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('banner_edit') ?>  <a role="button" href="<?php echo $this->Csz_model->base_link() ?>/admin/banner/new" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->lang->line('banner_new') ?></a></div>
         <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/banner/update/'.$this->uri->segment(4)); ?>
 
         <div class="control-group">	

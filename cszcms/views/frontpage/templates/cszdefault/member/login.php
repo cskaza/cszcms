@@ -18,6 +18,9 @@
                         if ($error == 'CAPTCHA_WRONG') {
                             echo $this->Csz_model->getLabelLang('captcha_wrong');
                         }
+                        if ($error == 'NOT_ACTIVE') {
+                            echo $this->Csz_model->getLabelLang('member_forget_chkmail').' '.$this->Csz_model->getLabelLang('email_confirm_message');
+                        }
                         if ($error == 'IP_BANNED') {
                             echo 'Your IP Address been banned!';
                         }

@@ -55,9 +55,9 @@ class Article extends CI_Controller {
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
 
@@ -225,7 +225,7 @@ class Article extends CI_Controller {
     
     public function view() {
         if($this->uri->segment(4) && $this->uri->segment(5)){
-            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."' AND url_rewrite = '".$this->uri->segment(5)."'", '', 1);
+            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
                 if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
                     $this->Csz_model->setSiteLang($art_row->lang_iso);
@@ -307,7 +307,7 @@ class Article extends CI_Controller {
     
     public function amp() {
         if($this->uri->segment(4) && $this->uri->segment(5)){
-            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."' AND url_rewrite = '".$this->uri->segment(5)."'", '', 1);
+            $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
                 if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
                     $this->Csz_model->setSiteLang($art_row->lang_iso);

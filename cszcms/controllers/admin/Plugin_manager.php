@@ -120,8 +120,8 @@ class Plugin_manager extends CI_Controller {
                     $unzip = @$this->unzip->extract($newfname, FCPATH);
                     if(!empty($unzip)){
                         if (file_exists(FCPATH . 'plugin_sql/install.sql')) {
-                            $this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
-                            $this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
+                            @$this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
+                            @$this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
                         }
                         if(is_writable($newfname)){
                             @unlink($newfname);
@@ -134,6 +134,7 @@ class Plugin_manager extends CI_Controller {
                         redirect($this->csz_referrer->getIndex(), 'refresh');
                     }
                 }
+                $this->Csz_model->clear_all_cache();
                 $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -177,8 +178,8 @@ class Plugin_manager extends CI_Controller {
                         $unzip = @$this->unzip->extract($newfname, FCPATH);
                         if(!empty($unzip)){
                             if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
-                                $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                                $this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
+                                @$this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                                @$this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
                             }
                             if(is_writable($newfname)){
                                 @unlink($newfname);

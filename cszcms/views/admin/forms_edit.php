@@ -246,6 +246,7 @@
                                     $data['button'] = 'button';
                                     $data['checkbox'] = 'checkbox';
                                     $data['datepicker'] = 'datepicker';
+                                    $data['timepicker'] = 'timepicker';
                                     $data['email'] = 'email';
                                     $data['file'] = 'file';
                                     $data['label'] = 'label';
@@ -323,6 +324,7 @@
                                 <option value="button">button</option>
                                 <option value="checkbox">checkbox</option>
                                 <option value="datepicker">datepicker</option>
+                                <option value="timepicker">timepicker</option>
                                 <option value="email">email</option>
                                 <option value="file">file</option>
                                 <option value="label">label</option>

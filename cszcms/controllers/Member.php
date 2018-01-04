@@ -61,6 +61,7 @@ class Member extends CI_Controller {
 
     public function index() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::chk_reset_password();
         $this->load->model('Csz_startup');
         $this->Csz_startup->chkStartRun(FALSE);
         $this->csz_referrer->setIndex('member');
@@ -111,6 +112,7 @@ class Member extends CI_Controller {
 
     public function loginCheck() {
         Member_helper::login_already($this->session->userdata('admin_email'));
+        $config = $this->Csz_model->load_config();
         $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
         $password = $this->input->post('password', TRUE);
         $result = $this->Csz_model->login($email, $password);
@@ -121,9 +123,30 @@ class Member extends CI_Controller {
             }else{
                 redirect($this->Csz_model->base_link().'/member', 'refresh');
             }
+        } else if ($result == 'NOT_ACTIVE') {
+            $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
+            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->where('email', $email);
+            $this->db->update('user_admin');
+            $this->load->helper('string');
+            $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
+            $md5_hash = $user_rs->md5_hash;
+            /* now we will send an email */
+            # ---- set subject --#
+            $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
+            # ---- set from, to, bcc --#
+            $from_name = $config->site_name;
+            $from_email = 'no-reply@' . EMAIL_DOMAIN;
+            $to_email = $email;
+            $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . $this->Csz_model->base_link() . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . $this->Csz_model->base_link() . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . $this->Csz_model->base_link() . '" target="_blank"><b>' . $config->site_name . '</b></a>';
+            @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
+            $this->template->setSub('config', $config);
+            $this->template->setSub('error', $result);
+            $this->load->helper('form');
+            $this->template->loadFrontViews('member/login');
         } else {
             $this->Csz_model->saveLogs($email, 'Frontend Login Invalid!', $result);
-            $this->template->setSub('config', $this->Csz_model->load_config());
+            $this->template->setSub('config', $config);
             $this->template->setSub('error', $result);
             $this->load->helper('form');
             $this->template->loadFrontViews('member/login');
@@ -304,14 +327,33 @@ class Member extends CI_Controller {
         }
     }
 
-    public function email_check($str) {
+    public function email_check($email) {
         Member_helper::login_already($this->session->userdata('admin_email'));
-        $this->db->where('email', $str);
-        $this->db->where('active', 1);
-        $this->db->limit(1, 0);
-        $query = $this->db->get('user_admin');
-        if ($query->num_rows() == 1) {
-            return true;
+        $config = $this->Csz_model->load_config();
+        $user_rs = $this->Csz_model->getValue('*', 'user_admin', 'email', $email, 1);
+        if ($user_rs !== FALSE) {
+            if($user_rs->active == 1){
+                return true;
+            }else{
+                $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
+                $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->where('email', $email);
+                $this->db->update('user_admin');
+                $this->load->helper('string');
+                $user_rs = $this->Csz_model->getValue('md5_hash', 'user_admin', 'email', $email, 1);
+                $md5_hash = $user_rs->md5_hash;
+                /* now we will send an email */
+                # ---- set subject --#
+                $subject = $this->Csz_model->getLabelLang('email_confirm_subject');
+                # ---- set from, to, bcc --#
+                $from_name = $config->site_name;
+                $from_email = 'no-reply@' . EMAIL_DOMAIN;
+                $to_email = $email;
+                $message_html = $this->Csz_model->getLabelLang('email_dear') . $email . ',<br><br>' . $this->Csz_model->getLabelLang('email_confirm_message') . '<br><a href="' . $this->Csz_model->base_link() . '/member/confirm/' . $md5_hash . '" target="_blank"><b>' . $this->Csz_model->base_link() . '/member/confirm/' . $md5_hash . '</b></a><br><br>' . $this->Csz_model->getLabelLang('email_footer') . ' <br><a href="' . $this->Csz_model->base_link() . '" target="_blank"><b>' . $config->site_name . '</b></a>';
+                @$this->Csz_model->sendEmail($to_email, $subject, $message_html, $from_email, $from_name);
+                $this->form_validation->set_message('email_check', $this->Csz_model->getLabelLang('member_forget_chkmail').' '.$this->Csz_model->getLabelLang('email_confirm_message'));
+                return false;
+            }
         } else {
             $this->form_validation->set_message('email_check', $this->Csz_model->getLabelLang('email_check'));
             return false;
@@ -341,6 +383,7 @@ class Member extends CI_Controller {
                     $data = array(
                         'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
                         'md5_hash' => md5(time() + mt_rand(1, 99999999)),
+                        'pass_change' => 1,
                     );
                     $this->db->set('md5_lasttime', 'NOW()', FALSE);
                     $this->db->where('md5_hash', $md5_hash);
@@ -421,6 +464,9 @@ class Member extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
+        if($this->uri->segment(3)){
+            $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(3)));
+        }
         //Load the view
         $this->template->loadFrontViews('member/pm_add');
     }

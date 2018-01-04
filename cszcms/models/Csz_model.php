@@ -26,9 +26,9 @@ class Csz_model extends CI_Model {
         parent::__construct();
         $this->load->database();
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
 
@@ -212,6 +212,7 @@ class Csz_model extends CI_Model {
      * @param	string	$table    DB table
      * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
      * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
+     * @param	integer	$limit   Limit the result. Default is 0
      * @param	string|array	$orderby   Order by field or NULL 
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$groupby   Group by field or NULL 
@@ -285,6 +286,7 @@ class Csz_model extends CI_Model {
      * @param	string	$table    DB table
      * @param	string	$where_field   where field or where condition Ex. "field = '1' AND field2 = '2'"
      * @param	string	$where_val   value of wherer (If $where_field has condition. Please null)
+     * @param	integer	$limit   Limit the result. Default is 0
      * @param	string|array	$orderby   Order by field or NULL 
      * @param	string	$sort   asc or desc or NULL 
      * @param	string	$groupby   Group by field or NULL  
@@ -761,12 +763,11 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreCss($more_css = '', $more_include = TRUE) {
-        $core_css = '<link rel="canonical" href="' . $this->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
-        $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
-        $core_css.= '<link href="' . $this->base_link(TRUE).'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
+        $core_css = '<link href="' . $this->base_link(TRUE, FALSE).'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
+        $core_css.= link_tag('assets/js/plugins/timepicker/bootstrap-timepicker.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -796,10 +797,12 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE) {
-        $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE).'/'. 'corejs.js"></script>';
+        $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
-        $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});</script>';
+        $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
+        $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").timepicker({minuteStep:1,showMeridian:false,defaultTime:false,disableFocus:true});</script>';
+        if ($this->getFBsdk() !== FALSE) { $core_js.= $this->getFBsdk(); }
         if (!empty($more_js)) {
             if($more_include !== FALSE){
                 if (is_array($more_js)) {
@@ -816,6 +819,7 @@ class Csz_model extends CI_Model {
                 $core_js.= '<script type="text/javascript">'.str_replace('<script ', '</script><script ', $more_js).'</script>';
             }
         }
+        if ($this->getFBChat() !== FALSE) { $core_js.= $this->getFBChat(); }
         return $core_js;
     }
 
@@ -869,12 +873,16 @@ class Csz_model extends CI_Model {
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
             array('name' => 'og:url', 'content' => $this->base_link(). '/' . $this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
+            array('name' => 'og:locale', 'content' => $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))), 'type' => 'property'),
             array('name' => 'twitter:card', 'content' => 'summary'),
             array('name' => 'twitter:title', 'content' => $title),
             array('name' => 'twitter:description', 'content' => $desc_txt),
             array('name' => 'twitter:image', 'content' => $og_image),
         );
         $return_meta = meta($meta);
+        $return_meta.= '<link rel="canonical" href="' . $this->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
+        $return_meta.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+        $return_meta.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
         $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Article Feed" href="'.$this->base_link(). '/plugin/article/rss/" />';
         $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Gallery Feed" href="'.$this->base_link(). '/plugin/gallery/rss/" />';
         if ($config->fbapp_id) {
@@ -927,10 +935,11 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function getHtmlContent($ori_content, $url_segment) { /* Calculate the HTML code */
-        $ori_content = $this->frmNameInHtml($ori_content, $url_segment);
-        $ori_content = $this->widgetInHtml($ori_content);
         $ori_content = $this->bannerInHtml($ori_content);
+        $ori_content = $this->carouselInHtml($ori_content);
+        $ori_content = $this->widgetInHtml($ori_content);
         $ori_content = $this->formTagToHTML($ori_content);
+        $ori_content = $this->frmNameInHtml($ori_content, $url_segment);
         return $ori_content;
     }
     
@@ -1037,7 +1046,102 @@ class Csz_model extends CI_Model {
         return str_replace('[?]{=banner:' . $id . '}[?]', $this->cache->get('banner_'.$id), $content);
     }
 
+    /**
+     * carouselInHtml
+     *
+     * Function for find carousel tag
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
+    public function carouselInHtml($content) { /* Find the carousel in content */
+        $txt_nonhtml = strip_tags($content);
+        if (strpos($txt_nonhtml, '[?]{=carousel:') !== false) {
+            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
+            $array = explode("[?]", $txt_nonline);
+            if (!empty($array)) {
+                foreach ($array as $val) {
+                    if (strpos($val, '{=carousel:') !== false) {
+                        $rep_arr = array('{=carousel:', '}');
+                        $carousel_id = str_replace($rep_arr, '', $val);
+                        $content = $this->addCarouselToHTML($content, $carousel_id);
+                    }
+                }
+            }
+            unset($array);
+        }
+        unset($txt_nonhtml);
+        return $content;
+    }
 
+    /**
+     * addCarouselToHTML
+     *
+     * Function for add carousel into html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$id   carousel id
+     * @return	string
+     */
+    public function addCarouselToHTML($content, $id) {
+        if (!$this->cache->get('carousel_'.$id)) {
+            $getCarousel = $this->getValue('*', 'carousel_widget', "active = '1' AND carousel_widget_id = '" . $id . "'", '', 1);
+            $html = '[?]{=carousel:' . $id . '}[?]';
+            if ($getCarousel !== FALSE) {
+                $getPhoto = $this->getValueArray('*', 'carousel_picture', "carousel_widget_id = '" . $getCarousel->carousel_widget_id . "'", '', '', 'arrange', 'ASC');               
+                $html = '';
+                if($getPhoto !== FALSE){
+                    $i = 0;
+                    $li_html = '';
+                    $item_html = '';
+                    $photo_path = base_url() . 'photo/carousel/';
+                    foreach ($getPhoto as $value) {
+                        $active = '';
+                        $class_active = '';
+                        if($i == 0){
+                            $active = ' active';
+                            $class_active = ' class="active"';
+                        }
+                        if($value['caption'] && $value['caption'] != NULL){
+                            $caption = '<div class="carousel-caption">'.$value['caption'].'</div>';
+                            $alt_img = ' alt="'.$value['caption'].'"';
+                        }else{
+                            $caption = '';
+                            $alt_img = ' alt="'.$getCarousel->name.'"';
+                        }
+                        if($value['carousel_type'] == 'multiimages' && $value['file_upload'] && $value['file_upload'] != NULL){
+                            $item_add = '<img src="'.$photo_path.$value['file_upload'].'" class="img-responsive" width="100%"'.$alt_img.'>';
+                        }else if($value['carousel_type'] == 'multiimages' && $value['photo_url'] && $value['photo_url'] != NULL){
+                            $item_add = '<img src="'.$value['photo_url'].'" class="img-responsive" width="100%"'.$alt_img.'>';
+                        }else if($value['carousel_type'] == 'youtubevideos' && $value['youtube_url']){
+                            $youtube_script_replace = array("http://", "https://", "www.youtube.com/watch?v=", "m.youtube.com/watch?v=", "youtu.be/", "www.youtube.com/embed/", "m.youtube.com/embed/");
+                            $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']);
+                            $item_add = '<div class="embed-responsive embed-responsive-16by9" style="background-color: #000;"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'.$youtube_value.'" allowfullscreen="allowfullscreen" width="100%"></iframe></div>';
+                        }
+                        $li_html.= '<li data-target="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide-to="'.$i.'"'.$class_active.'></li>';
+                        $item_html.= '<div class="item'.$active.'"><div class="fill">'.$item_add.'</div>'.$caption.'</div>';
+                        $i++;
+                    }
+                    $html = '<div id="myCarousel-'.$getCarousel->carousel_widget_id.'" class="carousel slide">';
+                    $html.= '<ol class="carousel-indicators">';
+                    $html.= $li_html;
+                    $html.= '</ol><div class="carousel-inner">';
+                    $html.= $item_html;
+                    $html.= '</div><a class="left carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="prev"><span class="icon-prev"></span></a><a class="right carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="next"><span class="icon-next"></span></a>';
+                    $html.= '</div>';
+                }
+            }
+            if($this->load_config()->pagecache_time == 0){
+                $cache_time = 1;
+            }else{
+                $cache_time = $this->load_config()->pagecache_time;
+            }
+            $this->cache->save('carousel_'.$id, $html, ($cache_time * 60));
+            unset($html, $cache_time, $getCarousel, $getPhoto);
+        }
+        return str_replace('[?]{=carousel:' . $id . '}[?]', $this->cache->get('carousel_'.$id), $content);
+    }
+    
     /**
      * widgetInHtml
      *
@@ -1055,8 +1159,8 @@ class Csz_model extends CI_Model {
                 foreach ($array as $val) {
                     if (strpos($val, '{=widget:') !== false) {
                         $rep_arr = array('{=widget:', '}');
-                        $wid_name = str_replace($rep_arr, '', $val);
-                        $content = $this->addWidgetToHTML($content, $wid_name);
+                        $wid_id = str_replace($rep_arr, '', $val);
+                        $content = $this->addWidgetToHTML($content, $wid_id);
                     }
                 }
             }
@@ -1066,25 +1170,25 @@ class Csz_model extends CI_Model {
     }
     
     /**
-     * getWidgetFromName
+     * getWidgetFromID
      *
-     * Function for get widget from name
+     * Function for get widget from id
      *
-     * @param	string	$wid_name   Widget name
+     * @param	string	$wid_id   Widget id
      * @return	object or FALSE
      */
-    public function getWidgetFromName($wid_name) {
-        if (!$this->cache->get('widget_sql_'.md5($wid_name))) {
-            $widget = $this->getValue('*', 'widget_xml', "active = '1' AND widget_name = '" . $wid_name . "' AND xml_url != '' AND limit_view != '0'", '', 1);            
+    public function getWidgetFromID($wid_id) {
+        if (!$this->cache->get('widget_sql_'.md5($wid_id))) {
+            $widget = $this->getValue('*', 'widget_xml', "active = '1' AND xml_url != '' AND limit_view != '0' AND (widget_xml_id = '" . $wid_id . "' OR widget_name = '" . $wid_id . "')", '', 1);            
             if($this->load_config()->pagecache_time == 0){
                 $cache_time = 1;
             }else{
                 $cache_time = $this->load_config()->pagecache_time;
             }
-            $this->cache->save('widget_sql_'.md5($wid_name), $widget, ($cache_time * 60));
+            $this->cache->save('widget_sql_'.md5($wid_id), $widget, ($cache_time * 60));
             unset($cache_time, $widget);
         }
-        return $this->cache->get('widget_sql_'.md5($wid_name));
+        return $this->cache->get('widget_sql_'.md5($wid_id));
     }
     
     /**
@@ -1118,12 +1222,12 @@ class Csz_model extends CI_Model {
      * Function for add widget into html
      *
      * @param	string	$content    Original content
-     * @param	string	$wid_name   Widget name
+     * @param	string	$wid_id   Widget name
      * @return	string
      */
-    public function addWidgetToHTML($content, $wid_name) {
-        if (!$this->cache->get('widget_'.md5($wid_name))) {
-            $getWidget = $this->getWidgetFromName($wid_name);
+    public function addWidgetToHTML($content, $wid_id) {
+        if (!$this->cache->get('widget_'.md5($wid_id))) {
+            $getWidget = $this->getWidgetFromID($wid_id);
             if ($getWidget !== FALSE) {
                 $html = str_replace('{widget_header_name}', $getWidget->widget_name, $getWidget->widget_open);
                 if ($this->is_url_exist($getWidget->xml_url) !== FALSE) {
@@ -1157,17 +1261,17 @@ class Csz_model extends CI_Model {
                 }
                 $html.= $getWidget->widget_close;
             }else{
-                $html = '[?]{=widget:' . $wid_name . '}[?]';
+                $html = '[?]{=widget:' . $wid_id . '}[?]';
             }
             if($this->load_config()->pagecache_time == 0){
                 $cache_time = 1;
             }else{
                 $cache_time = $this->load_config()->pagecache_time;
             }
-            $this->cache->save('widget_'.md5($wid_name), $html, ($cache_time * 60));
+            $this->cache->save('widget_'.md5($wid_id), $html, ($cache_time * 60));
             unset($html, $cache_time, $getWidget);
         }
-        return str_replace('[?]{=widget:' . $wid_name . '}[?]', $this->cache->get('widget_'.md5($wid_name)), $content);
+        return str_replace('[?]{=widget:' . $wid_id . '}[?]', $this->cache->get('widget_'.md5($wid_id)), $content);
     }
 
     /**
@@ -1269,8 +1373,20 @@ class Csz_model extends CI_Model {
                             $class = 'form-datepicker';
                         }
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
-                        <div class="controls">
+                        <div class="input-group">
                             <input type="text" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $class . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>';
+                    } else if ($field['field_type'] == 'timepicker') {
+                        if ($field['field_class']) {
+                            $class = $field['field_class'] . ' timepicker';
+                        } else {
+                            $class = 'timepicker';
+                        }
+                        $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
+                        <div class="input-group bootstrap-timepicker timepicker">
+                            <input type="text" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $class . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
                         </div>';
                     } else if ($field['field_type'] == 'selectbox') {
                         $opt_html = '';
@@ -1364,16 +1480,7 @@ class Csz_model extends CI_Model {
      *
      */
     public function clear_all_session() {
-        $path = $this->config->item('sess_save_path');
-        $sess_path = ($path == '') ? BASEPATH . '/ci_session' : $path;
-        $handle = opendir($sess_path);
-        while (($file = readdir($handle)) !== FALSE) {
-            //Leave the directory protection alone
-            if ($file != '.htaccess' && $file != 'index.html') {
-                @unlink($sess_path . '/' . $file);
-            }
-        }
-        closedir($handle);
+        $this->db->empty_table('ci_sessions');
         $this->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
     }
 
@@ -1384,7 +1491,6 @@ class Csz_model extends CI_Model {
      *
      */
     public function clear_all_cache() {
-        (extension_loaded('memcached') || extension_loaded('memcache')) ? $this->load->driver('cache', array('adapter' => 'memcached', 'backup' => 'file')) : $this->load->driver('cache', array('adapter' => 'file'));
         $this->cache->clean();
         $path = $this->config->item('cache_path');
         $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
@@ -1393,6 +1499,15 @@ class Csz_model extends CI_Model {
             //Leave the directory protection alone
             if ($file != '.htaccess' && $file != 'index.html') {
                 $this->clear_file_cache($file);
+            }
+        }
+        closedir($handle);
+        $cache_path = APPPATH . 'db_cache/';
+        $handle = opendir($cache_path);
+        while (($file = readdir($handle)) !== FALSE) {
+            //Leave the directory protection alone
+            if ($file != '.htaccess' && $file != 'index.html') {
+                @unlink($cache_path . '/' . $file);
             }
         }
         closedir($handle);
@@ -1506,7 +1621,7 @@ class Csz_model extends CI_Model {
                 }
             }
             $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
-            $html.= '<div class="g-recaptcha" style="transform:scale(0.75) !important; -webkit-transform:scale(0.75) !important; transform-origin:0 0 !important; -webkit-transform-origin:0 0 !important;" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+            $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
             if (!$this->cache->get('showCaptcha_' . $hl)) {
                 ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
                 $this->cache->save('showCaptcha_' . $hl, $html, ($cache_time * 60));
@@ -1547,13 +1662,14 @@ class Csz_model extends CI_Model {
     /**
      * pwdEncypt
      *
-     * Function for encyption the password with 3 step
+     * Function for encyption the password with password_hash (BCRYPT)
      *
      * @param	string	$password    password
      * @return	string
      */
     public function pwdEncypt($password) {
-        return hash('sha512', sha1(md5($password)));
+        $options = array('cost' => 12);
+        return password_hash($password, PASSWORD_BCRYPT, $options);
     }
 
     /**
@@ -1570,15 +1686,24 @@ class Csz_model extends CI_Model {
         $return = array();
         $this->db->select("*");
         $this->db->where("email", $email);
-        $this->db->where("password", $this->pwdEncypt($password));
-        $this->db->where("active", '1');
         if($typecondition){
             $this->db->where($typecondition);
         }
         $this->db->limit(1, 0);
         $query = $this->db->get("user_admin");
-        $return['row'] = $query->row();
-        $return['num_rows'] = $query->num_rows();
+        $result = $query->row();
+        if(!empty($result)){
+            if(password_verify($password, $result->password)){
+                $return['row'] = $result;
+                $return['num_rows'] = $query->num_rows();
+            }else{
+                $return['row'] = '';
+                $return['num_rows'] = 0;
+            }
+        }else{
+            $return['row'] = '';
+            $return['num_rows'] = 0;
+        }
         unset($query);
         return $return;
     }
@@ -1600,7 +1725,7 @@ class Csz_model extends CI_Model {
             if($this->chkIPBaned($email) === FALSE){
                 $data = array();
                 if($backend !== FALSE){
-                    $query = $this->chkPassword($email, $password, "user_type != 'member'");
+                    $query = $this->chkPassword($email, $password, "user_type != 'member' AND active = '1'");
                     $data['admin_logged_in'] = TRUE;
                 }else{
                     $query = $this->chkPassword($email, $password);
@@ -1608,18 +1733,25 @@ class Csz_model extends CI_Model {
                 }
                 if ($query['num_rows'] !== 0 && !empty($query['row'])) {
                     $rows = $query['row'];
-                    $session_id = session_id();
-                    $this->db->set('session_id', $session_id, TRUE);
-                    $this->db->where('user_admin_id', $rows->user_admin_id);
-                    $this->db->update('user_admin');
-                    $data['user_admin_id'] = $rows->user_admin_id;
-                    $data['admin_name'] = $rows->name;
-                    $data['admin_email'] = $rows->email;
-                    $data['admin_type'] = $rows->user_type;
-                    $data['session_id'] = $session_id;
-                    $this->session->set_userdata($data);
-                    unset($data,$rows);
-                    return 'SUCCESS';
+                    if($rows->active == 1){
+                        $session_id = session_id();
+                        $this->db->set('session_id', $session_id, TRUE);
+                        $this->db->set('timestamp_login', 'NOW()', FALSE);
+                        $this->db->where('user_admin_id', $rows->user_admin_id);
+                        $this->db->update('user_admin');
+                        $data['user_admin_id'] = $rows->user_admin_id;
+                        $data['admin_name'] = $rows->name;
+                        $data['admin_email'] = $rows->email;
+                        $data['admin_type'] = $rows->user_type;
+                        $data['pwd_change'] = $rows->pass_change;
+                        $data['session_id'] = $session_id;
+                        $this->session->set_userdata($data);
+                        unset($data,$rows);
+                        return 'SUCCESS';
+                    }else{
+                        unset($data,$rows);
+                        return 'NOT_ACTIVE';
+                    }
                 } else {
                     unset($data);
                     return 'INVALID';
@@ -1684,6 +1816,13 @@ class Csz_model extends CI_Model {
             unset($data);
         }
     }
+    
+    private function getLabelLangDB($name, $sel_name = 'lang_en'){
+        $this->db->select($sel_name);
+        $this->db->where("name", $name);
+        $this->db->limit(1, 0);
+        return $this->db->get("general_label");
+    }
 
     /**
      * getLabelLang
@@ -1700,27 +1839,37 @@ class Csz_model extends CI_Model {
         $lang = $this->session->userdata('fronlang_iso');
         if ($lang) {
             $sel_name = 'lang_' . $lang;
-            $this->db->select($sel_name);
-            $this->db->where("name", $name);
-            $this->db->limit(1, 0);
-            $query = $this->db->get("general_label");
-            if (!empty($query) && $query->num_rows() !== 0) {
-                if ($query->row()->$sel_name){
-                    return $query->row()->$sel_name;
-                }else{
-                    $error_txt = "This label is untranslated on General Label! (".$name.")";
+            if (!$this->cache->get('getLabelLang_'.$name.'_'.$sel_name)) {
+                $query = $this->getLabelLangDB($name, $sel_name);
+                if (!empty($query) && $query->num_rows() !== 0) {
+                    if ($query->row()->$sel_name){
+                        $return = $query->row()->$sel_name;
+                    }else{
+                        unset($query);
+                        $query = $this->getLabelLangDB($name);
+                        if (!empty($query) && $query->num_rows() !== 0) {
+                            $error_txt = "This label is untranslated on General Label! (".$name.")";
+                            log_message('error', $error_txt);
+                            $return = $query->row()->lang_en;
+                        }else{
+                            $error_txt = "This label is not defined in General Label! (".$name.")";
+                            log_message('error', $error_txt);
+                            $return = $error_txt;
+                        }
+                    }
+                }else {
+                    $error_txt = "This language isn't sync! (lang_" . $lang . ")";
                     log_message('error', $error_txt);
-                    return $error_txt;
+                    $return = $error_txt;
                 }
-            }else {
-                $error_txt = "This language isn't sync! (lang_" . $lang . ")";
-                log_message('error', $error_txt);
-                return $error_txt;
+                ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
+                $this->cache->save('getLabelLang_'.$name.'_'.$sel_name, $return, ($cache_time * 60));
+                unset($return, $cache_time, $query);
             }
-        } else {
+            return $this->cache->get('getLabelLang_'.$name.'_'.$sel_name);
+        }else{
             return FALSE;
         }
-        unset($query);
     }
 
     /**
@@ -1742,6 +1891,8 @@ class Csz_model extends CI_Model {
                 'user_type' => 'member',
                 'active' => 0,
                 'md5_hash' => $md5_hash,
+                'pm_sendmail' => 1,
+                'pass_change' => 1,
             );
             $this->db->set('md5_lasttime', 'NOW()', FALSE);
             $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -1766,6 +1917,11 @@ class Csz_model extends CI_Model {
     public function updateMember($id) {
         $query = $this->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE));
         if ($query['num_rows'] !== 0) {
+            if($this->input->post('pm_sendmail')){
+                $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
+            }else{
+                $pm_sendmail = 0;
+            }
             // update the user account
             if ($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)) {
                 $birthday = $this->input->post('year', TRUE) . '-' . $this->input->post('month', TRUE) . '-' . $this->input->post('day', TRUE);
@@ -1792,6 +1948,7 @@ class Csz_model extends CI_Model {
                 $this->db->set('password', $this->pwdEncypt($this->input->post('password', TRUE)), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
                 $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->set('pass_change', 1);
             }
             $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
             $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
@@ -1800,6 +1957,7 @@ class Csz_model extends CI_Model {
             $this->db->set('address', $this->input->post("address", TRUE), TRUE);
             $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
+            $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
@@ -1971,6 +2129,61 @@ class Csz_model extends CI_Model {
     public function urlencode($url) {
         return str_replace('%2F', '/', urlencode($url));
     }
+    
+    /**
+     * getFBsdk
+     *
+     * Function for get facebook SDK javascript
+     *
+     * @return	string or FALSE if not have fbapp_id
+     */
+    public function getFBsdk() {
+        $html = '';
+        $config = $this->load_config();
+        if ($config->fbapp_id) {
+            $html.= '<script type="text/javascript">
+                    window.fbAsyncInit = function() {
+                      FB.init({
+                        appId            : \'' . $config->fbapp_id . '\',
+                        autoLogAppEvents : true,
+                        xfbml            : true,
+                        version          : \'v2.11\'
+                      });
+                    };
+                    (function(d, s, id){
+                       var js, fjs = d.getElementsByTagName(s)[0];
+                       if (d.getElementById(id)) {return;}
+                       js = d.createElement(s); js.id = id;
+                       js.src = "https://connect.facebook.net/' . $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))) . '/sdk.js";
+                       fjs.parentNode.insertBefore(js, fjs);
+                     }(document, \'script\', \'facebook-jssdk\'));
+                  </script>';
+            return $html;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * getFBChat
+     *
+     * Function for get facebook messager chat
+     *
+     * @return	string or FALSE if not have facebook_page_id or fb_messenger setting not active
+     */
+    public function getFBChat() {
+        $html = '';
+        $config = $this->load_config();
+        if ($config->facebook_page_id && $config->fb_messenger) {
+            $html.= '<div class="fb-customerchat"
+                page_id="'.$config->facebook_page_id.'"
+                minimized="true">
+               </div>';
+            return $html;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * getFBComments
@@ -1983,18 +2196,11 @@ class Csz_model extends CI_Model {
      * @param	string	$lang   language code from session
      * @return	string or FALSE if not have fbapp_id
      */
-    public function getFBComments($url, $limit, $sort, $lang) {
+    public function getFBComments($url, $limit, $sort) {
         $html = '';
         $config = $this->load_config();
-        if ($config->fbapp_id && $url && $limit && $sort && $lang) {
+        if ($config->fbapp_id && $url && $limit && $sort) {
             $html.= '<div id="fb-root"></div>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/' . $lang . '_' . strtoupper($this->getCountryCode($lang)) . '/sdk.js#xfbml=1&version=v2.8&appId=' . $config->fbapp_id . '";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, \'script\', \'facebook-jssdk\'));</script>
             <div class="fb-comments" data-href="' . $url . '" data-width="100%" data-numposts="' . $limit . '" data-order-by="' . $sort . '"></div>' . "\n";
             return $html;
         } else {
@@ -2261,26 +2467,36 @@ class Csz_model extends CI_Model {
      * Function for get the base url link
      * 
      * @param	bool	$static for assets static resources from a different cdn domain
+     * @param	bool	$htaccess for htaccess config
      *
      * @return	string
      */
-    public function base_link($static = FALSE) {
+    public function base_link($static = FALSE, $htaccess = TRUE) {
         if($static === TRUE){
-            $baseurl = rtrim($this->config->base_url('', '', TRUE), '/');
-            $cachename = '_static';
+            if(HTACCESS_FILE === FALSE && $htaccess === FALSE){
+                $baseurl = rtrim($this->config->base_url('', '', TRUE), '/').'/index.php';
+                $cachename = '_static_htaccess';
+            }else{
+                $baseurl = rtrim($this->config->base_url('', '', TRUE), '/');
+                $cachename = '_static';
+            }
         }else{
-            $baseurl = rtrim(BASE_URL, '/');
-            $cachename = '';
+            if(HTACCESS_FILE === FALSE || $htaccess === FALSE){
+                $baseurl = rtrim(BASE_URL, '/').'/index.php';
+                $cachename = '_htaccess';
+            }else{
+                $baseurl = rtrim(BASE_URL, '/');
+                $cachename = '';
+            }
         }
         if (!$this->cache->get('base_link'.$cachename)) {
-            $return = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
             if($this->load_config()->pagecache_time == 0){
                 $cache_time = 1;
             }else{
                 $cache_time = $this->load_config()->pagecache_time;
             }
-            $this->cache->save('base_link'.$cachename, $return, ($cache_time * 60));
-            unset($return, $cache_time, $baseurl);
+            $this->cache->save('base_link'.$cachename, $baseurl, ($cache_time * 60));
+            unset($cache_time, $baseurl);
         }
         return $this->cache->get('base_link'.$cachename);
     }

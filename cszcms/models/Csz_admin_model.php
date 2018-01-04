@@ -27,9 +27,9 @@ class Csz_admin_model extends CI_Model{
         parent::__construct();
         $this->load->model('Csz_model');
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
     }
 
@@ -374,6 +374,8 @@ class Csz_admin_model extends CI_Model{
             'picture' => $upload_file,
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
+            'pm_sendmail' => 1,
+            'pass_change' => 1,
         );
         if($member === FALSE){
             $this->db->set('user_type', 'admin');
@@ -406,6 +408,11 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $active = 0;
             }
+            if($this->input->post('pm_sendmail')){
+                $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
+            }else{
+                $pm_sendmail = 0;
+            }
             if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
                 $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
             }else{
@@ -431,6 +438,7 @@ class Csz_admin_model extends CI_Model{
                 $this->db->set('password', $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
                 $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->set('pass_change', 1);
             }
             if($id != 1 && $this->session->userdata('user_admin_id') != $id){
                 $this->db->set('active', $active, FALSE);
@@ -443,6 +451,7 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('address', $this->input->post("address", TRUE), TRUE);
             $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
+            $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
             $this->db->set('timestamp_update', 'NOW()', FALSE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
@@ -461,7 +470,7 @@ class Csz_admin_model extends CI_Model{
                     $this->db->update('user_to_group');
                 }
             }
-            $this->clear_file_cache('getUserEmail*', TRUE);
+            $this->Csz_model->clear_file_cache('getUserEmail*', TRUE);
             return TRUE;
         }else{
             return FALSE;
@@ -480,7 +489,7 @@ class Csz_admin_model extends CI_Model{
         if($id != 1){
             $this->removeData('user_admin', array('user_admin_id' => $id));
         }
-        $this->clear_file_cache('getUserEmail*', TRUE);
+        $this->Csz_model->clear_file_cache('getUserEmail*', TRUE);
     }
 
     /**
@@ -664,6 +673,7 @@ class Csz_admin_model extends CI_Model{
     public function coreCss($more_css = '', $more_include = TRUE){
         $core_css = '<link rel="canonical" href="' . $this->Csz_model->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
         $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+        $core_css.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
         $core_css.= link_tag('assets/css/bootstrap.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
@@ -836,6 +846,7 @@ class Csz_admin_model extends CI_Model{
             'facebook_page_id' => $this->input->post('facebook_page_id', TRUE),
             'assets_static_active' => $this->input->post('assets_static_active', TRUE),
             'assets_static_domain' => $this->input->post('assets_static_domain', TRUE),
+            'fb_messenger' => $this->input->post('fb_messenger', TRUE),
         );
         $upload_file = '';
         if($this->input->post('del_file')){
@@ -1768,6 +1779,7 @@ class Csz_admin_model extends CI_Model{
             case 'radio':
             case 'selectbox':
             case 'text':
+            case 'timepicker':
                 $fields = array(
                     $name => array(
                         'type' => 'VARCHAR',
@@ -1828,6 +1840,7 @@ class Csz_admin_model extends CI_Model{
             case 'radio':
             case 'selectbox':
             case 'text':
+            case 'timepicker':
                 $fields = array(
                     $oldname => array(
                         'name' => $newname,
@@ -2552,6 +2565,7 @@ class Csz_admin_model extends CI_Model{
             }
             $this->removeData('general_label', "name LIKE '".$plugin_config_filename."%'");
             $this->removeData('user_perms', "name LIKE '".$plugin_config_filename."%'");
+            $this->removeData('user_perms', "name LIKE '".$this->Csz_model->getPluginConfig($plugin_config_filename, 'plugin_name')."%'");
             $this->removeData('plugin_manager', 'plugin_config_filename', $plugin_config_filename);
             unset($plugin_config_filename,$plugin_file_path,$plugin_db_table,$value);
             return TRUE;
@@ -2638,5 +2652,69 @@ class Csz_admin_model extends CI_Model{
         }
     }
 
+    /**
+     * insertCarousel
+     *
+     * Function for insert the new carousel
+     */
+    public function insertCarousel(){
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;       
+        $data = array(
+            'name' => $this->input->post('name', TRUE),
+            'active' => $active,
+        );
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('carousel_widget', $data);
+    }
 
+    /**
+     * updateCarousel
+     *
+     * Function for update the carousel
+     *
+     * @param	string	$id    banner id
+     */
+    public function updateCarousel($id){
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $data = array(
+            'name' => $this->input->post('name', TRUE),            
+            'active' => $active,
+        );
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('carousel_widget_id', $id);
+        $this->db->update('carousel_widget', $data);
+    }
+    
+    /**
+     * insertCarouselUpload
+     *
+     * Function for upload the carousel photo
+     *
+     * @param	string	$carousel_widget_id    carousel widget id
+     * @param	string	$carousel_type    carousel type into database
+     * @param	string	$fileupload    file upload path into database
+     * @param	string	$youtube_url    youtube url into database
+     * @param	string	$photo_url    photo url into database
+     */
+    public function insertCarouselUpload($carousel_widget_id, $carousel_type, $fileupload = '', $youtube_url = '', $photo_url = '') {
+        $img_rs = $this->Csz_model->getValue('arrange', 'carousel_picture', "carousel_widget_id", $carousel_widget_id, 1, 'arrange', 'desc');
+        if(!empty($img_rs)){
+            $arrange = $img_rs->arrange;
+        }else{
+            $arrange = 0;
+        }
+        $data = array(
+            'carousel_widget_id' => $carousel_widget_id,
+            'arrange' => ($arrange)+1,
+        );
+        if($fileupload){ $this->db->set('file_upload', $fileupload, TRUE); }
+        $this->db->set('carousel_type', $carousel_type, TRUE);
+        if($youtube_url){ $this->db->set('youtube_url', $youtube_url, TRUE); }
+        if($photo_url){ $this->db->set('photo_url', $photo_url, TRUE); }
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('carousel_picture', $data);
+    }
+    
 }

@@ -7,10 +7,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 ?>
 <?php echo doctype('html5')?>
-<html lang="<?php echo $this->session->userdata('fronlang_iso') ?>" prefix="og: http://ogp.me/ns#">
+<html lang="<?php echo $this->session->userdata('fronlang_iso') . '-' . strtoupper($this->Csz_model->getCountryCode($this->session->userdata('fronlang_iso'))) ?>" prefix="og: http://ogp.me/ns#">
     <head>
         <?php echo $meta_tags?>
         <?php echo link_tag('templates/cszdefault/imgs/favicon.ico', 'shortcut icon', 'image/ico');?>
+        <!-- Bootstrap Core CSS -->
+        <?php echo $core_css ?>
         <title><?php echo $title?></title>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -92,8 +94,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </footer>
         </div>
-        <!-- Bootstrap Core CSS -->
-        <?php echo $core_css ?>
         <!-- Custom CSS -->
         <?php echo link_tag('templates/cszdefault/css/cszdefault.min.css') ?>
         <!-- Bootstrap core JavaScript

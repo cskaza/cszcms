@@ -26,6 +26,7 @@ class Export extends CI_Controller {
         $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
+        admin_helper::is_allowchk('export');
     }
 
     public function _init() {

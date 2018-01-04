@@ -39,9 +39,9 @@ class Csz_startup extends CI_Model {
     function __construct() {
         parent::__construct();
         if (CACHE_TYPE == 'file') {
-            $this->load->driver('cache', array('adapter' => 'file'));
+            $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
-            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
+            $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
         $this->load->database();
         $this->db->cache_on();
@@ -127,11 +127,13 @@ class Csz_startup extends CI_Model {
     public function getPluginBackend() {
         if (!$this->cache->get('startupPluginBackend')) {
             $return = array();
-            foreach ($this->plugin as $value) {
-                $config = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'backend_startup');
-                $base_url = $this->Csz_model->base_link().'/admin/plugin/'.$this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite').'/';
-                if($config !== FALSE && $base_url !== FALSE){
-                    if($config) $return[] = $base_url.$config;
+            if(!empty($this->plugin)){
+                foreach ($this->plugin as $value) {
+                    $config = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'backend_startup');
+                    $base_url = $this->Csz_model->base_link().'/admin/plugin/'.$this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite').'/';
+                    if($config !== FALSE && $base_url !== FALSE){
+                        if($config) $return[] = $base_url.$config;
+                    }
                 }
             }
             ($this->Csz_model->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->Csz_model->load_config()->pagecache_time;
@@ -151,11 +153,13 @@ class Csz_startup extends CI_Model {
     public function getPluginFrontend() {
         if (!$this->cache->get('startupPluginFrontend')) {
             $return = array();
-            foreach ($this->plugin as $value) {
-                $config = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'frontend_startup');
-                $base_url = $this->Csz_model->base_link().'/plugin/'.$this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite').'/';
-                if($config !== FALSE && $base_url !== FALSE){
-                    if($config) $return[] = $base_url.$config;
+            if(!empty($this->plugin)){
+                foreach ($this->plugin as $value) {
+                    $config = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'frontend_startup');
+                    $base_url = $this->Csz_model->base_link().'/plugin/'.$this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite').'/';
+                    if($config !== FALSE && $base_url !== FALSE){
+                        if($config) $return[] = $base_url.$config;
+                    }
                 }
             }
             ($this->Csz_model->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->Csz_model->load_config()->pagecache_time;

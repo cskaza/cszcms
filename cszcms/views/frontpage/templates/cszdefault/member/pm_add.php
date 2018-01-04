@@ -18,54 +18,67 @@
                     <a role="button" href="<?php echo $this->Csz_model->base_link()?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
                     <br><br>
                     <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
-                    <div class="control-group">	
-                        <?php echo form_error('to', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
-                        <label class="control-label" for="to"><?php echo $this->Csz_model->getLabelLang('pm_to_txt'); ?>*</label>
-                        <?php
-                            $att = 'name="to[]" id="to" class="form-control select2" multiple="multiple" required="required" autofocus="true"';
-                            $data = array();
-                            if (!empty($users) && $users !== FALSE) {
-                                foreach ($users as $u) {
-                                    $data[$u['user_admin_id']] = $u['name'];
+                    <?php if($this->uri->segment(3)){ ?>
+                        <div class="control-group">	
+                            <b><?php echo $this->Csz_model->getLabelLang('pm_to_txt') ?>:</b> <?php echo $this->Csz_admin_model->getUser($main_pm->sender_id)->name; ?>
+                            <input type="hidden" name="to[]" id="to" value="<?php echo $main_pm->sender_id ?>">
+                        </div> <!-- /control-group -->
+                        <div class="control-group">
+                            <b><?php echo $this->Csz_model->getLabelLang('pm_subject_txt') ?></b> Re: <?php echo $main_pm->title; ?>
+                            <input type="hidden" name="title" id="title" value="Re: <?php echo $main_pm->title ?>">
+                        </div> <!-- /control-group -->
+                        <div class="control-group">
+                            <b><?php echo $this->lang->line('pm_message'); ?>: </b><?php echo $main_pm->message; ?>
+                        </div>
+                        <br>
+                    <?php }else{ ?>
+                        <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
+                        <div class="control-group">	
+                            <?php echo form_error('to', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                            <label class="control-label" for="to"><?php echo $this->Csz_model->getLabelLang('pm_to_txt'); ?>*</label>
+                            <?php
+                                $att = 'name="to[]" id="to" class="form-control select2" multiple="multiple" required="required" autofocus="true"';
+                                $data = array();
+                                if (!empty($users) && $users !== FALSE) {
+                                    foreach ($users as $u) {
+                                        $data[$u['user_admin_id']] = $u['name'];
+                                    }
                                 }
-                            }
-                            echo form_dropdown('', $data, ($this->uri->segment(3) && is_numeric($this->uri->segment(3))) ? $this->uri->segment(3) : '', $att);
-                        ?>
-                    </div> <!-- /control-group -->
-
-                    <div class="control-group">	
-                        <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
-                        <label class="control-label" for="title"><?php echo $this->Csz_model->getLabelLang('pm_subject_txt'); ?>*</label>
-                        <?php
-                        $data = array(
-                            'name' => 'title',
-                            'id' => 'title',
-                            'required' => 'required',
-                            'autofocus' => 'true',
-                            'class' => 'form-control',
-                            'maxlength' => '255',
-                            'value' => set_value('title', '', FALSE)
-                        );
-                        echo form_input($data);
-                        ?>			
-                    </div> <!-- /control-group -->
-
+                                echo form_dropdown('', $data, ($this->uri->segment(3) && is_numeric($this->uri->segment(3))) ? $this->uri->segment(3) : '', $att);
+                            ?>
+                        </div> <!-- /control-group -->
+                        <div class="control-group">	
+                            <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                            <label class="control-label" for="title"><?php echo $this->Csz_model->getLabelLang('pm_subject_txt'); ?>*</label>
+                            <?php
+                            $data = array(
+                                'name' => 'title',
+                                'id' => 'title',
+                                'required' => 'required',
+                                'autofocus' => 'true',
+                                'class' => 'form-control',
+                                'maxlength' => '255',
+                                'value' => set_value('title', '', FALSE)
+                            );
+                            echo form_input($data);
+                            ?>			
+                        </div> <!-- /control-group -->
+                    <?php } ?>
                     <div class="control-group">	
                         <?php echo form_error('message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <label class="control-label" for="message"><?php echo $this->Csz_model->getLabelLang('pm_msg_txt'); ?>*</label>
                         <?php
-                        $data = array(
-                            'name' => 'message',
-                            'id' => 'message',
-                            'required' => 'required',
-                            'autofocus' => 'true',
-                            'class' => 'form-control',
-                            'value' => set_value('message', '', FALSE)
-                        );
-                        echo form_textarea($data);
+                            $data = array(
+                                'name' => 'message',
+                                'id' => 'message',
+                                'required' => 'required',
+                                'autofocus' => 'true',
+                                'class' => 'form-control',
+                                'value' => set_value('message', '', FALSE)
+                            );
+                            echo form_textarea($data);
                         ?>			
                     </div> <!-- /control-group -->
-
                     <br><br>
                     <div class="form-actions">
                         <?php

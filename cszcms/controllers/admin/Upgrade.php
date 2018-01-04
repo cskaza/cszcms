@@ -80,12 +80,14 @@ class Upgrade extends CI_Controller {
             $newfname = FCPATH . basename($url);
             if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
                 $this->Csz_admin_model->setMaintenance();
+                $this->Csz_model->clear_all_cache();
+                $this->db->cache_delete_all();
                 if (file_exists($newfname)) {
                     $unzip = @$this->unzip->extract($newfname, FCPATH);
                     if(!empty($unzip)){
                         if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
-                            $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                            $this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
+                            @$this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                            @$this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
                         }
                         if(is_writable($newfname)){
                             @unlink($newfname);
@@ -140,14 +142,16 @@ class Upgrade extends CI_Controller {
                 $newfname = FCPATH . $file_name;
                 if (file_exists($newfname)) {
                     $this->Csz_admin_model->setMaintenance();
+                    $this->Csz_model->clear_all_cache();
+                    $this->db->cache_delete_all();
                     @$this->unzip->extract($newfname, FCPATH);
                     if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) { /* for sql upgrade  */
-                        $this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
-                        $this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
+                        @$this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                        @$this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
                     }
                     if (file_exists(FCPATH . 'plugin_sql/install.sql')) { /* for sql plugin install or upgrade  */
-                        $this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
-                        $this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
+                        @$this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
+                        @$this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
                     }
                     if (is_writable($newfname)) {
                         @unlink($newfname);
@@ -403,12 +407,11 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
-        $this->db->cache_delete_all();
+        @$this->db->cache_delete_all();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         @$this->db->empty_table('save_formdraft');
-        $this->db->flush_cache();
-        $this->db->close();
+        @$this->db->flush_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
@@ -417,10 +420,10 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
-        $this->Csz_model->clear_all_session();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        $this->Csz_model->clear_all_session();
         redirect('admin/logout', 'refresh');
     }
 
