@@ -30,3 +30,8 @@ Installation Instructions:
 - Click 'Install' button. And enjoy with your web applications.
 
 If you find the hosting for run your website with CSZ CMS. Please see at https://www.cskaza.com
+
+### Support
+
+* [Community English](http://forums.astian.org/forumdisplay.php?fid=9)
+* [Comunidad Español](http://forums.astian.org/forumdisplay.php?fid=10)

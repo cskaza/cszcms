@@ -12,51 +12,39 @@
 <!-- Info boxes -->
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <h1><i class="fa fa-server"></i></h1>
-                    </div>
-                    <div class="col-xs-10 text-right">
-                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->getServerIp() ?></small></div>
-                        <div>(<?php echo $this->Csz_admin_model->getSoftwareInfo('n') ?>)</div>
-                    </div>
-                </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-server"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">(<?php echo $this->Csz_admin_model->getSoftwareInfo('n') ?>)</span>
+                <span class="info-box-number"><?php echo $this->Csz_admin_model->getServerIp() ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
+        <!-- /.info-box -->
     </div>
     <!-- /.col -->
     <div class="col-md-3">
-        <div class="panel panel-yellow">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <h1><i class="fa fa-microchip"></i></h1>
-                    </div>
-                    <div class="col-xs-10 text-right">
-                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></small></div>
-                        <div><?php echo $this->lang->line('serverstatus_phpmem_use') ?></div>
-                    </div>
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-microchip"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text"><?php echo $this->lang->line('serverstatus_phpmem_use') ?></span>
+                    <span class="info-box-number"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></span>
                 </div>
+                <!-- /.info-box-content -->
             </div>
-        </div>
+            <!-- /.info-box -->
     </div>
     <!-- /.col -->
     <div class="col-md-3">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-2">
-                        <h1><i class="fa fa-hdd-o"></i></h1>
-                    </div>
-                    <div class="col-xs-10 text-right">
-                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->usageSpace() ?></small></div>
-                        <div><?php echo $this->lang->line('serverstatus_disk_use') ?></div>
-                    </div>
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-hdd-o"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text"><?php echo $this->lang->line('serverstatus_disk_use') ?></span>
+                    <span class="info-box-number"><?php echo $this->Csz_admin_model->usageSpace() ?></span>
                 </div>
+                <!-- /.info-box-content -->
             </div>
-        </div>
+            <!-- /.info-box -->
     </div>
     <!-- /.col -->
 </div>
@@ -121,15 +109,19 @@
         <br><br>
         <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clearalldbcache') ?></a>
         <br><br>
+        <?php if($this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?>
         <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a>
         <br><br>
+        <?php } ?>
         <ol class="breadcrumb">
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>
             </li>
         </ol>
+        <?php if($this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?>
         <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllErrLog' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_clear_logs') ?></a>
         <br><br>
+        <?php } ?>
         <?php echo form_open($this->Csz_model->base_link(). '/admin/upgrade/downloadErrLog'); ?>
         <?php
         $att = 'id="errlogfile" class="form-control-static"';

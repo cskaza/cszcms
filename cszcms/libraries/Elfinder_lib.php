@@ -42,5 +42,9 @@ class Elfinder_lib {
         $connector = new elFinderConnector(new elFinder($opts));
         return $connector->run();
     }
+    
+    public function getVersion(){
+        return elFinder::getApiFullVersion();
+    }
 
 }

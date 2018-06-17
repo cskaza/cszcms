@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $plugin_config['plugin_name']  = 'Gallery';
 $plugin_config['plugin_urlrewrite']  = 'gallery'; /* Please don't have any blank space */
 $plugin_config['plugin_author']  = 'CSZCMS'; /* For your name */
-$plugin_config['plugin_version']   = '1.0.4';
+$plugin_config['plugin_version']   = '1.0.5';
 $plugin_config['plugin_description']   = 'gallery plugin'; /* For your plugin description */
 
 /* for menu inside member zone. If not have please blank. 
@@ -64,8 +64,37 @@ $plugin_config['plugin_file_path']   = array(
     FCPATH . '/cszcms/language/spanish/plugin/gallery_lang.php',
     FCPATH . '/cszcms/language/thai/plugin/gallery_lang.php',
 );
+
+/* Plugin widget Config (for content view page only) 
+ * If don't have the widget for your plugin. Please blank.
+ */
+$plugin_config['plugin_widget_viewtable']   = 'gallery_db';
+/* for sql extra condition for this view table. If not have please blank. */
+$plugin_config['plugin_widget_condition']   = "active = '1' AND url_rewrite != ''";
+/* for select the field from the database with array('field_name'). If not have please blank. */
+$plugin_config['plugin_widget_sel_field']   = array(
+    'gallery_db_id',
+    'album_name',
+    'url_rewrite',
+    'keyword',
+    'short_desc',
+    'timestamp_create',
+    'timestamp_update',
+);
+/* for sql table join with view table when have view ID. If not have please blank. */
+$plugin_config['plugin_widget_othertable']   = 'gallery_picture';
+$plugin_config['plugin_widget_othertable_idkey']   = 'gallery_db_id';
+$plugin_config['plugin_widget_othertable_condition']   = "file_upload != ''";
+/* for select the field from the table join with array('field_name'). If not have please blank. */
+$plugin_config['plugin_widget_othertable_selfield']   = array(
+    'file_upload',
+    'caption',
+);
+
 /* End System Config (Important) */
 
 /* Custom config (For your plugin config)
  * Please add your config after this section
  */
+$plugin_config['backend_startup'] = '';
+$plugin_config['frontend_startup'] = '';

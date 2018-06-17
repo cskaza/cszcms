@@ -23,7 +23,9 @@ allow from all
         ExpiresDefault "access plus 10 day"
 </IfModule>
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
+    <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css|js)$">
+		Header set Access-Control-Allow-Origin "*"
+	</FilesMatch>
     Header set Connection keep-alive
     Header unset ETag
     # Set X-XSS-Protection header and X-Frame-Options header and X-Content-Type-Options header for Apache

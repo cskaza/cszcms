@@ -674,10 +674,10 @@ class Csz_admin_model extends CI_Model{
         $core_css = '<link rel="canonical" href="' . $this->Csz_model->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
         $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
         $core_css.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
-        $core_css.= link_tag('assets/css/bootstrap.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/css/bootstrap.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-        $core_css.= link_tag('assets/css/flag-icon.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/css/flag-icon.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
@@ -847,6 +847,7 @@ class Csz_admin_model extends CI_Model{
             'assets_static_active' => $this->input->post('assets_static_active', TRUE),
             'assets_static_domain' => $this->input->post('assets_static_domain', TRUE),
             'fb_messenger' => $this->input->post('fb_messenger', TRUE),
+            'email_logs' => $this->input->post('email_logs', TRUE),
         );
         $upload_file = '';
         if($this->input->post('del_file')){
@@ -1531,6 +1532,12 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
+        if($this->input->post('save_to_db')){ 
+            $save_to_db = $this->input->post('save_to_db', TRUE);
+        }else{
+            $save_to_db = 0;
+            $sendmail = 1;
+        }
         $str_arr = array(' ', '-');
         $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
@@ -1546,6 +1553,7 @@ class Csz_admin_model extends CI_Model{
             'send_to_visitor' => $send_to_visitor,
             'active' => $active,
             'captcha' => $captcha,
+            'save_to_db' => $save_to_db,
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
@@ -1623,6 +1631,12 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
+        if($this->input->post('save_to_db')){ 
+            $save_to_db = $this->input->post('save_to_db', TRUE);
+        }else{
+            $save_to_db = 0;
+            $sendmail = 1;
+        }
         $str_arr = array(' ', '-');
         $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
         $data = array(
@@ -1641,6 +1655,7 @@ class Csz_admin_model extends CI_Model{
             'visitor_body' => $this->input->post('visitor_body', TRUE),
             'active' => $active,
             'captcha' => $captcha,
+            'save_to_db' => $save_to_db,
         );
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('form_main_id', $id);
@@ -2715,6 +2730,78 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_create', 'NOW()', FALSE);
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->insert('carousel_picture', $data);
+    }
+    
+    /**
+     * getAllPluginWidget
+     *
+     * Function for insert the new carousel
+     * 
+     * @return	array
+     */
+    public function getAllPluginWidget(){
+        $return = array();
+        $all_plugin = $this->Csz_model->getValueArray('*', 'plugin_manager', 'plugin_active', '1');
+        if($all_plugin !== FALSE){
+            foreach ($all_plugin as $value) {
+                $plugin_widget_viewtable = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_widget_viewtable');
+                if($plugin_widget_viewtable && $plugin_widget_viewtable !== FALSE){
+                    $return[] = $value['plugin_config_filename'];
+                }
+            }
+        }
+        return $return;
+    }
+    
+    /**
+     * insertPWidget
+     *
+     * Function for insert the new plugin widget
+     */
+    public function insertPWidget(){
+        // Create the new lang
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $data = array(
+            'name' => $this->input->post('name', TRUE),
+            'plugin_filename' => $this->input->post('plugin_filename', TRUE),
+            'sort_by' => $this->input->post('sort_by', TRUE),
+            'order_by' => $this->input->post('order_by', TRUE),
+            'active' => $active,
+            'data_limit' => $this->input->post('data_limit', TRUE),
+            'view_id' => str_replace('.', '', $this->input->post('view_id', TRUE)),
+            'template_code' => $this->input->post('template_code', TRUE),
+            'lang_iso' => $this->input->post('lang_iso', TRUE),
+        );
+        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->insert('plugin_widget', $data);
+    }
+
+    /**
+     * updatePWidget
+     *
+     * Function for update the plugin widget
+     *
+     * @param	string	$id    widget id
+     */
+    public function updatePWidget($id){
+        // Update the lang
+        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $data = array(
+            'name' => $this->input->post('name', TRUE),
+            'plugin_filename' => $this->input->post('plugin_filename', TRUE),
+            'sort_by' => $this->input->post('sort_by', TRUE),
+            'order_by' => $this->input->post('order_by', TRUE),
+            'active' => $active,
+            'data_limit' => $this->input->post('data_limit', TRUE),
+            'view_id' => str_replace('.', '', $this->input->post('view_id', TRUE)),
+            'template_code' => $this->input->post('template_code', TRUE),
+            'lang_iso' => $this->input->post('lang_iso', TRUE),
+        );
+        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->where('plugin_widget_id', $id);
+        $this->db->update('plugin_widget', $data);
+        $this->Csz_model->clear_file_cache('pwidget_' . md5($id));
     }
     
 }

@@ -141,7 +141,7 @@ class Home extends CI_Controller {
 
     public function getCoreCSS(){
         if (function_exists('session_cache_limiter')) {
-            session_cache_limiter(''); // add this line to the beginning of your php script to disable the cache limiter function:
+            @session_cache_limiter(''); // add this line to the beginning of your php script to disable the cache limiter function:
         }
         $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
         $file = FCPATH.'assets/css/bootstrap.min.css';
@@ -150,8 +150,8 @@ class Home extends CI_Controller {
             FCPATH.'assets/css/flag-icon.min.css',
             FCPATH.'assets/css/full-slider.css',
         );
-        $etag = md5_file($file); // Generate Etag
-        $fileModified = filemtime($file);
+        $etag = @md5_file($file); // Generate Etag
+        $fileModified = @filemtime($file);
         /*
           Set 304 Not Modified if old visitor
          */
@@ -168,7 +168,7 @@ class Home extends CI_Controller {
     
     public function getCoreJS(){
         if (function_exists('session_cache_limiter')) {
-            session_cache_limiter(''); // add this line to the beginning of your php script to disable the cache limiter function:
+            @session_cache_limiter(''); // add this line to the beginning of your php script to disable the cache limiter function:
         }
         $expires = 60 * 60 * 24 * 30; // Cache lifetime 30 days
         $file = FCPATH.'assets/js/bootstrap.min.js';
@@ -179,8 +179,8 @@ class Home extends CI_Controller {
             FCPATH.'assets/js/ui-loader.min.js',
             FCPATH.'assets/js/scripts.min.js',
         );
-        $etag = md5_file($file); // Generate Etag
-        $fileModified = filemtime($file);
+        $etag = @md5_file($file); // Generate Etag
+        $fileModified = @filemtime($file);
         /*
           Set 304 Not Modified if old visitor
          */

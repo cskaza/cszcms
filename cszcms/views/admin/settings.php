@@ -430,6 +430,23 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
+        <div class="control-group">										
+            <label class="form-control-static" for="email_logs">
+                <?php
+                if($settings->email_logs){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'email_logs',
+                    'id' => 'email_logs',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('settings_email_logs'); ?></label>	
+        </div> <!-- /control-group -->
         <br>
         <div class="h2 sub-header"><?php echo $this->lang->line('settings_google_config') ?></div>
         <div class="control-group">										

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="<?php echo $this->session->userdata('fronlang_iso') . '-' . strtoupper($this->Csz_model->getCountryCode($this->session->userdata('fronlang_iso'))) ?>" prefix="og: http://ogp.me/ns#">
     <head>
         <?php echo $meta_tags?>
-        <?php echo link_tag('templates/cszdefault/imgs/favicon.ico', 'shortcut icon', 'image/ico');?>
+        <?php echo link_tag(base_url('', '', TRUE).'templates/cszdefault/imgs/favicon.ico', 'shortcut icon', 'image/ico');?>
         <!-- Bootstrap Core CSS -->
         <?php echo $core_css ?>
         <title><?php echo $title?></title>
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </footer>
         </div>
         <!-- Custom CSS -->
-        <?php echo link_tag('templates/cszdefault/css/cszdefault.min.css') ?>
+        <?php echo link_tag(base_url('', '', TRUE).'templates/cszdefault/css/cszdefault.min.css') ?>
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->

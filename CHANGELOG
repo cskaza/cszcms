@@ -1,4 +1,23 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.0 (2018-06-15)
+- Add Developer Toolbar.
+- Add new plugin widget system.
+- Add the article and gallery plugin can upgrade with plugin manager.
+- Add setting on 'Site Settings' for disabled the email logs to save into DB.
+- Add setting on 'Forms Builder' for disabled the save into DB after form submit.
+- Update Codeigniter core to 3.1.8.
+- Update TinyMCE to 4.7.13.
+- Update AdminLTE to 2.4.3.
+- Update elFinder to 2.1.38.
+- Support for PHP 7.2.
+- Allow blank password for DB password on installer wizard.
+- Fixed plugin upgrade loop never die.
+- Fixed widget code not working.
+- Fixed the session and cookie prefix name.
+- Fixed .htaccess config bug with static assets.
+- Fixed corecss and corejs error on PHP7.2.
+- Fixed more bug.
+
 CSZ-CMS V.1.1.9 (2017-12-22)
 - Add the import/export group permission.
 - Add the PM group permission.

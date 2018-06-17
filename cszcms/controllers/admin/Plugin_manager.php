@@ -161,6 +161,7 @@ class Plugin_manager extends CI_Controller {
             @ini_set('memory_limit','512M');
         }
         if ($this->uri->segment(4) && $this->Csz_admin_model->chkPluginInst($this->uri->segment(4)) !== FALSE) {
+            $this->Csz_model->clear_all_cache();
             $last_ver = $this->Csz_admin_model->pluginLatestVer($this->uri->segment(4));
             $cur_ver = $this->Csz_model->getPluginConfig($this->uri->segment(4), 'plugin_version');
             if($this->Csz_admin_model->chkPluginUpdate($cur_ver, $last_ver) !== FALSE){
@@ -180,6 +181,8 @@ class Plugin_manager extends CI_Controller {
                             if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) {
                                 @$this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
                                 @$this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
+                                $this->Csz_model->clear_all_cache();
+                                $this->db->cache_delete_all();
                             }
                             if(is_writable($newfname)){
                                 @unlink($newfname);

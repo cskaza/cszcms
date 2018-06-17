@@ -93,14 +93,15 @@ CREATE TABLE IF NOT EXISTS `form_main` (
   `visitor_body` text,
   `active` int(11),
   `captcha` int(11),
+  `save_to_db` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`form_main_id`),
   KEY `form_name` (`form_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, '2016-05-02 19:15:50', '2016-05-02 19:15:50');
+INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `save_to_db`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, 1, NOW(), NOW());
 
 DROP TABLE IF EXISTS `lang_iso`;
 CREATE TABLE IF NOT EXISTS `lang_iso` (
@@ -140,8 +141,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 INSERT INTO `pages` (`pages_id`, `page_name`, `page_url`, `lang_iso`, `page_title`, `page_keywords`, `page_desc`, `content`, `custom_css`, `custom_js`, `active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header>[?]{=carousel:1}[?]</header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- /container -->', '', '', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
-(2, 'About Us', 'about-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', '', '', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
+(1, 'Home', 'home', 'en', 'CSZ Home', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english, homepage', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<header>[?]{=carousel:1}[?]</header><!-- Start Jumbotron -->\r\n<div class="jumbotron">\r\n<div class="container">\r\n<h1>Hello, world!</h1>\r\n<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n<div class="col-md-4">\r\n<h2>Heading</h2>\r\n<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>\r\n<p><a class="btn btn-default" href="#" role="button">View details »</a></p>\r\n</div>\r\n</div>\r\n</div>\r\n', '', '', 1, '2016-03-08 10:12:56', '2016-05-09 11:00:51'),
+(2, 'Abouts Us', 'abouts-us', 'en', 'CSZ-CMS About Us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, aboutus', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>About Us!</h1>\r\n<p>CSKAZA Template for Bootstrap with CSZ-CMS. CSZ-CMS build by CSKAZA.</p>\r\n<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>\r\n</div>\r\n</div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="col-md-6">\r\n<div class="panel panel-default">\r\n<div class="panel-heading">Panel heading</div>\r\n<div class="panel-body">\r\n<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<p></p>', '', '', 1, '2016-04-11 15:17:18', '2016-05-01 15:16:13'),
 (3, 'Contact Us', 'contact-us', 'en', 'CSZ-CMS Contact us', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, contact us', 'CSKAZA Template for Bootstrap with CSZ-CMS', '<div class="jumbotron">\r\n<div class="container">\r\n<h1>Contact us!</h1>\r\n<p>If you want to contact us please use this form below. Or send the email to <a href="mailto:info@cszcms.com">info[at]cszcms.com</a></p>\r\n</div>\r\n</div>\r\n<div class="container"></div>\r\n<div class="container">\r\n<div class="row">\r\n<div class="col-md-6">\r\n<h2>Google Map</h2>\r\n<p><iframe width="100%" height="315" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.168282092751!2d98.37285931425068!3d7.877454308128998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2zN8KwNTInMzguOCJOIDk4wrAyMiczMC4yIkU!5e0!3m2!1sen!2sth!4v1462104596003" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>\r\n</div>\r\n<div class="col-md-6">\r\n<h2>Contact Form</h2>\r\n<p>If you have any question please send this from.</p>\r\n<p>[?]{=forms:contactus_en}[?]</p>\r\n</div>\r\n</div>\r\n</div>\r\n<p></p>\r\n<p></p>', '', '', 1, '2016-04-30 16:57:16', '2016-05-12 17:59:41');
 
 DROP TABLE IF EXISTS `page_menu`;
@@ -165,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `page_menu` (
 
 INSERT INTO `page_menu` (`page_menu_id`, `menu_name`, `lang_iso`, `pages_id`, `other_link`, `plugin_menu`, `drop_menu`, `drop_page_menu_id`, `position`, `new_windows`, `active`, `arrange`, `timestamp_create`, `timestamp_update`) VALUES
 (1, 'Home', 'en', 1, '', '', 0, 0, 0, 0, 1, 1, '2016-03-25 13:00:08', '2016-04-30 16:58:07'),
-(2, 'About Us', 'en', 2, '', '', 0, 0, 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
+(2, 'Abouts Us', 'en', 2, '', '', 0, 0, 0, 0, 1, 2, '2016-04-11 15:01:03', '2016-04-30 16:58:07'),
 (3, 'Contact Us', 'en', 3, '', '', 0, 0, 0, 0, 1, 3, '2016-04-30 16:58:02', '2016-04-30 16:58:07'),
 (4, 'Drop Menu', 'en', 0, '', '', 1, 0, 0, 0, 1, 4, '2016-03-27 15:54:15', '2016-04-30 16:58:07'),
 (5, 'CSZ CMS Website', 'en', 0, 'https://www.cszcms.com', '', 0, 4, 0, 1, 1, 1, '2016-03-28 15:22:12', '2016-04-30 16:58:07');
@@ -210,12 +211,13 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `assets_static_active` int(11),
   `assets_static_domain` varchar(255),
   `fb_messenger` int(11),
+  `email_logs` int(11),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `timestamp_update`) VALUES
-(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, NOW());
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `email_logs`, `timestamp_update`) VALUES
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 1, NOW());
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -529,7 +531,7 @@ CREATE TABLE `user_perms` (
   `definition` text,
   `permstype` varchar(100),
   PRIMARY KEY (`user_perms_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=32;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=33;
 
 INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VALUES
 (1, 'save', 'For save permission on backend', 'backend'),
@@ -562,7 +564,8 @@ INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VA
 (28, 'pages cssjs additional', 'For pages content css js metatag additional access permission on backend', 'backend'),
 (29, 'export', 'For Import Export CSV access permission on backend', 'backend'),
 (30, 'pm', 'For PM access permission on backend', 'backend'),
-(31, 'carousel', 'For carousel access permission on backend', 'backend');
+(31, 'carousel', 'For carousel access permission on backend', 'backend'),
+(32, 'old plugin widget', 'For old plugin widget access permission on backend', 'backend');
 
 DROP TABLE IF EXISTS `user_perm_to_group`;
 CREATE TABLE `user_perm_to_group` (
@@ -732,3 +735,21 @@ INSERT INTO `carousel_picture` (`carousel_picture_id`, `carousel_widget_id`, `fi
 (1, 1, NULL, 'https://placehold.it/1900x540&text=Slide%20One', 'Caption One', 1, 'multiimages', NULL, NOW(), NOW()),
 (2, 1, NULL, 'https://placehold.it/1900x540&text=Slide%20Two', 'Caption Two', 2, 'multiimages', NULL, NOW(), NOW()),
 (3, 1, NULL, 'https://placehold.it/1900x540&text=Slide%20Three', 'Caption Three', 3, 'multiimages', NULL, NOW(), NOW());
+
+DROP TABLE IF EXISTS `plugin_widget`;
+CREATE TABLE IF NOT EXISTS `plugin_widget` (
+  `plugin_widget_id` int(11) AUTO_INCREMENT,
+  `name` varchar(255),
+  `plugin_filename` varchar(255),
+  `sort_by` varchar(255),
+  `order_by` varchar(10),
+  `data_limit` int(11),
+  `view_id` int(11),
+  `template_code` text,
+  `lang_iso` varchar(10),
+  `active` int(11),
+  `timestamp_create` datetime,
+  `timestamp_update` datetime,
+  PRIMARY KEY (`plugin_widget_id`),
+  KEY `plugin_widget_id` (`plugin_widget_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

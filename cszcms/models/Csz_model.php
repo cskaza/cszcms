@@ -660,7 +660,7 @@ class Csz_model extends CI_Model {
     public function load_page($pageurl) {
         if (!$this->cache->get('file_'.$this->encodeURL($pageurl))) {
             $this->db->where("page_url", $pageurl);
-            $this->db->where("active", 1);
+            $this->db->where("active", "1");
             $this->db->limit(1, 0);
             $query = $this->db->get('pages');
             if (!empty($query) && $query->num_rows() !== 0) {
@@ -668,12 +668,7 @@ class Csz_model extends CI_Model {
             } else {
                 $row = FALSE;
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('file_'.$this->encodeURL($pageurl), $row, ($cache_time * 60));
+            $this->cache->save('file_'.$this->encodeURL($pageurl), $row, ($this->load_config()->pagecache_time * 60));
             unset($query, $row);
         }
         return $this->cache->get('file_'.$this->encodeURL($pageurl));
@@ -767,7 +762,7 @@ class Csz_model extends CI_Model {
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
         $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
-        $core_css.= link_tag('assets/js/plugins/timepicker/bootstrap-timepicker.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/timepicker/bootstrap-timepicker.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -800,7 +795,7 @@ class Csz_model extends CI_Model {
         $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE, TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").timepicker({minuteStep:1,showMeridian:false,defaultTime:false,disableFocus:true});</script>';
         if ($this->getFBsdk() !== FALSE) { $core_js.= $this->getFBsdk(); }
         if (!empty($more_js)) {
@@ -937,6 +932,7 @@ class Csz_model extends CI_Model {
     public function getHtmlContent($ori_content, $url_segment) { /* Calculate the HTML code */
         $ori_content = $this->bannerInHtml($ori_content);
         $ori_content = $this->carouselInHtml($ori_content);
+        $ori_content = $this->pwidgetInHtml($ori_content);
         $ori_content = $this->widgetInHtml($ori_content);
         $ori_content = $this->formTagToHTML($ori_content);
         $ori_content = $this->frmNameInHtml($ori_content, $url_segment);
@@ -993,22 +989,17 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function bannerInHtml($content) { /* Find the banner in content */
+        $output_array = array();
         $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?]{=banner:') !== false) {
-            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
-            $array = explode("[?]", $txt_nonline);
-            if (!empty($array)) {
-                foreach ($array as $val) {
-                    if (strpos($val, '{=banner:') !== false) {
-                        $rep_arr = array('{=banner:', '}');
-                        $bid = str_replace($rep_arr, '', $val);
-                        $content = $this->addBannerToHTML($content, $bid);
-                    }
+        preg_match_all("/\[\?\]\{=banner\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if(!empty($output_array[0])){
+            for ($i = 0; $i < count($output_array[0]); $i++) {
+                if (!empty($output_array[0][$i]) && strpos($output_array[0][$i], '[?]{=banner:') !== false && !empty($output_array[1][$i])) {
+                    $content = $this->addBannerToHTML($content, $output_array[1][$i]);
                 }
             }
-            unset($array);
         }
-        unset($txt_nonhtml);
+        unset($output_array, $txt_nonhtml);
         return $content;
     }
 
@@ -1055,22 +1046,17 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function carouselInHtml($content) { /* Find the carousel in content */
+        $output_array = array();
         $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?]{=carousel:') !== false) {
-            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
-            $array = explode("[?]", $txt_nonline);
-            if (!empty($array)) {
-                foreach ($array as $val) {
-                    if (strpos($val, '{=carousel:') !== false) {
-                        $rep_arr = array('{=carousel:', '}');
-                        $carousel_id = str_replace($rep_arr, '', $val);
-                        $content = $this->addCarouselToHTML($content, $carousel_id);
-                    }
+        preg_match_all("/\[\?\]\{=carousel\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if(!empty($output_array[0])){
+            for ($i = 0; $i < count($output_array[0]); $i++) {
+                if (!empty($output_array[0][$i]) && strpos($output_array[0][$i], '[?]{=carousel:') !== false && !empty($output_array[1][$i])) {
+                    $content = $this->addCarouselToHTML($content, $output_array[1][$i]);
                 }
             }
-            unset($array);
         }
-        unset($txt_nonhtml);
+        unset($output_array, $txt_nonhtml);
         return $content;
     }
 
@@ -1151,21 +1137,17 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function widgetInHtml($content) { /* Find the widget in content */
+        $output_array = array();
         $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?]{=widget:') !== false) {
-            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
-            $array = explode("[?]", $txt_nonline);
-            if (!empty($array)) {
-                foreach ($array as $val) {
-                    if (strpos($val, '{=widget:') !== false) {
-                        $rep_arr = array('{=widget:', '}');
-                        $wid_id = str_replace($rep_arr, '', $val);
-                        $content = $this->addWidgetToHTML($content, $wid_id);
-                    }
+        preg_match_all("/\[\?\]\{=widget\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if(!empty($output_array[0])){
+            for ($i = 0; $i < count($output_array[0]); $i++) {
+                if (!empty($output_array[0][$i]) && strpos($output_array[0][$i], '[?]{=widget:') !== false && !empty($output_array[1][$i])) {
+                    $content = $this->addWidgetToHTML($content, $output_array[1][$i]);
                 }
             }
         }
-        unset($array, $txt_nonline, $txt_nonhtml);
+        unset($output_array, $txt_nonhtml);
         return $content;
     }
     
@@ -1178,17 +1160,8 @@ class Csz_model extends CI_Model {
      * @return	object or FALSE
      */
     public function getWidgetFromID($wid_id) {
-        if (!$this->cache->get('widget_sql_'.md5($wid_id))) {
-            $widget = $this->getValue('*', 'widget_xml', "active = '1' AND xml_url != '' AND limit_view != '0' AND (widget_xml_id = '" . $wid_id . "' OR widget_name = '" . $wid_id . "')", '', 1);            
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('widget_sql_'.md5($wid_id), $widget, ($cache_time * 60));
-            unset($cache_time, $widget);
-        }
-        return $this->cache->get('widget_sql_'.md5($wid_id));
+        $this->db->cache_on();
+        return $this->getValue('*', 'widget_xml', "active = '1' AND xml_url != '' AND limit_view != '0' AND (widget_xml_id = '" . $wid_id . "' OR widget_name = '" . $wid_id . "')", '', 1);
     }
     
     /**
@@ -1226,52 +1199,213 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function addWidgetToHTML($content, $wid_id) {
-        if (!$this->cache->get('widget_'.md5($wid_id))) {
-            $getWidget = $this->getWidgetFromID($wid_id);
-            if ($getWidget !== FALSE) {
-                $html = str_replace('{widget_header_name}', $getWidget->widget_name, $getWidget->widget_open);
-                if ($this->is_url_exist($getWidget->xml_url) !== FALSE) {
-                    $xml_url = $this->get_contents_url($getWidget->xml_url);
-                    if($xml_url !== FALSE){
-                        $xml = simplexml_load_string($xml_url);
-                        if ($xml !== FALSE) {
-                            if ($xml->plugin[0]->null == 0) {
-                                $i = 1;
-                                foreach ($xml->plugin[0]->item as $item) {
-                                    $html.= $this->replaceTagInWidget($getWidget->widget_content, $item);
-                                    if ($i == $getWidget->limit_view) {
-                                        break;
-                                    }
-                                    $i++;
+        $getWidget = $this->getWidgetFromID($wid_id);
+        if ($getWidget !== FALSE) {
+            $html = str_replace('{widget_header_name}', $getWidget->widget_name, $getWidget->widget_open);
+            if ($this->is_url_exist($getWidget->xml_url) !== FALSE) {
+                $xml_url = $this->get_contents_url($getWidget->xml_url);
+                if ($xml_url !== FALSE) {
+                    $xml = simplexml_load_string($xml_url);
+                    if ($xml !== FALSE) {
+                        if ($xml->plugin[0]->null == 0) {
+                            $i = 1;
+                            foreach ($xml->plugin[0]->item as $item) {
+                                $html .= $this->replaceTagInWidget($getWidget->widget_content, $item);
+                                if ($i == $getWidget->limit_view) {
+                                    break;
                                 }
-                            } else {
-                                $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
+                                $i++;
                             }
-                            $html.= str_replace(array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')), $getWidget->widget_seemore);         
-                        }else{
-                            $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
+                        } else {
+                            $html .= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                         }
-                        unset($xml);
-                    }else{
-                        $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
+                        $html .= str_replace(array('{main_url}', '{readmore_text}'), array($xml->plugin[0]->main_url, $this->getLabelLang('article_readmore_text')), $getWidget->widget_seemore);
+                    } else {
+                        $html .= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                     }
-                    unset($xml_url);
-                }else{
-                    $html.= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
+                    unset($xml);
+                } else {
+                    $html .= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
                 }
-                $html.= $getWidget->widget_close;
-            }else{
-                $html = '[?]{=widget:' . $wid_id . '}[?]';
+                unset($xml_url);
+            } else {
+                $html .= '<h4 class="error">' . $this->getLabelLang('error_txt') . '</h4>';
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('widget_'.md5($wid_id), $html, ($cache_time * 60));
-            unset($html, $cache_time, $getWidget);
+            $html .= $getWidget->widget_close;
+        } else {
+            $html = '[?]{=widget:' . $wid_id . '}[?]';
         }
-        return str_replace('[?]{=widget:' . $wid_id . '}[?]', $this->cache->get('widget_'.md5($wid_id)), $content);
+        return str_replace('[?]{=widget:' . $wid_id . '}[?]', $html, $content);
+    }
+    
+    /**
+     * pwidgetInHtml
+     *
+     * Function for find plugin widget tag
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
+    public function pwidgetInHtml($content) { /* Find the widget in content */
+        $output_array = array();
+        $txt_nonhtml = strip_tags($content);
+        preg_match_all("/\[\?\]\{=pwidget\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if(!empty($output_array[0])){
+            for ($i = 0; $i < count($output_array[0]); $i++) {
+                if (!empty($output_array[0][$i]) && strpos($output_array[0][$i], '[?]{=pwidget:') !== false && !empty($output_array[1][$i])) {
+                    $content = $this->addPWidgetToHTML($content, $output_array[1][$i]);
+                }
+            }
+        }
+        unset($output_array, $txt_nonhtml);
+        return $content;
+    }
+    
+    /**
+     * getWidgetFromID
+     *
+     * Function for get widget from id
+     *
+     * @param	string	$wid_id   Widget id
+     * @return	object or FALSE
+     */
+    public function getPWidgetFromID($wid_id) {
+        $this->db->cache_on();
+        return $this->getValue('*', 'plugin_widget', "active = '1' AND data_limit != '0' AND plugin_widget_id = '" . $wid_id . "'", '', 1);
+    }
+    
+    /**
+     * findFieldInLoop
+     *
+     * Function for file field insode the loop tag
+     *
+     * @param	string	$html   html input
+     * @param	array	$item   the item object or array get data from getValue
+     * @return	string
+     */
+    public function findFieldInLoop($html, $item) {
+        $tags = array();
+        $tag_r = '';
+        preg_match_all("/{loop}([^\[]*){endloop}/", $html, $tags);
+        if (!empty($tags)) {
+            $replace_html = '';
+            $tag_r .= $tags[0][0];
+            $tags2 = array();
+            preg_match_all("/{field=([^\s!\/]+)}/", $tags[1][0], $tags2);
+            if (!empty($tags2)) {
+                $tag_r1 = array();
+                $tag_r2 = array();
+                for ($j = 0; $j < count($tags2[0]); $j++) {
+                    $tag_r1[$j] = $tags2[0][$j];
+                    $tag_r2[$j] = $tags2[1][$j];
+                }
+                if (is_array($item) && $item !== FALSE) {
+                    foreach ($item as $value) {
+                        $replace_r1 = array();
+                        for ($k = 0; $k < count($tag_r1); $k++) {
+                            $replace_r1[] = $value[$tag_r2[$k]];
+                        }
+                        $replace_html.= str_replace($tag_r1, $replace_r1, $tags[1][0]);
+                    }
+                }
+            }
+            $html = str_replace($tag_r, $replace_html, $html);
+        }
+        return $html;
+    }
+    
+    /**
+     * fieldTagInPWidget
+     *
+     * Function for check and replace tag in plugin widget html
+     *
+     * @param	string  $html   html input
+     * @param	array	$item   the item object or array get data from getValue
+     * @return	string
+     */
+    public function fieldTagInPWidget($html, $item) {
+        $tags = array();
+        preg_match_all("/{field=([^\s!\/]+)}/", $html, $tags);
+        if(!empty($tags)){
+            $tag_r = array();
+            $replace_r = array();
+            if (is_array($item) && $item !== FALSE) {
+                foreach ($item as $value) {
+                    for ($i = 0; $i < count($tags[0]); $i++) {
+                        $tag_r[] = $tags[0][$i];
+                        $item_name = $tags[1][$i];
+                        $replace_r[] = $value[$item_name];
+                    }
+                    $html = str_replace($tag_r, $replace_r, $html);
+                }
+            }
+        }
+        return $html;  
+    }
+    
+    /**
+     * findTagBaseURL
+     *
+     * Function for check and replace base url tag in plugin widget html
+     *
+     * @param	string  $html   html input
+     * @param	string  $plugin_filename   plugin filename from config
+     * @return	string
+     */
+    public function findTagBaseURL($html, $plugin_filename = '') {
+        $return = preg_replace("/{base_url}/", BASE_URL, $html);
+        if($plugin_filename){
+            $return = preg_replace("/{base_url_plugin}/", BASE_URL . '/plugin/' . $plugin_filename, $return);
+            $return = preg_replace("/{base_url_photo_plugin}/", BASE_URL . '/photo/plugin/' . $plugin_filename, $return);
+        }
+        return $return;
+    }
+
+    /**
+     * addPWidgetToHTML
+     *
+     * Function for add plugin widget into html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$wid_id   Widget id
+     * @return	string
+     */
+    public function addPWidgetToHTML($content, $wid_id) {
+        $getWidget = $this->getPWidgetFromID($wid_id);
+        $widget_html = '[?]{=pwidget:' . $wid_id . '}[?]';
+        if ($getWidget !== FALSE) {
+            if($getWidget->lang_iso && $getWidget->lang_iso != NULL){
+                $lang_iso = " AND lang_iso = '".$getWidget->lang_iso."'";
+            }else{
+                $lang_iso = '';
+            }
+            $widget_html = $this->findTagBaseURL($getWidget->template_code, $getWidget->plugin_filename);
+            $getViewTable = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_viewtable');
+            $getViewTableCond = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_condition');
+            $getViewTableSel = implode(',', $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_sel_field'));
+            $getJoinTable = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable');
+            $getJoinTableIDKey = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_idkey');
+            $getJoinTableCond = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_condition');
+            $getJoinTableSel = implode(',', $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_selfield'));            
+            if($getWidget->data_limit == 1 && $getWidget->view_id != NULL && $getWidget->view_id != 0){
+                $getViewValue = $this->getValueArray($getViewTableSel, $getViewTable, $getViewTableCond.' AND '.$getViewTable."_id = '".$getWidget->view_id."'".$lang_iso, '', 1, $getWidget->sort_by, $getWidget->order_by);
+                $getJoinValue = $this->getValueArray($getJoinTableSel, $getJoinTable, $getJoinTableCond.' AND '.$getJoinTableIDKey." = '".$getWidget->view_id."'", '', $getWidget->data_limit);
+                $widget_html = $this->findFieldInLoop($widget_html, $getJoinValue);
+                $widget_html = $this->fieldTagInPWidget($widget_html, $getViewValue);
+            }else if($getWidget->data_limit > 1 && $getWidget->view_id != NULL && $getWidget->view_id != 0){
+                $getViewValue = $this->getValueArray($getViewTableSel, $getViewTable, $getViewTableCond.' AND '.$getViewTable."_id = '".$getWidget->view_id."'".$lang_iso, '', 1, $getWidget->sort_by, $getWidget->order_by);
+                $getJoinValue = $this->getValueArray($getJoinTableSel, $getJoinTable, $getJoinTableCond.' AND '.$getJoinTableIDKey." = '".$getWidget->view_id."'", '', $getWidget->data_limit);
+                $widget_html = $this->findFieldInLoop($widget_html, $getJoinValue);
+                $widget_html = $this->fieldTagInPWidget($widget_html, $getViewValue);
+            }else if($getWidget->data_limit == 1 && ($getWidget->view_id == NULL || $getWidget->view_id == 0)){
+                $getViewValue = $this->getValueArray($getViewTableSel, $getViewTable, $getViewTableCond.$lang_iso, '', 1, $getWidget->sort_by, $getWidget->order_by);
+                $widget_html = $this->fieldTagInPWidget($widget_html, $getViewValue);
+            }else if($getWidget->data_limit > 1 && ($getWidget->view_id == NULL || $getWidget->view_id == 0)){
+                $getViewValue = $this->getValueArray($getViewTableSel, $getViewTable, $getViewTableCond.$lang_iso, '', $getWidget->data_limit, $getWidget->sort_by, $getWidget->order_by);
+                $widget_html = $this->findFieldInLoop($widget_html, $getViewValue);
+            }
+        }
+        return str_replace('[?]{=pwidget:' . $wid_id . '}[?]', $widget_html, $content);
     }
 
     /**
@@ -1284,21 +1418,13 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function frmNameInHtml($content, $url_segment) { /* Find the form in content */
+        $output_array = array();
         $txt_nonhtml = strip_tags($content);
-        if ($this->findFrmTag($content) !== false) {
-            $txt_nonline = str_replace(PHP_EOL, '', $txt_nonhtml);
-            $array = explode("[?]", $txt_nonline);
-            if (!empty($array)) {
-                foreach ($array as $val) {
-                    if (strpos($val, '{=forms:') !== false) {
-                        $rep_arr = array('{=forms:', '}');
-                        $frm_name = str_replace($rep_arr, '', $val);
-                        $content = $this->addFrmToHtml($content, $frm_name, $url_segment);
-                        break; /* Break for reCaptcha one form per page only */
-                    }
-                }
-            }
+        preg_match("/\[\?\]\{=forms\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if (!empty($output_array[0]) && strpos($output_array[0], '[?]{=forms:') !== false && !empty($output_array[1])) {
+            $content = $this->addFrmToHtml($content, $output_array[1], $url_segment);
         }
+        unset($output_array, $txt_nonhtml);
         return $content;
     }
 
@@ -1781,6 +1907,7 @@ class Csz_model extends CI_Model {
         );
         $this->session->unset_userdata($data);
         unset($data);
+        $this->session->sess_destroy();
         $this->load->model('Csz_startup');
         $this->Csz_startup->clearStartup();
         if($url){
@@ -2031,7 +2158,7 @@ class Csz_model extends CI_Model {
         } else {
             $result = $this->email->print_debugger(FALSE);
         }
-        if($save_log === TRUE){
+        if($save_log === TRUE && $load_conf->email_logs == 1){
             $data = array(
                 'to_email' => $to_email,
                 'from_email' => $from_email,

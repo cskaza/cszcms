@@ -228,6 +228,19 @@
                 echo form_checkbox($data);
                 ?> <?php echo $this->lang->line('forms_captcha'); ?></label>	
         </div> <!-- /control-group -->
+        <div class="control-group">										
+            <label class="form-control-static" for="save_to_db">
+                <?php
+                ($form_rs->save_to_db)?$checked = 'checked':$checked = '';
+                $data = array(
+                    'name' => 'save_to_db',
+                    'id' => 'save_to_db',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('forms_save_to_db'); ?></label>	
+        </div> <!-- /control-group -->
         <div class="h2 sub-header"><?php echo  $this->lang->line('field_editheader') ?></div>
         <div class="addfields">
             <?php if(!empty($field_rs)){ ?>

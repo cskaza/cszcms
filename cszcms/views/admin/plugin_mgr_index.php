@@ -122,9 +122,13 @@
                                 if ($this->Csz_admin_model->chkPluginUpdate($cur_ver, $last_ver) !== FALSE && $this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) === FALSE) {
                                     echo '<a role="button" class="btn btn-warning btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/upgrade/' . $filename . '">' . $this->lang->line('pluginmgr_upgrade') . '</a> &nbsp;&nbsp; ';
                                 }
-                                echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/uninstall/' . $filename . '" title="' . $this->lang->line('btn_delete') . '"><i class="glyphicon glyphicon-trash"></i></a>';
+                                if($filename != 'article' && $filename != 'gallery'){
+                                    echo '<a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/uninstall/' . $filename . '" title="' . $this->lang->line('btn_delete') . '"><i class="glyphicon glyphicon-trash"></i></a>';
+                                }
                             } else {
-                                echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/install/' . $filename . '">' . $this->lang->line('btn_install') . '</a>';
+                                if($filename != 'article' && $filename != 'gallery'){
+                                    echo '<a role="button" class="btn btn-success btn-sm" role="button" onclick="return confirm(\'' . $this->lang->line('delete_message') . '\')" href="' . $this->Csz_model->base_link() . '/admin/plugin/install/' . $filename . '">' . $this->lang->line('btn_install') . '</a>';
+                                }
                             }
                             echo '</td>';
                             echo '</tr>';

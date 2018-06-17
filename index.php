@@ -1,8 +1,4 @@
 <?php
-if (!file_exists('config.inc.php')) {
-	header("Location: install/index.php?nocache=".time());
-	exit();
-}
 /**
  * CSZ CMS
  *
@@ -327,6 +323,12 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+if (!file_exists('config.inc.php')) {
+    $fullurl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . str_replace(array('/install','/index.php'), '', $_SERVER['REQUEST_URI']);
+    $curdomain = rtrim(preg_replace('/\\?.*/', '', $fullurl),'/');
+    header("Location: ".$curdomain."/install/index.php?nocache=".time());
+    exit();
+}
 /** Config **/
 include FCPATH.'config.inc.php';
 if (function_exists('ini_set')) {
@@ -339,4 +341,5 @@ include FCPATH.'htaccess.config.inc.php';
 include FCPATH.'cache.config.inc.php';
 include FCPATH.'memcached.config.inc.php';
 include FCPATH.'redis.config.inc.php';
+include FCPATH.'devtoolsbar.config.inc.php';
 require_once BASEPATH.'core/CodeIgniter.php';

@@ -5,7 +5,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
 header("Pragma: no-cache"); /* HTTP 1.0. */
 header("Expires: 0"); /* Proxies. */
 if (file_exists('../config.inc.php')) {
-    header("Location: ../?nocache=" . time());
+    header("Location: ".$curdomain."/?nocache=" . time());
     exit();
 }
 /* Start register the varible same CI index */
@@ -36,7 +36,7 @@ define('BASEPATH', '../system');
 require './include/Database.php';
 $success = 0;
 $chk_pass = 0;
-if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbpass'] && $_POST['dbname']) {
+if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbname']) {
     if (function_exists('ini_set')) {
         @ini_set('max_execution_time', 600);
         @ini_set('memory_limit','512M');
@@ -44,7 +44,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
     /* Prepare Input Data */
     /* $dbdsn = $_POST['dbdsn']; */
     $url_replace = array('https://', 'http://');
-    $baseurl = $_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/"));
+    $baseurl = preg_replace('/\s+/', '', $_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/")));
     $dbhost = $_POST['dbhost'];
     $dbuser = $_POST['dbuser'];
     $dbpass = $_POST['dbpass'];
@@ -79,7 +79,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
     if (!$numrow) {
         $success = 0;
         $db->closeDB();
-        echo '<div class="alert alert-danger text-center" role="alert">Can\'t insert the database into your MySQL server</div>';
+        echo '<div class="alert alert-danger text-center" role="alert">Something\'s wrong! Can\'t insert the database into your \'MySQL\' server.<br>Please, try to check your \'MySQL\' username/password again.</div>';
     } else {
         /* Prepare data for config.inc.php file */
         $config_file = '../config.inc.php';
@@ -124,11 +124,15 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         fclose($fopen1);
         $success = 1;
         $db->closeDB();
-        if (isset($_COOKIE['csrf_cookie_csz']) || isset($_SESSION['csrf_cookie_csz'])) {
-            unset($_COOKIE['csrf_cookie_csz']);
-            unset($_SESSION['csrf_cookie_csz']);
-            setcookie('csrf_cookie_csz', null, -1, '/');
+        $csrfcookiename = str_replace('.', '_', $domain).'_cszcookiecsrf_cookie_csz';
+        $csrfsessionname = str_replace('.', '_', $domain).'_cszsesscsrf_cookie_csz';
+        if (isset($_SESSION[$csrfsessionname])) {            
+            unset($_SESSION[$csrfsessionname]);           
         }
+        if (isset($_COOKIE[$csrfcookiename])) {
+            unset($_COOKIE[$csrfcookiename]);
+        }
+        setcookie($csrfcookiename, null, -1, '/');
     }
 }
 ?>
@@ -170,7 +174,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
             <?php
             if ($success) {
                 $url_replace = array('https://', 'http://');
-                $baseurl = $_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/"));
+                $baseurl = preg_replace('/\s+/', '',$_POST['protocal'] . str_replace($url_replace, '', rtrim($_POST['baseurl'], "/")));
                 ?>
                 <div class="row">
                     <div class="col-md-12">
@@ -326,8 +330,8 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <input id="dbhost" name="dbhost" type="text" class="form-control" placeholder="localhost or dbserver.example.com" required>
                                         <label for="dbuser">Database Username*: </label>
                                         <input id="dbuser" name="dbuser" type="text" class="form-control" placeholder="Username for DB" required>
-                                        <label for="dbpass">Database Password*: </label> <span class="text-danger">(Blank isn't allowed on password)</span>
-                                        <input id="dbpass" name="dbpass" type="password" class="form-control" placeholder="Password for DB" required>
+                                        <label for="dbpass">Database Password: </label> <span class="text-danger">(blank password is not recommend!)</span>
+                                        <input id="dbpass" name="dbpass" type="password" class="form-control" placeholder="Password for DB">
                                         <label for="dbname">Database Name*: </label>
                                         <input id="dbname" name="dbname" type="text" class="form-control" placeholder="DB Name for CSZ-CMS" required>
                                         <br><span class="text-info">
@@ -347,7 +351,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <h3 class="panel-title"><b>Website Setup</b></h3>
                                     </div>
                                     <div class="panel-body">
-                                        <label for="htaccess"><input id="htaccess" name="htaccess" type="checkbox" checked> Yes, your server is support to .htccess and mod_rewrite.</label><br>
+                                        <label for="htaccess"><input id="htaccess" name="htaccess" type="checkbox" value="1" checked> Yes, your server is support to .htccess and mod_rewrite.</label><br>
                                         <span class="text-info"><em>If mod_rewrite is not support and .htaccess is not support. Please uncheck this box!</em></span><br><br>
                                         <label for="baseurl">Base URL*: </label>
                                         <div class="input-group">
@@ -410,7 +414,6 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                 <hr>
                 <div class="row">
                     <div class="col-md-8 div-copyright">
-                        <?php $version->setTimezone('Asia/Bangkok'); ?>
                         <span class="copyright">Copyright &copy; <?php echo date('Y'); ?> CSZ CMS Installer</span>
                         <small style="color:gray;"><br><span class="copyright">Installer for <a href="https://www.cszcms.com" target="_blank" title="CSZ CMS Official Website">CSZ CMS</a> Version <?php echo $version->getVersion(); ?></span></small>
                     </div>

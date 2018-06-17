@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$autoload['packages'] = array();
+$autoload['packages'] = array(APPPATH . 'third_party/DevelBar');
 
 
 /*

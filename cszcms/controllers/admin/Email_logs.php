@@ -36,6 +36,10 @@ class Email_logs extends CI_Controller {
         $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
         $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
+        if($this->Csz_admin_model->load_config()->email_logs != 1){
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
     }
 
     public function index() {

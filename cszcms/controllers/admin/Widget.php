@@ -40,7 +40,7 @@ class Widget extends CI_Controller {
 
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('old plugin widget');
         $this->load->library('pagination');
         $this->db->cache_on();
         $this->csz_referrer->setIndex();
@@ -63,7 +63,7 @@ class Widget extends CI_Controller {
 
     public function addWidget() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');        
+        admin_helper::is_allowchk('old plugin widget');        
         $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Load the form helper
         $this->load->helper('form');
@@ -73,7 +73,7 @@ class Widget extends CI_Controller {
 
     public function insert() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('old plugin widget');
         admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
@@ -96,7 +96,7 @@ class Widget extends CI_Controller {
 
     public function editWidget() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('old plugin widget');
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(4)) {
@@ -116,7 +116,7 @@ class Widget extends CI_Controller {
 
     public function edited() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('old plugin widget');
         admin_helper::is_allowchk('save');
         //Load the form validation library
         $this->load->library('form_validation');
@@ -141,7 +141,7 @@ class Widget extends CI_Controller {
 
     public function delete() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
-        admin_helper::is_allowchk('plugin widget');
+        admin_helper::is_allowchk('old plugin widget');
         admin_helper::is_allowchk('delete');
         if ($this->uri->segment(4)) {
             //Delete the widget

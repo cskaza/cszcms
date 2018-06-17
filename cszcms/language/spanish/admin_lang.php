@@ -1,6 +1,6 @@
 <?php
 //Backend System
-$lang['backend_system']		= 'Zona administrativa';
+$lang['backend_system']		= 'Administración';
 
 //Dashboard
 $lang['dashboard_totalemail']	= "Todos los registros de email";
@@ -9,7 +9,7 @@ $lang['dashboard_totalmember']	= "Todos los miembros";
 $lang['dashboard_viewdetail']	= "Ver detalles";
 $lang['dashboard_linkrecent']	= "Registros recientes de estadisticas";
 $lang['dashboard_emailrecent']	= "Registros recientes de los Correos Electronicos";
-$lang['dashboard_toemail']	= "A";
+$lang['dashboard_toemail']	= "Para";
 $lang['dashboard_fromemail']	= "Desde";
 $lang['dashboard_rssnews']	= "Noticias Recientes de CSZ CMS";
 
@@ -83,7 +83,7 @@ $lang['user_perm_deny']                 = "Denegar";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Guardar";
-$lang['btn_save_draft']		= "Save Draft";
+$lang['btn_save_draft']		= "Guardar Borrador";
 $lang['btn_save_exit']		= "Guardar & Salir";
 $lang['btn_cancel']		= "Cancelar";
 $lang['btn_delete']		= "Eliminar";
@@ -105,7 +105,7 @@ $lang['day_txt']		= "Dia";
 $lang['btn_ascopy']		= "Como Copia";
 
 //Login Page
-$lang['login_heading']		= "Iniciar Sesion en Zona administrativa";
+$lang['login_heading']		= "Iniciar Sesion en area administrativa";
 $lang['login_email']		= "Dirección de Correo Electronico";
 $lang['login_password']		= "Contraseña";
 $lang['login_signin']		= "Iniciar Sesion";
@@ -193,8 +193,9 @@ $lang['social_persona']			= "Mozilla Persona";
 $lang['social_odnoklassniki']		= "Odnoklassniki";
 $lang['social_vk']                      = "VKontakte";
 $lang['social_gitlab']                  = "GitLab";
-$lang['social_table_title']		= "Social Site";
-$lang['social_table_link']		= "Profile Link";
+$lang['social_telegram']                  = "Telegram";
+$lang['social_table_title']		= "Sitios Sociales";
+$lang['social_table_link']		= "Link del Perfil";
 $lang['social_table_active']            = "Activo";
 
 //Settings Page
@@ -210,8 +211,8 @@ $lang['settings_add_js_remark']		= "JavaScript solo para la pagina principal. No
 $lang['settings_add_meta']		= "Meta Tag adicionales";
 $lang['settings_add_meta_remark']	= "Meta tag sólo para la primera página.";
 $lang['settings_googlecapt_active']	= "reCaptcha Habilitado";
-$lang['settings_googlecapt_sitekey']	= "reCaptcha Site Key";
-$lang['settings_googlecapt_secretkey']	= "reCaptcha Secret Key";
+$lang['settings_googlecapt_sitekey']	= "Clave del sitio reCaptcha";
+$lang['settings_googlecapt_secretkey']	= "Clave secreta reCaptcha";
 $lang['settings_googlecapt_remark']	= 'Puedes obtener la clave de reCaptcha at <a href="https://www.google.com/recaptcha" target="_blank">https://www.google.com/recaptcha</a>';
 $lang['settings_logo']			= "Logo";
 $lang['settings_logo_remark']		= "El logotipo del sitio tiene una altura que no excede 50 px Para la plantilla predeterminada.";
@@ -224,8 +225,8 @@ $lang['settings_email_protocal']        = "Protocolo de Correo Electronico";
 $lang['settings_smtp_host']             = "Host SMTP";
 $lang['settings_smtp_user']             = "Nombre de Usuario SMTP";
 $lang['settings_smtp_pass']             = "Contraseña SMTP";
-$lang['settings_smtp_port']             = "SMTP Port";
-$lang['settings_sendmail_path']         = "Sendmail Path";
+$lang['settings_smtp_port']             = "Puerto SMTP";
+$lang['settings_sendmail_path']         = "Ruta Sendmail";
 $lang['settings_email_testbtn']          = "Test Enviado!";
 $lang['settings_sitemap_header']        = "Generador de Sitemaps";
 $lang['settings_sitemap_runnow']        = "Iniciar Ahora";
@@ -233,7 +234,7 @@ $lang['settings_sitemap_lasttime']      = "Ultima Actualizacion";
 $lang['settings_member_header']          = "Config Miembros";
 $lang['settings_member_confirm_active']	= "Confirmar via correo electronico los nuevos usuarios";
 $lang['settings_member_close_regist']	= "Registro de usuario cerrado";
-$lang['settings_og_image']		= "Image of og metatag (og:image)";
+$lang['settings_og_image']		= "Imagen de metatag (og:image)";
 $lang['settings_fbappid_header']	= "Config de Facebook";
 $lang['settings_fbapp_id']		= "FB App ID";
 $lang['settings_fbappid_remark']	= 'Tu puedes crear la FB App ID en <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>';
@@ -246,29 +247,30 @@ $lang['settings_gsearch_active']	= "Habilitar la búsqueda personalizada de Goog
 $lang['settings_gsearch_cxid']          = "ID de su motor de búsqueda (cx ID)";
 $lang['settings_gsearch_remark']	= 'You can see at <a href="https://developers.google.com/custom-search/docs/tutorial/introduction" target="_blank"><b>Custom Search Tutorial</b></a>.';
 $lang['settings_maintenance_active']    = "Habilitar el modo de mantenimiento";
-$lang['settings_html_optimize_disable']    = "Disable HTML Optimization";
-$lang['settings_gmaps_key']		= "Google Maps API Key";
+$lang['settings_html_optimize_disable']    = "Desactivar optimización HTML";
+$lang['settings_gmaps_key']		= "Clave API para Google Maps";
 $lang['settings_gmaps_key_remark']	= 'How to getting a Google API key? <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank"><b>See here</b></a>';
 $lang['settings_gmaps_lat']		= "Latitud Predeterminada";
 $lang['settings_gmaps_lng']		= "Longitud Predeterminada";
 $lang['settings_facebook_page_id']	= "Facebook Pages ID";
 $lang['settings_facebook_page_id_remark']	= "You can get Facebook Pages ID at 'Page ID' section in 'About' page from your facebook pages";
 $lang['settings_assets_static_domain']	= "Static resources from a different cdn domain for assets";
-$lang['settings_assets_static_domain_remark']	= "(Example: https://cdn.cszcms.com) This static domain required to same route with origin domain only";
-$lang['settings_fb_messenger']		= "Facebook Messenger Active";
+$lang['settings_assets_static_domain_remark']	= "(Ejemplo: https://cdn.cszcms.com) This static domain required to same route with origin domain only";
+$lang['settings_fb_messenger']		= "Activar Facebook Messenger";
 $lang['settings_fb_messenger_remark']	= 'How to whitelist the domain of your website on your Facebook pages? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>Click here</b></a>';
+$lang['settings_email_logs']		= "Email Logs Enable";
 
 //Navigation Page
 $lang['navpage_header']                 = "Menu Principal";
 $lang['navpage_dropmenu']                 = "Drop Down Menu";
 $lang['navpage_new_header']		= "Nuevo Menu";
 $lang['navpage_edit_header']		= "Editar Menu Principal";
-$lang['navpage_menulang']		= "Menu Language";
-$lang['navpage_menuname']		= "Menu Name";
-$lang['navpage_type']			= "Menu Type";
-$lang['navpage_pagelink']		= "Page Link";
+$lang['navpage_menulang']		= "Lenguaje del Menu";
+$lang['navpage_menuname']		= "Nombre del Menu";
+$lang['navpage_type']			= "Tipo de Menu";
+$lang['navpage_pagelink']		= "Link de Pagina";
 $lang['navpage_pluginmenu']		= "Plugin Menu";
-$lang['navpage_link']			= "Otro Link";
+$lang['navpage_link']			= "Link Externo";
 $lang['navpage_delete_btn']		= "Eliminar";
 $lang['navpage_edit_btn']                  = "Editar";
 $lang['delete_message']            = "Esta seguro que quiere realizar esto ?";
@@ -297,7 +299,7 @@ $lang['lang_index_remark_txt']              = "is system language. You can't del
 //Langs - New Lang/Edit Lang
 $lang['lang_new_header']		= "Nuevo Lenguage";
 $lang['lang_edit_header']		= "Editar Lenguage";
-$lang['lang_active']                    = "Activoo";
+$lang['lang_active']                    = "Activo";
 $lang['lang_countryiso_remark']		= 'You can see country ISO code list (2 letters long) at - <a href="http://www.nationsonline.org/oneworld/country_code_list.htm" target="_blank" rel="nofollow external">CLICK AQUÍ</a>';
 $lang['lang_iso_remark']		= 'You can see language ISO code list (2 letters long) at - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank" rel="nofollow external">CLICK AQUÍ</a>';
 
@@ -342,11 +344,11 @@ $lang['forms_notfound']                 = "Formulario no encontrado. Por favor c
 $lang['forms_addnew']			= "Nuevo Formulario";
 $lang['forms_edit']			= "Editar Formulario";
 $lang['forms_name']			= "Nombre del Formulario";
-$lang['forms_method']			= "Forms Method";
+$lang['forms_method']			= "Metodo de envío";
 $lang['forms_enctype']			= "Forms enctype";
 $lang['forms_delete_msg']            = "Do you want to do this ?";
-$lang['forms_sendmail']			= "Sendmail Enable";
-$lang['forms_captcha']			= "Captcha Enable";
+$lang['forms_sendmail']			= "Habilitar Sendmail";
+$lang['forms_captcha']			= "Habilitar Captcha";
 $lang['forms_email']			= "Send to Email";
 $lang['forms_subject']			= "Email Subject";
 $lang['forms_indexremark']		= "<i>Please use this tag for insert the forms into the content. Please see Forms Name<br><b>Tag:</b></i> [?]{=forms:<b>forms_name</b>}[?]<br><b>Important Remark: Can use one form per page only!</b>";
@@ -359,6 +361,7 @@ $lang['forms_email_field_name']		= "Email to field name";
 $lang['forms_visitor_subject']		= "Asunto del correo";
 $lang['forms_visitor_body']		= "Cuerpo del correo";
 $lang['forms_visitor_newtxt']		= "Sendmail al visitante. Por favor edite el formulario";
+$lang['forms_save_to_db']		= "Save to DB Enable";
 
 //Field Text
 $lang['field_header']                   = "Insertar Campo";
@@ -459,7 +462,7 @@ $lang['pluginmgr_latest_version']                 = "Ultima Version";
 $lang['pluginmgr_latest_already']                 = "Su complemento esta en la ultima version!";
 
 // Widget Builder
-$lang['widget_header']               = "Plugin Widgets";
+$lang['widget_header']               = "XML Plugin Widgets";
 $lang['widget_new_header']		= "Nuevo Widget";
 $lang['widget_edit_header']		= "Editar Widget";
 $lang['widget_active']                    = "Activo";
@@ -550,7 +553,7 @@ $lang['filemanager_template_name']                = "Template Name";
 $lang['filemanager_template_create']                = "Create Template";
 
 // Server Status
-$lang['serverstatus_header']                = "Server Status";
+$lang['serverstatus_header']                = "Estado del Servidor";
 $lang['serverstatus_phpmem_use']                = "PHP Memory Usage";
 $lang['serverstatus_disk_use']                = "Disk Space Usage";
 $lang['serverstatus_os']                = "OS";
@@ -559,11 +562,11 @@ $lang['serverstatus_php_disabled']                = "PHP Function Disabled";
 
 // Carousel Widget
 $lang['carousel_header']                = "Carousel Widget";
-$lang['carousel_new']             = "Nueva Carousel";
+$lang['carousel_new']             = "Nuevo Carousel";
 $lang['carousel_edit']             = "Editar Carousel";
-$lang['carousel_name']                 = "Carousel Name";
+$lang['carousel_name']                 = "Nombre del Carousel";
 $lang['carousel_picture']                = "Pictures Upload";
-$lang['carousel_fileallow']              = "Only files (jpg, jpeg, png, gif) are allowed. Image size is not over 1900px on width or height.";
+$lang['carousel_fileallow']              = "Solor archivos (jpg, jpeg, png, gif) are allowed. Image size is not over 1900px on width or height.";
 $lang['carousel_caption']                = "Caption";
 $lang['carousel_indexremark']		= "<i>Please use this tag for insert the carousel into the content. Please see Carousel ID#<br><b>Tag:</b></i> [?]{=carousel:<b>carousel_id</b>}[?]";
 $lang['carousel_addremark']                = "Upload the picture. Please edit this carousel.";
@@ -571,3 +574,19 @@ $lang['carousel_youtube_head']            = "Add New Youtube";
 $lang['carousel_youtube_url']            = "Youtube URL";
 $lang['carousel_url_head']            = "Add New Photo URL";
 $lang['carousel_photo_url']            = "Photo URL";
+
+// PLugin Widget
+$lang['pwidget_header']               = "Plugin Widgets";
+$lang['pwidget_new_header']		= "New Widget";
+$lang['pwidget_edit_header']		= "Edit Widget";
+$lang['pwidget_active']                    = "Activo";
+$lang['pwidget_name']                    = "Nombre";
+$lang['pwidget_plugin']                    = "Nombre del Plugin";
+$lang['pwidget_limit_view']                    = "Show Limit";
+$lang['pwidget_main_short_code']                    = "Main short code";
+$lang['pwidget_loop_short_code']                    = "Short code for inside the loop only";
+$lang['pwidget_gen_short_code']                    = "Short code generate!";
+$lang['pwidget_sort_by']                    = "Ordenar por";
+$lang['pwidget_body']                    = "Template body";
+$lang['pwidget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see ID#<br><b>Tag:</b></i> [?]{=pwidget:<b>ID#</b>}[?]";
+$lang['pwidget_plugin_view_id']                    = "Plugin View ID";

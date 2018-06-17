@@ -28,12 +28,12 @@ class Database{
 
     // Constructor
     public function __construct($dbhost = '', $dbuser = '', $dbpass = '', $dbname = ''){
-        $this->_connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-        $this->_connection->set_charset('utf8');
-        $this->_connection->query("SET collation_connection = utf8_general_ci");
-        // Error handling
-        if(mysqli_connect_error()){
-            trigger_error("Failed to conencto to MySQL: ".mysqli_connect_error(), E_USER_ERROR);
+        try {
+            $this->_connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+            $this->_connection->set_charset('utf8');
+            $this->_connection->query("SET collation_connection = utf8_general_ci");
+        }catch (Exception $e){
+            echo $e->getMessage();
         }
     }
 
@@ -129,15 +129,6 @@ class Version{
             $version = $this->getVersionConfig();
         }
         return $version;
-    }
-
-    public function setTimezone($timezone){
-        if(!$timezone)
-            $timezone = 'Asia/Bangkok';
-        if(function_exists('ini_set')){
-            ini_set('max_execution_time', 300);
-            ini_set('date.timezone', $timezone);
-        }
     }
 
 }

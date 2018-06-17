@@ -381,8 +381,10 @@ $config['encryption_key'] = '';
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
+$find_arr = @parse_url(BASE_URL);
+$domain = @$find_arr['host'];
 $config['sess_driver'] = 'database';
-$config['sess_cookie_name'] = 'csz_sess';
+$config['sess_cookie_name'] = str_replace('.', '_', $domain).'_cszsess';
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
@@ -404,9 +406,7 @@ $config['sess_regenerate_destroy'] = TRUE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$find_arr = @parse_url(BASE_URL);
-$domain = @$find_arr['host'];
-$config['cookie_prefix']	= 'cszcookie';
+$config['cookie_prefix']	= str_replace('.', '_', $domain).'_cszcookie';
 $config['cookie_domain']	= $domain;
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= isset($_SERVER['HTTPS']) ? TRUE : FALSE;

@@ -15,20 +15,11 @@ function compress()
         echo '</body></html>';
         exit(0);
     }
-    $buffer = $CI->output->get_output();
     $config = $CI->Csz_model->load_config();
-    $new_buffer = NULL;
-    if($config->html_optimize_disable != 1){
-        $new_buffer = $CI->Csz_model->compress_html($buffer);
+    if($config->html_optimize_disable != 1 && DEV_TOOLS_BAR === FALSE){
+        $CI->output->set_output($CI->Csz_model->compress_html($CI->output->get_output()));
+        $CI->output->_display();
     }
-    // We are going to check if processing has working
-    if ($new_buffer === NULL)
-    {
-        $new_buffer = $buffer;
-    }
-    $CI->output->set_output($new_buffer);
-    unset($config, $buffer, $new_buffer);
-    $CI->output->_display();
 }
 
 /* End of file compress.php */

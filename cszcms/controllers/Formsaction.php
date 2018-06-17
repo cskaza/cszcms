@@ -27,8 +27,7 @@ class Formsaction extends CI_Controller {
         $this->CI = & get_instance();
         if($this->Csz_model->load_config()->maintenance_active){
             //Return to home page
-            redirect('./', 'refresh');
-            exit(0);
+            redirect(base_url(), 'refresh');
         }
     }
 
@@ -56,7 +55,6 @@ class Formsaction extends CI_Controller {
                         //Return to last page: Error
                         $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . '</div>');
                         redirect($cur_page, 'refresh');
-                        exit(1);
                     }
                     if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
                         if ($f_val->field_type == 'email') {
@@ -71,7 +69,6 @@ class Formsaction extends CI_Controller {
                             //Return to last page: Error
                             $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . '</div>');
                             redirect($cur_page, 'refresh');
-                            exit(1);
                         } 
                         if (isset($_FILES[$f_val->field_name]) && $_FILES[$f_val->field_name]['tmp_name'] && $_FILES[$f_val->field_name]['name']) {
                             $ext = str_replace('.', '', strrchr($_FILES[$f_val->field_name]['name'], "."));
@@ -83,7 +80,6 @@ class Formsaction extends CI_Controller {
                                     //Return to last page: Error
                                     $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . '</div>');
                                     redirect($cur_page, 'refresh');
-                                    exit(1);
                                 }
                                 unset($ext, $ext_accept, $sel_opt);
                             }
@@ -96,9 +92,11 @@ class Formsaction extends CI_Controller {
                         }
                     }
                 }
-                $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-                $this->db->set('timestamp_create', 'NOW()', FALSE);
-                $this->db->insert('form_' . $frm_rs->form_name, $data);
+                if($frm_rs->save_to_db == 1){
+                    $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->insert('form_' . $frm_rs->form_name, $data);
+                }
                 $email_from = 'no-reply@' . EMAIL_DOMAIN;
                 $visit_email = '';
                 if($frm_rs->send_to_visitor && $frm_rs->email_field_id){
@@ -113,16 +111,13 @@ class Formsaction extends CI_Controller {
                 //Return to last page: Success
                 $this->session->set_flashdata('formtag_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->success_txt . '</div>');
                 redirect($cur_page, 'refresh');
-                exit(0);
             } else {
                 //Return to home page
-                redirect('./', 'refresh');
-                exit(1);
+                redirect(base_url(), 'refresh');
             }
         } else {
             //Return to home page
-            redirect('./', 'refresh');
-            exit(1);
+            redirect(base_url(), 'refresh');
         }
     }
 

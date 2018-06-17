@@ -257,6 +257,7 @@ $lang['settings_assets_static_domain']	= "Static resources from a different cdn 
 $lang['settings_assets_static_domain_remark']	= "(Example: https://cdn.cszcms.com) This static domain required to same route with origin domain only";
 $lang['settings_fb_messenger']		= "Facebook Messenger Active";
 $lang['settings_fb_messenger_remark']	= 'How to whitelist the domain of your website on your Facebook pages? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>Click here</b></a>';
+$lang['settings_email_logs']		= "Email Logs Enable";
 
 //Navigation Page
 $lang['navpage_header']                 = "Main Menu";
@@ -359,6 +360,7 @@ $lang['forms_email_field_name']		= "Email to field name";
 $lang['forms_visitor_subject']		= "Oggetto Email";
 $lang['forms_visitor_body']		= "Email testo";
 $lang['forms_visitor_newtxt']		= "testo inviato a utente";
+$lang['forms_save_to_db']		= "Save to DB Enable";
 
 //Field Text
 $lang['field_header']                   = "Inserisci campo";
@@ -459,7 +461,7 @@ $lang['pluginmgr_latest_version']                 = "Latest Version";
 $lang['pluginmgr_latest_already']                 = "Your plugin is latest version!";
 
 // Widget Builder
-$lang['widget_header']               = "Plugin Widgets";
+$lang['widget_header']               = "XML Plugin Widgets";
 $lang['widget_new_header']		= "Nuovo Widget";
 $lang['widget_edit_header']		= "Modifica Widget";
 $lang['widget_active']                    = "Attiva";
@@ -571,3 +573,19 @@ $lang['carousel_youtube_head']            = "Add New Youtube";
 $lang['carousel_youtube_url']            = "Youtube URL";
 $lang['carousel_url_head']            = "Add New Photo URL";
 $lang['carousel_photo_url']            = "Photo URL";
+
+// PLugin Widget
+$lang['pwidget_header']               = "Plugin Widgets";
+$lang['pwidget_new_header']		= "New Widget";
+$lang['pwidget_edit_header']		= "Edit Widget";
+$lang['pwidget_active']                    = "Active";
+$lang['pwidget_name']                    = "Name";
+$lang['pwidget_plugin']                    = "Plugin Name";
+$lang['pwidget_limit_view']                    = "Show Limit";
+$lang['pwidget_main_short_code']                    = "Main short code";
+$lang['pwidget_loop_short_code']                    = "Short code for inside the loop only";
+$lang['pwidget_gen_short_code']                    = "Short code generate!";
+$lang['pwidget_sort_by']                    = "Sort By";
+$lang['pwidget_body']                    = "Template body";
+$lang['pwidget_indexremark']		= "<i>Please use this tag for insert the plugin widget into the content. Please see ID#<br><b>Tag:</b></i> [?]{=pwidget:<b>ID#</b>}[?]";
+$lang['pwidget_plugin_view_id']                    = "Plugin View ID";

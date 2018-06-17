@@ -16,7 +16,7 @@ $row = $this->Csz_admin_model->load_config();
         <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
         <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
         <?php echo $meta_tags ?>
-        <?php echo link_tag('templates/admin/favicon.ico', 'shortcut icon', 'image/ico'); ?>
+        <?php echo link_tag(base_url('', '', TRUE).'templates/admin/favicon.ico', 'shortcut icon', 'image/ico','','', FALSE); ?>
         <!-- Bootstrap Core CSS -->
         <?php echo $core_css ?>
         <link rel="icon" type="image/x-icon" href="<?php echo base_url('', '', TRUE) ?>templates/admin/favicon.ico" />
@@ -147,7 +147,7 @@ $row = $this->Csz_admin_model->load_config();
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/optimize' ?>"><i class="fa fa-compress"></i> <?php echo $this->lang->line('btn_optimize_db') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearallcache') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
-                                        <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('btn_clear_sess') ?></a></li>
+                                        <?php if($this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?><li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('btn_clear_sess') ?></a></li><?php } ?>
                                         <?php if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE){ ?><li><a href="<?php echo $this->Csz_model->base_link(). '/admin/export' ?>"><i class="glyphicon glyphicon-export"></i> <?php echo $this->lang->line('export_import_csv_btn') ?></a></li><?php } ?>
                                     </ul>
                                 </li>
@@ -222,7 +222,7 @@ $row = $this->Csz_admin_model->load_config();
                 <?php echo  $this->Headfoot_html->admin_footer() ?>
                 <!-- End Footer -->
                 
-                <div class="footer" style="position:absolute;bottom:0;right:2%;transform:translateY(-100%);">
+                <div class="footer" style="position:absolute;right:2%;transform:translateY(-100%);">
                     <div class="row col-md-12 text-center">
                         <a href="#top" title="To Top" style="text-decoration:none;">
                             <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
@@ -241,10 +241,11 @@ $row = $this->Csz_admin_model->load_config();
                         <!-- /.tab-pane -->
                         <!-- Settings tab content -->
                         <div class="tab-pane" id="control-sidebar-home-tab">
-                            <h2 class="control-sidebar-heading">AdminLTE Template 2.3.7</h2>
+                            <h2 class="control-sidebar-heading">AdminLTE Template 2.4.3</h2>
                             <p>
                                 <b>MIT License</b><br>
-                                <em>Copyright &copy; 2014-<?php echo date('Y') ?> <a href="http://almsaeedstudio.com" target="_blank" rel="nofollow external">Almsaeed Studio</a>. All rights reserved.</em>
+                                <em>Copyright &copy; 2014-2017 <a href="https://adminlte.io/" target="_blank" rel="nofollow external">Almsaeed Studio</a>. All rights reserved.</em><br>
+                                <br><em>Modified by <a href="https://www.cskaza.com" target="_blank">CSKAZA</a>.</em>
                             </p>
                         </div>
                         <!-- /.tab-pane -->
@@ -274,9 +275,9 @@ $row = $this->Csz_admin_model->load_config();
             <?php echo $this->Headfoot_html->admin_footer() ?>
         <?php } ?>
         <!-- Theme style -->
-        <?php echo link_tag('templates/admin/css/AdminLTE.min.css') ?>
+        <?php echo link_tag(base_url('', '', TRUE).'templates/admin/css/AdminLTE.min.css') ?>
         <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
-        <?php echo link_tag('templates/admin/css/skins/_all-skins.min.css') ?>
+        <?php echo link_tag(base_url('', '', TRUE).'templates/admin/css/skins/_all-skins.min.css') ?>
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->

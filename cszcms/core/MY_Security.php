@@ -52,12 +52,17 @@ class MY_Security extends CI_Security {
             $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
             $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
             if (($referer_host && $referer_host === $own_host)) {
+                $this->clearCSRFcookie();
                 header('Refresh:2;url=' . $_SERVER["HTTP_REFERER"] . '?nocache=' . time());
                 show_error('The action is not allowed by CSRF Protection. Please wait 2 seconds to redirect.', 403);
+            }else{
+                $this->clearCSRFcookie();
+                show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
             }
+        }else{
+            $this->clearCSRFcookie();
+            show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
         }
-        show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
-        exit(1);
     }
 
     /**
@@ -281,5 +286,19 @@ class MY_Security extends CI_Security {
 
 		return $config;
 	}
+        
+        private function clearCSRFcookie() {
+            $find_arr = @parse_url(BASE_URL);
+            $domain = @$find_arr['host'];
+            $csrfcookiename = str_replace('.', '_', $domain).'_cszcookiecsrf_cookie_csz';
+            $csrfsessionname = str_replace('.', '_', $domain).'_cszsesscsrf_cookie_csz';
+            if (isset($_SESSION[$csrfsessionname])) {            
+                unset($_SESSION[$csrfsessionname]);           
+            }
+            if (isset($_COOKIE[$csrfcookiename])) {
+                unset($_COOKIE[$csrfcookiename]);
+            }
+            setcookie($csrfcookiename, null, -1, '/');
+        }
 
 }

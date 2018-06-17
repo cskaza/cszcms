@@ -29,11 +29,12 @@ class Filemanager extends CI_Controller {
         $this->lang->load('admin', $this->Csz_admin_model->getLang());
         $this->template->set_template('admin');
         $this->_init();
+        $this->load->library('elfinder_lib');
     }
 
     public function _init() {
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
-        $this->template->set('core_js', $this->Csz_admin_model->coreJs('//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js'));
+        $this->template->set('core_js', $this->Csz_admin_model->coreJs('//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js'));
         $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
         $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
@@ -102,7 +103,7 @@ class Filemanager extends CI_Controller {
             define('returnVoid', void 0);
             (function(){
                 var /* elFinder version */
-                    elver = '2.1.27',
+                    elver = '".$this->elfinder_lib->getVersion()."',
                     /* jQuery and jQueryUI version*/
                     jqver = '3.2.1',
                     uiver = '1.12.1',
@@ -203,7 +204,7 @@ class Filemanager extends CI_Controller {
                         'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',
                         'elfinder' : 'elfinder.min'
                     },
-                    waitSeconds : 10 /* optional*/
+                    waitSeconds : 5 /* optional*/
                 });
                 /* load JavaScripts (REQUIRED)*/
                 load();
@@ -427,7 +428,6 @@ class Filemanager extends CI_Controller {
                 $this->cmsConfigAdmin(),
             ),
         );
-        $this->load->library('elfinder_lib');
         $this->elfinder_lib->run($opts);
     }
     
@@ -586,7 +586,6 @@ class Filemanager extends CI_Controller {
                 ),
             ),
         );
-        $this->load->library('elfinder_lib');
         $this->elfinder_lib->run($opts);
     }
 

@@ -92,6 +92,8 @@ class Upgrade extends CI_Controller {
                         if(is_writable($newfname)){
                             @unlink($newfname);
                         }
+                        $this->Csz_model->clear_all_cache();
+                        $this->db->cache_delete_all();
                     }else{
                         if(is_writable($newfname)){
                             @unlink($newfname);

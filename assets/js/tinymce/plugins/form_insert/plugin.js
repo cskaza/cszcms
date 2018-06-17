@@ -37,7 +37,8 @@ tinymce.PluginManager.add('form_insert', function (editor) {
         // Open window
         var selType = [
             {text: 'Forms', value: 'forms'},
-            {text: 'Widget', value: 'widget'},
+            {text: 'Old Widget', value: 'widget'},
+            {text: 'Plugin Widget', value: 'pwidget'},
             {text: 'Banner', value: 'banner'},
             {text: 'Carousel', value: 'carousel'},
             {text: 'Carousel Header', value: 'carousel header'}

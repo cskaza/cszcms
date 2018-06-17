@@ -11,35 +11,27 @@
             <div class="col-md-12" style="word-wrap:break-word;">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        <h1><i class="fa fa-microchip"></i></h1>
-                                    </div>
-                                    <div class="col-xs-10 text-right">
-                                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></small></div>
-                                        <div><?php echo $this->lang->line('serverstatus_phpmem_use') ?></div>
-                                    </div>
-                                </div>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-yellow"><i class="fa fa-microchip"></i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text"><?php echo $this->lang->line('serverstatus_phpmem_use') ?></span>
+                              <span class="info-box-number"><?php echo $this->Csz_admin_model->memUsage() ?> / <?php echo $this->Csz_admin_model->getMemLimit() ?></span>
                             </div>
+                            <!-- /.info-box-content -->
                         </div>
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6">
-                        <div class="panel panel-green">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        <h1><i class="fa fa-hdd-o"></i></h1>
-                                    </div>
-                                    <div class="col-xs-10 text-right">
-                                        <div class="huge"><small style="font-size:60%"><?php echo $this->Csz_admin_model->usageSpace() ?></small></div>
-                                        <div><?php echo $this->lang->line('serverstatus_disk_use') ?></div>
-                                    </div>
-                                </div>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-hdd-o"></i></span>
+                            <div class="info-box-content">
+                              <span class="info-box-text"><?php echo $this->lang->line('serverstatus_disk_use') ?></span>
+                              <span class="info-box-number"><?php echo $this->Csz_admin_model->usageSpace() ?></span>
                             </div>
+                            <!-- /.info-box-content -->
                         </div>
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
                 </div>
@@ -123,28 +115,30 @@
                                     </a>
                                 </div>
                         </div>
-                        <div class="row col-sm-12">
-                                <div class="panel panel-red">
-                                    <div class="panel-heading">
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <h1><i><span class="glyphicon glyphicon-envelope"></span></i></h1>
-                                            </div>
-                                            <div class="col-xs-9 text-right">
-                                                <div class="huge"><?php echo $total_emaillogs ?></div>
-                                                <div><?php echo $this->lang->line('dashboard_totalemail') ?>!</div>
+                        <?php if($config->email_logs == 1){ ?>
+                            <div class="row col-sm-12">
+                                    <div class="panel panel-red">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <h1><i><span class="glyphicon glyphicon-envelope"></span></i></h1>
+                                                </div>
+                                                <div class="col-xs-9 text-right">
+                                                    <div class="huge"><?php echo $total_emaillogs ?></div>
+                                                    <div><?php echo $this->lang->line('dashboard_totalemail') ?>!</div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <a href="<?php echo $this->Csz_model->base_link().'/admin/emaillogs' ?>">
+                                            <div class="panel-footer">
+                                                <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
+                                                <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </a>
                                     </div>
-                                    <a href="<?php echo $this->Csz_model->base_link().'/admin/emaillogs' ?>">
-                                        <div class="panel-footer">
-                                            <span class="pull-left"><?php echo $this->lang->line('dashboard_viewdetail') ?></span>
-                                            <span class="pull-right"><i><span class="glyphicon glyphicon-expand"></span></i></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                        </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <!-- /.box -->
@@ -172,6 +166,7 @@
 </div>
 <!-- Page Heading -->
 <!-- /.row -->
+<?php if($config->email_logs == 1){ ?>
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title"><i><span class="glyphicon glyphicon-envelope"></span></i> <?php echo $this->lang->line('dashboard_emailrecent') ?></h3>
@@ -225,6 +220,7 @@
     </div>
 </div>
 <!-- /.box -->
+<?php } ?>
 <div class="box box-info">
     <div class="box-header with-border">
         <h3 class="box-title"><i><span class="glyphicon glyphicon-link"></span></i> <?php echo $this->lang->line('dashboard_linkrecent') ?></h3>
