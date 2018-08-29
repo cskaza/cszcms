@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.2.0'; /* For CMS Version */
+$config['csz_version'] = '1.2.1'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 
@@ -53,7 +53,7 @@ $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
  * Defualt Url https://www.cszcms.com/plugin/article/rss
  */
 $config['csz_backend_feed_url'] = 'https://www.cszcms.com/plugin/article/rss';
-$config['csz_backend_feed_backup_url'] = 'https://www.astian.org/plugin/article/rss';
+$config['csz_backend_feed_backup_url'] = 'https://cszcms.sourceforge.io/xml/cszcms-backend-feed.xml';
 
 /* 
  * For CSZ CMS plugin version checking xml url
@@ -79,3 +79,10 @@ $config['csz_plugin_install_server_2'] = 'https://www.cszcms.com/downloads/plugi
 $config['csz_plugin_upgrade_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms-plugin/upgrade/';
 $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugins/upgrade/';
 
+/* 
+ * For CI upgrade server file path Ex. https://www.cszcms.com/downloads/ci_update/ci-3.1.9.zip
+ * The upgrade file is "ci-3.1.9.zip" (Can't change the file upgrade name to other format. This format only)
+ * Please set the server with path only https://www.cszcms.com/downloads/ci_update/
+ */
+$config['ci_update_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms-plugin/ci_update/';
+$config['ci_update_server_2'] = 'https://www.cszcms.com/downloads/ci_update/';

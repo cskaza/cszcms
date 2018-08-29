@@ -1,4 +1,15 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.1 (2018-08-29)
+- Add CI system core update with click.
+- Add google translator tools. [$this->Headfoot_html->langMenu(4, 'th');].
+- Add the settings for website name on title page (disable, first, last).
+- Add Carousel can add custom template.
+- Fixed version checking for support CI core update.
+- Fixed blank page when check 'Disable HTML Optimization' on Site Settings.
+- Fixed rss feed on backend.
+- Fixed xml widget and plugin widget not working.
+- Fixed install wizard bug.
+
 CSZ-CMS V.1.2.0 (2018-06-15)
 - Add Developer Toolbar.
 - Add new plugin widget system.

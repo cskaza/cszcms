@@ -161,12 +161,15 @@
         </ol>
         <div class="panel panel-default">
             <div class="panel-body">
-                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b>
+                <b>Codeigniter <i><?php echo $ci_cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $ci_last_version ?></i></b> &nbsp;&nbsp; <a title="<?php echo $this->lang->line('btn_upgrade') ?>" href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/CIupdate' ?>" class="btn btn-primary btn-sm" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-refresh"></i></a>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b> &nbsp;&nbsp; <a title="<?php echo $this->lang->line('btn_upgrade') ?>" href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/download' ?>" class="btn btn-primary btn-sm" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-refresh"></i></a>
             </div>
         </div>
         <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>
-        <br><br>
-        <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/download' ?>" class="btn btn-primary" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><?php echo $this->lang->line('btn_upgrade') ?></a>
         <br><br>
     </div>
     <div class="col-lg-6 col-md-6">

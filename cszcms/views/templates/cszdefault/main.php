@@ -64,6 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
                              * 2=Show flag and Language, 
                              * 3=Show flag and Country,
+                             * 4=Google translator tools and next paramiter is default language. Ex $this->Headfoot_html->langMenu(4, 'th');
                              * Null or 0=Show Full detail)*/ ?>
                             <?php echo $this->Headfoot_html->langMenu(2);?>
                             <?php echo $this->Headfoot_html->footer();?>
@@ -84,6 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php /*$this->Headfoot_html->langMenu(1=Show flag only, 
                              * 2=Show flag and Language, 
                              * 3=Show flag and Country,
+                             * 4=Google translator tools and next paramiter is default language. Ex $this->Headfoot_html->langMenu(4, 'th');
                              * Null or 0=Show Full detail)*/ ?>
                             <?php echo $this->Headfoot_html->langMenu(2);?>
                             <?php echo $this->Headfoot_html->footer();?>

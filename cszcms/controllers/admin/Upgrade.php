@@ -25,6 +25,7 @@ class Upgrade extends CI_Controller {
 
     var $cur_version;
     var $last_version;
+    var $ci_last_version;
 
     function __construct() {
         parent::__construct();
@@ -44,6 +45,7 @@ class Upgrade extends CI_Controller {
         $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
         $this->cur_version = $this->Csz_model->getVersion();
         $this->last_version = $this->Csz_admin_model->getLatestVersion();
+        $this->ci_last_version = $this->Csz_admin_model->getLatestVersion('', TRUE);
     }
 
     public function index() {
@@ -54,6 +56,8 @@ class Upgrade extends CI_Controller {
         $this->load->helper('directory');
         $this->template->setSub('cur_version', $this->cur_version);
         $this->template->setSub('last_version', $this->last_version);
+        $this->template->setSub('ci_last_version', $this->ci_last_version);
+        $this->template->setSub('ci_cur_version', CI_VERSION);
         $this->template->setSub('logsdir', directory_map(APPPATH . '/logs/', 1, TRUE));
         //Load the view
         $this->template->loadSub('admin/upgrade_index');
@@ -102,12 +106,12 @@ class Upgrade extends CI_Controller {
                         redirect($this->csz_referrer->getIndex(), 'refresh');
                     }
                 }
+                $this->Csz_admin_model->unsetMaintenance();
+                $this->Csz_model->clear_all_cache();
+                $this->db->cache_delete_all();
                 if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
                     redirect('/admin/upgrade/download', 'refresh');
                 }else{
-                    $this->Csz_admin_model->unsetMaintenance();
-                    $this->Csz_model->clear_all_cache();
-                    $this->db->cache_delete_all();
                     // When Success 
                     $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
                     redirect($this->csz_referrer->getIndex(), 'refresh');
@@ -118,6 +122,64 @@ class Upgrade extends CI_Controller {
             }
         } else {
             $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+    
+    public function CIupdate() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','512M');
+        }
+        $lastversion = $this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE);
+        if ($lastversion !== FALSE) {
+            $nextversion = $this->Csz_admin_model->findNextVersion(CI_VERSION, '', TRUE);
+            $url1 = $this->config->item('ci_update_server_1') . "ci-" . $nextversion . ".zip";
+            $url2 = $this->config->item('ci_update_server_2') . "ci-" . $nextversion . ".zip";
+            if($this->Csz_model->is_url_exist($url1) !== FALSE){
+                $url = &$url1; /* Main Link */
+            }else if($this->Csz_model->is_url_exist($url1) === FALSE && $this->Csz_model->is_url_exist($url2) !== FALSE){
+                $url = &$url2; /* Backup Link */
+            }
+            $newfname = FCPATH . basename($url);
+            if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
+                $this->Csz_admin_model->setMaintenance();
+                $this->Csz_model->clear_all_cache();
+                $this->db->cache_delete_all();
+                if (file_exists($newfname)) {
+                    $unzip = @$this->unzip->extract($newfname, FCPATH);
+                    if(!empty($unzip)){
+                        if(is_writable($newfname)){
+                            @unlink($newfname);
+                        }
+                        $this->Csz_model->clear_all_cache();
+                        $this->db->cache_delete_all();
+                    }else{
+                        if(is_writable($newfname)){
+                            @unlink($newfname);
+                        }
+                        $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                    }
+                }
+                $this->Csz_admin_model->unsetMaintenance();
+                $this->Csz_model->clear_all_cache();
+                $this->db->cache_delete_all();
+                if($this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE) !== FALSE){
+                    redirect('/admin/upgrade/CIupdate', 'refresh');
+                }else{
+                    // When Success 
+                    $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                    redirect($this->csz_referrer->getIndex(), 'refresh');
+                }
+            }else{
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
+        } else {
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }

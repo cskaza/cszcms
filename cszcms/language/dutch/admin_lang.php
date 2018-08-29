@@ -258,6 +258,9 @@ $lang['settings_assets_static_domain_remark']	= "(Example: https://cdn.cszcms.co
 $lang['settings_fb_messenger']		= "Facebook Messenger Active";
 $lang['settings_fb_messenger_remark']	= 'How to whitelist the domain of your website on your Facebook pages? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>Click here</b></a>';
 $lang['settings_email_logs']		= "Email Logs Enable";
+$lang['settings_titlesetting']		= "Sitename Settings";
+$lang['settings_titlesetting_first']		= "First";
+$lang['settings_titlesetting_last']		= "Last";
 
 //Navigation Page
 $lang['navpage_header']                 = "Hoofdmenu";
@@ -573,6 +576,8 @@ $lang['carousel_youtube_head']            = "Add New Youtube";
 $lang['carousel_youtube_url']            = "Youtube URL";
 $lang['carousel_url_head']            = "Add New Photo URL";
 $lang['carousel_photo_url']            = "Photo URL";
+$lang['carousel_customtemp_active']            = "Custom Template Active";
+$lang['carousel_customtemp_txt']            = "Custom Template HTML";
 
 // PLugin Widget
 $lang['pwidget_header']               = "Plugin Widgets";

@@ -65,7 +65,7 @@ class Gallery extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $title = $this->Csz_model->getLabelLang('gallery_header') . ' | ' . $row->site_name;
+        $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('gallery_header'));
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
@@ -98,7 +98,7 @@ class Gallery extends CI_Controller {
                     $this->Csz_model->setSiteLang($album_row->lang_iso);
                 }
                 $row = $this->Csz_model->load_config();
-                $this->template->set('title', $album_row->album_name.' | ' . $row->site_name);
+                $this->template->set('title', $this->Csz_model->pagesTitle($album_row->album_name));
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($album_row->short_desc,$album_row->keyword,$album_row->album_name,$this->Gallery_model->getFirstImgs($album_row->gallery_db_id)));
                 $this->template->set('cur_page', $this->page_url);
 

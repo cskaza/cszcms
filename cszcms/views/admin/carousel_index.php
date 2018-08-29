@@ -19,7 +19,8 @@
                     <tr>
                         <th width="10%" class="text-center" style="vertical-align:middle;"><label><input id="sel-chkbox-all" type="checkbox"> <?php echo  $this->lang->line('btn_delete') ?></label></th>
                         <th width="15%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="55%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('carousel_name'); ?></th>
+                        <th width="35%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('carousel_name'); ?></th>
+                        <th width="20%" class="text-center" style="vertical-align:middle;"><?php echo $this->lang->line('carousel_customtemp_active'); ?></th>                      
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -36,12 +37,18 @@
                             }else{
                                 $inactive = ' style="vertical-align:middle;"';
                             }
+                            if($u['custom_temp_active']){
+                                $custom_temp_active = '<i class="success glyphicon glyphicon-ok"></i>';
+                            }else{
+                                $custom_temp_active = '<i class="error glyphicon glyphicon-remove"></i>';
+                            }
                             echo '<tr>';
                             echo '<td class="text-center" style="vertical-align:middle;">
                                     <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['carousel_widget_id'].'">
                                 </td>'; 
                             echo '<td class="text-center"'.$inactive.'>' . $u['carousel_widget_id'] . '</td>';
                             echo '<td class="text-center"'.$inactive.'>' . $u['name'] . '</td>';
+                            echo '<td class="text-center"'.$inactive.'>' . $custom_temp_active . '</td>';
                             echo '<td class="text-center"'.$inactive.'><a href="'.$this->Csz_model->base_link().'/admin/carousel/edit/' . $u['carousel_widget_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a>';
                             echo '</td></tr>';
                         }

@@ -29,6 +29,19 @@
                 ?>
             </div> <!-- /controls -->				
         </div> <!-- /control-group -->
+        <div class="control-group">
+            <label class="control-label" for="title_setting"><?php echo $this->lang->line('settings_titlesetting'); ?></label>
+            <div class="controls">
+                <?php
+                $att = 'id="title_setting" class="form-control"';
+                $data = array();
+                $data['0'] = $this->lang->line('settings_pagecache_time_off');
+                $data['1'] = $this->lang->line('settings_titlesetting_first');
+                $data['2'] = $this->lang->line('settings_titlesetting_last');
+                echo form_dropdown('title_setting', $data, $settings->title_setting, $att);
+                ?>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
         <div class="control-group">	
             <label class="control-label" for="siteFooter"><?php echo $this->lang->line('settings_footer'); ?></label>
             <div class="controls">

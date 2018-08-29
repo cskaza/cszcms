@@ -258,6 +258,9 @@ $lang['settings_assets_static_domain_remark']	= "(ตัวอย่าง: http
 $lang['settings_fb_messenger']		= "เปิดใช้งาน Facebook Messenger";
 $lang['settings_fb_messenger_remark']	= 'วิธีการเพิ่มโดเมนของเว็บไซต์ของคุณไว้ในหน้า Facebook ของคุณ? <a href="https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin#steps" target="_blank"><b>คลิกที่นี่</b></a>';
 $lang['settings_email_logs']		= "เปิดการใช้งานบันทึกของอีเมล์";
+$lang['settings_titlesetting']		= "การตั้งค่าชื่อเว็บไซต์";
+$lang['settings_titlesetting_first']		= "ก่อน";
+$lang['settings_titlesetting_last']		= "หลัง";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";
@@ -573,6 +576,8 @@ $lang['carousel_youtube_head']            = "เพิ่ม Youtube ใหม�
 $lang['carousel_youtube_url']            = "Youtube URL";
 $lang['carousel_url_head']            = "เพิ่ม URL รูปภาพใหม่";
 $lang['carousel_photo_url']            = "URL รูปภาพ";
+$lang['carousel_customtemp_active']            = "เปิดใช้งานเทมเพลตที่กำหนดเอง";
+$lang['carousel_customtemp_txt']            = "HTML เทมเพลตที่กำหนดเอง";
 
 // PLugin Widget
 $lang['pwidget_header']               = "วิดเจ็ตปลั๊กอิน";

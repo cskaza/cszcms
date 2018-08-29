@@ -53,7 +53,7 @@ class Member extends CI_Controller {
         $pageURL = $this->Csz_model->getCurPages();
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
-        $title = 'Member | ' . $row->site_name;
+        $title = $this->Csz_model->pagesTitle('Member');
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title, $row->keywords, $title));
         $this->template->set('cur_page', $pageURL);

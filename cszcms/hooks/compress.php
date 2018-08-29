@@ -19,6 +19,8 @@ function compress()
     if($config->html_optimize_disable != 1 && DEV_TOOLS_BAR === FALSE){
         $CI->output->set_output($CI->Csz_model->compress_html($CI->output->get_output()));
         $CI->output->_display();
+    }else{
+        $CI->output->_display();
     }
 }
 

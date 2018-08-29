@@ -144,6 +144,7 @@ class Cszmodel{
      * @return	string
      */
     public function pwdEncypt($password) {
+        require 'password.php';
         $options = array('cost' => 12);
         return password_hash($password, PASSWORD_BCRYPT, $options);
     }

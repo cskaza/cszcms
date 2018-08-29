@@ -63,13 +63,13 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
     $md5_hash = md5(time() + mt_rand(1, 99999999));
     if ($email && $_POST['password']) {
         /* Database Insert */
-        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `pm_sendmail`, `pass_change`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '" . $email . "', '" . $cszmodel->pwdEncypt($_POST['password']) . "', 'admin', 1, '" . $md5_hash . "', NOW(), 1, 1, NOW(), NOW())";
+        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `pm_sendmail`, `timestamp_login`, `pass_change`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', '" . $email . "', '" . $cszmodel->pwdEncypt($_POST['password']) . "', 'admin', 1, '" . $md5_hash . "', NOW(), 1, NOW(), 1, NOW(), NOW())";
         $mysqli->query($insert_user);
         $update_sql = "UPDATE `settings` SET `default_email` = '" . $email . "' WHERE `settings_id` = 1";
         $mysqli->query($update_sql);
     } else {
         /* Database Insert */
-        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `pm_sendmail`, `pass_change`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', 'demo@cszcms.com', '" . $cszmodel->pwdEncypt('123456') . "', 'admin', 1, '" . $md5_hash . "', NOW(), 1, 1, NOW(), NOW())";
+        $insert_user = "INSERT INTO `user_admin` (`user_admin_id`, `name`, `email`, `password`, `user_type`, `active`, `md5_hash`, `md5_lasttime`, `pm_sendmail`, `timestamp_login`, `pass_change`, `timestamp_create`, `timestamp_update`) VALUES (1, 'Admin User', 'demo@cszcms.com', '" . $cszmodel->pwdEncypt('123456') . "', 'admin', 1, '" . $md5_hash . "', NOW(), 1, NOW(), 1, NOW(), NOW())";
         $mysqli->query($insert_user);
         $update_sql = "UPDATE `settings` SET `default_email` = 'demo@cszcms.com' WHERE `settings_id` = 1";
         $mysqli->query($update_sql);

@@ -10,64 +10,8 @@
 </div>
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_edit'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
-        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/carousel/update/'.$this->uri->segment(4)); ?>
-        <div class="control-group">	
-            <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
-            <label class="control-label" for="name"><?php echo $this->lang->line('carousel_name'); ?>*</label>
-            <?php
-            $data = array(
-                'name' => 'name',
-                'id' => 'name',
-                'required' => 'required',
-                'autofocus' => 'true',
-                'class' => 'form-control',
-                'maxlength' => '255',
-                'value' => set_value('name', $carousel->name, FALSE)
-            );
-            echo form_input($data);
-            ?>			
-        </div> <!-- /control-group -->
-        <br>
-        <div class="control-group">										
-            <label class="form-control-static" for="active">
-                <?php
-                if($carousel->active){
-                    $checked = 'checked';
-                }else{
-                    $checked = '';
-                }
-                $data = array(
-                    'name' => 'active',
-                    'id' => 'active',
-                    'value' => '1',
-                    'checked' => $checked
-                );
-                echo form_checkbox($data);
-                ?> <?php echo $this->lang->line('lang_active'); ?></label>	
-        </div> <!-- /control-group -->
-        <br><br>
-        <div class="form-actions">
-            <?php
-            $data = array(
-                'name' => 'submit',
-                'id' => 'submit',
-                'class' => 'btn btn-lg btn-primary',
-                'value' => $this->lang->line('btn_save'),
-            );
-            echo form_submit($data);
-            ?> 
-            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
-        </div> <!-- /form-actions -->
-        <?php echo form_close(); ?>
-        <!-- /widget-content -->
-    </div>
-</div>
-<!-- /.row -->
-<div class="row">
     <div class="col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_picture') ?></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_picture') ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex(); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
         <div class="row">
             <div class="col-md-4">
                 <div class="h4 sub-header"><?php echo  $this->lang->line('carousel_youtube_head') ?></div>
@@ -179,10 +123,9 @@
                                 </td>
                                 <td style="vertical-align:middle;">
                                     <span class="h5"><b>
-                                        <?php 
-                                        if($file["carousel_type"] == 'multiimages' && $file["file_upload"] && $file["file_upload"] != NULL){
-                                            echo $file["file_upload"];
-                                        }else if($file["carousel_type"] == 'multiimages' && $file["photo_url"] && $file["photo_url"] != NULL){ ?>
+                                        <?php if($file["carousel_type"] == 'multiimages' && $file["file_upload"] && $file["file_upload"] != NULL){ ?>
+                                            <a href="<?php echo base_url().'photo/carousel/'.$file["file_upload"]; ?>" target="_blank"><?php echo base_url().'photo/carousel/'.$file["file_upload"]; ?></a>
+                                        <?php }else if($file["carousel_type"] == 'multiimages' && $file["photo_url"] && $file["photo_url"] != NULL){ ?>
                                             <a href="<?php echo $file["photo_url"]; ?>" target="_blank"><?php echo $file["photo_url"]; ?></a>
                                         <?php }else if($file["carousel_type"] == 'youtubevideos'){ ?>
                                             <a href="<?php echo $file["youtube_url"]; ?>" target="_blank"><?php echo $file["youtube_url"]; ?></a>
@@ -191,7 +134,7 @@
                                     <div class="form-group has-feedback">
                                         <div class="input-group">
                                             <div class="input-group-addon"><b><?php echo  $this->lang->line('carousel_caption') ?></b></div>
-                                            <input style="z-index: 1;" type="text" class="form-control" id="caption" name="caption[<?php echo $file["carousel_picture_id"] ?>]" value="<?php echo $file["caption"] ?>">
+                                            <input style="z-index: 1;" type="text" class="form-control" id="caption" name="caption[<?php echo $file["carousel_picture_id"] ?>]" value="<?php  echo $file["caption"]; ?>">
                                         </div>
                                     </div>
                                 </td>
@@ -223,6 +166,103 @@
         <!-- /widget-content --> 
         <br><br>
         <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="h2 sub-header"><?php echo $this->lang->line('carousel_edit'); ?></div>
+        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/carousel/update/'.$this->uri->segment(4)); ?>
+        <div class="control-group">	
+            <?php echo form_error('name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+            <label class="control-label" for="name"><?php echo $this->lang->line('carousel_name'); ?>*</label>
+            <?php
+            $data = array(
+                'name' => 'name',
+                'id' => 'name',
+                'required' => 'required',
+                'autofocus' => 'true',
+                'class' => 'form-control',
+                'maxlength' => '255',
+                'value' => set_value('name', $carousel->name, FALSE)
+            );
+            echo form_input($data);
+            ?>			
+        </div> <!-- /control-group -->
+        <br>
+        <div class="panel panel-default"> 
+            <div class="panel-heading">
+                <label class="checkbox-inline">
+                    <?php
+                    if($carousel->custom_temp_active){
+                        $checked = 'checked';
+                    }else{
+                        $checked = '';
+                    }
+                    $data = array(
+                        'name' => 'custom_temp_active',
+                        'id' => 'custom_temp_active',
+                        'value' => '1',
+                        "onclick" => "ChkHideShow('custom-template-id');",
+                        'checked' => $checked
+                    );
+                    echo form_checkbox($data);
+                    ?> <?php echo $this->lang->line('carousel_customtemp_active'); ?>
+                </label>
+            </div>
+            <?php if($carousel->custom_temp_active){
+                $style_display = '';
+            }else{
+                $style_display = ' style="display: none;"';
+            } ?>
+            <div class="panel-body" id="custom-template-id"<?php echo $style_display ?>>
+                <div class="control-group">            
+                    <label class="control-label" for="custom_template"><?php echo $this->lang->line('carousel_customtemp_txt'); ?></label>
+                    <?php
+                    $data = array(
+                        'name' => 'custom_template',
+                        'id' => 'custom_template',
+                        'class' => 'form-control',
+                        'value' => set_value('custom_template', $carousel->custom_template, FALSE)
+                    );
+                    echo form_textarea($data);
+                    ?>			
+                </div> <!-- /control-group -->
+            </div>
+        </div>
+        <br>
+        <div class="control-group">										
+            <label class="form-control-static" for="active">
+                <?php
+                if($carousel->active){
+                    $checked = 'checked';
+                }else{
+                    $checked = '';
+                }
+                $data = array(
+                    'name' => 'active',
+                    'id' => 'active',
+                    'value' => '1',
+                    'checked' => $checked
+                );
+                echo form_checkbox($data);
+                ?> <?php echo $this->lang->line('lang_active'); ?></label>	
+        </div> <!-- /control-group -->
+        <br><br>
+        <div class="form-actions">
+            <?php
+            $data = array(
+                'name' => 'submit',
+                'id' => 'submit',
+                'class' => 'btn btn-lg btn-primary',
+                'value' => $this->lang->line('btn_save'),
+            );
+            echo form_submit($data);
+            ?> 
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+        </div> <!-- /form-actions -->
+        <?php echo form_close(); ?>
+        <!-- /widget-content -->
     </div>
 </div>
 <script type="text/javascript">

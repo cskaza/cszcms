@@ -63,7 +63,7 @@ class Article extends CI_Controller {
 
     public function index() {
         $row = $this->Csz_model->load_config();
-        $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
+        $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('article_index_header'));
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
         $this->template->set('cur_page', $this->page_url);
@@ -106,7 +106,7 @@ class Article extends CI_Controller {
                     $this->Csz_model->setSiteLang($cat_row->lang_iso);
                 }
                 $row = $this->Csz_model->load_config();
-                $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
+                $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('article_index_header'));
                 $this->template->set('title', $title);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
@@ -151,7 +151,7 @@ class Article extends CI_Controller {
         $p = $this->Csz_model->cleanOSCommand($this->input->get('p', TRUE));
         if ($p) {
             $row = $this->Csz_model->load_config();
-            $title = 'Article Search | ' . $row->site_name;
+            $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('article_search_txt'));
             $this->template->set('title', $title);
             $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title, $row->keywords, $title));
             $this->template->set('cur_page', $this->page_url);
@@ -185,7 +185,7 @@ class Article extends CI_Controller {
             $year_arr = explode('-', $this->uri->segment(4));
             if($year_arr !== FALSE){
                 $row = $this->Csz_model->load_config();
-                $title = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
+                $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('article_index_header'));
                 $this->template->set('title', $title);
                 $this->template->set('meta_tags', $this->Csz_model->coreMetatags($title,$row->keywords,$title));
                 $this->template->set('cur_page', $this->page_url);
@@ -236,7 +236,7 @@ class Article extends CI_Controller {
                     $this->db->cache_off();
                 }
                 $this->output->cache($row->pagecache_time);
-                $this->template->set('title', $art_row->title.' | ' . $row->site_name);
+                $this->template->set('title', $this->Csz_model->pagesTitle($art_row->title));
                 $more_meta = '<link rel="amphtml" href="'.$this->Csz_model->base_link().'/plugin/article/amp/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/" />' . "\n";
                 $more_meta.= '<meta property="article:published_time" content="'.date('c', strtotime($art_row->timestamp_create)).'" />' . "\n";
                 $more_meta.= '<meta property="article:modified_time" content="'.date('c', strtotime($art_row->timestamp_update)).'" />' . "\n";
@@ -318,7 +318,7 @@ class Article extends CI_Controller {
                     $this->db->cache_off();
                 }
                 $this->output->cache($row->pagecache_time);
-                $this->template->set('title', $art_row->title.' | ' . $row->site_name);
+                $this->template->set('title', $this->Csz_model->pagesTitle($art_row->title));
                 $canonical = '<link rel="canonical" href="'.$this->Csz_model->base_link().'/plugin/article/view/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'">' . "\n";               
                 $this->template->set('canonical', $canonical);
                 if ($row->site_logo) {
@@ -391,7 +391,7 @@ class Article extends CI_Controller {
                 }
                 $row = $this->Csz_model->load_config();
                 $this->db->cache_on();
-                $this->template->setSub('title', $art_row->title.' | ' . $row->site_name);
+                $this->template->setSub('title', $this->Csz_model->pagesTitle($art_row->title));
                 $this->template->setSub('canonical', '<link rel="canonical" href="'.$this->Csz_model->base_link().'/plugin/article/markupview/'.$this->uri->segment(4).'">' . "\n");
                 $this->template->setSub('article', $art_row);
                 $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND article_db_id = '".$art_row->cat_id."'", '', 1);                

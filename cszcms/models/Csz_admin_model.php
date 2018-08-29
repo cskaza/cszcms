@@ -50,9 +50,10 @@ class Csz_admin_model extends CI_Model{
      * Function for get latest version from xml url
      *
      * @param	string	$xml_url    xml url file
+     * @param   bool    $is_ci      CI update check
      * @return	versoin string
      */
-    public function getLatestVersion($xml_url = ''){
+    public function getLatestVersion($xml_url = '', $is_ci = FALSE){
         if(!$xml_url){
             $xml_url = $this->config->item('csz_chkverxmlurl_main');
         }
@@ -68,23 +69,73 @@ class Csz_admin_model extends CI_Model{
         }else{
             $xml = FALSE;
         }
-        if($xml !== FALSE){
-            return $xml->version;
-        }else{
-            $xml_cur = $this->Csz_model->getVersion();
-            if(strpos($xml_cur, 'Beta') !== false){
-                $vercur = str_replace(' Beta', '', $xml_cur);
-                $cur_xml = explode('.', $vercur);
-                $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2] - 1);
-                unset($xml_cur, $vercur, $cur_xml);
+        if($is_ci === FALSE){
+            if($xml !== FALSE){
+                return $xml->version;
             }else{
-                $xml_version = $xml_cur;
-                unset($xml_cur);
+                $xml_cur = $this->Csz_model->getVersion();
+                if(strpos($xml_cur, 'Beta') !== false){
+                    $vercur = str_replace(' Beta', '', $xml_cur);
+                    $cur_xml = explode('.', $vercur);
+                    $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2] - 1);
+                    unset($xml_cur, $vercur, $cur_xml);
+                }else{
+                    $xml_version = $xml_cur;
+                    unset($xml_cur);
+                }
+                return $xml_version;
             }
-            return $xml_version;
+        }else{
+            if($xml !== FALSE){
+                return $xml->ci_version;
+            }else{
+                return CI_VERSION;
+            }
         }
     }
 
+    /**
+     * getPreviousVersion
+     *
+     * Function for get previous version from xml url
+     *
+     * @param	string	$xml_url    xml url file
+     * @param   bool    $is_ci      CI update check
+     * @return	versoin string
+     */
+    public function getPreviousVersion($xml_url = '', $is_ci = FALSE){
+        if(!$xml_url){
+            $xml_url = $this->config->item('csz_chkverxmlurl_main');
+        }
+        $xml_url_bak = $this->config->item('csz_chkverxmlurl_backup');
+        if($this->Csz_model->is_url_exist($xml_url) !== FALSE){
+            $xml_file = $this->Csz_model->get_contents_url($xml_url);
+            $xml = simplexml_load_string($xml_file);
+            unset($xml_file, $xml_url);
+        }else if($this->Csz_model->is_url_exist($xml_url) === FALSE && $this->Csz_model->is_url_exist($xml_url_bak) !== FALSE){
+            $xml_file = $this->Csz_model->get_contents_url($xml_url_bak);
+            $xml = simplexml_load_string($xml_file);
+            unset($xml_file, $xml_url_bak);
+        }else{
+            $xml = FALSE;
+        }
+        if($is_ci === FALSE){
+            if($xml !== FALSE){
+                return $xml->previous;
+            }else{
+                $xml_cur = str_replace(' Beta', '', $this->Csz_model->getVersion());
+                return $this->Csz_model->getNextVersion($xml_cur, -1);
+            }
+        }else{
+            if($xml !== FALSE){
+                return $xml->ci_previous;
+            }else{
+                return $this->Csz_model->getNextVersion(CI_VERSION, -1);
+            }
+        }
+        
+    }
+    
     /**
      * chkVerUpdate
      *
@@ -92,10 +143,11 @@ class Csz_admin_model extends CI_Model{
      *
      * @param	string	$cur_ver    current version
      * @param	string	$xml_url    xml url file
+     * @param   bool    $is_ci      CI update check
      * @return	true or false
      */
-    public function chkVerUpdate($cur_ver, $xml_url = ''){
-        $last_ver = $this->getLatestVersion($xml_url);
+    public function chkVerUpdate($cur_ver, $xml_url = '', $is_ci = FALSE){
+        $last_ver = $this->getLatestVersion($xml_url, $is_ci);
         if($last_ver){
             return $this->Csz_model->chkVerUpdate($cur_ver, $last_ver);
         }else{
@@ -110,12 +162,14 @@ class Csz_admin_model extends CI_Model{
      *
      * @param	string	$cur_txt    current version
      * @param	string	$xml_url    xml url file
+     * @param   bool    $is_ci      CI update check
      * @return	string or false
      */
-    public function findNextVersion($cur_txt, $xml_url = ''){
-        $last_ver = $this->getLatestVersion($xml_url);
+    public function findNextVersion($cur_txt, $xml_url = '', $is_ci = FALSE){
+        $last_ver = $this->getLatestVersion($xml_url, $is_ci);
+        $previous_ver = $this->getPreviousVersion($xml_url, $is_ci);
         if($last_ver){
-            return $this->Csz_model->findNextVersion($cur_txt, $last_ver);
+            return $this->Csz_model->findNextVersion($cur_txt, $last_ver, $previous_ver);
         }else{
             return FALSE;
         }
@@ -848,6 +902,7 @@ class Csz_admin_model extends CI_Model{
             'assets_static_domain' => $this->input->post('assets_static_domain', TRUE),
             'fb_messenger' => $this->input->post('fb_messenger', TRUE),
             'email_logs' => $this->input->post('email_logs', TRUE),
+            'title_setting' => $this->input->post('title_setting', TRUE),
         );
         $upload_file = '';
         if($this->input->post('del_file')){
@@ -2692,9 +2747,12 @@ class Csz_admin_model extends CI_Model{
      */
     public function updateCarousel($id){
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('custom_temp_active')) ? $custom_temp_active = $this->input->post('custom_temp_active', TRUE) : $custom_temp_active = 0;
         $data = array(
             'name' => $this->input->post('name', TRUE),            
             'active' => $active,
+            'custom_temp_active' => $custom_temp_active,
+            'custom_template' => $this->input->post('custom_template', FALSE),
         );
         $this->db->set('timestamp_update', 'NOW()', FALSE);
         $this->db->where('carousel_widget_id', $id);
@@ -2769,7 +2827,7 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'data_limit' => $this->input->post('data_limit', TRUE),
             'view_id' => str_replace('.', '', $this->input->post('view_id', TRUE)),
-            'template_code' => $this->input->post('template_code', TRUE),
+            'template_code' => $this->input->post('template_code', FALSE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
         );
         $this->db->set('timestamp_create', 'NOW()', FALSE);
@@ -2795,7 +2853,7 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'data_limit' => $this->input->post('data_limit', TRUE),
             'view_id' => str_replace('.', '', $this->input->post('view_id', TRUE)),
-            'template_code' => $this->input->post('template_code', TRUE),
+            'template_code' => $this->input->post('template_code', FALSE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
         );
         $this->db->set('timestamp_update', 'NOW()', FALSE);

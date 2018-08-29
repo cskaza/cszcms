@@ -795,6 +795,7 @@ class Csz_model extends CI_Model {
         $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
         $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE, TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").timepicker({minuteStep:1,showMeridian:false,defaultTime:false,disableFocus:true});</script>';
         if ($this->getFBsdk() !== FALSE) { $core_js.= $this->getFBsdk(); }
@@ -886,11 +887,11 @@ class Csz_model extends CI_Model {
         if ($config->facebook_page_id) {
             $return_meta.= '<meta property="fb:pages" content="' . $config->facebook_page_id . '" />' . "\n";
         }
-        $gplus = $this->Csz_model->getValue('social_url', 'footer_social', "social_name = 'google' AND active = '1'", '', 1);
+        $gplus = $this->getValue('social_url', 'footer_social', "social_name = 'google' AND active = '1'", '', 1);
         if($gplus !== FALSE && $gplus->social_url){
             $return_meta.= '<link href="' . $gplus->social_url . '" rel="publisher"/>' . "\n";
         }
-        $twitter = $this->Csz_model->getValue('social_url', 'footer_social', "social_name = 'twitter' AND active = '1'", '', 1);
+        $twitter = $this->getValue('social_url', 'footer_social', "social_name = 'twitter' AND active = '1'", '', 1);
         if($twitter !== FALSE && $twitter->social_url){ $twitter_username = basename($twitter->social_url);}
         if($twitter !== FALSE && $twitter->social_url && $twitter_username){
             $return_meta.= '<meta name="twitter:site" content="@' . $twitter_username . '"/>' . "\n";
@@ -1021,7 +1022,7 @@ class Csz_model extends CI_Model {
                 ($getBanner->nofollow && $getBanner->nofollow != NULL) ? $nofol = ' rel="nofollow external"' : $nofol = '';
                 ($getBanner->width && $getBanner->width != NULL) ? $width = ' width="' . $getBanner->width . '"' : $width = '';
                 ($getBanner->height && $getBanner->height != NULL) ? $height = ' height="' . $getBanner->height . '"' : $height = '';
-                $html = '<a target="_blank" href="' . $this->base_link(). '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '"></a>';
+                $html = '<a target="_blank" href="' . $this->base_link(). '/banner/' . $getBanner->banner_mgt_id . '" title="' . $getBanner->name . '"'.$nofol.'><img class="lazy img-responsive img-thumbnail" data-src="' . $img . '" alt="' . $getBanner->name . '"' . $width . $height . '></a>';
                 
             }else{
                 $html = '[?]{=banner:' . $id . '}[?]';
@@ -1074,47 +1075,51 @@ class Csz_model extends CI_Model {
             $getCarousel = $this->getValue('*', 'carousel_widget', "active = '1' AND carousel_widget_id = '" . $id . "'", '', 1);
             $html = '[?]{=carousel:' . $id . '}[?]';
             if ($getCarousel !== FALSE) {
-                $getPhoto = $this->getValueArray('*', 'carousel_picture', "carousel_widget_id = '" . $getCarousel->carousel_widget_id . "'", '', '', 'arrange', 'ASC');               
-                $html = '';
-                if($getPhoto !== FALSE){
-                    $i = 0;
-                    $li_html = '';
-                    $item_html = '';
-                    $photo_path = base_url() . 'photo/carousel/';
-                    foreach ($getPhoto as $value) {
-                        $active = '';
-                        $class_active = '';
-                        if($i == 0){
-                            $active = ' active';
-                            $class_active = ' class="active"';
+                if($getCarousel->custom_temp_active && $getCarousel->custom_template){
+                    $html = $getCarousel->custom_template;
+                }else{
+                    $getPhoto = $this->getValueArray('*', 'carousel_picture', "carousel_widget_id = '" . $getCarousel->carousel_widget_id . "'", '', '', 'arrange', 'ASC');               
+                    $html = '';
+                    if($getPhoto !== FALSE){
+                        $i = 0;
+                        $li_html = '';
+                        $item_html = '';
+                        $photo_path = base_url() . 'photo/carousel/';
+                        foreach ($getPhoto as $value) {
+                            $active = '';
+                            $class_active = '';
+                            if($i == 0){
+                                $active = ' active';
+                                $class_active = ' class="active"';
+                            }
+                            if($value['caption'] && $value['caption'] != NULL){
+                                $caption = '<div class="carousel-caption">'.$value['caption'].'</div>';
+                                $alt_img = ' alt="'.$value['caption'].'"';
+                            }else{
+                                $caption = '';
+                                $alt_img = ' alt="'.$getCarousel->name.'"';
+                            }
+                            if($value['carousel_type'] == 'multiimages' && $value['file_upload'] && $value['file_upload'] != NULL){
+                                $item_add = '<img src="'.$photo_path.$value['file_upload'].'" class="img-responsive" width="100%"'.$alt_img.'>';
+                            }else if($value['carousel_type'] == 'multiimages' && $value['photo_url'] && $value['photo_url'] != NULL){
+                                $item_add = '<img src="'.$value['photo_url'].'" class="img-responsive" width="100%"'.$alt_img.'>';
+                            }else if($value['carousel_type'] == 'youtubevideos' && $value['youtube_url']){
+                                $youtube_script_replace = array("http://", "https://", "www.youtube.com/watch?v=", "m.youtube.com/watch?v=", "youtu.be/", "www.youtube.com/embed/", "m.youtube.com/embed/");
+                                $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']);
+                                $item_add = '<div class="embed-responsive embed-responsive-16by9" style="background-color: #000;"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'.$youtube_value.'" allowfullscreen="allowfullscreen" width="100%"></iframe></div>';
+                            }
+                            $li_html.= '<li data-target="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide-to="'.$i.'"'.$class_active.'></li>';
+                            $item_html.= '<div class="item'.$active.'"><div class="fill">'.$item_add.'</div>'.$caption.'</div>';
+                            $i++;
                         }
-                        if($value['caption'] && $value['caption'] != NULL){
-                            $caption = '<div class="carousel-caption">'.$value['caption'].'</div>';
-                            $alt_img = ' alt="'.$value['caption'].'"';
-                        }else{
-                            $caption = '';
-                            $alt_img = ' alt="'.$getCarousel->name.'"';
-                        }
-                        if($value['carousel_type'] == 'multiimages' && $value['file_upload'] && $value['file_upload'] != NULL){
-                            $item_add = '<img src="'.$photo_path.$value['file_upload'].'" class="img-responsive" width="100%"'.$alt_img.'>';
-                        }else if($value['carousel_type'] == 'multiimages' && $value['photo_url'] && $value['photo_url'] != NULL){
-                            $item_add = '<img src="'.$value['photo_url'].'" class="img-responsive" width="100%"'.$alt_img.'>';
-                        }else if($value['carousel_type'] == 'youtubevideos' && $value['youtube_url']){
-                            $youtube_script_replace = array("http://", "https://", "www.youtube.com/watch?v=", "m.youtube.com/watch?v=", "youtu.be/", "www.youtube.com/embed/", "m.youtube.com/embed/");
-                            $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']);
-                            $item_add = '<div class="embed-responsive embed-responsive-16by9" style="background-color: #000;"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'.$youtube_value.'" allowfullscreen="allowfullscreen" width="100%"></iframe></div>';
-                        }
-                        $li_html.= '<li data-target="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide-to="'.$i.'"'.$class_active.'></li>';
-                        $item_html.= '<div class="item'.$active.'"><div class="fill">'.$item_add.'</div>'.$caption.'</div>';
-                        $i++;
+                        $html = '<div id="myCarousel-'.$getCarousel->carousel_widget_id.'" class="carousel slide">';
+                        $html.= '<ol class="carousel-indicators">';
+                        $html.= $li_html;
+                        $html.= '</ol><div class="carousel-inner">';
+                        $html.= $item_html;
+                        $html.= '</div><a class="left carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="prev"><span class="icon-prev"></span></a><a class="right carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="next"><span class="icon-next"></span></a>';
+                        $html.= '</div>';
                     }
-                    $html = '<div id="myCarousel-'.$getCarousel->carousel_widget_id.'" class="carousel slide">';
-                    $html.= '<ol class="carousel-indicators">';
-                    $html.= $li_html;
-                    $html.= '</ol><div class="carousel-inner">';
-                    $html.= $item_html;
-                    $html.= '</div><a class="left carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="prev"><span class="icon-prev"></span></a><a class="right carousel-control" href="#myCarousel-'.$getCarousel->carousel_widget_id.'" data-slide="next"><span class="icon-next"></span></a>';
-                    $html.= '</div>';
                 }
             }
             if($this->load_config()->pagecache_time == 0){
@@ -1160,8 +1165,7 @@ class Csz_model extends CI_Model {
      * @return	object or FALSE
      */
     public function getWidgetFromID($wid_id) {
-        $this->db->cache_on();
-        return $this->getValue('*', 'widget_xml', "active = '1' AND xml_url != '' AND limit_view != '0' AND (widget_xml_id = '" . $wid_id . "' OR widget_name = '" . $wid_id . "')", '', 1);
+        return $this->getValue('*', 'widget_xml', "active = '1' AND xml_url != '' AND limit_view != '0' AND widget_xml_id = '" . $wid_id . "'", '', 1);
     }
     
     /**
@@ -1270,7 +1274,6 @@ class Csz_model extends CI_Model {
      * @return	object or FALSE
      */
     public function getPWidgetFromID($wid_id) {
-        $this->db->cache_on();
         return $this->getValue('*', 'plugin_widget', "active = '1' AND data_limit != '0' AND plugin_widget_id = '" . $wid_id . "'", '', 1);
     }
     
@@ -1380,13 +1383,13 @@ class Csz_model extends CI_Model {
                 $lang_iso = '';
             }
             $widget_html = $this->findTagBaseURL($getWidget->template_code, $getWidget->plugin_filename);
-            $getViewTable = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_viewtable');
-            $getViewTableCond = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_condition');
-            $getViewTableSel = implode(',', $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_sel_field'));
-            $getJoinTable = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable');
-            $getJoinTableIDKey = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_idkey');
-            $getJoinTableCond = $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_condition');
-            $getJoinTableSel = implode(',', $this->Csz_model->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_selfield'));            
+            $getViewTable = $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_viewtable');
+            $getViewTableCond = $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_condition');
+            $getViewTableSel = implode(',', $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_sel_field'));
+            $getJoinTable = $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable');
+            $getJoinTableIDKey = $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_idkey');
+            $getJoinTableCond = $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_condition');
+            $getJoinTableSel = implode(',', $this->getPluginConfig($getWidget->plugin_filename, 'plugin_widget_othertable_selfield'));            
             if($getWidget->data_limit == 1 && $getWidget->view_id != NULL && $getWidget->view_id != 0){
                 $getViewValue = $this->getValueArray($getViewTableSel, $getViewTable, $getViewTableCond.' AND '.$getViewTable."_id = '".$getWidget->view_id."'".$lang_iso, '', 1, $getWidget->sort_by, $getWidget->order_by);
                 $getJoinValue = $this->getValueArray($getJoinTableSel, $getJoinTable, $getJoinTableCond.' AND '.$getJoinTableIDKey." = '".$getWidget->view_id."'", '', $getWidget->data_limit);
@@ -1707,8 +1710,7 @@ class Csz_model extends CI_Model {
         if ($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey) {
             $recaptcha = $this->input->post_get('g-recaptcha-response', TRUE);
             if ($recaptcha != null && strlen($recaptcha) != 0) {
-                $ip = $this->input->ip_address();
-                $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $ip;
+                $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $this->input->ip_address();
                 $res = $this->getCurlreCaptData($url);
                 if ($res !== FALSE && $res) {
                     $respone = $res;
@@ -1845,7 +1847,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function login($email, $password, $backend = FALSE) {
-        if ($this->Csz_model->chkCaptchaRes() == '') {
+        if ($this->chkCaptchaRes() == '') {
             return 'CAPTCHA_WRONG';
         } else {
             if($this->chkIPBaned($email) === FALSE){
@@ -2006,7 +2008,7 @@ class Csz_model extends CI_Model {
      */
     public function createMember() {
         // Create the user account
-        $config = $this->Csz_model->load_config();
+        $config = $this->load_config();
         if ($config->member_close_regist) {
             return FALSE;
         } else {
@@ -2666,17 +2668,34 @@ class Csz_model extends CI_Model {
         }
     }
     
-    private function chkNextVer($cur_ver, $last_ver){
+    /**
+     * getNextVersion
+     *
+     * Function for get the next version
+     *
+     * @param	string	$cur_ver    current version
+     * @param	int	$inc_dec    For increase the version number is '1' and decrease the version number is '-1'
+     * @return	string
+     */
+    public function getNextVersion($cur_ver, $inc_dec = 1){
         $cur_r = explode('.', $cur_ver);
-        if ($cur_ver == $last_ver) {
+        if($inc_dec > 0){
+            $cur_r[count($cur_r)-1]++;
+        } elseif ($inc_dec < 0){
+            $cur_r[count($cur_r)-1]--;
+        }
+        return implode('.', $cur_r);
+    }
+    
+    private function chkNextVer($cur_ver, $last_ver, $previous_ver){
+        if ($cur_ver == $last_ver || $previous_ver == $last_ver) {
             return $last_ver;
         } else {
-            if ($cur_r[1] <= 9 && $cur_r[2] < 9) {
-                return $cur_r[0] . '.' . $cur_r[1] . '.' . ($cur_r[2] + 1);
-            } else if ($cur_r[1] < 9 && $cur_r[2] == 9) {
-                return $cur_r[0] . '.' . ($cur_r[1] + 1) . '.0';
-            } else if ($cur_r[1] == 9 && $cur_r[2] == 9) {
-                return ($cur_r[0] + 1) . '.0.0';
+            $nextVer = $this->getNextVersion($cur_ver);
+            if(version_compare($cur_ver, $previous_ver, '<') === TRUE){
+                return $nextVer;
+            }else if(version_compare($cur_ver, $previous_ver) >= 0){
+                return $last_ver;
             } else {
                 return FALSE;
             }
@@ -2693,15 +2712,14 @@ class Csz_model extends CI_Model {
      * @param	string	$last_ver    latest version
      * @return	string or false
      */
-    public function findNextVersion($cur_txt, $last_ver){
-        /* sub version is limit x.9.9 */
+    public function findNextVersion($cur_txt, $last_ver, $previous_ver){
         $cur_xml = explode(' ', $cur_txt);
         if($cur_xml[0] && $last_ver){
             $cur_ver = str_replace(' ', '.', $cur_xml[0]);
             if(isset($cur_xml[1]) && $cur_xml[1] == 'Beta'){
                 return $cur_xml[0];
             }else{
-                return $this->chkNextVer($cur_ver, $last_ver);
+                return $this->chkNextVer($cur_ver, $last_ver, $previous_ver);
             }
         }else{
             return FALSE;
@@ -3004,5 +3022,21 @@ class Csz_model extends CI_Model {
             return preg_replace('/<(\w+)\b(?:\s+[\w\-.:]+(?:\s*=\s*(?:"[^"]*"|"[^"]*"|[\w\-.:]+))?)*\s*\/?>\s*<\/\1\s*>/', '', $string);
        }
    }
-    
+   
+    /**
+    * Title for page
+    *
+    * @param    string  $title title text
+    * @return   string
+    */
+   public function pagesTitle($title) {
+       $config = $this->load_config();
+       if($config->title_setting == 1){
+           return $config->site_name . ' | ' . $title;
+       }else if($config->title_setting == 2){
+           return $title . ' | ' . $config->site_name;
+       }else{
+           return $title;
+       }
+   }
 }

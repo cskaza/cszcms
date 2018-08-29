@@ -79,11 +79,10 @@ class Banner extends CI_Controller {
         $this->page_url = $pageURL;
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag . "\n" . $redirectmeta);
-        $title = 'Please wait... ,Redirect to | ' . $row->site_name;
+        $title = $this->Csz_model->pagesTitle('Please wait... ,Redirect to' );
         $this->template->set('title', $title);
         $this->template->set('meta_tags', $this->Csz_model->coreMetatags('Please wait... ,Redirect to ',$row->keywords,$title));
         $this->template->set('cur_page', $pageURL);
-        $this->template->set('title', $title);
     }
 
     public function index() {

@@ -139,6 +139,7 @@ $route['admin/forms/view/:num/delete'] = "admin/forms/deleteViewData";
 $route['admin/forms/:num'] = "admin/forms";
 $route['admin/upgrade'] = "admin/upgrade";
 $route['admin/upgrade/download'] = "admin/upgrade/download";
+$route['admin/upgrade/CIupdate'] = "admin/upgrade/CIupdate";
 $route['admin/upgrade/install'] = "admin/upgrade/install";
 $route['admin/upgrade/optimize'] = "admin/upgrade/dbOptimize";
 $route['admin/upgrade/backup'] = "admin/upgrade/dbBackup";

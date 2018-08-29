@@ -307,31 +307,36 @@ class Headfoot_html extends CI_Model{
      *
      * Function for language menu
      *
-     * @param	string	$type    language menu type 1=Show flag only, 2=Show flag and Language, 3=Show flag and Country or null=Show Full detail
+     * @param	string	$type    language menu type 1=Show flag only, 2=Show flag and Language, 3=Show flag and Country, 4=Google Translator tools,  null=Show Full detail
+     * @param	string	$lang_gool  Your page default language for Google translator tools. Default is 'en'
      * @return  string
      */
-    public function langMenu($type = ''){
+    public function langMenu($type = '', $lang_gool = 'en'){
         $lang_list = '';
         $i = 0;
-        $lang = $this->Csz_model->loadAllLang(1);
-        if($lang !== FALSE){
-            foreach($lang as $rs){
-                ($rs->lang_iso) ? $lang_url = $this->Csz_model->base_link().'/'.'lang/'.$rs->lang_iso : $lang_url = $this->Csz_model->base_link().'/'.'lang/';
-                if($type == 1){ /* Show flag only */
-                    $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country_iso.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span></a></li>';
-                }else if($type == 2){ /* Show flag and Language */
-                    $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->lang_name.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->lang_name.'</a></li>';
-                }else if($type == 3){ /* Show flag and Country */
-                    $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'</a></li>';
-                }else{ /* Show Full detail */
-                    $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'('.$rs->lang_name.')"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'('.$rs->lang_name.')</a></li>';
+        if($type == 4){
+            $html = "<div class=\"list-inline\" id=\"lang-menu\"><div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage:'".$lang_gool."'},'google_translate_element');}</script></div>";
+        }else{
+            $lang = $this->Csz_model->loadAllLang(1);
+            if($lang !== FALSE){
+                foreach($lang as $rs){
+                    ($rs->lang_iso) ? $lang_url = $this->Csz_model->base_link().'/'.'lang/'.$rs->lang_iso : $lang_url = $this->Csz_model->base_link().'/'.'lang/';
+                    if($type == 1){ /* Show flag only */
+                        $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country_iso.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span></a></li>';
+                    }else if($type == 2){ /* Show flag and Language */
+                        $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->lang_name.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->lang_name.'</a></li>';
+                    }else if($type == 3){ /* Show flag and Country */
+                        $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'</a></li>';
+                    }else{ /* Show Full detail */
+                        $lang_list.= '<li><a href="'.$lang_url.'" title="'.$rs->country.'('.$rs->lang_name.')"><span class="flag-icon flag-icon-'.$rs->country_iso.'"></span> '.$rs->country.'('.$rs->lang_name.')</a></li>';
+                    }
+                    $i++;
                 }
-                $i++;
+                ($i > 1) ? $html = '<ul class="list-inline" id="lang-menu">'.$lang_list.'</ul>' : $html = '';
+                unset($lang_list,$i,$lang,$rs,$type,$lang_url);
             }
-            ($i > 1) ? $html = '<ul class="list-inline" id="lang-menu">'.$lang_list.'</ul>' : $html = '';
-            unset($lang_list,$i,$lang,$rs,$type,$lang_url);
-            return $html;
         }
+        return $html;
     }
 
     /**

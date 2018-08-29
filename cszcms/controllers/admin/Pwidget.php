@@ -78,7 +78,7 @@ class Pwidget extends CI_Controller {
                             url:'".$this->Csz_model->base_link()."/admin/pwidget/getOthertableFieldAjax/'+plugin_filename,
                             success:function(other){
                                 for (j = 0; j < other.length; j++) {
-                                    if(view_id != ''){ otherfield_html += '{field=' + other[j] + '} ';}
+                                    if(view_id != '' && view_id != 0){ otherfield_html += '{field=' + other[j] + '} ';}
                                 }
                             }
                     });
@@ -89,24 +89,24 @@ class Pwidget extends CI_Controller {
                             for (i = 0; i < html.length; i++) {
                                 field_html += '{field=' + html[i] + '} ';
                             }
-                            if(data_limit == 1 && view_id != ''){
+                            if(data_limit == 1 && view_id != '' && view_id != 0){
                                 $('#main_field_rs').html(field_html);
                                 if(otherfield_html != ''){
                                     $('#field_rs').html(otherfield_html);
                                 }else{
                                     $('#field_rs').html('-');
                                 }
-                            }else if(data_limit > 1 && view_id != ''){
+                            }else if(data_limit > 1 && view_id != '' && view_id != 0){
                                 $('#main_field_rs').html(field_html);
                                 if(otherfield_html != ''){
                                     $('#field_rs').html(otherfield_html);
                                 }else{
                                     $('#field_rs').html('-');
                                 }
-                            }else if(data_limit == 1 && view_id == ''){
+                            }else if(data_limit == 1 && (view_id == '' || view_id == 0)){
                                 $('#main_field_rs').html(field_html);
                                 $('#field_rs').html('-');
-                            }else if(data_limit > 1 && view_id == ''){
+                            }else if(data_limit > 1 && (view_id == '' || view_id == 0)){
                                 $('#main_field_rs').html('');
                                 $('#field_rs').html(field_html);
                             }
@@ -186,7 +186,7 @@ class Pwidget extends CI_Controller {
                             url:'".$this->Csz_model->base_link()."/admin/pwidget/getOthertableFieldAjax/'+plugin_filename,
                             success:function(other){
                                 for (j = 0; j < other.length; j++) {
-                                    if(view_id != ''){ otherfield_html += '{field=' + other[j] + '} ';}
+                                    if(view_id != '' && view_id != 0){ otherfield_html += '{field=' + other[j] + '} ';}
                                 }
                             }
                     });
@@ -197,24 +197,24 @@ class Pwidget extends CI_Controller {
                             for (i = 0; i < html.length; i++) {
                                 field_html += '{field=' + html[i] + '} ';
                             }
-                            if(data_limit == 1 && view_id != ''){
+                            if(data_limit == 1 && view_id != '' && view_id != 0){
                                 $('#main_field_rs').html(field_html);
                                 if(otherfield_html != ''){
                                     $('#field_rs').html(otherfield_html);
                                 }else{
                                     $('#field_rs').html('-');
                                 }
-                            }else if(data_limit > 1 && view_id != ''){
+                            }else if(data_limit > 1 && view_id != '' && view_id != 0){
                                 $('#main_field_rs').html(field_html);
                                 if(otherfield_html != ''){
                                     $('#field_rs').html(otherfield_html);
                                 }else{
                                     $('#field_rs').html('-');
                                 }
-                            }else if(data_limit == 1 && view_id == ''){
+                            }else if(data_limit == 1 && (view_id == '' || view_id == 0)){
                                 $('#main_field_rs').html(field_html);
                                 $('#field_rs').html('-');
-                            }else if(data_limit > 1 && view_id == ''){
+                            }else if(data_limit > 1 && (view_id == '' || view_id == 0)){
                                 $('#main_field_rs').html('');
                                 $('#field_rs').html(field_html);
                             }
@@ -309,31 +309,35 @@ class Pwidget extends CI_Controller {
     public function getFieldAjax(){
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('plugin widget');
+        header('Content-Type: application/json; charset=utf-8');
         if ($this->uri->segment(4)) {
             $plugin_widget_sel_field = $this->Csz_model->getPluginConfig($this->uri->segment(4), 'plugin_widget_sel_field');
             if($plugin_widget_sel_field !== FALSE && $plugin_widget_sel_field != NULL){
-                echo json_encode($plugin_widget_sel_field);
+                echo json_encode($plugin_widget_sel_field, JSON_UNESCAPED_UNICODE);
             }else{
-                echo json_encode(NULL);
+                echo json_encode(NULL, JSON_UNESCAPED_UNICODE);
             }
         }else{
-            echo json_encode(NULL);
+            echo json_encode(NULL, JSON_UNESCAPED_UNICODE);
         }
+        exit();
     }
     
     public function getOthertableFieldAjax(){
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('plugin widget');
+        header('Content-Type: application/json; charset=utf-8');
         if ($this->uri->segment(4)) {
             $plugin_widget_othertable_selfield = $this->Csz_model->getPluginConfig($this->uri->segment(4), 'plugin_widget_othertable_selfield');
             if($plugin_widget_othertable_selfield !== FALSE && $plugin_widget_othertable_selfield != NULL){
-                echo json_encode($plugin_widget_othertable_selfield);
+                echo json_encode($plugin_widget_othertable_selfield, JSON_UNESCAPED_UNICODE);
             }else{
-                echo json_encode(NULL);
+                echo json_encode(NULL, JSON_UNESCAPED_UNICODE);
             }
         }else{
-            echo json_encode(NULL);
+            echo json_encode(NULL, JSON_UNESCAPED_UNICODE);
         }
+        exit();
     }
     
     public function asCopy() {

@@ -212,12 +212,13 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `assets_static_domain` varchar(255),
   `fb_messenger` int(11),
   `email_logs` int(11),
+  `title_setting` int(11),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `email_logs`, `timestamp_update`) VALUES
-(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 1, NOW());
+INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `email_logs`, `title_setting`, `timestamp_update`) VALUES
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 1, 2, NOW());
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -248,9 +249,9 @@ CREATE TABLE IF NOT EXISTS `user_admin` (
   `session_id` varchar(255),
   `md5_hash` varchar(255),
   `md5_lasttime` datetime,
-  `pm_sendmail` int(11) NOT NULL,
-  `timestamp_login` datetime NOT NULL,
-  `pass_change` int(11) NOT NULL,
+  `pm_sendmail` int(11),
+  `timestamp_login` datetime,
+  `pass_change` int(11),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`user_admin_id`),
@@ -693,10 +694,10 @@ CREATE TABLE `save_formdraft` (
 
 DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
-    `id` varchar(128) NOT NULL,
-    `ip_address` varchar(45) NOT NULL,
-    `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
-    `data` blob NOT NULL,
+    `id` varchar(128),
+    `ip_address` varchar(45),
+    `timestamp` int(10) unsigned DEFAULT 0,
+    `data` blob,
     PRIMARY KEY (`id`),
     KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -706,14 +707,16 @@ CREATE TABLE IF NOT EXISTS `carousel_widget` (
   `carousel_widget_id` int(11) AUTO_INCREMENT,
   `name` varchar(255),
   `active` int(11),
+  `custom_temp_active` int(11),
+  `custom_template` text,
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`carousel_widget_id`),
   KEY `carousel_widget_id` (`carousel_widget_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `carousel_widget` (`carousel_widget_id`, `name`, `active`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'Home', 1, NOW(), NOW());
+INSERT INTO `carousel_widget` (`carousel_widget_id`, `name`, `active`, `custom_temp_active`, `custom_template`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'Home', 1, 0, '', NOW(), NOW());
 
 DROP TABLE IF EXISTS `carousel_picture`;
 CREATE TABLE IF NOT EXISTS `carousel_picture` (
