@@ -63,7 +63,7 @@ class Languages extends CI_Controller {
             while ($i < count($lang_iso_id)) {
                 if ($lang_iso_id[$i]) {
                     $this->db->set('arrange', $arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where("lang_iso_id", $lang_iso_id[$i]);
                     $this->db->update('lang_iso');
                     $arrange++;

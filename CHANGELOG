@@ -1,4 +1,17 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.2 (2019-06-10)
+- Update elFinder to 2.1.49.
+- Update gallery plugin to 1.0.6.
+- Update Codeigniter core to 3.1.10.
+- Fixed to disable the automatic upgrade when use beta version.
+- Fixed XML Widget url field have blank space.
+- Fixed MX_Router and support for PHP 7.3.
+- Fixed Facebook chat not working.
+- Fixed remote url response code checking.
+- Fixed CSV import on backend not working.
+- Fixed more important bug.
+- Improve performance.
+
 CSZ-CMS V.1.2.1 (2018-08-29)
 - Add CI system core update with click.
 - Add google translator tools. [$this->Headfoot_html->langMenu(4, 'th');].

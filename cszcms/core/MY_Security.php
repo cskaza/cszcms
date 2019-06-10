@@ -38,13 +38,13 @@ class MY_Security extends CI_Security {
     public function csrf_show_error() {
         $ipaddress = $this->ip_address();
         $mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASS, DB_NAME);
-        $query = $mysqli->prepare("SELECT ip_address FROM login_logs WHERE ip_address = '" . $ipaddress . "' AND result = 'CSRF_INVALID' AND timestamp_create >= DATE_SUB(NOW(),INTERVAL 5 MINUTE)");
+        $query = $mysqli->prepare("SELECT ip_address FROM login_logs WHERE ip_address = '" . $ipaddress . "' AND result = 'CSRF_INVALID' AND timestamp_create >= DATE_SUB('".$this->timeNow()."',INTERVAL 5 MINUTE)");
         $query->execute();
         $query->store_result();
         $count = $query->num_rows;
         if($count < 10){
             $sql = "INSERT INTO login_logs (email_login, note, result, user_agent, ip_address, timestamp_create)
-            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$_SERVER['HTTP_USER_AGENT']."', '".$ipaddress."', NOW())";
+            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$_SERVER['HTTP_USER_AGENT']."', '".$ipaddress."', '".$this->timeNow()."')";
             $mysqli->query($sql);
         }
         $mysqli->close();
@@ -299,6 +299,15 @@ class MY_Security extends CI_Security {
                 unset($_COOKIE[$csrfcookiename]);
             }
             setcookie($csrfcookiename, null, -1, '/');
+        }
+        
+        /**
+        * Time now into database
+        *
+        * @return   string
+        */
+        private function timeNow() {
+           return date('Y-m-d H:i:s').'.000000';
         }
 
 }

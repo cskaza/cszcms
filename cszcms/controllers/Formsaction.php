@@ -94,7 +94,7 @@ class Formsaction extends CI_Controller {
                 }
                 if($frm_rs->save_to_db == 1){
                     $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
                     $this->db->insert('form_' . $frm_rs->form_name, $data);
                 }
                 $email_from = 'no-reply@' . EMAIL_DOMAIN;

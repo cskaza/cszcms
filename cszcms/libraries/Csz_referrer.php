@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * For page redirect to index when after save.
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -13,13 +13,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */
 
 class Csz_referrer {
+    public $baseurl = '';
+    public function __construct()
+    {
+	$CI =& get_instance();
+        $CI->load->model('Csz_model');
+        $this->baseurl = $CI->Csz_model->base_link();
+    }
     
     /**
      * setIndex
@@ -29,21 +36,20 @@ class Csz_referrer {
      * @param	string	$index    Session name
      */
     public function setIndex($index = '') {
-        $this->CI =& get_instance();
+        $CI =& get_instance();
         if(!$index){
             $key = 'referred_index';
         }else{
             $key = 'referred_'.$index;
         }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
-        $baseurl = rtrim(BASE_URL, '/');
-        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php/' : $baseurl.'/';
-        if(strpos($paramiter_url, '?') !== false){ /* Find ? in string */
+        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php/' : $this->baseurl.'/';
+        if($paramiter_url && strpos($paramiter_url, '?') !== false){ /* Find ? in string */
             $param = strstr($paramiter_url,'?'); /* Remove string before ? */
         }else{
             $param = '';
         }
-        $_SESSION[$key] = $base_url.$this->CI->uri->uri_string().$param;
+        $_SESSION[$key] = $base_url.$CI->uri->uri_string().$param;
         unset($index,$key,$paramiter_url,$param);
     }
     
@@ -57,8 +63,8 @@ class Csz_referrer {
      * @return	string
      */
     public function getIndex($index = '', $backend = TRUE) {
-        $this->CI =& get_instance();
-        $this->CI->load->library('user_agent');
+        $CI =& get_instance();
+        $CI->load->library('user_agent');
         if($backend){
             $topage = '/admin';
         }else{
@@ -69,32 +75,30 @@ class Csz_referrer {
         }else{
             $key = 'referred_'.$index;
         }
-        $baseurl = rtrim(BASE_URL, '/');
-        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
+        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php' : $this->baseurl;
         if(isset($_SESSION[$key])){
             $referred_from = $_SESSION[$key];
         }else{
-            if($this->CI->agent->is_referral()) {
-                $referred_from = $this->CI->agent->referrer();
+            if($CI->agent->is_referral()) {
+                $referred_from = $CI->agent->referrer();
             }else{
                 $referred_from = $base_url.$topage;
             }
         }
-        unset($index,$key,$base_url,$baseurl,$topage);
+        unset($index,$key,$base_url,$topage);
         return $referred_from;
     }
     
     public function getReferrer() {
-        $this->CI =& get_instance();
-        $this->CI->load->library('user_agent');
-        $baseurl = rtrim(BASE_URL, '/');
-        $base_url = (HTACCESS_FILE === FALSE) ? $baseurl.'/index.php' : $baseurl;
-        if ($this->CI->agent->is_referral()) {
-            $referred_from = $this->CI->agent->referrer();
+        $CI =& get_instance();
+        $CI->load->library('user_agent');
+        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php' : $this->baseurl;
+        if ($CI->agent->is_referral()) {
+            $referred_from = $CI->agent->referrer();
         } else {
             $referred_from = $base_url;
         }
-        unset($base_url,$baseurl);
+        unset($base_url);
         return $referred_from;
     }
     

@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -16,7 +16,7 @@ if (!defined('BASEPATH'))
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -64,9 +64,15 @@ class Upgrade extends CI_Controller {
     }
 
     public function download() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        if(strpos($this->cur_version, 'Beta') !== FALSE || strpos($this->cur_version, 'beta') !== FALSE){
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+            exit();
+        }
         if (function_exists('ini_set')) {
             @ini_set('max_execution_time', 600);
             @ini_set('memory_limit','512M');
@@ -127,6 +133,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function CIupdate() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -185,6 +192,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function install() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -238,6 +246,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function dbOptimize() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -254,6 +263,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function dbBackup() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -277,6 +287,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function fileBackup() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -438,6 +449,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function photoBackup() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -456,6 +468,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function clearAllCache() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -468,6 +481,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function clearAllDBCache() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -481,6 +495,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function clearAllSession() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
@@ -492,6 +507,7 @@ class Upgrade extends CI_Controller {
     }
 
     public function clearAllErrLog() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
@@ -503,6 +519,7 @@ class Upgrade extends CI_Controller {
     }
     
     public function downloadErrLog() {
+        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -537,5 +554,14 @@ class Upgrade extends CI_Controller {
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
+    }
+    
+    public function phpinfo() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
+        //Load the view
+        phpinfo();
+        exit();
     }
 }

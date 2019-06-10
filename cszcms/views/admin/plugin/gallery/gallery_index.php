@@ -21,6 +21,30 @@
     </div>
 </div>
 <!-- /.row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <?php echo form_open($this->Csz_model->base_link(). '/admin/plugin/gallery/configSave'); ?>
+        <label class="control-label" for="gallery_sort"><?php echo $this->lang->line('pwidget_sort_by'); ?>:     
+        <?php
+            $att = 'id="gallery_sort" class="form-control-static"';
+            $data = array();
+            $data['manually'] = $this->lang->line('settings_pagecache_time_off');
+            $data['newest'] = $this->lang->line('fb_comment_sort_newest');
+            $data['oldest'] = $this->lang->line('fb_comment_sort_oldest');
+            echo form_dropdown('gallery_sort', $data, $this->Gallery_model->getConfig()->gallery_sort, $att);
+            ?></label> &nbsp;&nbsp;&nbsp; 
+        <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-sm btn-primary',
+                    'value' => $this->lang->line('btn_save'),
+                );
+                echo form_submit($data);
+        ?>
+        <?php echo form_close(); ?>
+    </div>
+</div>
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
@@ -50,10 +74,10 @@
                         <th width="17%"></th>
                     </tr>
                 </thead>
-                <tbody class="ui-sortable">
+                <tbody<?php if($this->Gallery_model->getConfig()->gallery_sort != 'newest' && $this->Gallery_model->getConfig()->gallery_sort != 'oldest') echo ' class="ui-sortable"'; else echo ''; ?>>
                     <?php if ($gallery === FALSE) { ?>
                         <tr>
-                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="6" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
@@ -84,6 +108,7 @@
                 </tbody>
             </table>
         </div>
+        <?php if($this->Gallery_model->getConfig()->gallery_sort != 'newest' && $this->Gallery_model->getConfig()->gallery_sort != 'oldest'){ ?>
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <?php
@@ -99,7 +124,8 @@
                 <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
             </div>
         </div>
-        <?php echo  form_close(); ?>
+        <?php }
+        echo form_close(); ?>
         <!-- /widget-content --> 
         <br><br>
         <b><?php echo $this->lang->line('total').' '.$total_row.' '.$this->lang->line('records');?></b>

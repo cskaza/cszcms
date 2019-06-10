@@ -19,6 +19,8 @@ class Feed
     public $lang;
     public $charset = 'utf-8';
     public $ctype = null;
+    public $caching = 0;
+    public $cacheKey = null;
     protected $shortening = false;
     protected $shorteningLimit = 150;
     protected $dateFormat = 'datetime';
@@ -72,17 +74,17 @@ class Feed
      * Returns aggregated feed with all items from $items array
      *
      * @param string $format (options: 'atom', 'rss')
-     * @param carbon|datetime|integer $cache (0 - turns off the cache)
+     * @param integer $cache (0 - turns off the cache)
      * @param string $key
      *
      * @return view
      */
-    public function render($format = null, $cache = null, $key = null)
+    public function render($format = null, $cache = 0, $key = null)
     {
         $CI =& get_instance();
         if ($format == null && $this->customView == null) $format = "atom";
         if ($this->customView == null) $this->customView = $format;
-        if ($cache != null) $this->caching = $cache;
+        if ($cache != 0) $this->caching = $cache;
         if ($key != null) $this->cacheKey = $key;
         if ($this->ctype == null)
         {
@@ -91,10 +93,22 @@ class Feed
         if (empty($this->lang)) $this->lang = $CI->config->item('language');
         if (empty($this->link)) $this->link = $CI->config->item('base_url');
         if (empty($this->pubdate)) $this->pubdate = date('D, d M Y H:i:s O');
-        foreach($this->items as $k => $v)
-        {
+        foreach($this->items as $k => $v) {
             $this->items[$k]['title'] = $CI->security->entity_decode(strip_tags($this->items[$k]['title']));
             $this->items[$k]['pubdate'] = $this->formatDate($this->items[$k]['pubdate'], $format);
+        }
+        if ($this->cacheKey != null){
+            if (!$CI->cache->get($this->cacheKey)) {
+                if($this->caching == 0){
+                    $cache_time = 1;
+                }else{
+                    $cache_time = $this->caching;
+                }
+                $CI->cache->save($this->cacheKey, $this->items, ($cache_time * 60));
+            }
+            $return_items = $CI->cache->get($this->cacheKey);
+        }else{
+            $return_items = $this->items;
         }
         $channel = array(
             'title'=>$CI->security->entity_decode(strip_tags($this->title)),
@@ -106,12 +120,13 @@ class Feed
             'lang'=>$this->lang
         );
         $viewData = array(
-            'items'         => $this->items,
+            'items'         => $return_items,
             'channel'       => $channel,
             'namespaces'    => $this->getNamespaces(),
             'ctype'         => $this->ctype,
             'charset'       => $this->charset
         );
+        unset($return_items);
         $CI->load->view('feed/'.$this->customView, $viewData);
      }
     /**

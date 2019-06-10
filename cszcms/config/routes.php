@@ -150,6 +150,7 @@ $route['admin/upgrade/clearAllCache'] = "admin/upgrade/clearAllCache";
 $route['admin/upgrade/clearAllDBCache'] = "admin/upgrade/clearAllDBCache";
 $route['admin/upgrade/clearAllErrLog'] = "admin/upgrade/clearAllErrLog";
 $route['admin/upgrade/clearAllSession'] = "admin/upgrade/clearAllSession";
+$route['admin/upgrade/phpinfo'] = "admin/upgrade/phpinfo";
 $route['admin/upgrade/:any'] = "admin/upgrade";
 $route['admin/linkstats'] = "admin/linkstats";
 $route['admin/linkstats/new'] = "admin/linkstats/addLinks";

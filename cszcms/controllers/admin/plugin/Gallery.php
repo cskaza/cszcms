@@ -61,7 +61,7 @@ class Gallery extends CI_Controller {
         
         $total_row = $this->Csz_model->countData('gallery_db', $search_arr);
         //Get users from database
-        $this->template->setSub('gallery', $this->Csz_model->getValueArray('*', 'gallery_db', $search_arr, '', 0, 'arrange', 'asc'));
+        $this->template->setSub('gallery', $this->Gallery_model->getValueArray('gallery_db', $search_arr));
         $this->template->setSub('total_row', $total_row);
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
 
@@ -96,7 +96,7 @@ class Gallery extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Gallery_model->insert();
-            $this->output->delete_cache('/plugin/gallery/rss');
+            $this->Csz_model->clear_file_cache('gallery_RSS');
             $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
@@ -110,7 +110,12 @@ class Gallery extends CI_Controller {
         $this->load->helper('form');
         $this->csz_referrer->setIndex('gallery_edit'); /* Set index page when redirect after save */
         if ($this->uri->segment(5)) {
-            $this->template->setSub('album', $this->Csz_model->getValue('*', 'gallery_db', 'gallery_db_id', $this->uri->segment(5), 1));
+            $album = $this->Csz_model->getValue('*', 'gallery_db', 'gallery_db_id', $this->uri->segment(5), 1);
+            if($album === FALSE){
+                redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+                exit();
+            }
+            $this->template->setSub('album', $album);
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
             $this->load->library('pagination');
             
@@ -143,7 +148,7 @@ class Gallery extends CI_Controller {
                 //Validation passed
                 //Add the user
                 $this->Gallery_model->update($this->uri->segment(5));
-                $this->output->delete_cache('/plugin/gallery/rss');
+                $this->Csz_model->clear_file_cache('gallery_RSS');
                 $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
                 $this->db->cache_delete_all();
                 redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
@@ -159,11 +164,11 @@ class Gallery extends CI_Controller {
         admin_helper::is_allowchk('save');
         if ($this->uri->segment(5)) {
             $gallery_type = $this->input->post('gallery_type', TRUE);
-            $youtube_url = $this->input->post('youtube_url', TRUE);
+            $youtube_url = preg_replace('/\s+/', '', $this->input->post('youtube_url', TRUE));
             if ($youtube_url) {
                 $this->Gallery_model->insertFileUpload($this->uri->segment(5), $gallery_type, '', $youtube_url);
                 $this->db->cache_delete_all();
-            }                
+            }
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
             redirect($this->csz_referrer->getIndex('gallery_edit'), 'refresh');
         } else {
@@ -227,7 +232,7 @@ class Gallery extends CI_Controller {
             while ($i < count($gallery_picture_id)) {
                 if ($gallery_picture_id[$i]) {
                     $this->db->set('arrange', $arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where("gallery_picture_id", $gallery_picture_id[$i]);
                     $this->db->update('gallery_picture');
                     $arrange++;
@@ -239,7 +244,7 @@ class Gallery extends CI_Controller {
             foreach ($caption as $key => $value) {
                 if ($value && $key) {
                     $this->db->set('caption', $value, TRUE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('gallery_picture_id', $key);
                     $this->db->update('gallery_picture');
                 }
@@ -254,23 +259,25 @@ class Gallery extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('gallery');
         admin_helper::is_allowchk('save');
-        $i = 0;
-        $arrange = 1;
-        $gallery_db_id = $this->input->post('gallery_db_id', TRUE);
-        if (!empty($gallery_db_id)) {
-            while ($i < count($gallery_db_id)) {
-                if ($gallery_db_id[$i]) {
-                    $this->db->set('arrange', $arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
-                    $this->db->where("gallery_db_id", $gallery_db_id[$i]);
-                    $this->db->update('gallery_db');
-                    $arrange++;
+        if($this->Gallery_model->getConfig()->gallery_sort != 'newest' && $this->Gallery_model->getConfig()->gallery_sort != 'oldest'){
+            $i = 0;
+            $arrange = 1;
+            $gallery_db_id = $this->input->post('gallery_db_id', TRUE);
+            if (!empty($gallery_db_id)) {
+                while ($i < count($gallery_db_id)) {
+                    if ($gallery_db_id[$i]) {
+                        $this->db->set('arrange', $arrange, FALSE);
+                        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+                        $this->db->where("gallery_db_id", $gallery_db_id[$i]);
+                        $this->db->update('gallery_db');
+                        $arrange++;
+                    }
+                    $i++;
                 }
-                $i++;
             }
+            $this->db->cache_delete_all();
+            $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        $this->db->cache_delete_all();
-        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
     }
 
@@ -293,10 +300,59 @@ class Gallery extends CI_Controller {
                 }
             }
             $this->Gallery_model->delete($this->uri->segment(5));
-            $this->output->delete_cache('/plugin/gallery/rss');
+            $this->Csz_model->clear_file_cache('gallery_RSS');
             $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        }
+        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+    }
+    
+    public function configSave() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
+        $this->Gallery_model->updateConfig();
+        $this->Csz_model->clear_file_cache('gallery_config');
+        $this->db->cache_delete_all();
+        $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+    }
+    
+    public function asCopy() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('gallery');
+        admin_helper::is_allowchk('save');
+        if($this->uri->segment(5)){
+            $gallery = $this->Csz_model->getValue('*', 'gallery_db', "gallery_db_id", $this->uri->segment(5), 1);
+            if($gallery !== FALSE){
+                $data = array(
+                    'album_name' => $this->Csz_model->findNameAsCopy('gallery_db', 'gallery_db_id', $gallery->album_name),
+                    'url_rewrite' => $this->Csz_model->findNameAsCopy('gallery_db', 'gallery_db_id', $gallery->url_rewrite, TRUE),
+                    'keyword' => $gallery->keyword,
+                    'short_desc' => $gallery->short_desc,
+                    'lang_iso' => $gallery->lang_iso,
+                    'arrange' => $this->Csz_model->getLastID('gallery_db', 'arrange')+1,
+                    'active' => 0,
+                );
+                $this->Csz_model->insertAsCopy('gallery_db', $data);
+                $this->db->cache_delete_all();
+            }
+            $gallery_img = $this->Csz_model->getValueArray('*', 'gallery_picture', "gallery_db_id", $this->uri->segment(5));
+            if($gallery_img !== FALSE){
+                foreach ($gallery_img as $value) {
+                    $data = array(
+                        'gallery_db_id' => $this->Csz_model->getLastID('gallery_db', 'gallery_db_id'),
+                        'file_upload' => $value['file_upload'],
+                        'caption' => $value['caption'],
+                        'arrange' => $this->Csz_model->getLastID('gallery_picture', 'arrange', "gallery_db_id = '".$this->uri->segment(5)."'")+1,
+                        'gallery_type' => $value['gallery_type'],
+                        'youtube_url ' => $value['youtube_url'],
+                    );
+                    $this->Csz_model->insertAsCopy('gallery_picture', $data);
+                }
+                $this->db->cache_delete_all();
+            }
         }
         redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
     }

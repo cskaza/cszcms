@@ -231,7 +231,7 @@ class Users extends CI_Controller {
         } else {
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $this->db->set('md5_hash', md5(time()+mt_rand(1, 99999999)), TRUE);
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('email', $email);
             $this->db->where("user_type != 'member'");
             $this->db->update('user_admin');
@@ -300,7 +300,7 @@ class Users extends CI_Controller {
                         'md5_hash' => md5(time()+mt_rand(1, 99999999)),
                         'pass_change' => 1,
                     );
-                    $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                    $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('md5_hash', $md5_hash);
                     $this->db->update('user_admin', $data);
                     $this->db->cache_delete_all();

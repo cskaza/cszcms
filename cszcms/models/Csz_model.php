@@ -4,7 +4,7 @@
  *
  * An open source content management system
  *
- * Copyright (c) 2016 - 2017, Astian Foundation.
+ * Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -13,7 +13,7 @@
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016 - 2017, Astian Foundation.
+ * @copyright   Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -21,6 +21,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {
+    
+    public $cachetime = 0;
              
     function __construct() {
         parent::__construct();
@@ -30,6 +32,12 @@ class Csz_model extends CI_Model {
         } else {
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
+        if($this->load_config()->pagecache_time == 0){
+            $this->cachetime = 1;
+        }else{
+            $this->cachetime = $this->load_config()->pagecache_time;
+        }
+        
     }
 
     /**
@@ -54,73 +62,10 @@ class Csz_model extends CI_Model {
                     $version = $con_version;
                 }
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('getVersion'.$version_test, $version, ($cache_time * 60));
-            unset($version, $con_version, $con_release, $cache_time);
+            $this->cache->save('getVersion'.$version_test, $version, ($this->cachetime * 60));
+            unset($version, $con_version, $con_release);
         }
         return $this->cache->get('getVersion'.$version_test);
-    }
-
-    /**
-     * downloadFile From url
-     *
-     * Function for download file from url
-     *
-     * @param	string	$url    url for file  download
-     * @param	string	$newfname    path for file save
-     * @return	FALSE if can't download
-     */
-    public function downloadFile($url, $newfname) {
-        if (function_exists('ini_set')) {
-            @ini_set('max_execution_time', 600);
-            @ini_set("pcre.recursion_limit", "16777");
-        }
-        if(ini_get('allow_url_fopen')){
-            if (stripos($url, 'https://') !== FALSE) {
-                $default_opts = array(
-                    'ssl' => array(
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                    )
-                );
-                stream_context_set_default($default_opts);
-            }
-            $file = fopen($url, 'rb') or die("Can't open file");
-            if (!$file) {
-                fclose($file);
-                unset($url,$newfname,$newf,$file);
-                return FALSE;
-            } else {
-                $newf = fopen($newfname, 'wb') or die("Can't create file");
-                if ($newf) {
-                    while (!feof($file)) {
-                        fwrite($newf, fread($file, 1024 * 1024 * 100), 1024 * 1024 * 100); /* 100MB */
-                    }
-                    fclose($newf);
-                }
-                fclose($file);
-            }
-        }else{
-            $ch = curl_init($url);
-            $newf = fopen($newfname, 'wb') or die("Can't create file");
-            if(stripos($url, 'https://') !== FALSE){
-                curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            }
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_FILE, $newf);
-            $result = curl_exec($ch);
-            fclose($newf);
-            if($result === false) {
-                log_message('error', 'Unable to perform the request : ' . curl_error($ch) . ' ['.$url.']');
-                return FALSE;
-            }
-        }
     }
 
     /**
@@ -262,8 +207,8 @@ class Csz_model extends CI_Model {
         }
         $query = $this->db->get($table);
         if (!empty($query)) {
-            if ($query->num_rows() !== 0) {
-                if ($query->num_rows() === 1) {
+            if ($query->num_rows() > 0) {
+                if ($query->num_rows() == 1) {
                     return $query->first_row();
                 } else {
                     return $query->result();
@@ -337,8 +282,8 @@ class Csz_model extends CI_Model {
         }
         $query = $this->db->get($table);
         if (!empty($query)) {
-            if ($query->num_rows() !== 0) {
-                if ($onlyone === TRUE && $query->num_rows() === 1) {
+            if ($query->num_rows() > 0) {
+                if ($onlyone === TRUE && $query->num_rows() == 1) {
                     return $query->first_row('array');
                 } else {
                     return $query->result_array();
@@ -377,7 +322,7 @@ class Csz_model extends CI_Model {
         $this->db->order_by($field_id, 'DESC');
         $this->db->limit(1, 0);
         $query = $this->db->get($table);
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->row();
             return $row->$field_id;
         } else {
@@ -410,7 +355,7 @@ class Csz_model extends CI_Model {
             }
             $this->db->limit(1, 0);
             $query = $this->db->get($table);
-            if (!empty($query) && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() > 0) {
                 $row = $query->row();
                 return $row->$field_id_name;
             } else {
@@ -431,17 +376,14 @@ class Csz_model extends CI_Model {
      */
     public function load_config() {
         if (!$this->cache->get('config')) {
-            $cache_time = 1;
             $this->db->limit(1, 0);
             $query = $this->db->get('settings');
-            if (!empty($query) && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() > 0) {
                 $row = $query->row();
-                $cache_time = $row->pagecache_time;
             } else {
                 $row = FALSE;
             }
-            if($cache_time == 0) $cache_time = 1;
-            $this->cache->save('config', $row, ($cache_time * 60));
+            $this->cache->save('config', $row, ($this->cachetime * 60));
             unset($query, $row);
         }
         return $this->cache->get('config');
@@ -457,10 +399,8 @@ class Csz_model extends CI_Model {
     function getLang() {
         if (!$this->cache->get('backendLang')) {
             $config = $this->load_config();
-            $cache_time = $config->pagecache_time;
-            if($cache_time == 0) $cache_time = 1;
-            $this->cache->save('backendLang', $config->admin_lang, ($cache_time * 60));
-            unset($cache_time, $config);
+            $this->cache->save('backendLang', $config->admin_lang, ($this->cachetime * 60));
+            unset($config);
         }
         return $this->cache->get('backendLang');
     }
@@ -477,7 +417,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("lang_iso", $lang);
         $query = $this->db->get('lang_iso');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->row();
             return $row->country_iso;
         }else{
@@ -498,7 +438,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->where("pages_id", $id);
         $query = $this->db->get('pages');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->row();
             return $row->page_url;
         }else{
@@ -519,7 +459,7 @@ class Csz_model extends CI_Model {
         $this->db->limit(1, 0);
         $this->db->order_by('pages_id ASC');
         $query = $this->db->get('pages');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->row();
             return $row->page_url;
         } else {
@@ -557,7 +497,7 @@ class Csz_model extends CI_Model {
             $this->db->limit(1, 0);
             $this->db->order_by('pages_id ASC');
             $query = $this->db->get('pages');
-            if (!empty($query) && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() > 0) {
                 return $query->row()->page_url;
             } else {
                 return $this->getFirstPagesActive();
@@ -578,7 +518,7 @@ class Csz_model extends CI_Model {
         $this->db->order_by("arrange", "asc");
         $this->db->limit(1, 0);
         $query = $this->db->get('lang_iso');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->row();
             return $row->lang_iso;
         }
@@ -597,7 +537,7 @@ class Csz_model extends CI_Model {
         $this->db->where("lang_iso", $lang_iso);
         $this->db->where("active", 1);
         $query = $this->db->get('lang_iso');
-        if(!empty($query) && $query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() > 0){
             return $query->num_rows();
         }else{
             return 0;
@@ -640,7 +580,7 @@ class Csz_model extends CI_Model {
             $this->db->where("active", 1);
         $this->db->order_by("arrange", "asc");
         $query = $this->db->get('lang_iso');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -663,7 +603,7 @@ class Csz_model extends CI_Model {
             $this->db->where("active", "1");
             $this->db->limit(1, 0);
             $query = $this->db->get('pages');
-            if (!empty($query) && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() > 0) {
                 $row = $query->row();
             } else {
                 $row = FALSE;
@@ -694,7 +634,7 @@ class Csz_model extends CI_Model {
         }
         $this->db->order_by("arrange", "asc");
         $query = $this->db->get('page_menu');
-        if (!empty($query) && $query->num_rows() !== 0) {
+        if (!empty($query) && $query->num_rows() > 0) {
             $row = $query->result();
             return $row;
         } else {
@@ -718,13 +658,12 @@ class Csz_model extends CI_Model {
             if($activeonly) $this->db->where("active", 1);
             $this->db->order_by("footer_social_id", "asc");
             $query = $this->db->get('footer_social');
-            if (!empty($query) && $query->num_rows() !== 0) {
+            if (!empty($query) && $query->num_rows() > 0) {
                 $row = $query->result();
             } else {
                 $row = FALSE;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-            $this->cache->save($cachename, $row, ($cache_time * 60));
+            $this->cache->save($cachename, $row, ($this->cachetime * 60));
             unset($query, $row, $activeonly);
         }
         return $this->cache->get($cachename);
@@ -953,7 +892,7 @@ class Csz_model extends CI_Model {
      */
     public function formTagToHTML($content) { /* Find the banner in content */
         $txt_nonhtml = strip_tags($content);
-        if (strpos($txt_nonhtml, '[?startform_') !== false && strpos($txt_nonhtml, '[/?endform]') !== false) {
+        if ($txt_nonhtml && strpos($txt_nonhtml, '[?startform_') !== false && strpos($txt_nonhtml, '[/?endform]') !== false) {
             $this->load->helper('form');
             $output_array = array();
             preg_match("/\[\?startform_(.*?)\:(.*?)\{(.*?)\}\]/", $txt_nonhtml, $output_array);
@@ -1015,7 +954,7 @@ class Csz_model extends CI_Model {
      */
     public function addBannerToHTML($content, $id) {
         if (!$this->cache->get('banner_'.$id)) {
-            $this->db->where('NOW() BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)', '', FALSE); /* For date range between start to end */
+            $this->db->where("'".$this->Csz_model->timeNow()."' BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)", '', FALSE); /* For date range between start to end */
             $getBanner = $this->getValue('*', 'banner_mgt', "active = '1' AND banner_mgt_id = '" . $id . "'", '', 1);
             if ($getBanner !== FALSE) {
                 ($getBanner->img_path && $getBanner->img_path != NULL) ? $img = base_url() . 'photo/banner/' . $getBanner->img_path : $img = base_url() . 'photo/no_image.png';
@@ -1027,13 +966,8 @@ class Csz_model extends CI_Model {
             }else{
                 $html = '[?]{=banner:' . $id . '}[?]';
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('banner_'.$id, $html, ($cache_time * 60));
-            unset($html, $cache_time, $getBanner);
+            $this->cache->save('banner_'.$id, $html, ($this->cachetime * 60));
+            unset($html, $getBanner);
         }
         return str_replace('[?]{=banner:' . $id . '}[?]', $this->cache->get('banner_'.$id), $content);
     }
@@ -1122,13 +1056,8 @@ class Csz_model extends CI_Model {
                     }
                 }
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('carousel_'.$id, $html, ($cache_time * 60));
-            unset($html, $cache_time, $getCarousel, $getPhoto);
+            $this->cache->save('carousel_'.$id, $html, ($this->cachetime * 60));
+            unset($html, $getCarousel, $getPhoto);
         }
         return str_replace('[?]{=carousel:' . $id . '}[?]', $this->cache->get('carousel_'.$id), $content);
     }
@@ -1706,25 +1635,23 @@ class Csz_model extends CI_Model {
             @ini_set("pcre.recursion_limit", "16777");
         }
         $config = $this->load_config();
-        $respone = '';
         if ($config->googlecapt_active && $config->googlecapt_sitekey && $config->googlecapt_secretkey) {
             $recaptcha = $this->input->post_get('g-recaptcha-response', TRUE);
             if ($recaptcha != null && strlen($recaptcha) != 0) {
                 $url = "https://www.google.com/recaptcha/api/siteverify" . "?secret=" . $config->googlecapt_secretkey . "&response=" . $recaptcha . "&remoteip=" . $this->input->ip_address();
                 $res = $this->getCurlreCaptData($url);
-                if ($res !== FALSE && $res) {
-                    $respone = $res;
+                if ($res !== FALSE && !empty($res)) {
+                    return $res;
                 } else {
-                    $respone = '';
+                    unset($res);
+                    return FALSE;
                 }
             } else {
-                $respone = '';
+                return FALSE;
             }
         } else {
-            $respone = 'NOT_ACTIVE';
+            return 'NOT_ACTIVE';
         }
-        unset($res);
-        return $respone;
     }
 
     /**
@@ -1751,9 +1678,8 @@ class Csz_model extends CI_Model {
             $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
             $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
             if (!$this->cache->get('showCaptcha_' . $hl)) {
-                ($config->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $config->pagecache_time;
-                $this->cache->save('showCaptcha_' . $hl, $html, ($cache_time * 60));
-                unset($html, $config, $cache_time);
+                $this->cache->save('showCaptcha_' . $hl, $html, ($this->cachetime * 60));
+                unset($html, $config);
             }
             return $this->cache->get('showCaptcha_' . $hl);
         }
@@ -1769,7 +1695,7 @@ class Csz_model extends CI_Model {
     public function saveLinkStats($link) {
         $this->db->set('link', $link, TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->timeNow(), TRUE);
         $this->db->insert('link_statistic');
     }
     
@@ -1783,7 +1709,7 @@ class Csz_model extends CI_Model {
     public function saveBannerStats($banner_mgt_id) {
         $this->db->set('banner_mgt_id', $banner_mgt_id, TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->timeNow(), TRUE);
         $this->db->insert('banner_statistic');
     }
     
@@ -1807,15 +1733,16 @@ class Csz_model extends CI_Model {
      *
      * @param	string	$email    email address
      * @param	string	$password    password
-     * @param	string	$typecondition   User type sql condition for WHERE. Default is NULL
+     * @param	bool	$backend   TRUE for login on backend
      * @return	object
      */
-    public function chkPassword($email, $password, $typecondition = '') {
-        $return = array();
+    public function chkPassword($email, $password, $backend) {
+        $return['row'] = '';
+        $return['num_rows'] = 0;
         $this->db->select("*");
         $this->db->where("email", $email);
-        if($typecondition){
-            $this->db->where($typecondition);
+        if($backend === TRUE){
+            $this->db->where("user_type != 'member' AND active = '1'");
         }
         $this->db->limit(1, 0);
         $query = $this->db->get("user_admin");
@@ -1824,20 +1751,14 @@ class Csz_model extends CI_Model {
             if(password_verify($password, $result->password)){
                 $return['row'] = $result;
                 $return['num_rows'] = $query->num_rows();
-            }else{
-                $return['row'] = '';
-                $return['num_rows'] = 0;
             }
-        }else{
-            $return['row'] = '';
-            $return['num_rows'] = 0;
         }
         unset($query);
         return $return;
     }
 
     /**
-     * memberLogin
+     * login
      *
      * Function for check the email and password
      *
@@ -1847,24 +1768,19 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function login($email, $password, $backend = FALSE) {
-        if ($this->chkCaptchaRes() == '') {
+        if ($this->chkCaptchaRes() === FALSE) {
             return 'CAPTCHA_WRONG';
         } else {
             if($this->chkIPBaned($email) === FALSE){
                 $data = array();
-                if($backend !== FALSE){
-                    $query = $this->chkPassword($email, $password, "user_type != 'member' AND active = '1'");
-                    $data['admin_logged_in'] = TRUE;
-                }else{
-                    $query = $this->chkPassword($email, $password);
-                    $data['admin_logged_in'] = FALSE;
-                }
-                if ($query['num_rows'] !== 0 && !empty($query['row'])) {
+                $query = $this->chkPassword($email, $password, $backend);
+                $data['admin_logged_in'] = $backend;
+                if ($query['num_rows'] > 0 && !empty($query['row'])) {
                     $rows = $query['row'];
                     if($rows->active == 1){
                         $session_id = session_id();
                         $this->db->set('session_id', $session_id, TRUE);
-                        $this->db->set('timestamp_login', 'NOW()', FALSE);
+                        $this->db->set('timestamp_login', $this->timeNow(), TRUE);
                         $this->db->where('user_admin_id', $rows->user_admin_id);
                         $this->db->update('user_admin');
                         $data['user_admin_id'] = $rows->user_admin_id;
@@ -1874,21 +1790,20 @@ class Csz_model extends CI_Model {
                         $data['pwd_change'] = $rows->pass_change;
                         $data['session_id'] = $session_id;
                         $this->session->set_userdata($data);
-                        unset($data,$rows);
+                        unset($data,$rows,$query);
                         return 'SUCCESS';
                     }else{
-                        unset($data,$rows);
+                        unset($data,$rows,$query);
                         return 'NOT_ACTIVE';
                     }
                 } else {
-                    unset($data);
+                    unset($data,$query);
                     return 'INVALID';
                 }
             }else{
                 return 'IP_BANNED';
             }
         }
-        unset($query);
     }
     
     /**
@@ -1940,7 +1855,7 @@ class Csz_model extends CI_Model {
             );
             $this->db->set('user_agent', $user_agent, TRUE);
             $this->db->set('ip_address', $ip_address, TRUE);
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', $this->timeNow(), TRUE);
             $this->db->insert('login_logs', $data);
             unset($data);
         }
@@ -1970,13 +1885,13 @@ class Csz_model extends CI_Model {
             $sel_name = 'lang_' . $lang;
             if (!$this->cache->get('getLabelLang_'.$name.'_'.$sel_name)) {
                 $query = $this->getLabelLangDB($name, $sel_name);
-                if (!empty($query) && $query->num_rows() !== 0) {
+                if (!empty($query) && $query->num_rows() > 0) {
                     if ($query->row()->$sel_name){
                         $return = $query->row()->$sel_name;
                     }else{
                         unset($query);
                         $query = $this->getLabelLangDB($name);
-                        if (!empty($query) && $query->num_rows() !== 0) {
+                        if (!empty($query) && $query->num_rows() > 0) {
                             $error_txt = "This label is untranslated on General Label! (".$name.")";
                             log_message('error', $error_txt);
                             $return = $query->row()->lang_en;
@@ -1991,9 +1906,8 @@ class Csz_model extends CI_Model {
                     log_message('error', $error_txt);
                     $return = $error_txt;
                 }
-                ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-                $this->cache->save('getLabelLang_'.$name.'_'.$sel_name, $return, ($cache_time * 60));
-                unset($return, $cache_time, $query);
+                $this->cache->save('getLabelLang_'.$name.'_'.$sel_name, $return, ($this->cachetime * 60));
+                unset($return, $query);
             }
             return $this->cache->get('getLabelLang_'.$name.'_'.$sel_name);
         }else{
@@ -2023,9 +1937,9 @@ class Csz_model extends CI_Model {
                 'pm_sendmail' => 1,
                 'pass_change' => 1,
             );
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->timeNow(), TRUE);
+            $this->db->set('timestamp_create', $this->timeNow(), TRUE);
+            $this->db->set('timestamp_update', $this->timeNow(), TRUE);
             $this->db->insert('user_admin', $data);
             $this->db->set('user_admin_id', $this->db->insert_id());
             $this->db->set('user_groups_id', 3);
@@ -2045,7 +1959,7 @@ class Csz_model extends CI_Model {
      */
     public function updateMember($id) {
         $query = $this->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE));
-        if ($query['num_rows'] !== 0) {
+        if ($query['num_rows'] > 0) {
             if($this->input->post('pm_sendmail')){
                 $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
             }else{
@@ -2076,7 +1990,7 @@ class Csz_model extends CI_Model {
             if ($this->input->post('password') != '') {
                 $this->db->set('password', $this->pwdEncypt($this->input->post('password', TRUE)), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-                $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->set('md5_lasttime', $this->timeNow(), TRUE);
                 $this->db->set('pass_change', 1);
             }
             $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
@@ -2087,7 +2001,7 @@ class Csz_model extends CI_Model {
             $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
             $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('timestamp_update', $this->timeNow(), TRUE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
             $this->clear_file_cache('getUserEmail*', TRUE);
@@ -2171,13 +2085,66 @@ class Csz_model extends CI_Model {
             );
             $this->db->set('user_agent', $this->input->user_agent(), TRUE);
             $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', $this->timeNow(), TRUE);
             $this->db->insert('email_logs', $data);
             $this->db->cache_delete_all();
             unset($data);
         }
         unset($to_email, $subject, $message, $from_email, $from_name, $bcc, $reply_to, $alt_message, $attach_file, $save_log, $config, $load_conf, $protocal);
         return $result;
+    }
+    
+    /**
+     * get_contents_url
+     *
+     * Function for get the content from url
+     *
+     * @param	string	$url    content full url path
+     * @return  string or FALSE
+     */
+    public function get_contents_url($url = '') {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if($url){
+            if (function_exists('curl_init')) {
+                // create a new cURL resource
+                $ch = curl_init();
+                // set URL and other appropriate options
+                curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                if(stripos($url, 'https://') !== FALSE){
+                    curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                }
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                $content = curl_exec($ch);
+                curl_close($ch);
+                unset($url, $ch);
+            } else if (ini_get('allow_url_fopen')) {
+                if (stripos($url, 'https://') !== FALSE) {
+                    $default_opts = array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        )
+                    );
+                    stream_context_set_default($default_opts);
+                }
+                $content = @file_get_contents($url);
+            } else {
+                log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
+                $content = FALSE;
+                unset($url);
+            }
+            return $content;
+        }else{
+            return FALSE;
+        }
     }
 
     /**
@@ -2193,7 +2160,24 @@ class Csz_model extends CI_Model {
             @ini_set('max_execution_time', 600);
             @ini_set("pcre.recursion_limit", "16777");
         }
-        if (ini_get('allow_url_fopen') && function_exists('get_headers')) {
+        if (function_exists('curl_init')) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_HEADER => true,
+            CURLOPT_NOBODY => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 300,
+            CURLOPT_URL => $url));
+            if (stripos($url, 'https://') !== FALSE) {
+                curl_setopt($curl, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            }
+            curl_exec($curl);
+            $headers = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+            unset($url, $curl, $headers1);
+        } else if (ini_get('allow_url_fopen') && function_exists('get_headers')) {
             if (stripos($url, 'https://') !== FALSE) {
                 $default_opts = array(
                     'ssl' => array(
@@ -2206,28 +2190,75 @@ class Csz_model extends CI_Model {
             $headers1 = @get_headers($url);
             $headers = substr($headers1[0], 9, 3);
             unset($url, $headers1, $default_opts);
-        } else if (function_exists('curl_version')) {
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-            CURLOPT_HEADER => true,
-            CURLOPT_NOBODY => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => $url));
-            if (stripos($url, 'https://') !== FALSE) {
-                curl_setopt($curl, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            }
-            $headers1 = explode("\n", curl_exec($curl));
-            $headers = substr($headers1[0], 9, 3);
-            curl_close($curl);
-            unset($url, $curl, $headers1);
         } else {
             log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
             $headers = FALSE;
             unset($url);
         }
         return $headers;
+    }
+    
+    /**
+     * downloadFile From url
+     *
+     * Function for download file from url
+     *
+     * @param	string	$url    url for file  download
+     * @param	string	$newfname    path for file save
+     * @return	FALSE if can't download
+     */
+    public function downloadFile($url, $newfname) {
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set("pcre.recursion_limit", "16777");
+        }
+        if (function_exists('curl_init')){
+            $ch = curl_init($url);
+            $newf = fopen($newfname, 'wb') or die("Can't create file");
+            curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+            if(stripos($url, 'https://') !== FALSE){
+                curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            }
+            @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_FILE, $newf);
+            $result = curl_exec($ch);
+            fclose($newf);
+            if($result === false) {
+                log_message('error', 'Unable to perform the request : ' . curl_error($ch) . ' ['.$url.']');
+                return FALSE;
+            }
+        } else if(ini_get('allow_url_fopen')){
+            if (stripos($url, 'https://') !== FALSE) {
+                $default_opts = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    )
+                );
+                stream_context_set_default($default_opts);
+            }
+            $file = fopen($url, 'rb') or die("Can't open file");
+            if (!$file) {
+                fclose($file);
+                unset($url,$newfname,$newf,$file);
+                return FALSE;
+            } else {
+                $newf = fopen($newfname, 'wb') or die("Can't create file");
+                if ($newf) {
+                    while (!feof($file)) {
+                        fwrite($newf, fread($file, 1024 * 1024 * 100), 1024 * 1024 * 100); /* 100MB */
+                    }
+                    fclose($newf);
+                }
+                fclose($file);
+            }
+        } else {
+            log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
+            $headers = FALSE;
+            unset($url);
+        }
     }
 
     /**
@@ -2283,7 +2314,7 @@ class Csz_model extends CI_Model {
                        var js, fjs = d.getElementsByTagName(s)[0];
                        if (d.getElementById(id)) {return;}
                        js = d.createElement(s); js.id = id;
-                       js.src = "https://connect.facebook.net/' . $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))) . '/sdk.js";
+                       js.src = "https://connect.facebook.net/' . $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))) . '/sdk/xfbml.customerchat.js";
                        fjs.parentNode.insertBefore(js, fjs);
                      }(document, \'script\', \'facebook-jssdk\'));
                   </script>';
@@ -2348,8 +2379,8 @@ class Csz_model extends CI_Model {
      */
     public function insertAsCopy($table, $data = array()) {
         if($table && is_array($data) && !empty($data)){
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', $this->timeNow(), TRUE);
+            $this->db->set('timestamp_update', $this->timeNow(), TRUE);
             $this->db->insert($table, $data);
             unset($data, $table);
             return TRUE;
@@ -2424,7 +2455,7 @@ class Csz_model extends CI_Model {
     public function findFrmTag($content, $html = FALSE) {
         @ini_set("pcre.recursion_limit", "16777");
         if($html === TRUE){
-            if (strpos($content, '<form ') !== false && strpos($content, ' name="csrf_csz"') !== false) {
+            if ($content && strpos($content, '<form ') !== false && strpos($content, ' name="csrf_csz"') !== false) {
                 unset($content,$html);
                 return TRUE;
             }else{
@@ -2433,7 +2464,7 @@ class Csz_model extends CI_Model {
             }
         }else{
             $txt_nonhtml = strip_tags($content);
-            if (strpos($txt_nonhtml, '[?]{=forms:') !== false) {
+            if ($txt_nonhtml && strpos($txt_nonhtml, '[?]{=forms:') !== false) {
                 unset($content,$html);
                 return TRUE;
             }else{
@@ -2454,18 +2485,13 @@ class Csz_model extends CI_Model {
         if (!$this->cache->get('loadBFconfig')) {
             $this->db->limit(1, 0);
             $query = $this->db->get('login_security_config');
-            if ($query->num_rows() !== 0) {
+            if ($query->num_rows() > 0) {
                 $row = $query->row();
             } else {
                 $row = FALSE;
             }
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('loadBFconfig', $row, ($cache_time * 60));
-            unset($query, $cache_time, $row);
+            $this->cache->save('loadBFconfig', $row, ($this->cachetime * 60));
+            unset($query, $row);
         }
         return $this->cache->get('loadBFconfig');
     }
@@ -2481,7 +2507,7 @@ class Csz_model extends CI_Model {
     public function chkBFwhitelistIP($ip_address = '') {
         if(!$ip_address) $ip_address = $this->input->ip_address();
         $ip_count = $this->countData('whitelist_ip', "ip_address = '".$ip_address."'");
-        if($ip_count !== FALSE && $ip_count !== 0){
+        if($ip_count !== FALSE && $ip_count > 0){
             return TRUE;
         }else{
             return FALSE;
@@ -2499,7 +2525,7 @@ class Csz_model extends CI_Model {
     public function chkBFblacklistIP($ip_address = '') {
         if(!$ip_address) $ip_address = $this->input->ip_address();
         $ip_count = $this->countData('blacklist_ip', "ip_address = '".$ip_address."'");
-        if($ip_count !== FALSE && $ip_count !== 0){
+        if($ip_count !== FALSE && $ip_count > 0){
             return TRUE;
         }else{
             return FALSE;
@@ -2518,12 +2544,12 @@ class Csz_model extends CI_Model {
         if(!$ip_address) $ip_address = $this->input->ip_address();
         $config = $this->load_bf_config();
         if($this->chkBFwhitelistIP($ip_address) === FALSE){
-            $search_sql = "ip_address = '".$ip_address."' AND (result = 'INVALID' OR result = 'CSRF_INVALID') AND timestamp_create >= DATE_SUB(NOW(),INTERVAL ".$config->bf_protect_period." MINUTE)";
+            $search_sql = "ip_address = '".$ip_address."' AND (result = 'INVALID' OR result = 'CSRF_INVALID') AND timestamp_create >= DATE_SUB('".$this->timeNow()."',INTERVAL ".$config->bf_protect_period." MINUTE)";
             $ip_count = $this->countData('login_logs', $search_sql);
-            if($ip_count !== FALSE  && $ip_count !== 0 && $ip_count >= ($config->max_failure) && $this->chkBFblacklistIP($ip_address) === FALSE){
+            if($ip_count !== FALSE  && $ip_count > 0 && $ip_count >= ($config->max_failure) && $this->chkBFblacklistIP($ip_address) === FALSE){
                 $this->db->set('ip_address', $ip_address, TRUE);
                 $this->db->set('note', 'Automatic add this IP from brute force', TRUE);
-                $this->db->set('timestamp_create', 'NOW()', FALSE);
+                $this->db->set('timestamp_create', $this->timeNow(), TRUE);
                 $this->db->insert('blacklist_ip');
                 $data = array(
                     'email_login' => $email,
@@ -2532,7 +2558,7 @@ class Csz_model extends CI_Model {
                 );
                 $this->db->set('user_agent', $this->input->user_agent(), TRUE);
                 $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-                $this->db->set('timestamp_create', 'NOW()', FALSE);
+                $this->db->set('timestamp_create', $this->timeNow(), TRUE);
                 $this->db->insert('login_logs', $data);
                 unset($data);
                 $this->clear_all_cache();
@@ -2583,9 +2609,8 @@ class Csz_model extends CI_Model {
                     $return = FALSE;
                 }
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-            $this->cache->save('pluginconfig_'.md5($config_filename.$index_name), $return, ($cache_time * 60));
-            unset($return, $cache_time, $plugin_config, $file_path);
+            $this->cache->save('pluginconfig_'.md5($config_filename.$index_name), $return, ($this->cachetime * 60));
+            unset($return, $plugin_config, $file_path);
         }
         return $this->cache->get('pluginconfig_'.md5($config_filename.$index_name));
     }
@@ -2619,13 +2644,8 @@ class Csz_model extends CI_Model {
             }
         }
         if (!$this->cache->get('base_link'.$cachename)) {
-            if($this->load_config()->pagecache_time == 0){
-                $cache_time = 1;
-            }else{
-                $cache_time = $this->load_config()->pagecache_time;
-            }
-            $this->cache->save('base_link'.$cachename, $baseurl, ($cache_time * 60));
-            unset($cache_time, $baseurl);
+            $this->cache->save('base_link'.$cachename, $baseurl, ($this->cachetime * 60));
+            unset($baseurl);
         }
         return $this->cache->get('base_link'.$cachename);
     }
@@ -2643,7 +2663,7 @@ class Csz_model extends CI_Model {
         $this->db->where("bf_private_key", $private_key);
         $this->db->limit(1, 0);
         $query = $this->db->get("login_security_config");
-        if(!empty($query) && $query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() > 0){
             return TRUE;
         }else{
             return FALSE;
@@ -2829,58 +2849,6 @@ class Csz_model extends CI_Model {
     }
     
     /**
-     * get_contents_url
-     *
-     * Function for get the content from url
-     *
-     * @param	string	$url    content full url path
-     * @return  string or FALSE
-     */
-    public function get_contents_url($url = '') {
-        if (function_exists('ini_set')) {
-            @ini_set('max_execution_time', 600);
-            @ini_set("pcre.recursion_limit", "16777");
-        }
-        if($url){
-            if (ini_get('allow_url_fopen')) {
-                if (stripos($url, 'https://') !== FALSE) {
-                    $default_opts = array(
-                        'ssl' => array(
-                            'verify_peer' => false,
-                            'verify_peer_name' => false,
-                        )
-                    );
-                    stream_context_set_default($default_opts);
-                }
-                $content = @file_get_contents($url);
-            }else if (function_exists('curl_version')) {
-                // create a new cURL resource
-                $ch = curl_init();
-                // set URL and other appropriate options
-                curl_setopt($ch, CURLOPT_URL, $url);
-                if(stripos($url, 'https://') !== FALSE){
-                    curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                }
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_HEADER, 0);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                $content = curl_exec($ch);
-                curl_close($ch);
-                unset($url, $ch);
-            } else {
-                log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
-                $content = FALSE;
-                unset($url);
-            }
-            return $content;
-        }else{
-            return FALSE;
-        }
-    }
-    
-    /**
      * rmdir_recursive
      *
      * Function for remove directory with recursive
@@ -3039,4 +3007,14 @@ class Csz_model extends CI_Model {
            return $title;
        }
    }
+   
+   /**
+    * Time now into database
+    *
+    * @return   string
+    */
+   public function timeNow() {
+       return date('Y-m-d H:i:s').'.000000';
+   }
+   
 }

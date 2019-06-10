@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `email_logs`, `title_setting`, `timestamp_update`) VALUES
-(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 1, 2, NOW());
+(1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 1, 1, 2, NOW());
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (
@@ -756,3 +756,13 @@ CREATE TABLE IF NOT EXISTS `plugin_widget` (
   PRIMARY KEY (`plugin_widget_id`),
   KEY `plugin_widget_id` (`plugin_widget_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `gallery_config`;
+CREATE TABLE IF NOT EXISTS `gallery_config` (
+  `gallery_config_id` int(11) AUTO_INCREMENT,
+  `gallery_sort` varchar(255),
+  `user_admin_id` int(11),
+  `timestamp_update` datetime,
+  PRIMARY KEY (`gallery_config_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+INSERT INTO `gallery_config` (`gallery_config_id`, `gallery_sort`, `user_admin_id`, `timestamp_update`) VALUES (1, 'manually', '1', NOW());

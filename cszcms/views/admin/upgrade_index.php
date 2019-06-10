@@ -1,4 +1,4 @@
-<?php if($this->Csz_auth_model->is_group_allowed('save', 'backend') !== FALSE){ ?>
+<?php if($this->Csz_auth_model->is_group_allowed('save', 'backend') !== FALSE && $this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?>
 <!-- Page Heading -->
 <div class="row">
     <div class="col-lg-12">
@@ -59,7 +59,14 @@
                 <b>APC Support:</b> <?php if(extension_loaded('apc') && ini_get('apc.enabled')){ echo $this->lang->line('option_yes'); }else{ echo $this->lang->line('option_no'); } ?><br>
                 <b>Memcached Support:</b> <?php if(extension_loaded('memcached') || extension_loaded('memcache')){ echo $this->lang->line('option_yes'); }else{ echo $this->lang->line('option_no'); } ?><br>
                 <b>Redis Support:</b> <?php if(extension_loaded('redis')){ echo $this->lang->line('option_yes'); }else{ echo $this->lang->line('option_no'); } ?><br>
-                <b><?php echo $this->lang->line('serverstatus_php_disabled') ?>:</b> <?php echo $this->Csz_admin_model->getDisabledFunctions() ?>
+                <b><?php echo $this->lang->line('serverstatus_php_disabled') ?>:</b> <?php echo $this->Csz_admin_model->getDisabledFunctions() ?><br>
+                <b>PHPINFO:</b> <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#myModal"><?php echo $this->lang->line('dashboard_viewdetail') ?></a>
+                <!-- Modal HTML -->
+                <div id="myModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content"><iframe src="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/phpinfo' ?>" width="100%" height="500"></iframe></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -166,7 +173,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
-                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b> &nbsp;&nbsp; <a title="<?php echo $this->lang->line('btn_upgrade') ?>" href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/download' ?>" class="btn btn-primary btn-sm" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-refresh"></i></a>
+                <b><?php echo $this->lang->line('upgrade_curver'); ?> <i><?php echo $cur_version ?></i></b> | <b><?php echo $this->lang->line('upgrade_lastver'); ?> <i><?php echo $last_version ?></i></b> &nbsp;&nbsp; <?php if(strpos($this->cur_version, 'Beta') === FALSE && strpos($this->cur_version, 'beta') === FALSE){ ?><a title="<?php echo $this->lang->line('btn_upgrade') ?>" href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/download' ?>" class="btn btn-primary btn-sm" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-refresh"></i></a><?php } ?>
             </div>
         </div>
         <span class="error"><small><?php echo $this->lang->line('upgrade_text'); ?></small></span>

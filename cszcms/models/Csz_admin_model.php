@@ -5,7 +5,7 @@
  *
  * An open source content management system
  *
- * Copyright (c) 2016 - 2017, Astian Foundation.
+ * Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -14,7 +14,7 @@
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016 - 2017, Astian Foundation.
+ * @copyright   Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -22,6 +22,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Csz_admin_model extends CI_Model{
+    
+    public $cachetime = 0;
 
     function __construct(){
         parent::__construct();
@@ -30,6 +32,11 @@ class Csz_admin_model extends CI_Model{
             $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
+        }
+        if($this->load_config()->pagecache_time == 0){
+            $this->cachetime = 1;
+        }else{
+            $this->cachetime = $this->load_config()->pagecache_time;
         }
     }
 
@@ -74,7 +81,7 @@ class Csz_admin_model extends CI_Model{
                 return $xml->version;
             }else{
                 $xml_cur = $this->Csz_model->getVersion();
-                if(strpos($xml_cur, 'Beta') !== false){
+                if($xml_cur && strpos($xml_cur, 'Beta') !== false){
                     $vercur = str_replace(' Beta', '', $xml_cur);
                     $cur_xml = explode('.', $vercur);
                     $xml_version = $cur_xml[0].'.'.$cur_xml[1].'.'.($cur_xml[2] - 1);
@@ -330,7 +337,7 @@ class Csz_admin_model extends CI_Model{
         }
         $query = $this->db->get($table);
         if(!empty($query)){
-            if($query->num_rows() !== 0){
+            if($query->num_rows() > 0){
                 $row = $query->result_array();
                 return $row;
             }else{
@@ -381,9 +388,8 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $return = FALSE;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-            $this->cache->save('getUserEmail_'.$id, $return, ($cache_time * 60));
-            unset($return, $cache_time, $rows);
+            $this->cache->save('getUserEmail_'.$id, $return, ($this->cachetime * 60));
+            unset($return, $rows);
         }
         return $this->cache->get('getUserEmail_'.$id);
     }
@@ -436,9 +442,9 @@ class Csz_admin_model extends CI_Model{
         }else{
             $this->db->set('user_type', 'member');
         }
-        $this->db->set('md5_lasttime', 'NOW()', FALSE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('user_admin', $data);
         $this->db->set('user_admin_id', $this->db->insert_id());
         $this->db->set('user_groups_id', $this->input->post('group', TRUE));
@@ -455,7 +461,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function updateUser($id){
         $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), "user_type != 'member'");
-        if($query['num_rows'] !== 0){
+        if($query['num_rows'] > 0){
             // update the user account
             if($this->input->post('active')){
                 $active = $this->input->post('active', TRUE);
@@ -491,7 +497,7 @@ class Csz_admin_model extends CI_Model{
             if($this->input->post('password') != ''){
                 $this->db->set('password', $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)), TRUE);
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-                $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
                 $this->db->set('pass_change', 1);
             }
             if($id != 1 && $this->session->userdata('user_admin_id') != $id){
@@ -506,7 +512,7 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
             $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
             if($id != 1 && $this->session->userdata('user_admin_id') != $id){
@@ -630,12 +636,12 @@ class Csz_admin_model extends CI_Model{
             $table = 'user_admin';
         $this->db->select("*");
         $this->db->where("md5_hash", $md5);
-        $this->db->where("md5_lasttime < DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
+        $this->db->where("md5_lasttime < DATE_SUB('".$this->Csz_model->timeNow()."', INTERVAL 30 MINUTE)");
         $this->db->limit(1, 0);
         $query = $this->db->get($table);
-        if($query->num_rows() !== 0){
+        if($query->num_rows() > 0){
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('md5_hash', $md5);
             $this->db->update($table);
             return TRUE;
@@ -843,7 +849,7 @@ class Csz_admin_model extends CI_Model{
     public function updateSocial(){
         $this->db->select("*");
         $query = $this->db->get("footer_social");
-        if($query->num_rows() !== 0){
+        if($query->num_rows() > 0){
             foreach($query->result() as $rows){
                 $data = array();
                 $data['social_url'] = $this->input->post($rows->social_name, TRUE);
@@ -852,7 +858,7 @@ class Csz_admin_model extends CI_Model{
                 }else{
                     $data['active'] = 0;
                 }
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where("social_name", $rows->social_name);
                 $this->db->update('footer_social', $data);
             }
@@ -938,7 +944,7 @@ class Csz_admin_model extends CI_Model{
             $data['site_name'] = $this->input->post('siteTitle', TRUE);
         if($this->input->post('smtp_pass', TRUE))
             $this->db->set('smtp_pass', trim($this->input->post('smtp_pass', TRUE)));
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
         unset($data,$upload_file,$upload_file1,$additional_js);
@@ -1132,7 +1138,7 @@ class Csz_admin_model extends CI_Model{
             while($i < count($menu_id)){
                 if($menu_id[$i]){
                     $this->db->set('arrange', $main_arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where("page_menu_id", $menu_id[$i]);
                     $this->db->update('page_menu');
                     $main_arrange++;
@@ -1147,7 +1153,7 @@ class Csz_admin_model extends CI_Model{
                 for($i = 0; $i < count($menusub_id[$key]); $i++){
                     if($menusub_id[$key][$i]){
                         $this->db->set('arrange', $sub_arrange, FALSE);
-                        $this->db->set('timestamp_update', 'NOW()', FALSE);
+                        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                         $this->db->where("page_menu_id", $menusub_id[$key][$i]);
                         $this->db->where("drop_page_menu_id", $key);
                         $this->db->update('page_menu');
@@ -1168,7 +1174,7 @@ class Csz_admin_model extends CI_Model{
     public function getPagesAll(){
         $this->db->select("*");
         $query = $this->db->get('pages');
-        if(!empty($query) && $query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() > 0){
             return $query->result_array();
         }
         return array();
@@ -1186,7 +1192,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where("plugin_active", 1);
         $this->db->order_by("plugin_config_filename", "asc");
         $query = $this->db->get('plugin_manager');
-        if(!empty($query) && $query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() > 0){
             return $query->result_array();
         }
         return array();
@@ -1217,7 +1223,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->select("*");
         $this->db->where('drop_menu', 1);
         $query = $this->db->get('page_menu');
-        if($query->num_rows() !== 0){
+        if($query->num_rows() > 0){
             return $query->result_array();
         }
         return array();
@@ -1276,8 +1282,8 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'arrange' => $arrange,
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('page_menu', $data);
     }
 
@@ -1315,7 +1321,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('position', $this->input->post('position', TRUE), TRUE);
         $this->db->set('new_windows', $new_windows, TRUE);
         $this->db->set('active', $active, TRUE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('page_menu_id', $id);
         $this->db->update('page_menu');
     }
@@ -1329,19 +1335,19 @@ class Csz_admin_model extends CI_Model{
      */
     public function findLangDataUpdate($lang_iso){
         $query = $this->db->get_where($table = 'pages', 'lang_iso = \''.$lang_iso.'\'');
-        if($query->num_rows() !== 0){
+        if($query->num_rows() > 0){
             foreach($query->result() as $rows){
                 $this->db->set('lang_iso', $this->Csz_model->getDefualtLang(), TRUE);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where("pages_id", $rows->pages_id);
                 $this->db->update('pages');
             }
         }
         $query = $this->db->get_where($table = 'page_menu', 'lang_iso = \''.$lang_iso.'\'');
-        if($query->num_rows() !== 0){
+        if($query->num_rows() > 0){
             foreach($query->result() as $rows){
                 $this->db->set('lang_iso', $this->Csz_model->getDefualtLang(), TRUE);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where("page_menu_id", $rows->page_menu_id);
                 $this->db->update('page_menu');
             }
@@ -1366,8 +1372,8 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
         );
         $this->db->set('arrange', ($arrange)+1);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('lang_iso', $data);
         if(!$this->db->field_exists('lang_'.$this->input->post("lang_iso", TRUE), 'general_label')){
             $this->load->dbforge();
@@ -1407,12 +1413,12 @@ class Csz_admin_model extends CI_Model{
         }
         /* Update lang in menu */
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('lang_iso', $old_lang->lang_iso);
         $this->db->update('page_menu');
         /* Update lang in page */
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('lang_iso', $old_lang->lang_iso);
         $this->db->update('pages');
 
@@ -1424,7 +1430,7 @@ class Csz_admin_model extends CI_Model{
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('lang_iso_id', $id);
         $this->db->update('lang_iso');
     }
@@ -1460,7 +1466,7 @@ class Csz_admin_model extends CI_Model{
         foreach($lang as $value){
             $this->db->set('lang_'.$value['lang_iso'], $this->input->post("lang_".$value['lang_iso'], TRUE), TRUE);
         }
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('general_label_id', $id);
         $this->db->update('general_label');
     }
@@ -1514,8 +1520,8 @@ class Csz_admin_model extends CI_Model{
             $data['custom_css'] = $custom_css;
             $data['custom_js'] = $custom_js;
         }
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('pages', $data);
     }
 
@@ -1551,7 +1557,7 @@ class Csz_admin_model extends CI_Model{
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
         $this->Csz_model->clear_all_cache();
@@ -1570,8 +1576,8 @@ class Csz_admin_model extends CI_Model{
             'year' => $year,
             'file_upload' => $fileupload,
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('upload_file', $data);
     }
 
@@ -1610,8 +1616,8 @@ class Csz_admin_model extends CI_Model{
             'captcha' => $captcha,
             'save_to_db' => $save_to_db,
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('form_main', $data);
         $form_main_id = $this->db->insert_id();
 
@@ -1649,8 +1655,8 @@ class Csz_admin_model extends CI_Model{
                         'field_required' => $field_required[$i],
                         'arrange' => $arrange,
                     );
-                    $this->db->set('timestamp_create', 'NOW()', FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->insert('form_field', $data);
                     $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
                     $this->dbforge->add_field($fields);
@@ -1712,7 +1718,7 @@ class Csz_admin_model extends CI_Model{
             'captcha' => $captcha,
             'save_to_db' => $save_to_db,
         );
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('form_main_id', $id);
         $this->db->update('form_main', $data);
         /* Rename Field */
@@ -1745,7 +1751,7 @@ class Csz_admin_model extends CI_Model{
                         'field_required' => $field_required1[$i],
                         'arrange' => $arrange,
                     );
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('form_field_id', $form_field_id[$i]);
                     $this->db->update('form_field', $data);
                     $arrange++;
@@ -1803,8 +1809,8 @@ class Csz_admin_model extends CI_Model{
                         'field_required' => $field_required[$i],
                         'arrange' => $last_arrange,
                     );
-                    $this->db->set('timestamp_create', 'NOW()', FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->insert('form_field', $data);
                     $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
                     $this->dbforge->add_column('form_'.$form_name, $fields);
@@ -2002,7 +2008,7 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $data = array(
             'widget_name' => $this->input->post('widget_name', TRUE),
-            'xml_url' => $this->input->post('xml_url', TRUE),
+            'xml_url' => preg_replace('/\s+/', '', $this->input->post('xml_url', TRUE)),
             'limit_view' => $this->input->post('limit_view', TRUE),
             'active' => $active,
             'widget_open' => $this->input->post('widget_open', TRUE),
@@ -2010,8 +2016,8 @@ class Csz_admin_model extends CI_Model{
             'widget_seemore' => $this->input->post('widget_seemore', TRUE),
             'widget_close' => $this->input->post('widget_close', TRUE),
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('widget_xml', $data);
     }
 
@@ -2033,7 +2039,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('widget_content', $this->input->post('widget_content', TRUE));
         $this->db->set('widget_seemore', $this->input->post('widget_seemore', TRUE));
         $this->db->set('widget_close', $this->input->post('widget_close', TRUE));
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('widget_xml_id', $id);
         $this->db->update('widget_xml');
         $this->Csz_model->clear_file_cache('widget_'.$this->Csz_model->encodeURL($this->input->post("widget_name", TRUE)));
@@ -2047,7 +2053,7 @@ class Csz_admin_model extends CI_Model{
     public function insertLinks(){
         // Create the new links
         $this->db->set('url', $this->input->post('url', TRUE));
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('link_stat_mgt');
     }
 
@@ -2059,7 +2065,7 @@ class Csz_admin_model extends CI_Model{
     public function updateBFSettings(){
         $this->db->set('bf_protect_period', $this->input->post("bf_protect_period", TRUE));
         $this->db->set('max_failure', $this->input->post("max_failure", TRUE));
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("login_security_config_id", 1);
         $this->db->update('login_security_config');
         $this->Csz_model->clear_file_cache('loadBFconfig');
@@ -2077,7 +2083,7 @@ class Csz_admin_model extends CI_Model{
                 'ip_address' => $ip_address,
                 'note' => $this->input->post('note', TRUE),
             );
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
             $this->db->insert('whitelist_ip', $data);
             $this->removeData('blacklist_ip', 'ip_address', $ip_address);
             $this->db->cache_delete_all();
@@ -2096,7 +2102,7 @@ class Csz_admin_model extends CI_Model{
                 'ip_address' => $ip_address,
                 'note' => $this->input->post('note', TRUE),
             );
-            $this->db->set('timestamp_create', 'NOW()', FALSE);
+            $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
             $this->db->insert('blacklist_ip', $data);
             $this->removeData('whitelist_ip', 'ip_address', $ip_address);
             $this->db->cache_delete_all();
@@ -2132,8 +2138,8 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'note' => $this->input->post('note', TRUE),
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('banner_mgt', $data);
     }
 
@@ -2173,7 +2179,7 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'note' => $this->input->post('note', TRUE),
         );
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('banner_mgt_id', $id);
         $this->db->update('banner_mgt', $data);
     }
@@ -2196,7 +2202,7 @@ class Csz_admin_model extends CI_Model{
         );
         $this->db->set('user_agent', $this->input->user_agent(), TRUE);
         $this->db->set('ip_address', $this->input->ip_address(), TRUE);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('actions_logs', $data);
         unset($data);
     }
@@ -2209,7 +2215,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function setMaintenance() {
         $data = array('maintenance_active' => 1);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
         $this->db->cache_delete_all();
@@ -2225,7 +2231,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function unsetMaintenance() {
         $data = array('maintenance_active' => 0);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("settings_id", 1);
         $this->db->update('settings', $data);
         $this->db->cache_delete_all();
@@ -2246,7 +2252,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where('user_admin_id', $this->session->userdata('user_admin_id'));
         $this->db->limit(1);
         $query = $this->db->get('save_formdraft');
-        if(!empty($query) && $query->num_rows() === 1){
+        if(!empty($query) && $query->num_rows() > 0){
             $data = $query->first_row();
             return json_decode(base64_decode($data->submit_array), TRUE);
             
@@ -2315,7 +2321,7 @@ class Csz_admin_model extends CI_Model{
         $gmdate = gmdate("YmdHis", time());
         $private_key = sha1($row->default_email . '|' . $this->Csz_model->base_link() . '|' . $user->password . '|cszcms|' . $gmdate);
         $this->db->set('bf_private_key', $private_key);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("login_security_config_id", 1);
         $this->db->update('login_security_config');
         $this->Csz_model->clear_file_cache('loadBFconfig');
@@ -2333,7 +2339,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->where("login_security_config_id", '1');
         $this->db->limit(1, 0);
         $query = $this->db->get("login_security_config");
-        if(!empty($query) && $query->num_rows() !== 0){
+        if(!empty($query) && $query->num_rows() > 0){
             $private_key = $query->row()->bf_private_key;
             if(!empty($private_key) && $private_key != NULL){
                 return $private_key;
@@ -2396,11 +2402,10 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $return = FALSE;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
             if($return !== FALSE){
-                $this->cache->save('plugin_list_xml' . md5($xml_url), $return, ($cache_time * 60));
+                $this->cache->save('plugin_list_xml' . md5($xml_url), $return, ($this->cachetime * 60));
             }
-            unset($xml_url_bak,$cache_time,$return);
+            unset($xml_url_bak,$return);
         }
         if($this->cache->get('plugin_list_xml' . md5($xml_url)) !== FALSE && $key_search && $search){
             $xml = simplexml_load_string($this->cache->get('plugin_list_xml' . md5($xml_url)));
@@ -2438,9 +2443,8 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $ver_arr = FALSE;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;               
-            $this->cache->save('plugin_list_version', $ver_arr, ($cache_time * 60));
-            unset($plugin_list, $ver_arr, $cache_time);
+            $this->cache->save('plugin_list_version', $ver_arr, ($this->cachetime * 60));
+            unset($plugin_list, $ver_arr);
         }
         return $this->cache->get('plugin_list_version');
     }
@@ -2599,9 +2603,8 @@ class Csz_admin_model extends CI_Model{
             }else{ /* have many primary key return array */
                 $return = $return_arr;
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-            $this->cache->save('findPrimaryKey_'.$table, $return, ($cache_time * 60));
-            unset($return, $cache_time, $return_arr);
+            $this->cache->save('findPrimaryKey_'.$table, $return, ($this->cachetime * 60));
+            unset($return, $return_arr);
         }
         return $this->cache->get('findPrimaryKey_'.$table);
     }
@@ -2652,7 +2655,10 @@ class Csz_admin_model extends CI_Model{
     }
     
     public function getServerIp() {
-        return @getenv('SERVER_ADDR');
+        if (!$this->cache->get('SERVER_ADDR')) {
+            $this->cache->save('SERVER_ADDR', @getenv('SERVER_ADDR'), ($this->cachetime * 60));
+        }
+        return $this->cache->get('SERVER_ADDR');
     }
 
     /**
@@ -2665,7 +2671,10 @@ class Csz_admin_model extends CI_Model{
      * @return string the description, as a string.
      */
     public function getSoftwareInfo($mode = 'a') {
-        return @php_uname($mode);
+        if (!$this->cache->get('php_uname_'.$mode)) {
+            $this->cache->save('php_uname_'.$mode, @php_uname($mode), ($this->cachetime * 60));
+        }
+        return $this->cache->get('php_uname_'.$mode);
     }
 
     /**
@@ -2673,7 +2682,7 @@ class Csz_admin_model extends CI_Model{
     * @param directory $directory
     * @return integer
     */
-   public function dirSize($directory, $dept = 0) {
+   public function dirSize($directory) {
         if (!$this->cache->get('chkDirSize_' . md5($directory))) {
             $size = 0;
             foreach (scandir($directory) as $file) {
@@ -2686,15 +2695,17 @@ class Csz_admin_model extends CI_Model{
                     }
                 }
             }
-            ($this->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $this->load_config()->pagecache_time;
-            $this->cache->save('chkDirSize_' . md5($directory), $size, ($cache_time * 60));
-            unset($file, $path, $cache_time, $size);
+            $this->cache->save('chkDirSize_' . md5($directory), $size, ($this->cachetime * 60));
+            unset($file, $path, $size);
         }
         return $this->cache->get('chkDirSize_' . md5($directory));
    } 
 
     public function usageSpace() {
-        return $this->getNiceFileSize(@$this->dirSize(FCPATH));
+        if (!$this->cache->get('usageSpace')) {
+            $this->cache->save('usageSpace', $this->getNiceFileSize(@$this->dirSize(FCPATH)), ($this->cachetime * 60));
+        }
+        return $this->cache->get('usageSpace');
     }
 
     public function memUsage() {
@@ -2707,19 +2718,27 @@ class Csz_admin_model extends CI_Model{
     }
     
     public function getMemLimit() {
-        if (!ini_get('memory_limit')) {
-            return "-";
-        } else {
-            return @ini_get('memory_limit');
+        if (!$this->cache->get('memory_limit')) {
+            if (!ini_get('memory_limit')) {
+                $return = "-";
+            } else {
+                $return = @ini_get('memory_limit');
+            }
+            $this->cache->save('memory_limit', $return, ($this->cachetime * 60));
         }
+        return $this->cache->get('memory_limit');
     }
 
     public function getDisabledFunctions() {
-        if (!ini_get('disable_functions')) {
-            return "-";
-        } else {
-            return @ini_get('disable_functions');
+        if (!$this->cache->get('disable_functions')) {
+            if (!ini_get('disable_functions')) {
+                $return = "-";
+            } else {
+                $return = @ini_get('disable_functions');
+            }
+            $this->cache->save('disable_functions', $return, ($this->cachetime * 60));
         }
+        return $this->cache->get('disable_functions');
     }
 
     /**
@@ -2733,8 +2752,8 @@ class Csz_admin_model extends CI_Model{
             'name' => $this->input->post('name', TRUE),
             'active' => $active,
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('carousel_widget', $data);
     }
 
@@ -2754,7 +2773,7 @@ class Csz_admin_model extends CI_Model{
             'custom_temp_active' => $custom_temp_active,
             'custom_template' => $this->input->post('custom_template', FALSE),
         );
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('carousel_widget_id', $id);
         $this->db->update('carousel_widget', $data);
     }
@@ -2785,8 +2804,8 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('carousel_type', $carousel_type, TRUE);
         if($youtube_url){ $this->db->set('youtube_url', $youtube_url, TRUE); }
         if($photo_url){ $this->db->set('photo_url', $photo_url, TRUE); }
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('carousel_picture', $data);
     }
     
@@ -2830,8 +2849,8 @@ class Csz_admin_model extends CI_Model{
             'template_code' => $this->input->post('template_code', FALSE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
         );
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('plugin_widget', $data);
     }
 
@@ -2856,10 +2875,14 @@ class Csz_admin_model extends CI_Model{
             'template_code' => $this->input->post('template_code', FALSE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
         );
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('plugin_widget_id', $id);
         $this->db->update('plugin_widget', $data);
         $this->Csz_model->clear_file_cache('pwidget_' . md5($id));
+    }
+    
+    public function showLoadingImg() {
+        echo '<center><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)"><img src="'.base_url('', '', TRUE).'assets/images/loading.gif" class="img-responsive"/><br>Loading...</div></center>';
     }
     
 }

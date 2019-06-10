@@ -191,11 +191,13 @@ class Csz_startup extends CI_Model {
      * @param   bool $backend TRUE is for backend, FALSE is for frontend
      */
     public function chkStartRun($backend = TRUE) {
-        $startup = $this->run($backend);
-        if($startup !== FALSE){
-            redirect($startup, 'refresh');
+        if($this->config->item('runStartupEnable') !== false){
+            $startup = $this->run($backend);
+            if($startup !== FALSE){
+                redirect($startup, 'refresh');
+            }
+            unset($startup);
         }
-        unset($startup);
     }
     
 }

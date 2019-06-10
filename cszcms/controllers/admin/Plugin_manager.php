@@ -80,12 +80,12 @@ class Plugin_manager extends CI_Controller {
             $status = $this->Csz_model->getValue('plugin_active', 'plugin_manager', "plugin_config_filename != '' AND plugin_manager_id = '".$this->uri->segment(4)."'", '', 1);
             if ($status->plugin_active) {
                 $this->db->set('plugin_active', 0, FALSE);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where('plugin_manager_id', $this->uri->segment(4));
                 $this->db->update('plugin_manager');
             } else {
                 $this->db->set('plugin_active', 1, FALSE);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where('plugin_manager_id', $this->uri->segment(4));
                 $this->db->update('plugin_manager');
             }

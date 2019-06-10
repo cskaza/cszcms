@@ -34,6 +34,7 @@ define('BASEPATH', '../system');
 /* End register the varible same CI index */
 
 require './include/Database.php';
+$cszmodel = new Cszmodel;
 $success = 0;
 $chk_pass = 0;
 if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbname']) {
@@ -59,7 +60,6 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
     $mysqli = $db->connectDB();
     $filename = 'cszcms_app.sql';
     $db->mysqli_multi_query_file($mysqli, $filename);
-    $cszmodel = new Cszmodel;
     $md5_hash = md5(time() + mt_rand(1, 99999999));
     if ($email && $_POST['password']) {
         /* Database Insert */
@@ -141,7 +141,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
     <head>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Expires" content="Sun, 01 Jan 2014 00:00:00 GMT" />
         <link rel="canonical" href="<?php echo $curdomain; ?>/install/"/>
         <meta name="robots" content="no-cache" />
         <meta name="description" content="Backend System for CSZ Content Management" />
@@ -193,7 +193,9 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                 <h3 class="panel-title"><b>Please login to backend with your Email address and Password was setup.</b></h3>
                             </div>
                             <div class="panel-body">
-                                <a href="<?php echo $baseurl; ?>/index.php/admin?nocache=<?php echo time() ?>" class="btn btn-lg btn-success">Go to Backend login</a>
+                                <p class="well text-warning">If can't login to the backend. (About CSRF Protection) Please close and re-open the browser again. Or clear all browser cache and cookie. Or open with other browser.</p>
+                                <br><br>
+                                <a target="_blank" href="<?php echo $baseurl; ?>/index.php/admin?nocache=<?php echo time() ?>" class="btn btn-lg btn-success">Go to Backend login</a>
                             </div>
                         </div>
                     </div>
@@ -365,7 +367,14 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         </div><!-- /input-group -->
                                         <span class="text-info"><em>If you want install on sub-directory Example. <b>http://www.ex.com/subdir</b> or <b>http://localhost/subdir</b> on localhost. subdir is directory when you extract file from zip file</em></span><br>
                                         <label for="timezone">Time Zone*: </label>
-                                        <input id="timezone" name="timezone" type="text" class="form-control" placeholder="Asia/Bangkok" required>
+                                        <select id="timezone" name="timezone" class="form-control" required>
+                                            <option value="">-- Select Timezone --</option>
+                                            <?php foreach($cszmodel->tz_list() as $t) { ?>
+                                              <option value="<?php print $t['zone'] ?>">
+                                                <?php echo $t['zone'] ?>
+                                              </option>
+                                            <?php } ?>
+                                        </select>
                                         <span class="text-info"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span>
                                     </div>
                                 </div>

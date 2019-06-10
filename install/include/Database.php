@@ -148,5 +148,23 @@ class Cszmodel{
         $options = array('cost' => 12);
         return password_hash($password, PASSWORD_BCRYPT, $options);
     }
+    
+    /**
+    * Timezones list with GMT offset
+    *
+    * @return array
+    * @link http://stackoverflow.com/a/9328760
+    */
+    public function tz_list() {
+        $zones_array = array();
+        if (function_exists('timezone_identifiers_list')){            
+            foreach(@timezone_identifiers_list() as $key => $zone) {
+                $zones_array[$key]['zone'] = $zone;
+            }
+        }else{
+            $zones_array[0]['zone'] = '';
+        }
+        return $zones_array;
+   } 
 
 }

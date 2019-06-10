@@ -40,8 +40,8 @@ class Gallery_model extends CI_Model {
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('active', $active);
         $this->db->set('arrange', ($arrange)+1);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('gallery_db');
     }
     
@@ -55,9 +55,18 @@ class Gallery_model extends CI_Model {
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('active', $active);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("gallery_db_id", $id);
         $this->db->update('gallery_db');
+    }
+    
+    public function updateConfig() {
+        // Create the new lang
+        $this->db->set('gallery_sort', $this->input->post('gallery_sort', TRUE));
+        $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+        $this->db->where("gallery_config_id", '1');
+        $this->db->update('gallery_config');
     }
     
     public function delete($id) {
@@ -82,8 +91,8 @@ class Gallery_model extends CI_Model {
         if($fileupload){ $this->db->set('file_upload', $fileupload, TRUE); }
         $this->db->set('gallery_type', $gallery_type, TRUE);
         if($youtube_url){ $this->db->set('youtube_url', $youtube_url, TRUE); }
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('gallery_picture', $data);
     }
     
@@ -111,6 +120,75 @@ class Gallery_model extends CI_Model {
         }else{
             return FALSE;
         }
+    }
+    
+    /**
+     * getConfig
+     *
+     * Function for get settings from settings table
+     *
+     * @return	Object or FALSE
+     */
+    public function getConfig() {
+        if (!$this->cache->get('gallery_config')) {
+            $cache_time = 1;
+            $this->db->limit(1, 0);
+            $query = $this->db->get('gallery_config');
+            if (!empty($query) && $query->num_rows() > 0) {
+                $row = $query->row();
+                $cache_time = $this->Csz_model->load_config()->pagecache_time;
+            } else {
+                $row = FALSE;
+            }
+            if($cache_time == 0) $cache_time = 1;
+            $this->cache->save('gallery_config', $row, ($cache_time * 60));
+            unset($query, $row);
+        }
+        return $this->cache->get('gallery_config');
+    }
+    
+    public function getIndexData($table, $result_per_page, $pagination, $search_arr) {
+        if($this->getConfig() !== FALSE){
+            switch ($this->getConfig()->gallery_sort) {
+                case 'manually':
+                    $return = $this->Csz_admin_model->getIndexData($table, $result_per_page, $pagination, 'arrange', 'asc', $search_arr);
+                    break;
+                case 'newest':
+                    $return = $this->Csz_admin_model->getIndexData($table, $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr);
+                    break;
+                case 'oldest':
+                    $return = $this->Csz_admin_model->getIndexData($table, $result_per_page, $pagination, 'timestamp_create', 'asc', $search_arr);
+                    break;
+                default:
+                    $return = $this->Csz_admin_model->getIndexData($table, $result_per_page, $pagination, 'arrange', 'asc', $search_arr);
+                    break;
+            }
+        }else{
+            $return = $this->Csz_admin_model->getIndexData($table, $result_per_page, $pagination, 'arrange', 'asc', $search_arr);
+        }
+        return $return;
+    }
+    
+    public function getValueArray($table, $search_arr, $sel_feild = '*') {
+        if($this->getConfig() !== FALSE){
+            switch ($this->getConfig()->gallery_sort) {
+                case 'manually':
+                    $return = $this->Csz_model->getValueArray($sel_feild, $table, $search_arr, '', 0, 'arrange', 'asc');
+                    break;
+                case 'newest':
+                    $return = $this->Csz_model->getValueArray($sel_feild, $table, $search_arr, '', 0, 'timestamp_create', 'desc');
+                    break;
+                case 'oldest':
+                    $return = $this->Csz_model->getValueArray($sel_feild, $table, $search_arr, '', 0, 'timestamp_create', 'asc');
+                    break;
+                default:
+                    $return = $this->Csz_model->getValueArray($sel_feild, $table, $search_arr, '', 0, 'arrange', 'asc');
+                    break;
+            }
+        }else{
+            $return = $this->Csz_model->getValueArray($sel_feild, $table, $search_arr, '', 0, 'arrange', 'asc');
+        }
+        return $return;
     }
     
 }

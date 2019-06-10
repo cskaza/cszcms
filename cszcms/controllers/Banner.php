@@ -53,7 +53,7 @@ class Banner extends CI_Controller {
         $id = $this->uri->segment(2);
         $row = $this->Csz_model->load_config();
         if ($id && is_numeric($id)) {
-            $this->db->where('NOW() BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)', '', FALSE); /* For date range between start to end */
+            $this->db->where("'".$this->Csz_model->timeNow()."' BETWEEN start_date AND DATE_ADD(end_date, INTERVAL 1 DAY)", '', FALSE); /* For date range between start to end */
             $getLink = $this->Csz_model->getValue('*', 'banner_mgt', "active = '1' AND banner_mgt_id = '".$id."'", '', 1);
             if(!empty($getLink) && $getLink !== FALSE){
                 if($getLink->link == '' || $getLink->link == '#'){

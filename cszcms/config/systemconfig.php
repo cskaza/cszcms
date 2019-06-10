@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.2.1'; /* For CMS Version */
+$config['csz_version'] = '1.2.2'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 
@@ -45,7 +45,7 @@ $config['csz_chkverxmlurl_backup'] = 'https://cszcms.sourceforge.io/xml/lastest_
  * The upgrade file is "upgrade-to-1.1.4.zip" (Can't change the file upgrade name to other format. This format only)
  * Please set the server with path only https://www.cszcms.com/downloads/upgrade/
  */
-$config['csz_upgrade_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms/upgrade/';
+$config['csz_upgrade_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms/upgrade/';
 $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
 
 /* 
@@ -60,15 +60,15 @@ $config['csz_backend_feed_backup_url'] = 'https://cszcms.sourceforge.io/xml/cszc
  * Defualt url http://localhost/plugintest/plugin_list.xml
  * Backup url http://localhost/plugintest/plugin_list.xml
  */
-$config['csz_pluginxmlurl_main'] = 'https://www.cszcms.com/downloads/plugins/plugin_list.xml';
-$config['csz_pluginxmlurl_backup'] = 'https://cszcms-plugin.sourceforge.io/plugin_list.xml';
+$config['csz_pluginxmlurl_main'] = 'https://cszcms-plugin.sourceforge.io/plugin_list.xml';
+$config['csz_pluginxmlurl_backup'] = 'https://www.cszcms.com/downloads/plugins/plugin_list.xml';
 
 /* 
  * For CSZ CMS plugin install server file path Ex. http://localhost/plugintest/install/shop_install_1.0.6.zip
  * The upgrade file is "shop_install_1.0.6.zip" (Can't change the file install name to other format. This format only)
  * Please set the server with path only http://localhost/plugintest/install/
  */
-$config['csz_plugin_install_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms-plugin/install/';
+$config['csz_plugin_install_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/install/';
 $config['csz_plugin_install_server_2'] = 'https://www.cszcms.com/downloads/plugins/install/';
 
 /* 
@@ -76,7 +76,7 @@ $config['csz_plugin_install_server_2'] = 'https://www.cszcms.com/downloads/plugi
  * The upgrade file is "shop_upgrade_1.0.6.zip" (Can't change the file upgrade name to other format. This format only)
  * Please set the server with path only http://localhost/plugintest/upgrade/
  */
-$config['csz_plugin_upgrade_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms-plugin/upgrade/';
+$config['csz_plugin_upgrade_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/upgrade/';
 $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugins/upgrade/';
 
 /* 
@@ -84,5 +84,5 @@ $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugi
  * The upgrade file is "ci-3.1.9.zip" (Can't change the file upgrade name to other format. This format only)
  * Please set the server with path only https://www.cszcms.com/downloads/ci_update/
  */
-$config['ci_update_server_1'] = 'https://jaist.dl.sourceforge.net/project/cszcms-plugin/ci_update/';
+$config['ci_update_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/ci_update/';
 $config['ci_update_server_2'] = 'https://www.cszcms.com/downloads/ci_update/';

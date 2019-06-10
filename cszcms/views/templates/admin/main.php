@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
 header("Pragma: no-cache"); /* HTTP 1.0. */
-header("Expires: 0"); /* Proxies. */
+header("Expires: Sun, 01 Jan 2014 00:00:00 GMT"); /* Proxies. */
 $row = $this->Csz_admin_model->load_config();
 /**
  * Main file for Template.
@@ -14,7 +14,8 @@ $row = $this->Csz_admin_model->load_config();
     <head>
         <meta http-equiv="refresh" content="7205;url=<?php echo $this->Csz_model->base_link().'/admin/logout'; ?>" />
         <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+        <meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT"/>
+	<meta http-equiv="pragma" content="no-cache" />
         <?php echo $meta_tags ?>
         <?php echo link_tag(base_url('', '', TRUE).'templates/admin/favicon.ico', 'shortcut icon', 'image/ico','','', FALSE); ?>
         <!-- Bootstrap Core CSS -->
@@ -59,6 +60,15 @@ $row = $this->Csz_admin_model->load_config();
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
                                 <!-- Messages: style can be found in dropdown.less-->
+                                <li class="dropdown messages-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="<?php echo $this->lang->line('dash_cur_time'); ?> <?php echo date('Y-m-d H:i:s'); ?>">
+                                        <i class="glyphicon glyphicon-time"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="header"><b><?php echo $this->lang->line('dash_cur_time'); ?></b></li>
+                                        <li class="text-center"><?php echo date('Y-m-d H:i:s'); ?></li>
+                                    </ul>
+                                </li>
                                 <?php if($this->Csz_auth_model->is_group_allowed('pm', 'backend') !== FALSE){
                                     $unread = $this->Csz_auth_model->count_unread_pms(); ?>
                                     <li class="dropdown messages-menu">

@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $plugin_config['plugin_name']  = 'Gallery';
 $plugin_config['plugin_urlrewrite']  = 'gallery'; /* Please don't have any blank space */
 $plugin_config['plugin_author']  = 'CSZCMS'; /* For your name */
-$plugin_config['plugin_version']   = '1.0.5';
+$plugin_config['plugin_version']   = '1.0.6';
 $plugin_config['plugin_description']   = 'gallery plugin'; /* For your plugin description */
 
 /* for menu inside member zone. If not have please blank. 
@@ -30,6 +30,7 @@ $plugin_config['plugin_menu_permission_name'] = '';
 $plugin_config['plugin_db_table']   = array(
     'gallery_db',
     'gallery_picture',
+    'gallery_config',
 ); /* Please input all your pludin db table name */
 
 /* Sitemap Generater Config (for content view page only) 

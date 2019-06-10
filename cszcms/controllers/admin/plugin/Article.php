@@ -136,7 +136,7 @@ class Article extends CI_Controller {
             while ($count < count($article_db_id)) {
                 if ($article_db_id[$count]) {
                     $this->db->set('arrange', $arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where("article_db_id", $article_db_id[$count]);
                     $this->db->update('article_db');
                     $arrange++;
@@ -189,8 +189,8 @@ class Article extends CI_Controller {
             //Validation passed
             //Add the user
             $this->Article_model->insert();
-            $this->output->delete_cache('/plugin/article/rss');
             $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
+            $this->Csz_model->clear_file_cache('article_RSS');
             $this->db->cache_delete_all();
             redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
         }
@@ -222,6 +222,11 @@ class Article extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
+            $article = $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1);
+            if($article === FALSE){
+                redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+                exit();
+            }
             $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
@@ -250,7 +255,7 @@ class Article extends CI_Controller {
                     //Validation passed
                     //Add the user
                     $this->Article_model->artupdate($this->uri->segment(5));
-                    $this->output->delete_cache('/plugin/article/rss');
+                    $this->Csz_model->clear_file_cache('article_RSS');
                     $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
                     $this->db->cache_delete_all();
                     redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
@@ -266,6 +271,11 @@ class Article extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         if ($this->uri->segment(5)) {
+            $article = $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1);
+            if($article === FALSE){
+                redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+                exit();
+            }
             $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", '', 0, 'arrange', 'asc'));
             $this->template->setSub('category', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
@@ -304,7 +314,7 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             //Delete the data
             $this->Article_model->delete($this->uri->segment(5));
-            $this->output->delete_cache('/plugin/article/rss');
+            $this->Csz_model->clear_file_cache('article_RSS');
             $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');

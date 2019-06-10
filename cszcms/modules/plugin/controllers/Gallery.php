@@ -83,7 +83,7 @@ class Gallery extends CI_Controller {
         ($this->uri->segment(3)) ? $pagination = $this->uri->segment(3) : $pagination = 0;
 
         //Get users from database
-        $this->template->setSub('gallery', $this->Csz_admin_model->getIndexData('gallery_db', $result_per_page, $pagination, 'arrange', 'asc', $search_arr));
+        $this->template->setSub('gallery', $this->Gallery_model->getIndexData('gallery_db', $result_per_page, $pagination, $search_arr));
         $this->template->setSub('total_row', $total_row);
 
         //Load the view
@@ -200,8 +200,7 @@ class Gallery extends CI_Controller {
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
         if($row->pagecache_time != 0){ 
-            $this->db->cache_on(); 
-            $this->output->cache($row->pagecache_time);
+            $this->db->cache_on();
         }
         // create new instance
         $feed = new Feed();
@@ -212,7 +211,7 @@ class Gallery extends CI_Controller {
         $search_arr = " active = '1'";
         $limit = 20;
         // get article list
-        $gallery = $this->Csz_admin_model->getIndexData('gallery_db', $limit, 0, 'arrange', 'asc', $search_arr);
+        $gallery = $this->Gallery_model->getIndexData('gallery_db', $limit, 0, $search_arr);
         // add posts to the feed
         if($gallery !== FALSE){
             foreach ($gallery as $a)
@@ -223,7 +222,7 @@ class Gallery extends CI_Controller {
             }
         }
         // show your feed (options: 'atom' (recommended) or 'rss')
-        $feed->render('rss');
+        $feed->render('rss', $row->pagecache_time, 'gallery_RSS');
     }
     
     public function getWidget() {
@@ -246,10 +245,10 @@ class Gallery extends CI_Controller {
             }else{
                 $search_arr = " active = '1'";
             }
-            $article = $this->Csz_admin_model->getIndexData('gallery_db', 100, 0, 'arrange', 'asc', $search_arr);
-            if($article !== FALSE){
+            $gallery = $this->Gallery_model->getIndexData('gallery_db', 100, 0, $search_arr);
+            if($gallery !== FALSE){
                 $xml->addNode('null', '0'); // For check item is not empty
-                foreach ($article as $row) {
+                foreach ($gallery as $row) {
                     // start sub branch
                     $xml->startBranch('item', array('id' => $row['gallery_db_id'])); 
                     $xml->addNode('sub_url', $this->Csz_model->base_link().'/plugin/gallery/view/'.$row['gallery_db_id'].'/'.$row['url_rewrite']);

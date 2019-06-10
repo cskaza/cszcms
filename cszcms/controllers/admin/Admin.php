@@ -55,7 +55,7 @@ class Admin extends CI_Controller {
         $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
         $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
         $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
-        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));        
+        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
         $this->load->library('RSSParser');
         ($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE) ? $url = $this->config->item('csz_backend_feed_url') /* Main Link */ : $url = $this->config->item('csz_backend_feed_backup_url'); /* Backup Link */
         $this->rssparser->set_feed_url($url);  /* get feed from CSZ CMS Article */
@@ -215,10 +215,6 @@ class Admin extends CI_Controller {
         </script>');
         $this->template->setSub('settings', $settings);
         $this->template->loadSub('admin/analytics');
-        if ($settings->pagecache_time != 0) {
-            $this->db->cache_on();
-            $this->output->cache($settings->pagecache_time);
-        }
     }
     
     public function deleteEmailLogs() {
@@ -238,11 +234,10 @@ class Admin extends CI_Controller {
     public function login() {
         admin_helper::login_already($this->session->userdata('admin_email'));
         //Load the form helper
-        $this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
+        //$this->Csz_model->clear_uri_cache($this->config->item('base_url').urldecode('admin'));
         $this->template->setSub('error', '');
         $this->load->helper('form');
         $this->template->loadSub('admin/login');
-        $this->db->cache_on();
     }
 
     public function loginCheck() {
@@ -259,9 +254,9 @@ class Admin extends CI_Controller {
             $this->login();
         }else{
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
-            $password = $this->input->post('password', TRUE);
-            $result = $this->Csz_model->login($email, $password, TRUE); /* TRUE for backend login */
+            $result = $this->Csz_model->login($email, $this->input->post('password', TRUE), TRUE); /* TRUE for backend login */
             if ($result == 'SUCCESS') {
+                $this->Csz_admin_model->showLoadingImg();
                 $this->Csz_model->saveLogs($email, 'Backend Login Successful!', $result);
                 if($this->session->userdata('cszblogin_cururl')){
                     redirect($this->session->userdata('cszblogin_cururl'), 'refresh');
@@ -424,7 +419,7 @@ class Admin extends CI_Controller {
             foreach ($remark as $key => $value) {
                 if ($value && $key) {
                     $this->db->set('remark', $value, TRUE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('upload_file_id', $key);
                     $this->db->update('upload_file');
                 }
@@ -518,7 +513,7 @@ class Admin extends CI_Controller {
                 $chk_draft = $this->Csz_model->countData('save_formdraft', "form_url = '".$referrer."'");
                 if($chk_draft > 0){
                     $this->db->set('submit_array', $input_data);
-                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('form_url', $referrer);
                     $this->db->where('user_admin_id', $this->session->userdata('user_admin_id'));
                     $this->db->update('save_formdraft');
@@ -526,7 +521,7 @@ class Admin extends CI_Controller {
                     $this->db->set('form_url', $referrer);
                     $this->db->set('submit_array', $input_data);
                     $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
-                    $this->db->set('timestamp_create', 'NOW()', FALSE);
+                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
                     $this->db->insert('save_formdraft');
                 }       
                 $this->db->cache_delete_all();

@@ -294,7 +294,7 @@ class Csz_auth_model extends CI_Model {
             'active' => '1'
         );
         $count = $this->Csz_model->countData('user_admin', $data);
-        if ($count !== FALSE && $count !== 0) {
+        if ($count !== FALSE && $count > 0) {
             return TRUE;
         } else {
             return FALSE;
@@ -320,7 +320,7 @@ class Csz_auth_model extends CI_Model {
                 'user_groups_id' => $group_id,
             );
             $count = $this->Csz_model->countData('user_perm_to_group', $data);
-            if ($count !== FALSE && $count !== 0 || $group_id == 1) {
+            if ($count !== FALSE && $count > 0 || $group_id == 1) {
                 return TRUE;
             }else{
                 return FALSE;

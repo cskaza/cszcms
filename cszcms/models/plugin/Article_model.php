@@ -59,8 +59,8 @@ class Article_model extends CI_Model {
         $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
         $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('article_db', $data);
     }
 
@@ -79,8 +79,8 @@ class Article_model extends CI_Model {
         $this->db->set('active', $active);
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
         $this->db->set('arrange', ($arrange)+1);
-        $this->db->set('timestamp_create', 'NOW()', FALSE);
-        $this->db->set('timestamp_update', 'NOW()', FALSE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('article_db', $data);
     }
 
@@ -118,7 +118,7 @@ class Article_model extends CI_Model {
             $this->db->set('fb_comment_active', $fb_comment_active);
             $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
             $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where("article_db_id", $id);
             $this->db->update('article_db', $data);
             $this->Csz_model->clear_uri_cache($this->config->item('base_url') . urldecode('plugin/article/view/' . $id . '/' . $this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1)->url_rewrite)); /* Clear Page Cache when update */
@@ -137,7 +137,7 @@ class Article_model extends CI_Model {
             $this->db->set('url_rewrite', $url_rewrite);
             $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
             $this->db->set('active', $active);
-            $this->db->set('timestamp_update', 'NOW()', FALSE);
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where("article_db_id", $id);
             $this->db->update('article_db', $data);
         }
@@ -149,12 +149,12 @@ class Article_model extends CI_Model {
             if ($row->is_category) {
                 if (!$row->main_cat_id) {
                     $this->db->set('main_cat_id', 0);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('main_cat_id', $id);
                     $this->db->update('article_db');
                 }
                 $this->db->set('cat_id', 0);
-                $this->db->set('timestamp_update', 'NOW()', FALSE);
+                $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where('cat_id', $id);
                 $this->db->update('article_db');
             }else{

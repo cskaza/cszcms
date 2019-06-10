@@ -78,8 +78,8 @@ class Export extends CI_Controller {
             $newfname = FCPATH . $file_name;
             if (file_exists($newfname)) {
                 $this->load->library('csvimport');
-                $csv_array = $this->csvimport->get_array($newfname, FALSE);
-                if ($csv_array) {
+                $csv_array = $this->csvimport->get_array($newfname);
+                if (!empty($csv_array)) {
                     $data = array();
                     $data_count = 1;
                     foreach ($csv_array as $row) {
@@ -127,8 +127,8 @@ class Export extends CI_Controller {
             $csvfile = $this->input->post('csvfile', TRUE);
             $this->load->library('csvimport');
             $newfname = FCPATH . $csvfile.'.csv';
-            $csv_array = $this->csvimport->get_array($newfname, FALSE);
-            if ($csv_array) {
+            $csv_array = $this->csvimport->get_array($newfname);
+            if (!empty($csv_array)) {
                 $data = array();
                 foreach ($csv_array as $row) {
                     $data_row = array();
@@ -144,11 +144,11 @@ class Export extends CI_Controller {
                     }
                     $data[] = $data_row;
                 }
+                $this->db->insert_batch($this->uri->segment(4), $data);
+                $this->db->cache_delete_all();
                 if (is_writable($newfname)) {
                     @unlink($newfname);
                 }
-                $this->db->insert_batch($this->uri->segment(4), $data);
-                $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
                 redirect($this->csz_referrer->getIndex('export'), 'refresh');
             } else {

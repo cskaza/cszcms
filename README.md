@@ -1,9 +1,3 @@
-Dependency Status
----------------------
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/566/badge)](https://bestpractices.coreinfrastructure.org/projects/566)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/28f12c06c6ff48db94f9c13c148429ad)](https://www.codacy.com/app/Astian-Foundation/cszcms?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=cszcms/cszcms/&amp;utm_campaign=Badge_Grade)
-
-
 #### CSZ CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
@@ -33,5 +27,4 @@ If you find the hosting for run your website with CSZ CMS. Please see at https:/
 
 ### Support
 
-* [Community English](http://forums.astian.org/forumdisplay.php?fid=9)
-* [Comunidad Español](http://forums.astian.org/forumdisplay.php?fid=10)
+* [Community English](https://www.cszcms.com)

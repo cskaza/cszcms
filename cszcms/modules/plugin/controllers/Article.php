@@ -418,33 +418,31 @@ class Article extends CI_Controller {
         // first load the library
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
-        if($row->pagecache_time != 0){ 
-            $this->db->cache_on(); 
-            $this->output->cache($row->pagecache_time);
+        if ($row->pagecache_time != 0) {
+            $this->db->cache_on();
         }
         // create new instance
         $feed = new Feed();
         // set your feed's title, description, link, pubdate and language
         $feed->title = $row->site_name;
         $feed->description = $this->Csz_model->getLabelLang('article_index_header') . ' | ' . $row->site_name;
-        $feed->link = $this->Csz_model->base_link().'/plugin/article';
+        $feed->link = $this->Csz_model->base_link() . '/plugin/article';
         $search_arr = " is_category = '0' AND active = '1'";
         $limit = 20;
         // get article list
         $article = $this->Csz_admin_model->getIndexData('article_db', $limit, 0, 'timestamp_create', 'desc', $search_arr);
         // add posts to the feed
-        if($article !== FALSE){
-            foreach ($article as $a)
-            {
-		$content = $this->Csz_model->get_contents_url($this->Csz_model->base_link().'/plugin/article/markupview/'.$a['article_db_id']);
+        if ($article !== FALSE) {
+            foreach ($article as $a) {
+                $content = $this->Csz_model->get_contents_url($this->Csz_model->base_link() . '/plugin/article/markupview/' . $a['article_db_id']);
                 // set item's title, author, url, pubdate and description
-                $url = $this->Csz_model->base_link().'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'];
+                $url = $this->Csz_model->base_link() . '/plugin/article/view/' . $a['article_db_id'] . '/' . $a['url_rewrite'];
                 $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
                 $feed->add($a['title'], $row->site_name, $url, $a['timestamp_create'], $a['short_desc'], $content);
             }
         }
         // show your feed (options: 'atom' (recommended) or 'rss')
-        $feed->render('rss');
+        $feed->render('rss', $row->pagecache_time, 'article_RSS');
     }
     
     public function getWidget() {

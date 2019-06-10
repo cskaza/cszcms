@@ -122,7 +122,7 @@
                         <?php
                         foreach ($whitelist as $u) {
                             echo '<tr>';
-                            echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].'</span></td>';
+                            echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].' ('.$u['timestamp_create'].')</span></td>';
                             echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/bfsettings/whiteipdel/'.$u['whitelist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
                             echo '</tr>';
                         }
@@ -177,7 +177,7 @@
                         <?php
                         foreach ($blacklist as $u) {
                             echo '<tr>';
-                            echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].'</span></td>';
+                            echo '<td style="vertical-align:middle;">'.$u['ip_address'].'<br><span style="font-style: italic; font-size:12px;">'.$u['note'].' ('.$u['timestamp_create'].')</span></td>';
                             echo '<td class="text-center" style="vertical-align:middle;"><a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/bfsettings/blackipdel/'.$u['blacklist_ip_id'].'"><i class="glyphicon glyphicon-remove"></i></a></td>';
                             echo '</tr>';
                         }

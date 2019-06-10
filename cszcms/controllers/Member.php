@@ -125,7 +125,7 @@ class Member extends CI_Controller {
             }
         } else if ($result == 'NOT_ACTIVE') {
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('email', $email);
             $this->db->update('user_admin');
             $this->load->helper('string');
@@ -229,7 +229,7 @@ class Member extends CI_Controller {
                 'active' => 1,
                 'md5_hash' => md5(time() + mt_rand(1, 99999999)),
             );
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('user_type', 'member');
             $this->db->where('md5_hash', $md5_hash);
             $this->db->where('user_admin_id', $user_rs->user_admin_id);
@@ -305,7 +305,7 @@ class Member extends CI_Controller {
         } else {
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-            $this->db->set('md5_lasttime', 'NOW()', FALSE);
+            $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('email', $email);
             $this->db->update('user_admin');
             $this->load->helper('string');
@@ -336,7 +336,7 @@ class Member extends CI_Controller {
                 return true;
             }else{
                 $this->db->set('md5_hash', md5(time() + mt_rand(1, 99999999)), TRUE);
-                $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
                 $this->db->where('email', $email);
                 $this->db->update('user_admin');
                 $this->load->helper('string');
@@ -385,7 +385,7 @@ class Member extends CI_Controller {
                         'md5_hash' => md5(time() + mt_rand(1, 99999999)),
                         'pass_change' => 1,
                     );
-                    $this->db->set('md5_lasttime', 'NOW()', FALSE);
+                    $this->db->set('md5_lasttime', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('md5_hash', $md5_hash);
                     $this->db->update('user_admin', $data);
                     

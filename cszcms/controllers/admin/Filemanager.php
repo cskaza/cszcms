@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
  *
  * An open source content management system
  *
- * Copyright (c) 2016, Astian Foundation.
+ * Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  *
  * Astian Develop Public License (ADPL)
  * 
@@ -17,7 +17,7 @@ if (!defined('BASEPATH'))
  * file, You can obtain one at http://astian.org/about-ADPL
  * 
  * @author	CSKAZA
- * @copyright   Copyright (c) 2016, Astian Foundation.
+ * @copyright   Copyright (c) 2019, Chinawut Phongphasook (CSKAZA).
  * @license	http://astian.org/about-ADPL	ADPL License
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
@@ -34,7 +34,7 @@ class Filemanager extends CI_Controller {
 
     public function _init() {
         $this->template->set('core_css', $this->Csz_admin_model->coreCss());
-        $this->template->set('core_js', $this->Csz_admin_model->coreJs('//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js'));
+        $this->template->set('core_js', $this->Csz_admin_model->coreJs());
         $this->template->set('title', 'Backend System | ' . $this->Csz_admin_model->load_config()->site_name);
         $this->template->set('meta_tags', $this->Csz_admin_model->coreMetatags('Backend System for CSZ Content Management System'));
         $this->template->set('cur_page', $this->Csz_admin_model->getCurPages());
@@ -53,7 +53,8 @@ class Filemanager extends CI_Controller {
         }else{
             $connect_url = $this->Csz_model->base_link() . "/admin/filemanager/connectorNodel/";
         }
-        $this->template->setJS("<script>
+        $this->template->setJS("<script data-main=\"".base_url('', '', TRUE)."assets/js/plugins/elfinder/elfinder_main.js\" src=\"//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js\"></script>
+            <script>
             define('elFinderConfig', {
                 defaultOpts : {
                     rememberLastDir : false,
@@ -100,115 +101,7 @@ class Filemanager extends CI_Controller {
                     'elfinder': {}
                 }
             });
-            define('returnVoid', void 0);
-            (function(){
-                var /* elFinder version */
-                    elver = '".$this->elfinder_lib->getVersion()."',
-                    /* jQuery and jQueryUI version*/
-                    jqver = '3.2.1',
-                    uiver = '1.12.1',
-                    /* Detect language (optional)*/
-                    lang = (function() {
-                        var locq = window.location.search,
-                            fullLang, locm, lang;
-                        if (locq && (locm = locq.match(/lang=([a-zA-Z_-]+)/))) {
-                            /* detection by url query (?lang=xx)*/
-                            fullLang = locm[1];
-                        } else {
-                            /* detection by browser language*/
-                            fullLang = (navigator.browserLanguage || navigator.language || navigator.userLanguage);
-                        }
-                        lang = fullLang.substr(0,2);
-                        if (lang === 'ja') lang = 'jp';
-                        else if (lang === 'pt') lang = 'pt_BR';
-                        else if (lang === 'ug') lang = 'ug_CN';
-                        else if (lang === 'zh') lang = (fullLang.substr(0,5).toLowerCase() === 'zh-tw')? 'zh_TW' : 'zh_CN';
-                        return lang;
-                    })(),
-                    /* Start elFinder (REQUIRED)*/
-                    start = function(elFinder, editors, config) {
-                        /* load jQueryUI CSS*/
-                        elFinder.prototype.loadCss('//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/themes/smoothness/jquery-ui.css');
-                        $(function() {
-                            var optEditors = {
-                                    commandsOptions: {
-                                        edit: {
-                                            editors: Array.isArray(editors)? editors : []
-                                        }
-                                    }
-                                },
-                                opts = {};
-                            /* Interpretation of 'elFinderConfig'*/
-                            if (config && config.managers) {
-                                $.each(config.managers, function(id, mOpts) {
-                                    opts = Object.assign(opts, config.defaultOpts || {});
-                                    /* editors marges to opts.commandOptions.edit*/
-                                    try {
-                                        mOpts.commandsOptions.edit.editors = mOpts.commandsOptions.edit.editors.concat(editors || []);
-                                    } catch(e) {
-                                        Object.assign(mOpts, optEditors);
-                                    }
-                                    /* Make elFinder*/
-                                    $('#' + id).elfinder(
-                                        /* 1st Arg - options*/
-                                        $.extend(true, { lang: lang }, opts, mOpts || {}),
-                                        /* 2nd Arg - before boot up function*/
-                                        function(fm, extraObj) {
-                                            /* `init` event callback function*/
-                                            fm.bind('init', function() {
-                                                /* Optional for Japanese decoder 'extras/encoding-japanese.min'*/
-                                                delete fm.options.rawStringDecoder;
-                                                if (fm.lang === 'jp') {
-                                                    require(
-                                                        [ 'extras/encoding-japanese.min' ],
-                                                        function(Encoding) {
-                                                            if (Encoding.convert) {
-                                                                fm.options.rawStringDecoder = function(s) {
-                                                                    return Encoding.convert(s,{to:'UNICODE',type:'string'});
-                                                                };
-                                                            }
-                                                        }
-                                                    );
-                                                }
-                                            });
-                                        }
-                                    );
-                                });
-                            } else {
-                                alert('\"elFinderConfig\" object is wrong.');
-                            }
-                        });
-                    },                   
-                    /* JavaScript loader (REQUIRED)*/
-                    load = function() {
-                        require(
-                            [
-                                'elfinder'
-                                , 'extras/editors.default'       /* load text, image editors*/
-                                , 'elFinderConfig'
-                            /*  , 'extras/quicklook.googledocs'  // optional preview for GoogleApps contents on the GoogleDrive volume */
-                            ],
-                            start,
-                            function(error) {
-                                alert(error.message);
-                            }
-                        );
-                    },                    
-                    /* is IE8? for determine the jQuery version to use (optional)*/
-                    ie8 = (typeof window.addEventListener === 'undefined' && typeof document.getElementsByClassName === 'undefined');
-                /* config of RequireJS (REQUIRED)*/
-                require.config({
-                    baseUrl : '//cdnjs.cloudflare.com/ajax/libs/elfinder/'+elver+'/js',
-                    paths : {
-                        'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(ie8? '1.12.4' : jqver)+'/jquery.min',
-                        'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',
-                        'elfinder' : 'elfinder.min'
-                    },
-                    waitSeconds : 5 /* optional*/
-                });
-                /* load JavaScripts (REQUIRED)*/
-                load();
-            })();</script>");
+            </script>");
         $this->template->loadSub('admin/elfinder_index');
     }
     

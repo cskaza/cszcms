@@ -63,9 +63,10 @@ class Headfoot_html extends CI_Model{
      * @param	string	$active_type    for active 'class' or 'id'. Default is 'id'.
      * @param	string	$active_tag     for active 'a' or 'li'. Default is 'a'.
      * @param	string	$more_id_class     for more $active_type in $active_tag.
+     * @param	string	$more_drop_class     for more class on dropdown menu.
      * @return  string
      */
-    public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a', $more_id_class = ''){
+    public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a', $more_id_class = '', $more_drop_class = ''){
         $config = $this->Csz_model->load_config();
         $menu_list = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
@@ -119,7 +120,7 @@ class Headfoot_html extends CI_Model{
                         $active = ' '.$active_type.'="'.$more_id_class.'"';
                     }
                     if($rs->drop_menu){
-                        $menu_list.= '<li class="dropdown">
+                        $menu_list.= '<li class="dropdown'.$more_drop_class.'">
                         <a aria-expanded="true" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#" title="'.$rs->menu_name.'">'.$rs->menu_name.' <span class="caret"></span></a>
                         <ul class="dropdown-menu">';
                         $drop_menu = $this->Csz_model->main_menu($rs->page_menu_id, $cur_page_lang_iso);
@@ -279,9 +280,12 @@ class Headfoot_html extends CI_Model{
      *
      * Function for get social
      *
+     * @param	bool	$ul    Have ul tags or not
+     * @param	string	$icon_tag    fa-icon is show on i tag or a tag
+	 * @param	bool	$textname    have text name after icon
      * @return  string
      */
-    public function getSocial(){
+    public function getSocial($ul = TRUE, $icon_tag = 'i', $textname = FALSE){
         $social_list = '';
         if($this->Csz_model->getSocial()){
             foreach($this->Csz_model->getSocial() as $rs){
@@ -292,12 +296,19 @@ class Headfoot_html extends CI_Model{
                     $socail_url = '#';
                     $target = '';
                 }
-                $social_list.= '<li><a href="'.$socail_url.'"'.$target.' rel="nofollow external" title="'.$rs->social_name.'"><i class="fa fa-'.$rs->social_name.'"></i></a></li>';
+                ($textname !== FALSE) ? $nameaftericon = ' '.ucfirst($rs->social_name) : $nameaftericon = '';
+                if($icon_tag == 'i'){
+                    $social_list.= '<li><a href="'.$socail_url.'"'.$target.' rel="nofollow external" title="'.$rs->social_name.'"><i class="fa fa-'.$rs->social_name.'"></i>'.$nameaftericon.'</a></li>';
+                }else if($icon_tag == 'a'){
+                    $social_list.= '<li><a href="'.$socail_url.'"'.$target.' rel="nofollow external" title="'.$rs->social_name.'" class="fa fa-'.$rs->social_name.'">'.$nameaftericon.'</a></li>';
+                }
             }
         }
-        $html = '<ul class="list-inline social-buttons">
-                    '.$social_list.'
-                </ul>';
+        if($ul !== FALSE){
+            $html = '<ul class="list-inline social-buttons">'.$social_list.'</ul>';
+        }else{
+            $html = $social_list;
+        }
         unset($social_list,$socail_url,$target);
         return $html;
     }
@@ -315,7 +326,7 @@ class Headfoot_html extends CI_Model{
         $lang_list = '';
         $i = 0;
         if($type == 4){
-            $html = "<div class=\"list-inline\" id=\"lang-menu\"><div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage:'".$lang_gool."'},'google_translate_element');}</script></div>";
+            $html = "<style>.goog-te-banner-frame{display:none !important;}</style><div class=\"list-inline\" id=\"lang-menu\"><div id=\"google_translate_element\"></div><script>function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage:'".$lang_gool."'},'google_translate_element');}</script></div>";
         }else{
             $lang = $this->Csz_model->loadAllLang(1);
             if($lang !== FALSE){

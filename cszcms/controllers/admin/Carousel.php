@@ -230,7 +230,7 @@ class Carousel extends CI_Controller {
             while ($i < count($carousel_picture_id)) {
                 if ($carousel_picture_id[$i]) {
                     $this->db->set('arrange', $arrange, FALSE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where("carousel_picture_id", $carousel_picture_id[$i]);
                     $this->db->update('carousel_picture');
                     $arrange++;
@@ -242,7 +242,7 @@ class Carousel extends CI_Controller {
             foreach ($caption as $key => $value) {
                 if ($value && $key) {
                     $this->db->set('caption', $value, TRUE);
-                    $this->db->set('timestamp_update', 'NOW()', FALSE);
+                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
                     $this->db->where('carousel_picture_id', $key);
                     $this->db->update('carousel_picture');
                 }

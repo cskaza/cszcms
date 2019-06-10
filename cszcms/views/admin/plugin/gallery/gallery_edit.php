@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('btn_edit').' '.$this->lang->line('gallery_new_header'); ?> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('btn_edit').' '.$this->lang->line('gallery_new_header'); ?> <a role="button" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>')" href="<?php echo $this->Csz_model->base_link()?>/admin/plugin/gallery/asCopy/<?php echo $album->gallery_db_id?>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-duplicate"></i> <?php echo $this->lang->line('btn_ascopy') ?></a> <a class="btn btn-default btn-sm" href="<?php echo $this->csz_referrer->getIndex('gallery'); ?>"><span class="glyphicon glyphicon-arrow-left"></span> <?php echo $this->lang->line('btn_back'); ?></a></div>
         <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/gallery/editSave/'.$this->uri->segment(5)); ?>
         <div class="control-group">	
             <?php echo form_error('album_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
