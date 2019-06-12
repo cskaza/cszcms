@@ -406,7 +406,7 @@ $config['sess_regenerate_destroy'] = TRUE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$config['cookie_prefix']	= str_replace('.', '_', $domain).'_cszcookie';
+$config['cookie_prefix']	= 'cszcookie_'.md5(BASE_URL);
 $config['cookie_domain']	= $domain;
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= isset($_SERVER['HTTPS']) ? TRUE : FALSE;

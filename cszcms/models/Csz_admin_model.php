@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CSZ CMS
  *
@@ -19,7 +18,7 @@
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 class Csz_admin_model extends CI_Model{
     
@@ -2882,7 +2881,12 @@ class Csz_admin_model extends CI_Model{
     }
     
     public function showLoadingImg() {
-        echo '<center><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)"><img src="'.base_url('', '', TRUE).'assets/images/loading.gif" class="img-responsive"/><br>Loading...</div></center>';
+        echo '<center><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px"><img src="'.base_url('', '', TRUE).'assets/images/loading.gif" class="img-responsive" width="32"/><br>Loading...</div></center>';
+    }
+    
+    public function jsredirect($url, $delay = 500){
+        echo '<script>window.setTimeout(function(){window.location = "'.$url.'"; },'.$delay.');</script>';
+        exit(0);
     }
     
 }

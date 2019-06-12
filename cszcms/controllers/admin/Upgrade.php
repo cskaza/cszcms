@@ -64,14 +64,13 @@ class Upgrade extends CI_Controller {
     }
 
     public function download() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        $this->Csz_admin_model->showLoadingImg();
         if(strpos($this->cur_version, 'Beta') !== FALSE || strpos($this->cur_version, 'beta') !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
-            exit();
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
         if (function_exists('ini_set')) {
             @ini_set('max_execution_time', 600);
@@ -109,31 +108,30 @@ class Upgrade extends CI_Controller {
                             @unlink($newfname);
                         }
                         $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                     }
                 }
                 $this->Csz_admin_model->unsetMaintenance();
                 $this->Csz_model->clear_all_cache();
                 $this->db->cache_delete_all();
                 if($this->Csz_admin_model->chkVerUpdate($this->Csz_model->getVersion()) !== FALSE){
-                    redirect('/admin/upgrade/download', 'refresh');
+                    $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade/download');
                 }else{
                     // When Success 
                     $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
-                    redirect($this->csz_referrer->getIndex(), 'refresh');
+                    $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                 }
             }else{
                 $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }
         } else {
             $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('upgrade_lastver_alert').'</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
     }
     
     public function CIupdate() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -141,6 +139,7 @@ class Upgrade extends CI_Controller {
             @ini_set('max_execution_time', 600);
             @ini_set('memory_limit','512M');
         }
+        $this->Csz_admin_model->showLoadingImg();
         $lastversion = $this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion(CI_VERSION, '', TRUE);
@@ -169,30 +168,29 @@ class Upgrade extends CI_Controller {
                             @unlink($newfname);
                         }
                         $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                     }
                 }
                 $this->Csz_admin_model->unsetMaintenance();
                 $this->Csz_model->clear_all_cache();
                 $this->db->cache_delete_all();
                 if($this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE) !== FALSE){
-                    redirect('/admin/upgrade/CIupdate', 'refresh');
+                    $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade/CIupdate');
                 }else{
                     // When Success 
                     $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-                    redirect($this->csz_referrer->getIndex(), 'refresh');
+                    $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                 }
             }else{
                 $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }
         } else {
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
     }
     
     public function install() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -200,6 +198,7 @@ class Upgrade extends CI_Controller {
             @ini_set('max_execution_time', 600);
             @ini_set('memory_limit','512M');
         }
+        $this->Csz_admin_model->showLoadingImg();
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
         if (isset($_FILES['file_upload']) && $_FILES['file_upload'] != null) {
@@ -242,28 +241,27 @@ class Upgrade extends CI_Controller {
             $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
         }
         // When Success 
-        redirect('admin/upgrade', 'refresh');
+        $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade');
     }
     
     public function dbOptimize() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        $this->Csz_admin_model->showLoadingImg();
         $this->load->dbutil();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('optimize_success_alert').'</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }else{
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('optimize_error_alert').'</div>');
-            redirect('admin/upgrade', 'refresh');
+            $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade');
         }
     }
     
     public function dbBackup() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -287,7 +285,6 @@ class Upgrade extends CI_Controller {
     }
     
     public function fileBackup() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -449,7 +446,6 @@ class Upgrade extends CI_Controller {
     }
     
     public function photoBackup() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
@@ -468,58 +464,57 @@ class Upgrade extends CI_Controller {
     }
     
     public function clearAllCache() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_cache();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         @$this->db->empty_table('save_formdraft');
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
-        redirect($this->csz_referrer->getIndex(), 'refresh');
+        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
     }
     
     public function clearAllDBCache() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
+        $this->Csz_admin_model->showLoadingImg();
         @$this->db->cache_delete_all();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         @$this->db->empty_table('save_formdraft');
         @$this->db->flush_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
-        redirect($this->csz_referrer->getIndex(), 'refresh');
+        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
     }
     
     public function clearAllSession() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
+        $this->Csz_admin_model->showLoadingImg();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         $this->Csz_model->clear_all_session();
-        redirect('admin/logout', 'refresh');
+        $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/logout');
     }
 
     public function clearAllErrLog() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
+        $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_error_log();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-        redirect('admin/upgrade', 'refresh');
+        $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade');
     }
     
     public function downloadErrLog() {
-        $this->Csz_admin_model->showLoadingImg();
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');

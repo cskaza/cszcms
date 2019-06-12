@@ -1,5 +1,5 @@
 #### RELEASE NOTES
-CSZ-CMS V.1.2.2 (2019-06-10)
+CSZ-CMS V.1.2.2 (2019-06-12)
 - Update elFinder to 2.1.49.
 - Update gallery plugin to 1.0.6.
 - Update Codeigniter core to 3.1.10.
@@ -10,6 +10,8 @@ CSZ-CMS V.1.2.2 (2019-06-10)
 - Fixed remote url response code checking.
 - Fixed CSV import on backend not working.
 - Fixed more important bug.
+- Fixed Cannot modify header information error.
+- Fixed the session namespace.
 - Improve performance.
 
 CSZ-CMS V.1.2.1 (2018-08-29)
