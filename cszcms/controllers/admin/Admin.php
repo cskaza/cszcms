@@ -1,7 +1,6 @@
 <?php
+defined('BASEPATH') || exit('No direct script access allowed');
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
 /**
  * CSZ CMS
  *
@@ -46,21 +45,24 @@ class Admin extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chk_reset_password();
+        $this->load->model('Csz_admin_cache');
         $config = $this->Csz_admin_model->load_config();
         $this->db->cache_on();
-        $this->load->model('Csz_startup');
-        $this->Csz_startup->chkStartRun(TRUE);
+        if($this->config->item('runStartupEnable') !== false){
+            $this->load->model('Csz_startup');
+            $this->Csz_startup->chkStartRun(TRUE);
+        }
         $this->csz_referrer->setIndex();
-        $this->template->setSub('email_logs', $this->Csz_model->getValueArray('*', 'email_logs', "ip_address != ''", '', 10, 'timestamp_create', 'desc'));
-        $this->template->setSub('link_stats', $this->Csz_model->getValueArray('*', 'link_statistic', "ip_address != ''", '', 20, 'timestamp_create', 'desc'));
-        $this->template->setSub('total_emaillogs', $this->Csz_model->countData('email_logs'));
-        $this->template->setSub('total_linkstats', $this->Csz_model->countData('link_statistic'));
-        $this->template->setSub('total_member', $this->Csz_model->countData('user_admin',"user_type = 'member'"));
+        $this->template->setSub('email_logs', $this->Csz_admin_cache->getMailLogsDashboard());
+        $this->template->setSub('link_stats', $this->Csz_admin_cache->getLinkStatDashboard());
+        $this->template->setSub('total_emaillogs', $this->Csz_admin_cache->countMailLogsDashboard());
+        $this->template->setSub('total_linkstats', $this->Csz_admin_cache->countLinkStatDashboard());
+        $this->template->setSub('total_member', $this->Csz_admin_cache->countMemberDashboard());
         $this->load->library('RSSParser');
-        ($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE) ? $url = $this->config->item('csz_backend_feed_url') /* Main Link */ : $url = $this->config->item('csz_backend_feed_backup_url'); /* Backup Link */
-        $this->rssparser->set_feed_url($url);  /* get feed from CSZ CMS Article */
+        ($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE) ? $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_url')) /* Main Link */ : $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_backup_url')); /* Backup Link *//* get feed from CSZ CMS Article */
         $this->rssparser->set_cache_life($config->pagecache_time); /* Set cache life time in minutes */
-        $this->template->setSub('rss', $this->rssparser->runFeedBackend(6)); /* have function cache (backend_rssfeed_news) */
+        $this->template->setSub('rss', $this->rssparser->runFeedBackend(7)); /* have function cache (backend_rssfeed_news) */
+        $this->template->setSub('config', $config);
         $this->template->loadSub('admin/home');
     }
     
@@ -68,6 +70,7 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('analytics');
         $this->load->helper('form');
+        $this->db->cache_on();
         $settings = $this->Csz_admin_model->load_config();
         $this->csz_referrer->setIndex();
         if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){

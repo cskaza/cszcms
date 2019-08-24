@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 header("Cache-Control: no-cache, no-store, must-revalidate"); /* HTTP 1.1. */
 header("Pragma: no-cache"); /* HTTP 1.0. */
 header("Expires: Sun, 01 Jan 2014 00:00:00 GMT"); /* Proxies. */
@@ -16,6 +16,7 @@ $row = $this->Csz_admin_model->load_config();
         <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
         <meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT"/>
 	<meta http-equiv="pragma" content="no-cache" />
+        <meta name="robots" content="noindex,nofollow">
         <?php echo $meta_tags ?>
         <?php echo link_tag(base_url('', '', TRUE).'templates/admin/favicon.ico', 'shortcut icon', 'image/ico','','', FALSE); ?>
         <!-- Bootstrap Core CSS -->
@@ -151,16 +152,20 @@ $row = $this->Csz_admin_model->load_config();
                                         </li>
                                     </ul>
                                 </li>
+                                <?php if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE || $this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE){ ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-compressed"></i> <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
+                                        <?php if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE){ ?>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/optimize' ?>"><i class="fa fa-compress"></i> <?php echo $this->lang->line('btn_optimize_db') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearallcache') ?></a></li>
                                         <li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllDBCache' ?>" onclick="return confirm('<?php echo $this->lang->line('delete_message') ?>');"><i class="fa fa-trash"></i> <?php echo $this->lang->line('btn_clearalldbcache') ?></a></li>
                                         <?php if($this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?><li><a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><i class="fa fa-sign-out text-red"></i> <?php echo $this->lang->line('btn_clear_sess') ?></a></li><?php } ?>
+                                        <?php } ?>
                                         <?php if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE){ ?><li><a href="<?php echo $this->Csz_model->base_link(). '/admin/export' ?>"><i class="glyphicon glyphicon-export"></i> <?php echo $this->lang->line('export_import_csv_btn') ?></a></li><?php } ?>
                                     </ul>
                                 </li>
+                                <?php } ?>
                                 <!-- Control Sidebar Toggle Button -->
                                 <li>
                                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
@@ -231,14 +236,6 @@ $row = $this->Csz_admin_model->load_config();
                 <!-- Start Footer -->
                 <?php echo  $this->Headfoot_html->admin_footer() ?>
                 <!-- End Footer -->
-                
-                <div class="footer" style="position:absolute;right:2%;transform:translateY(-100%);">
-                    <div class="row col-md-12 text-center">
-                        <a href="#top" title="To Top" style="text-decoration:none;">
-                            <span class="h2"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                        </a>
-                    </div>
-                </div>
                 
                 <!-- Start Control Sidebar For Theme Settings -->
                 <aside class="control-sidebar control-sidebar-dark">

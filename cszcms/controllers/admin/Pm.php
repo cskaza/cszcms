@@ -1,7 +1,6 @@
 <?php
+defined('BASEPATH') || exit('No direct script access allowed');
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
 /**
  * CSZ CMS
  *
@@ -98,6 +97,24 @@ class Pm extends CI_Controller {
             redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
+        
+    public function viewSendMSG() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        if($this->uri->segment(4) && is_numeric($this->uri->segment(4))){
+            //Get users from database   
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(4));
+            if($pm !== FALSE){
+                $this->template->setSub('pm', $pm);
+                //Load the view
+                $this->db->cache_delete_all();
+                $this->template->loadSub('admin/pm_send_view');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
     
     public function newMSG() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
@@ -105,7 +122,8 @@ class Pm extends CI_Controller {
         $this->load->helper('form');
         $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
         if($this->uri->segment(4)){
-            $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(4)));
+            if($this->uri->segment(5) && is_numeric($this->uri->segment(5))){ $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(5))); }
+            $this->template->setSub('receiver', $this->Csz_admin_model->getUser($this->uri->segment(4)));
         }
         //Load the view
         $this->template->loadSub('admin/pm_add');
@@ -127,7 +145,7 @@ class Pm extends CI_Controller {
             //Validation passed
             //Add the user
             foreach($this->input->post('to[]') as $value){
-                $this->Csz_auth_model->send_pm($value, $this->input->post('title', TRUE), $this->input->post('message', TRUE));
+                $this->Csz_auth_model->send_pm($value, $this->input->post('title', TRUE), $this->input->post('message', TRUE), '', str_replace(array('{[',']}'), '', $this->input->post('re_message', TRUE)));
             }
             $this->db->cache_delete_all();
             //Return to user list

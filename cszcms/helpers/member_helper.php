@@ -30,7 +30,16 @@ class Member_helper{
     static function is_logged_in($email){
         $CI =& get_instance();
         if(!$email){
-            $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $req_uri = $_SERVER['REQUEST_URI'];
+            if(strpos($req_uri,'update') === FALSE && strpos($req_uri,'Update') === FALSE && 
+                strpos($req_uri,'save') === FALSE && strpos($req_uri,'Save') === FALSE && 
+                strpos($req_uri,'delete') === FALSE && strpos($req_uri,'Delete') === FALSE && 
+                strpos($req_uri,'del') === FALSE && strpos($req_uri,'Del') === FALSE && 
+                strpos($req_uri,'insert') === FALSE && strpos($req_uri,'Insert') === FALSE){
+                $url_return = 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['HTTP_HOST'].$req_uri;
+            }else{
+                $url_return = $CI->Csz_model->base_link().'/member';
+            }
             $sess_data = array('cszflogin_cururl' => $url_return);
             $CI->session->set_userdata($sess_data);
             redirect($CI->Csz_model->base_link().'/member/login', 'refresh');

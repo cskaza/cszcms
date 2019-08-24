@@ -96,6 +96,16 @@
                 echo form_dropdown('group', $data, '', $att);
             ?>	
         </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="pass_change"><?php echo $this->lang->line('user_req_changepwd'); ?>*</label>
+            <?php
+                $att = 'id="pass_change" class="form-control"';
+                $data = array();
+                $data['yes'] = $this->lang->line('option_yes');
+                $data['no'] = $this->lang->line('option_no');
+                echo form_dropdown('pass_change', $data, '', $att);
+            ?>	
+        </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">

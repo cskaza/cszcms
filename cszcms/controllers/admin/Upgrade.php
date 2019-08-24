@@ -554,6 +554,7 @@ class Upgrade extends CI_Controller {
     public function phpinfo() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('server info');
         admin_helper::is_allowchk('save');
         //Load the view
         phpinfo();

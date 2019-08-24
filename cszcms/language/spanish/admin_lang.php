@@ -80,6 +80,7 @@ $lang['user_backend_txt']               = "Backend";
 $lang['user_frontend_txt']              = "Frontend";
 $lang['user_perm_allow']                = "Permitir";
 $lang['user_perm_deny']                 = "Denegar";
+$lang['user_req_changepwd']             = "Requerido para cambiar la contraseña.";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Guardar";

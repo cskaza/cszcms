@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <span>Powered by CSZ CMS | Open Source Content Management with responsive</span>
+                            <span>Powered by <a href="https://www.cszcms.com" target="_blank" style="color: gray;">CSZ CMS</a> | Open Source Content Management with responsive</span>
                         </div>
                     </div>
                 </div>

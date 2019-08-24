@@ -27,7 +27,7 @@
  $plugin_config['frontend_startup'] = 'functionName';
  * 
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /* For Startup on login */
 class Csz_startup extends CI_Model {

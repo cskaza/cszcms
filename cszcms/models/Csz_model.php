@@ -18,11 +18,11 @@
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 class Csz_model extends CI_Model {
     
-    public $cachetime = 0;
+    private $cachetime = 0;
              
     function __construct() {
         parent::__construct();
@@ -33,11 +33,20 @@ class Csz_model extends CI_Model {
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
         if($this->load_config()->pagecache_time == 0){
-            $this->cachetime = 1;
+            $this->setcahetime(1);
         }else{
-            $this->cachetime = $this->load_config()->pagecache_time;
+            $this->setcahetime($this->load_config()->pagecache_time);
         }
         
+    }
+    
+    /**
+     * setcahetime
+     * Set the cache time (In minute)
+     * @param   int $minute   the minute of cache time
+     */
+    private function setcahetime($minute = 0) {
+        if(is_numeric($minute)) $this->cachetime = $minute;
     }
 
     /**
@@ -796,6 +805,7 @@ class Csz_model extends CI_Model {
         $meta = array(
             array('name' => 'content-language', 'content' => $this->session->userdata('fronlang_iso'), 'type' => 'equiv'),
             array('name' => 'description', 'content' => $desc_txt),
+            array('name' => 'robots', 'content' => 'index, follow'),
             array('name' => 'keywords', 'content' => $keywords),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'),
             array('name' => 'author', 'content' => $config->site_name),
@@ -818,6 +828,8 @@ class Csz_model extends CI_Model {
         $return_meta.= '<link rel="canonical" href="' . $this->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
         $return_meta.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
         $return_meta.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
+        $return_meta.= '<link rel="dns-prefetch" href="//connect.facebook.net">';
+        $return_meta.= '<link rel="dns-prefetch" href="//ajax.cloudflare.com">';
         $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Article Feed" href="'.$this->base_link(). '/plugin/article/rss/" />';
         $return_meta.= '<link rel="alternate" type="application/rss+xml" title="'.$config->site_name.' &raquo; Gallery Feed" href="'.$this->base_link(). '/plugin/gallery/rss/" />';
         if ($config->fbapp_id) {
@@ -1677,11 +1689,7 @@ class Csz_model extends CI_Model {
             }
             $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
             $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
-            if (!$this->cache->get('showCaptcha_' . $hl)) {
-                $this->cache->save('showCaptcha_' . $hl, $html, ($this->cachetime * 60));
-                unset($html, $config);
-            }
-            return $this->cache->get('showCaptcha_' . $hl);
+            return $html;
         }
     }
 
@@ -2301,13 +2309,13 @@ class Csz_model extends CI_Model {
         $html = '';
         $config = $this->load_config();
         if ($config->fbapp_id) {
-            $html.= '<script type="text/javascript">
+            $html.= '<div id="fb-root"></div><script type="text/javascript">
                     window.fbAsyncInit = function() {
                       FB.init({
-                        appId            : \'' . $config->fbapp_id . '\',
+                        appId            : "' . $config->fbapp_id . '",
                         autoLogAppEvents : true,
                         xfbml            : true,
-                        version          : \'v2.11\'
+                        version          : "v4.0"
                       });
                     };
                     (function(d, s, id){
@@ -2316,7 +2324,7 @@ class Csz_model extends CI_Model {
                        js = d.createElement(s); js.id = id;
                        js.src = "https://connect.facebook.net/' . $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))) . '/sdk/xfbml.customerchat.js";
                        fjs.parentNode.insertBefore(js, fjs);
-                     }(document, \'script\', \'facebook-jssdk\'));
+                     }(document, "script", "facebook-jssdk"));
                   </script>';
             return $html;
         } else {

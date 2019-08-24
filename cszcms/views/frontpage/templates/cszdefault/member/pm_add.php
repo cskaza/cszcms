@@ -17,19 +17,22 @@
                 <div class="panel-body">
                     <a role="button" href="<?php echo $this->Csz_model->base_link()?>/member/newpm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> <?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a>
                     <br><br>
-                    <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
+                    <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm/'.$this->uri->segment(4)); ?>
                     <?php if($this->uri->segment(3)){ ?>
                         <div class="control-group">	
-                            <b><?php echo $this->Csz_model->getLabelLang('pm_to_txt') ?>:</b> <?php echo $this->Csz_admin_model->getUser($main_pm->sender_id)->name; ?>
-                            <input type="hidden" name="to[]" id="to" value="<?php echo $main_pm->sender_id ?>">
+                            <b><?php echo $this->Csz_model->getLabelLang('pm_to_txt') ?>:</b> <?php echo $receiver->name; ?>
+                            <input type="hidden" name="to[]" id="to" value="<?php echo $receiver->user_admin_id ?>">
                         </div> <!-- /control-group -->
-                        <div class="control-group">
-                            <b><?php echo $this->Csz_model->getLabelLang('pm_subject_txt') ?></b> Re: <?php echo $main_pm->title; ?>
-                            <input type="hidden" name="title" id="title" value="Re: <?php echo $main_pm->title ?>">
-                        </div> <!-- /control-group -->
-                        <div class="control-group">
-                            <b><?php echo $this->lang->line('pm_message'); ?>: </b><?php echo $main_pm->message; ?>
-                        </div>
+                        <?php if($this->uri->segment(4)){ ?>
+                            <div class="control-group">
+                                <b><?php echo $this->Csz_model->getLabelLang('pm_subject_txt') ?></b> Re: <?php echo str_replace('Re: ', '', $main_pm->title); ?>
+                                <input type="hidden" name="title" id="title" value="Re: <?php echo str_replace('Re: ', '', $main_pm->title); ?>">
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <b><?php echo $this->lang->line('pm_message'); ?>: </b><pre style="overflow-x:auto;white-space:pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;"><?php echo $main_pm->message; ?></pre>
+                                <input type="hidden" name="re_message" id="re_message" value="<?php echo $main_pm->message ?>">
+                            </div>
+                        <?php } ?>
                         <br>
                     <?php }else{ ?>
                         <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
@@ -47,6 +50,8 @@
                                 echo form_dropdown('', $data, ($this->uri->segment(3) && is_numeric($this->uri->segment(3))) ? $this->uri->segment(3) : '', $att);
                             ?>
                         </div> <!-- /control-group -->
+                    <?php } ?>
+                    <?php if(!$this->uri->segment(4)){ ?>
                         <div class="control-group">	
                             <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                             <label class="control-label" for="title"><?php echo $this->Csz_model->getLabelLang('pm_subject_txt'); ?>*</label>
@@ -63,7 +68,7 @@
                             echo form_input($data);
                             ?>			
                         </div> <!-- /control-group -->
-                    <?php } ?>
+                    <?php } ?>    
                     <div class="control-group">	
                         <?php echo form_error('message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                         <label class="control-label" for="message"><?php echo $this->Csz_model->getLabelLang('pm_msg_txt'); ?>*</label>

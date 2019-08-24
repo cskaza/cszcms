@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /**
  * CSZ CMS
@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.2.2'; /* For CMS Version */
+$config['csz_version'] = '1.2.3'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 

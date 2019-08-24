@@ -11,7 +11,7 @@ $lang['dashboard_linkrecent']	= "Ultimi 20 Link ";
 $lang['dashboard_emailrecent']	= "Ultimi 10 logs Email ";
 $lang['dashboard_toemail']	= "A";
 $lang['dashboard_fromemail']	= "Da";
-$lang['dashboard_rssnews']	= "Ultime 6 CSZ CMS News";
+$lang['dashboard_rssnews']	= "Ultime CSZ CMS News";
 
 //Navigation Bar
 $lang['nav_dash']		= "Bacheca";
@@ -80,6 +80,7 @@ $lang['user_backend_txt']               = "Backend";
 $lang['user_frontend_txt']              = "Frontend";
 $lang['user_perm_allow']                = "Allow";
 $lang['user_perm_deny']                 = "Deny";
+$lang['user_req_changepwd']             = "Richiesto per cambiare la password.";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Salva";

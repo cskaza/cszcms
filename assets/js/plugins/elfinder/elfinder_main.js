@@ -4,6 +4,9 @@
  * Rename "main.default.js" to "main.js" and edit it if you need configure elFInder options or any things. And use that in elfinder.html.
  * e.g. `<script data-main="./main.js" src="./require.js"></script>`
  **/
+function getSiteDomain(){
+    return window.location.protocol+"//"+window.location.host+window.location.pathname.replace("index.php/", "").replace("admin/filemanager", "");
+}
 (function(){
 	"use strict";
 	var // jQuery and jQueryUI version
@@ -107,7 +110,7 @@
 
 	// config of RequireJS (REQUIRED)
 	require.config({
-		baseUrl : '../assets/js/plugins/elfinder/js',
+		baseUrl : getSiteDomain() + 'assets/js/plugins/elfinder/js',
 		paths : {
 			'jquery'   : '//cdnjs.cloudflare.com/ajax/libs/jquery/'+(old? '1.12.4' : jqver)+'/jquery.min',
 			'jquery-ui': '//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/jquery-ui.min',

@@ -42,21 +42,21 @@ class MY_Security extends CI_Security {
         $query->execute();
         $query->store_result();
         $count = $query->num_rows;
-        if($count < 10){
+        if($count < 21){
             $sql = "INSERT INTO login_logs (email_login, note, result, user_agent, ip_address, timestamp_create)
-            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$_SERVER['HTTP_USER_AGENT']."', '".$ipaddress."', '".$this->timeNow()."')";
+            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$this->xss_clean($mysqli->escape_string($_SERVER['HTTP_USER_AGENT']))."', '".$ipaddress."', '".$this->timeNow()."')";
             $mysqli->query($sql);
         }
         $mysqli->close();
         if (!empty($_SERVER["HTTP_REFERER"])) {
             $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
             $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
+            $this->clearCSRFcookie();
             if (($referer_host && $referer_host === $own_host)) {
-                $this->clearCSRFcookie();
-                header('Refresh:2;url=' . $_SERVER["HTTP_REFERER"] . '?nocache=' . time());
+                echo '<script>window.setTimeout(function(){window.location = "' . $_SERVER["HTTP_REFERER"] . '?nocache=' . time().'"; },2000);</script>';
                 show_error('The action is not allowed by CSRF Protection. Please wait 2 seconds to redirect.', 403);
             }else{
-                $this->clearCSRFcookie();
+                
                 show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
             }
         }else{
@@ -171,7 +171,7 @@ class MY_Security extends CI_Security {
         return $this->ip_address;
     }
 
-    private function server($index, $xss_clean = NULL) {
+    private function server($index, $xss_clean = TRUE) {
         return $this->_fetch_from_array($_SERVER, $index, $xss_clean);
     }
 
@@ -230,19 +230,6 @@ class MY_Security extends CI_Security {
         return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
     }
     
-    private function config_item($item)
-	{
-		static $_config;
-
-		if (empty($_config))
-		{
-			// references cannot be directly assigned to static variables, so we use an array
-			$_config[0] = $this->get_config();
-		}
-
-		return isset($_config[0][$item]) ? $_config[0][$item] : NULL;
-	}
-    
     private function get_config(Array $replace = array())
 	{
 		static $config;
@@ -290,8 +277,8 @@ class MY_Security extends CI_Security {
         private function clearCSRFcookie() {
             $find_arr = @parse_url(BASE_URL);
             $domain = @$find_arr['host'];
-            $csrfcookiename = str_replace('.', '_', $domain).'_cszcookiecsrf_cookie_csz';
-            $csrfsessionname = str_replace('.', '_', $domain).'_cszsesscsrf_cookie_csz';
+            $csrfcookiename = 'cszcookie_'.md5(BASE_URL).'csrf_cookie_csz';
+            $csrfsessionname = md5(BASE_URL).'_cszsesscsrf_cookie_csz';
             if (isset($_SESSION[$csrfsessionname])) {            
                 unset($_SESSION[$csrfsessionname]);           
             }

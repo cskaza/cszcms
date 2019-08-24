@@ -84,7 +84,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         /* Prepare data for config.inc.php file */
         $config_file = '../config.inc.php';
         $config_txt = "<?php \n";
-        $config_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
+        $config_txt .= "defined('FCPATH') || exit('No direct script access allowed'); \n\n";
         $config_txt .= "/* Database Host */ \n";
         $config_txt .= "define('DB_HOST', '" . $dbhost . "'); \n\n";
         $config_txt .= "/* Database Username */ \n";
@@ -106,7 +106,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         /* Prepare htaccess.config.inc.php file */
         $htaccess_file = '../htaccess.config.inc.php';
         $htaccess_txt = "<?php \n";
-        $htaccess_txt .= "defined('FCPATH') OR exit('No direct script access allowed'); \n\n";
+        $htaccess_txt .= "defined('FCPATH') || exit('No direct script access allowed'); \n\n";
         $htaccess_txt .= "/* \n";
         $htaccess_txt .= "* For .htaccess file support. \n";
         $htaccess_txt .= "* For mod_rewrite is not support and .htaccess is not support. Please config the 'HTACCESS_FILE' to FALSE  \n";
@@ -122,10 +122,36 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         $fopen1 = fopen($htaccess_file, 'wb') or die("can't open file");
         fwrite($fopen1, $htaccess_txt);
         fclose($fopen1);
+        /* Prepare htaccess.config.inc.php file */
+        $env_file = '../env.config.inc.php';
+        $env_txt = "<?php \n";
+        $env_txt .= "defined('FCPATH') || exit('No direct script access allowed'); \n\n";
+        $env_txt .= "/*--------------------------------------------------------------- \n";
+        $env_txt .= "* APPLICATION ENVIRONMENT \n";
+        $env_txt .= "*--------------------------------------------------------------- \n";
+        $env_txt .= "* \n";
+        $env_txt .= "* You can load different configurations depending on your \n";
+        $env_txt .= "* current environment. Setting the environment also influences \n";
+        $env_txt .= "* things like logging and error reporting. \n";
+        $env_txt .= "* \n";
+        $env_txt .= "* This can be set to anything, but default usage is: \n";
+        $env_txt .= "* \n";
+        $env_txt .= "*     'development' on localhost \n";
+        $env_txt .= "*     'testing' on local server \n";
+        $env_txt .= "*     'production' on hosting or remote server \n";
+        $env_txt .= "* NOTE: If you change these, also change the error_reporting() code below \n";
+        $env_txt .= "*/ \n";
+        if($_POST['env']){
+            $env_txt .= "define('ENVIRONMENT', '".$_POST['env']."'); \n";
+        }
+        /* write env.config.inc.php file */
+        $fopen2 = fopen($env_file, 'wb') or die("can't open file");
+        fwrite($fopen2, $env_txt);
+        fclose($fopen2);
         $success = 1;
         $db->closeDB();
-        $csrfcookiename = str_replace('.', '_', $domain).'_cszcookiecsrf_cookie_csz';
-        $csrfsessionname = str_replace('.', '_', $domain).'_cszsesscsrf_cookie_csz';
+        $csrfcookiename = 'cszcookie_'.md5($baseurl).'csrf_cookie_csz';
+        $csrfsessionname = md5($baseurl).'_cszsesscsrf_cookie_csz';
         if (isset($_SESSION[$csrfsessionname])) {            
             unset($_SESSION[$csrfsessionname]);           
         }
@@ -375,7 +401,14 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                               </option>
                                             <?php } ?>
                                         </select>
-                                        <span class="text-info"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span>
+                                        <span class="text-info"><em>See at <a href="http://php.net/manual/en/timezones.php" target="_blank"><b>Here</b></a> for Timezone list</em></span><br>
+                                        <label for="env">Environment*: </label>
+                                        <select id="env" name="env" class="form-control" required>
+                                            <option value="production">Production</option>
+                                            <option value="development">Development</option>
+                                            <option value="testing">Testing</option>
+                                        </select>
+                                        <span class="text-info"><em>Production on hosting or remote server, Development on localhost, Testing on local server.</em></span><br>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">

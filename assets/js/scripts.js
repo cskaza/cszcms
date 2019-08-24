@@ -6,11 +6,11 @@ function ChkHideShow(id) {
     $.toggleShowPassword = function (options) {
         var settings = $.extend({
             field: "#password",
-            control: "#toggle_show_password",
+            control: "#toggle_show_password"
         }, options);
 
         var control = $(settings.control);
-        var field = $(settings.field)
+        var field = $(settings.field);
 
         control.bind('click', function () {
             if (control.is(':checked')) {
@@ -18,6 +18,6 @@ function ChkHideShow(id) {
             } else {
                 field.attr('type', 'password');
             }
-        })
+        });
     };
 }(jQuery));

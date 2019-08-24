@@ -532,7 +532,7 @@ CREATE TABLE `user_perms` (
   `definition` text,
   `permstype` varchar(100),
   PRIMARY KEY (`user_perms_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=33;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=34;
 
 INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VALUES
 (1, 'save', 'For save permission on backend', 'backend'),
@@ -566,7 +566,8 @@ INSERT INTO `user_perms` (`user_perms_id`, `name`, `definition`, `permstype`) VA
 (29, 'export', 'For Import Export CSV access permission on backend', 'backend'),
 (30, 'pm', 'For PM access permission on backend', 'backend'),
 (31, 'carousel', 'For carousel access permission on backend', 'backend'),
-(32, 'old plugin widget', 'For old plugin widget access permission on backend', 'backend');
+(32, 'old plugin widget', 'For old plugin widget access permission on backend', 'backend'),
+(33, 'server info', 'For server information access permission on backend', 'backend');
 
 DROP TABLE IF EXISTS `user_perm_to_group`;
 CREATE TABLE `user_perm_to_group` (

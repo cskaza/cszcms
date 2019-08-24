@@ -1,4 +1,4 @@
-<?php if($this->Csz_auth_model->is_group_allowed('save', 'backend') !== FALSE && $this->Csz_auth_model->is_group_allowed('delete', 'backend') !== FALSE){ ?>
+<?php if($this->Csz_auth_model->is_group_allowed('server info', 'backend') !== FALSE){ ?>
 <!-- Page Heading -->
 <div class="row">
     <div class="col-lg-12">

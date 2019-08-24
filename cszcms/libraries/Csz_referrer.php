@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /**
  * For page redirect to index when after save.
@@ -20,14 +20,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 
 class Csz_referrer {
-    public $baseurl = '';
+    private $baseurl = '';
     public function __construct()
     {
 	$CI =& get_instance();
         $CI->load->model('Csz_model');
-        $this->baseurl = $CI->Csz_model->base_link();
+        $this->setBaseURL($CI->Csz_model->base_link());
     }
     
+    /**
+     * setBaseURL
+     *
+     * Function for set base url
+     *
+     * @param	string	$url    This is base url
+     */
+    private function setBaseURL($url){
+        if($url) $this->baseurl = $url;
+    }
+
+
     /**
      * setIndex
      *
@@ -43,7 +55,7 @@ class Csz_referrer {
             $key = 'referred_'.$index;
         }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
-        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php/' : $this->baseurl.'/';
+        $base_url = $this->baseurl.'/';
         if($paramiter_url && strpos($paramiter_url, '?') !== false){ /* Find ? in string */
             $param = strstr($paramiter_url,'?'); /* Remove string before ? */
         }else{
@@ -75,7 +87,7 @@ class Csz_referrer {
         }else{
             $key = 'referred_'.$index;
         }
-        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php' : $this->baseurl;
+        $base_url = $this->baseurl;
         if(isset($_SESSION[$key])){
             $referred_from = $_SESSION[$key];
         }else{
@@ -92,7 +104,7 @@ class Csz_referrer {
     public function getReferrer() {
         $CI =& get_instance();
         $CI->load->library('user_agent');
-        $base_url = (HTACCESS_FILE === FALSE) ? $this->baseurl.'/index.php' : $this->baseurl;
+        $base_url = $this->baseurl;
         if ($CI->agent->is_referral()) {
             $referred_from = $CI->agent->referrer();
         } else {

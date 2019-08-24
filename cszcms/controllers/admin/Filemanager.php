@@ -1,7 +1,5 @@
 <?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /**
  * CSZ CMS
@@ -57,11 +55,21 @@ class Filemanager extends CI_Controller {
             <script>
             define('elFinderConfig', {
                 defaultOpts : {
+                    url : '" . $connect_url . "', /* connector URL (REQUIRED)*/
                     rememberLastDir : false,
                     useBrowserHistory : false,
                     defaultView : 'list',
-                    url : '" . $connect_url . "' /* connector URL (REQUIRED)*/
-                    ,commandsOptions : {
+                    sync : 5000,
+                    themes : {
+                        'dark-slim'     : 'https://johnfort.github.io/elFinder.themes/dark-slim/manifest.json',
+                        'material'      : 'https://nao-pon.github.io/elfinder-theme-manifests/material-default.json',
+                        'material-gray' : 'https://nao-pon.github.io/elfinder-theme-manifests/material-gray.json',
+                        'material-light': 'https://nao-pon.github.io/elfinder-theme-manifests/material-light.json',
+                        'bootstrap'     : 'https://nao-pon.github.io/elfinder-theme-manifests/bootstrap.json',
+                        'moono'         : 'https://nao-pon.github.io/elfinder-theme-manifests/moono.json',
+                        'win10'         : 'https://nao-pon.github.io/elfinder-theme-manifests/win10.json'
+                    },    
+                    commandsOptions : {
                         edit : {
                             extraOptions : {
                                 /* set API key to enable Creative Cloud image editor
@@ -150,7 +158,7 @@ class Filemanager extends CI_Controller {
                 array(
                     'driver' => 'LocalFileSystem',
                     'path' => FCPATH . 'photo',
-                    'URL' => base_url() . 'photo',
+                    'URL' => base_url('', '', TRUE) . 'photo',
                     'alias' => 'File Upload',
                     'mimeDetect' => 'internal',
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
@@ -333,7 +341,7 @@ class Filemanager extends CI_Controller {
                 array(
                     'driver' => 'LocalFileSystem',
                     'path' => FCPATH . 'photo',
-                    'URL' => base_url() . 'photo',
+                    'URL' => base_url('', '', TRUE) . 'photo',
                     'alias' => 'File Upload',
                     'mimeDetect' => 'internal',
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too

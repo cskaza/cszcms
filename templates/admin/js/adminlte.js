@@ -152,7 +152,7 @@ throw new Error('AdminLTE requires jQuery')
   var DataKey = 'lte.boxwidget';
 
   var Default = {
-    animationSpeed : 500,
+    animationSpeed : 50,
     collapseTrigger: '[data-widget="collapse"]',
     removeTrigger  : '[data-widget="remove"]',
     collapseIcon   : 'fa-minus',

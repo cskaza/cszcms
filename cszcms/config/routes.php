@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -236,14 +236,16 @@ $route['admin/groups/:num'] = "admin/groups";
 $route['admin/pm'] = "admin/Pm";
 $route['admin/pm/view'] = "admin/Pm/viewMSG";
 $route['admin/pm/view/:num'] = "admin/Pm/viewMSG";
-$route['admin/pm/newpm'] = "admin/Pm/newMSG";
+$route['admin/pm/newpm/:num/:num'] = "admin/Pm/newMSG";
 $route['admin/pm/newpm/:num'] = "admin/Pm/newMSG";
+$route['admin/pm/newpm'] = "admin/Pm/newMSG";
 $route['admin/pm/insert'] = "admin/Pm/insert";
 $route['admin/pm/delete/:num'] = "admin/Pm/delete";
 $route['admin/pm/setread/:num'] = "admin/Pm/setRead";
 $route['admin/pm/setunread/:num'] = "admin/Pm/setUnRead";
 $route['admin/pm/sendpm'] = "admin/Pm/sendIndex";
 $route['admin/pm/sendpm/:num'] = "admin/Pm/sendIndex";
+$route['admin/pm/sendpm/:num/:num'] = "admin/Pm/sendIndex";
 $route['admin/pm/indexsave'] = "admin/Pm/indexSave";
 $route['admin/pm/:num'] = "admin/Pm";
 $route['admin/banner'] = "admin/banner";

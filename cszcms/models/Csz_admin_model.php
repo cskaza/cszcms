@@ -22,7 +22,7 @@ defined('BASEPATH') || exit('No direct script access allowed');
 
 class Csz_admin_model extends CI_Model{
     
-    public $cachetime = 0;
+    private $cachetime = 0;
 
     function __construct(){
         parent::__construct();
@@ -33,10 +33,19 @@ class Csz_admin_model extends CI_Model{
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
         if($this->load_config()->pagecache_time == 0){
-            $this->cachetime = 1;
+            $this->setcahetime(1);
         }else{
-            $this->cachetime = $this->load_config()->pagecache_time;
+            $this->setcahetime($this->load_config()->pagecache_time);
         }
+    }
+    
+    /**
+     * setcahetime
+     * Set the cache time (In minute)
+     * @param   int $minute   the minute of cache time
+     */
+    private function setcahetime($minute = 0) {
+        if(is_numeric($minute)) $this->cachetime = $minute;
     }
 
     /**
@@ -406,6 +415,11 @@ class Csz_admin_model extends CI_Model{
         }else{
             $active = 0;
         }
+        if($this->input->post('pass_change') == 'yes'){
+            $pass_change = 0;
+        }else{
+            $pass_change = 1;
+        }
         if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
             $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
         }else{
@@ -434,7 +448,7 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
             'pm_sendmail' => 1,
-            'pass_change' => 1,
+            'pass_change' => $pass_change,
         );
         if($member === FALSE){
             $this->db->set('user_type', 'admin');
@@ -472,6 +486,11 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $pm_sendmail = 0;
             }
+            if($this->input->post('pass_change') == 'yes'){
+                $pass_change = 0;
+            }else{
+                $pass_change = 1;
+            }
             if($this->input->post('year', TRUE) && $this->input->post('month', TRUE) && $this->input->post('day', TRUE)){
                 $birthday = $this->input->post('year', TRUE).'-'.$this->input->post('month', TRUE).'-'.$this->input->post('day', TRUE);
             }else{
@@ -502,6 +521,7 @@ class Csz_admin_model extends CI_Model{
             if($id != 1 && $this->session->userdata('user_admin_id') != $id){
                 $this->db->set('active', $active, FALSE);
                 $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
+                if($this->input->post('password') == ''){ $this->db->set('pass_change', $pass_change); }
             }
             $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
             $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
@@ -676,15 +696,11 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$lang_name    Language name
      * @return	string
      */
-    public function getLangISOfromName($lang_name){
+    public function getLangISOfromName($lang_name = 'english'){
         /* Get Language ISO from language config file (for backend system) */
         $this->config->load('language');
         $lang_config = $this->config->item('admin_language_iso');
-        if($lang_name){
-            return $lang_config[$lang_name];
-        }else{
-            return $lang_config['english'];
-        }
+        return $lang_config[$lang_name];
     }
 
     /**

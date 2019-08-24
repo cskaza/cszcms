@@ -21,7 +21,7 @@
                     <pre style="overflow-x:auto;white-space:pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;"><?php echo $pm->message; ?></pre>
                     <br><br>
                 </div>
-                <div class="panel-footer"><a href="<?php echo $this->Csz_model->base_link(). '/member/newpm/' . $pm->sender_id . '/' . $pm->id; ?>" class="btn btn-default" role="button"><?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a> &nbsp;&nbsp; <a href="<?php echo $this->Csz_model->base_link(). '/member/deletepm/' . $pm->id; ?>" class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->Csz_model->getLabelLang('shop_delete_alert'); ?>')"><?php echo $this->Csz_model->getLabelLang('pm_delete_txt') ?></a></div>
+                <div class="panel-footer"><a href="<?php echo $this->Csz_model->base_link(). '/member/newpm/' . $pm->receiver_id . '/' . $pm->id; ?>" class="btn btn-default" role="button"><?php echo $this->Csz_model->getLabelLang('pm_newmsg_txt') ?></a> &nbsp;&nbsp; <a href="<?php echo $this->Csz_model->base_link(). '/member/deletepm/' . $pm->id; ?>" class="btn btn-danger" role="button" onclick="return confirm('<?php echo $this->Csz_model->getLabelLang('shop_delete_alert'); ?>')"><?php echo $this->Csz_model->getLabelLang('pm_delete_txt') ?></a></div>
             </div>
         </div>
     </div>

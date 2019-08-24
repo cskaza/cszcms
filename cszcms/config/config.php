@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -384,7 +384,7 @@ $config['encryption_key'] = '';
 $find_arr = @parse_url(BASE_URL);
 $domain = @$find_arr['host'];
 $config['sess_driver'] = 'database';
-$config['sess_cookie_name'] = str_replace('.', '_', $domain).'_cszsess';
+$config['sess_cookie_name'] = md5(BASE_URL).'_cszsess';
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;

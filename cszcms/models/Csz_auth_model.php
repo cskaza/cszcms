@@ -23,7 +23,7 @@
  * https://github.com/emreakay/CodeIgniter-Aauth
  * 
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 class Csz_auth_model extends CI_Model {
 
@@ -398,10 +398,11 @@ class Csz_auth_model extends CI_Model {
      * @param string $title Title/subject
      * @param string $message Message
      * @param int $sender_id User id of private message sender
+     * @param string $re_message Reply the original message
      * 
      * @return array/bool Array with User ID's as key and TRUE or a specific error message OR FALSE if sender doesn't exist
      */
-    public function send_pm($receiver_ids, $title, $message, $sender_id = '') {
+    public function send_pm($receiver_ids, $title, $message, $sender_id = '', $re_message = '') {
         if (!$sender_id) {
             $sender_id = $this->session->userdata('user_admin_id');
         }
@@ -409,6 +410,9 @@ class Csz_auth_model extends CI_Model {
             return FALSE;
         }else{
             if ($receiver_ids && is_numeric($receiver_ids) && $sender_id != $receiver_ids) {
+                if($re_message){ 
+                    $message = '{[' . str_replace("\r\n" . "\r\n", "\r\n", $re_message) . "]} " . "\r\n" . "\r\n" . $message;
+                }
                 $data = array(
                     'sender_id' => $sender_id,
                     'receiver_id' => $receiver_ids,

@@ -1,5 +1,5 @@
 <?php  
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /* Session namespace */
 $config['sess_namespace'] = 'cszcms_'.md5(BASE_URL);

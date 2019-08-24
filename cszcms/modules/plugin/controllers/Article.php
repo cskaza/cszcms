@@ -90,7 +90,7 @@ class Article extends CI_Controller {
     
     public function category() {
         if($this->uri->segment(4)){
-            if($this->uri->segment(5)){
+            if($this->uri->segment(5) && !is_numeric($this->uri->segment(5))){
                 $maincat_row = $this->Csz_model->getValue('article_db_id', 'article_db', "is_category = '1' AND active = '1' AND url_rewrite = '".$this->uri->segment(4)."'", '', 1);
                 if($maincat_row !== FALSE){
                     $cat_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '1' AND active = '1' AND main_cat_id = '".$maincat_row->article_db_id."' AND url_rewrite = '".$this->uri->segment(5)."'", '', 1);
@@ -117,7 +117,7 @@ class Article extends CI_Controller {
                 $result_per_page = 10;
                 $total_row = $this->Csz_model->countData('article_db', $search_arr);
                 $num_link = 10;
-                if($this->uri->segment(5)){
+                if($this->uri->segment(5) && !is_numeric($this->uri->segment(5))){
                     $base_url = $this->Csz_model->base_link(). '/plugin/article/category/'.$this->uri->segment(4).'/'.$this->uri->segment(5).'/';
 
                     // Pageination config

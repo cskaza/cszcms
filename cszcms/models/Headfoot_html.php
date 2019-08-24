@@ -19,7 +19,7 @@
  * @link	https://www.cszcms.com
  * @since	Version 1.0.0
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 class Headfoot_html extends CI_Model{
 
@@ -414,46 +414,70 @@ class Headfoot_html extends CI_Model{
             $html.= '</ul></li>';
             /* End Private Message Menu */
         }
-        /* Start Content Menu */
-        if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'pwidget' || $cur_page == 'banner' || $cur_page == 'filemanager' || $cur_page == 'carousel'){
-            $content_display = "active ";
-        }else{
-            $content_display = "";
+        if($this->Csz_auth_model->is_group_allowed('forms builder', 'backend') !== FALSE || 
+                $this->Csz_auth_model->is_group_allowed('old plugin widget', 'backend') !== FALSE || 
+                $this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('linkstats', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('carousel', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('file manager', 'backend') !== FALSE
+        ){
+            /* Start Content Menu */
+            if($cur_page == 'navigation' || $cur_page == 'pages' || $cur_page == 'uploadindex' || $cur_page == 'forms' || $cur_page == 'linkstats' || $cur_page == 'widget' || $cur_page == 'pwidget' || $cur_page == 'banner' || $cur_page == 'filemanager' || $cur_page == 'carousel'){
+                $content_display = "active ";
+            }else{
+                $content_display = "";
+            }
+            $html.= '<li class="'.$content_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-right"></i> <span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
+            if($this->Csz_auth_model->is_group_allowed('forms builder', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'forms', 'admin/forms', $this->lang->line('forms_header'), 'glyphicon glyphicon-modal-window');
+            if($this->Csz_auth_model->is_group_allowed('old plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'widget', 'admin/widget', $this->lang->line('widget_header'), 'glyphicon glyphicon-gift');
+            if($this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pwidget', 'admin/pwidget', $this->lang->line('pwidget_header'), 'glyphicon glyphicon-gift');
+            if($this->Csz_auth_model->is_group_allowed('linkstats', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'linkstats', 'admin/linkstats', $this->lang->line('linkstats_header'), 'glyphicon glyphicon-stats');
+            if($this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'banner', 'admin/banner', $this->lang->line('banner_header'), 'glyphicon glyphicon-usd');
+            if($this->Csz_auth_model->is_group_allowed('carousel', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'carousel', 'admin/carousel', $this->lang->line('carousel_header'), 'glyphicon glyphicon-picture');
+            if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-blackboard');
+            if($this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'navigation', 'admin/navigation', $this->lang->line('nav_nav_header'), 'glyphicon glyphicon-object-align-top');
+            if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-file');
+            if($this->Csz_auth_model->is_group_allowed('file manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'filemanager', 'admin/filemanager', $this->lang->line('filemanager_header'), 'glyphicon glyphicon-cloud');
+            $html.= '</ul></li>';
+            /* End Content Menu */
         }
-        $html.= '<li class="'.$content_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-right"></i> <span>'.$this->lang->line('nav_content_menu').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
-        $html.= '<ul class="treeview-menu">';
-        if($this->Csz_auth_model->is_group_allowed('forms builder', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'forms', 'admin/forms', $this->lang->line('forms_header'), 'glyphicon glyphicon-modal-window');
-        if($this->Csz_auth_model->is_group_allowed('old plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'widget', 'admin/widget', $this->lang->line('widget_header'), 'glyphicon glyphicon-gift');
-        if($this->Csz_auth_model->is_group_allowed('plugin widget', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pwidget', 'admin/pwidget', $this->lang->line('pwidget_header'), 'glyphicon glyphicon-gift');
-        if($this->Csz_auth_model->is_group_allowed('linkstats', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'linkstats', 'admin/linkstats', $this->lang->line('linkstats_header'), 'glyphicon glyphicon-stats');
-        if($this->Csz_auth_model->is_group_allowed('banner', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'banner', 'admin/banner', $this->lang->line('banner_header'), 'glyphicon glyphicon-usd');
-        if($this->Csz_auth_model->is_group_allowed('carousel', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'carousel', 'admin/carousel', $this->lang->line('carousel_header'), 'glyphicon glyphicon-picture');
-        if($this->Csz_auth_model->is_group_allowed('pages content', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'pages', 'admin/pages', $this->lang->line('pages_header'), 'glyphicon glyphicon-blackboard');
-        if($this->Csz_auth_model->is_group_allowed('navigation', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'navigation', 'admin/navigation', $this->lang->line('nav_nav_header'), 'glyphicon glyphicon-object-align-top');
-        if($this->Csz_auth_model->is_group_allowed('file upload', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'uploadindex', 'admin/uploadindex', $this->lang->line('uploadfile_header'), 'glyphicon glyphicon-file');
-        if($this->Csz_auth_model->is_group_allowed('file manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'filemanager', 'admin/filemanager', $this->lang->line('filemanager_header'), 'glyphicon glyphicon-cloud');
-        $html.= '</ul></li>';
-        /* End Content Menu */
-        /* Start General Menu */
-        if($cur_page == 'users' || $cur_page == 'members' || $cur_page == 'groups' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin' || $cur_page == 'export'){
-            $gel_settings_display = "active ";
-        }else{
-            $gel_settings_display = "";
+        if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE || 
+                $this->Csz_auth_model->is_group_allowed('general label', 'backend') !== FALSE || 
+                $this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('plugin manager', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('admin users', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('member users', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('user groups', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE ||
+                $this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE
+        ){
+            /* Start General Menu */
+            if($cur_page == 'users' || $cur_page == 'members' || $cur_page == 'groups' || $cur_page == 'social' || $cur_page == 'settings' || $cur_page == 'lang' || $cur_page == 'upgrade' || $cur_page == 'genlabel' || $cur_page == 'plugin' || $cur_page == 'export'){
+                $gel_settings_display = "active ";
+            }else{
+                $gel_settings_display = "";
+            }
+            $html.= '<li class="'.$gel_settings_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-right"></i> <span>'.$this->lang->line('nav_gel_settings').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+            $html.= '<ul class="treeview-menu">';
+            if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'lang', 'admin/lang', $this->lang->line('lang_header'), 'glyphicon glyphicon-flag');
+            if($this->Csz_auth_model->is_group_allowed('general label', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'genlabel', 'admin/genlabel', $this->lang->line('genlabel_header'), 'glyphicon glyphicon-globe');
+            if($this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'social', 'admin/social', $this->lang->line('social_header'), 'glyphicon glyphicon-share');       
+            if($this->Csz_auth_model->is_group_allowed('plugin manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'plugin', 'admin/plugin', $this->lang->line('pluginmgr_header'), 'glyphicon glyphicon-gift');
+            if($this->Csz_auth_model->is_group_allowed('admin users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'users', 'admin/users', $this->lang->line('user_admin_txt'), 'fa fa-user');
+            if($this->Csz_auth_model->is_group_allowed('member users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'members', 'admin/members', $this->lang->line('user_member_txt'), 'fa fa-user');
+            if($this->Csz_auth_model->is_group_allowed('user groups', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'groups', 'admin/groups', $this->lang->line('user_group_txt'), 'fa fa-users');
+            if($this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'settings', 'admin/settings', $this->lang->line('settings_header'), 'glyphicon glyphicon-cog');
+            if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'upgrade', 'admin/upgrade', $this->lang->line('maintenance_header'), 'glyphicon glyphicon-compressed');
+            if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'export', 'admin/export', $this->lang->line('export_import_csv_btn'), 'glyphicon glyphicon-export');
+            $html.= '</ul></li>';
+            /* End General Menu */
         }
-        $html.= '<li class="'.$gel_settings_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-right"></i> <span>'.$this->lang->line('nav_gel_settings').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
-        $html.= '<ul class="treeview-menu">';
-        if($this->Csz_auth_model->is_group_allowed('language', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'lang', 'admin/lang', $this->lang->line('lang_header'), 'glyphicon glyphicon-flag');
-        if($this->Csz_auth_model->is_group_allowed('general label', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'genlabel', 'admin/genlabel', $this->lang->line('genlabel_header'), 'glyphicon glyphicon-globe');
-        if($this->Csz_auth_model->is_group_allowed('social', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'social', 'admin/social', $this->lang->line('social_header'), 'glyphicon glyphicon-share');       
-        if($this->Csz_auth_model->is_group_allowed('plugin manager', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'plugin', 'admin/plugin', $this->lang->line('pluginmgr_header'), 'glyphicon glyphicon-gift');
-        if($this->Csz_auth_model->is_group_allowed('admin users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'users', 'admin/users', $this->lang->line('user_admin_txt'), 'fa fa-user');
-        if($this->Csz_auth_model->is_group_allowed('member users', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'members', 'admin/members', $this->lang->line('user_member_txt'), 'fa fa-user');
-        if($this->Csz_auth_model->is_group_allowed('user groups', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'groups', 'admin/groups', $this->lang->line('user_group_txt'), 'fa fa-users');
-        if($this->Csz_auth_model->is_group_allowed('site settings', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'settings', 'admin/settings', $this->lang->line('settings_header'), 'glyphicon glyphicon-cog');
-        if($this->Csz_auth_model->is_group_allowed('maintenance', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'upgrade', 'admin/upgrade', $this->lang->line('maintenance_header'), 'glyphicon glyphicon-compressed');
-        if($this->Csz_auth_model->is_group_allowed('export', 'backend') !== FALSE) $html.= $this->admin_leftli($cur_page, 'export', 'admin/export', $this->lang->line('export_import_csv_btn'), 'glyphicon glyphicon-export');
-        $html.= '</ul></li>';
-        /* End General Menu */
         /* Start Plugin Menu */
         $plugin_arr = $this->Csz_model->getValueArray('plugin_config_filename', 'plugin_manager', "plugin_config_filename != '' AND plugin_active = '1'", '', 0);
         $plugin_menu = '';

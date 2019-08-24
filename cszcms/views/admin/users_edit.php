@@ -114,6 +114,23 @@
                 echo form_dropdown('user_type', $data, $users->user_type, $att);
             ?>		
         </div> <!-- /control-group -->
+        <?php if($this->uri->segment(4) != '1' && $this->session->userdata('user_admin_id') != $this->uri->segment(4)){ ?>
+        <div class="control-group">
+            <label class="control-label" for="pass_change"><?php echo $this->lang->line('user_req_changepwd'); ?>*</label>
+            <?php
+                if($users->pass_change == 1){
+                    $pass_change = 'no';
+                }else{
+                    $pass_change = 'yes';
+                }
+                $att = 'id="pass_change" class="form-control"';
+                $data = array();
+                $data['yes'] = $this->lang->line('option_yes');
+                $data['no'] = $this->lang->line('option_no');
+                echo form_dropdown('pass_change', $data, $pass_change, $att);
+            ?>	
+        </div> <!-- /control-group -->
+        <?php } ?>
         <br>
         <div class="control-group">										
             <label class="form-control-static" for="pm_sendmail">

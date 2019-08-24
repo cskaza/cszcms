@@ -40,9 +40,9 @@
                                         echo '<td class="text-center" style="vertical-align:middle;">
                                                 <input type="checkbox" name="delR[]" id="delR" class="selall-chkbox" value="'.$u['id'].'">
                                             </td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $u['title'] . '</a></td>';
-                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewpm/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewSendPM/'.$u['id'].'">' . $this->Csz_admin_model->getUser($u['receiver_id'])->name . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewSendPM/'.$u['id'].'">' . $u['title'] . '</a></td>';
+                                        echo '<td class="text-center" style="vertical-align:middle;"><a href="'.$this->Csz_model->base_link(). '/member/viewSendPM/'.$u['id'].'">' . $u['date_sent'] . '</a></td>';
                                         echo '</tr>';
                                     }
                                     ?>

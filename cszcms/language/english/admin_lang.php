@@ -11,7 +11,7 @@ $lang['dashboard_linkrecent']	= "20 Recent Link Statistic";
 $lang['dashboard_emailrecent']	= "10 Recent Email Logs";
 $lang['dashboard_toemail']	= "To";
 $lang['dashboard_fromemail']	= "From";
-$lang['dashboard_rssnews']	= "6 Recent CSZ CMS News";
+$lang['dashboard_rssnews']	= "Recent CSZ CMS News";
 
 //Navigation Bar
 $lang['nav_dash']		= "Dashboard";
@@ -80,6 +80,7 @@ $lang['user_backend_txt']               = "Backend";
 $lang['user_frontend_txt']              = "Frontend";
 $lang['user_perm_allow']                = "Allow";
 $lang['user_perm_deny']                 = "Deny";
+$lang['user_req_changepwd']             = "Required to change password.";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Save";
@@ -124,7 +125,7 @@ $lang['forgot_check_email']	= "Please check your email inbox and click the link 
 //Dashboard
 $lang['dash_welcome']		= "Welcome to CSZ CMS Backend";
 $lang['dash_cur_time']		= "Current Date/Time:";
-$lang['dash_message']		= "This is an open source web application that allows to manage all content and settings on the websites. It was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease. And based on the server side script language PHP and uses a MySQL or MariaDB database for data storage.<br><br>This is open-source Content Management System. And all is free under the Astian Develop Public License (ADPL).";
+$lang['dash_message']		= "This is an open source web application that allows to manage all content and settings on the websites. It was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease. And based on the server side script language PHP and uses a MySQL or MariaDB database for data storage.<br><br>This is open-source Content Management System. And all is free under the Astian Develop Public License (ADPL) and MIT.";
 $lang['dash_cszcms_link']	= "The official of CSZ CMS website";
 
 // EMAILS FORGET PASSWORD

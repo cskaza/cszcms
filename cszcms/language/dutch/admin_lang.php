@@ -11,7 +11,7 @@ $lang['dashboard_linkrecent']	= "20 Recente Link Statistieken";
 $lang['dashboard_emailrecent']	= "10 Recente Email Logs";
 $lang['dashboard_toemail']	= "Aan";
 $lang['dashboard_fromemail']	= "Van";
-$lang['dashboard_rssnews']	= "6 Recente CSZ CMS Nieuws";
+$lang['dashboard_rssnews']	= "Recente CSZ CMS Nieuws";
 
 //Navigation Bar
 $lang['nav_dash']		= "Dashboard";
@@ -80,6 +80,7 @@ $lang['user_backend_txt']               = "Backend";
 $lang['user_frontend_txt']              = "Frontend";
 $lang['user_perm_allow']                = "Toestaan";
 $lang['user_perm_deny']                 = "Weigeren";
+$lang['user_req_changepwd']             = "Vereist om het wachtwoord te wijzigen.";
 
 // COMMON BUTTONS
 $lang['btn_save']		= "Opslaan";

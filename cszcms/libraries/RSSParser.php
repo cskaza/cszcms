@@ -44,6 +44,12 @@ class RSSParser {
 		{
 			$this->callback = $callback;
 		}
+                $CI =& get_instance();
+                if (CACHE_TYPE == 'file') {
+                    $CI->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
+                } else {
+                    $CI->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
+                }
 	}
 
 	// --------------------------------------------------------------------
@@ -216,19 +222,19 @@ class RSSParser {
 	function runFeedBackend($num)
 	{
             $CI =& get_instance();
-            (CACHE_TYPE == 'file') ? $CI->load->driver('cache', array('adapter' => 'file')) : $CI->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file'));
             if (!$CI->cache->get('backend_rssfeed_news')) {
                 $return = '';
                 $rss = $this->getFeed($num);
                 if(!empty($rss)){
                     foreach ($rss as $item) {
-                        $return.= '<a href="'.$item['link'].'" target="_blank"><b>'.$item['title'].'</b></a><br>';
-                        $return.= '<em>'.$item['pubDate'].'</em><br><br>'; 
-                        $return.= $item['description'];
-                        $return.= '<hr>';
+                        $return.= '<div class="list-group"><div class="list-group-item">';
+                        $return.= '<a href="'.$item['link'].'" target="_blank"><b>'.$item['title'].'</b></a>'; 
+                        $return.= '<p>'.$item['description'].'</p>';
+                        $return.= '<span class="badge">'.$item['pubDate'].'</span>';
+                        $return.= '</div></div>';
                     }   
                 }
-                ($CI->Csz_model->load_config()->pagecache_time == 0) ? $cache_time = 1 : $cache_time = $CI->Csz_model->load_config()->pagecache_time;
+                ($CI->Csz_model->load_config()->pagecache_time == 0) ? $cache_time = 1440 : $cache_time = $CI->Csz_model->load_config()->pagecache_time;
                 $CI->cache->save('backend_rssfeed_news', $return, ($cache_time * 60));
             }
             return $CI->cache->get('backend_rssfeed_news');

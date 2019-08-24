@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /* 
  * For CSZ CMS Backend Language config 
@@ -13,4 +13,24 @@ $config['admin_language_iso']  = array(
     'dutch' => 'nl',
     'italian' => 'it',
     'spanish' => 'es',
+    'french' => 'fr',
+    'arabic' => 'ar',
+    'chinese' => 'zh',
+    'czech' => 'cs',
+    'danish' => 'da',
+    'german' => 'de',
+    'indonesian' => 'id',
+    'japanese' => 'ja',
+    'korean' => 'ko',
+    'portuguese' => 'pt',
+    'lao' => 'lo',
+    'russian' => 'ru',
+    'tamil' => 'ta',
+    'telugu' => 'te',
+    'malay' => 'ms',
+    'vietnamese' => 'vi',
+    'turkmen' => 'tk',
+    'swedish' => 'sv',
+    'burmese' => 'my',
+    'cambodian' => 'km',
 );

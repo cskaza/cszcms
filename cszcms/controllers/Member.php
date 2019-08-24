@@ -1,6 +1,5 @@
 <?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 
 /**
  * CSZ CMS
@@ -458,14 +457,33 @@ class Member extends CI_Controller {
         }
     }
     
+    public function viewSendPM() {
+        Member_helper::is_logged_in($this->session->userdata('admin_email'));
+        Member_helper::is_allowchk('pm');
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            //Get users from database   
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3));
+            if($pm !== FALSE){
+                $this->template->setSub('pm', $pm);
+                //Load the view
+                $this->template->loadFrontViews('member/pm_send_view');
+            }else{
+                redirect($this->csz_referrer->getIndex('member'), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex('member'), 'refresh');
+        }
+    }
+    
     public function newPM() {
         Member_helper::is_logged_in($this->session->userdata('admin_email'));
         Member_helper::is_allowchk('pm');
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('users', $this->Csz_model->getValueArray('*', 'user_admin', "active = '1' AND user_admin_id != '".$this->session->userdata('user_admin_id')."'", '', 0));
-        if($this->uri->segment(3)){
-            $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(3)));
+        if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
+            if($this->uri->segment(4) && is_numeric($this->uri->segment(4))){ $this->template->setSub('main_pm', $this->Csz_auth_model->get_pm($this->uri->segment(4))); }
+            $this->template->setSub('receiver', $this->Csz_admin_model->getUser($this->uri->segment(3)));
         }
         //Load the view
         $this->template->loadFrontViews('member/pm_add');
@@ -487,7 +505,7 @@ class Member extends CI_Controller {
             //Validation passed
             //Add the user
             foreach($this->input->post('to[]') as $value){
-                $this->Csz_auth_model->send_pm($value, $this->input->post('title', TRUE), $this->input->post('message', TRUE));
+                $this->Csz_auth_model->send_pm($value, $this->input->post('title', TRUE), $this->input->post('message', TRUE), '', str_replace(array('{[',']}'), '', $this->input->post('re_message', TRUE)));
             }
             $this->session->set_flashdata('f_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->Csz_model->getLabelLang('success_txt').'</div>');
             //Return to user list
