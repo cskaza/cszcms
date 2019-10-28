@@ -1,6 +1,17 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.4 (2019-10-27)
+- Add setting on content page for member login can see (Choose User Group).
+- Add setting on Article and Gallery plugin for member login can see (Choose User Group).
+- Add div class on form builder.
+- Add Vietnamese language on backend.
+- Add Line notify libraries.
+- Add copy_as on user groups.
+- Fixed file manager upload vulnerability (Github Issue#20).
+- Fixed more important bug.
+- Improve performance.
+
 CSZ-CMS V.1.2.3 (2019-08-19)
-- Add french language on backend.
+- Add French language on backend.
 - Update Bootstrap to 3.4.1.
 - Fixed Time-based blind SQL injection Vulnerability (Github Issue#19).
 - Fixed Private Message (PM) error.

@@ -75,6 +75,7 @@ class Home extends CI_Controller {
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
         if ($page_rs !== FALSE) {
+            Member_helper::is_allow_groups($page_rs->user_groups_idS);
             $this->template->set('core_css', $this->Csz_model->coreCss($page_rs->custom_css, FALSE));
             $this->template->set('core_js', $this->Csz_model->coreJs($page_rs->custom_js, FALSE));
             $title = $this->Csz_model->pagesTitle($page_rs->page_title);

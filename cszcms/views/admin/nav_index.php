@@ -1,3 +1,6 @@
+<style type="text/css">
+.inactive-data{color:red;text-decoration:line-through}
+</style>
 <!-- Page Heading -->
 <div class="row">
     <div class="col-lg-12">

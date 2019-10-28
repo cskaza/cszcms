@@ -248,7 +248,7 @@
                 <?php foreach ($field_rs as $field_val) { ?>    
                     <div class="panel panel-primary ui-state-default">
                         <div class="panel-body row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <i class="glyphicon glyphicon-sort"></i><br>
                                 <input type="hidden" name="form_field_id[]" id="form_field_id" value="<?php echo $field_val['form_field_id']?>">
                                 <div class="control-group">
@@ -273,10 +273,16 @@
                                     echo form_dropdown('field_type1[]', $data, $field_val['field_type'], $att);
                                     ?>
                                     <input type="hidden" name="field_oldtype[]" id="field_oldtype" value="<?php echo $field_val['field_type']?>">
-                                </div>            
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="control-group">	
+                                    <label class="control-label" for="field_div_class1"><?php echo $this->lang->line('field_div_class'); ?></label>
+                                    <input type="text" name="field_div_class1[]" id="field_div_class1" class="form-control" maxlength="255" value="<?php echo $field_val['field_div_class']?>">
+                                </div>
                                 <div class="control-group">	
                                     <label class="control-label" for="field_name1"><?php echo $this->lang->line('field_name'); ?>*</label>
-                                    <input type="text" name="field_name1[]" id="field_name1" class="form-control" maxlength="255" value="<?php echo $field_val['field_name']?>">
+                                    <input type="text" name="field_name1[]" id="field_name1" class="form-control" maxlength="255" value="<?php echo $field_val['field_name']?>" required="required">
                                     <input type="hidden" name="field_oldname[]" id="field_oldname" value="<?php echo $field_val['field_name']?>">
                                 </div>
                                 <div class="control-group">	
@@ -330,7 +336,7 @@
             <?php } ?>
             <div class="entry panel panel-default">
                 <div class="panel-body row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="control-group">
                             <label class="control-label" for="field_type"><?php echo $this->lang->line('field_type'); ?></label>
                             <select id="field_type" name="field_type[]" class="form-control">
@@ -349,7 +355,13 @@
                                 <option value="text">text</option>
                                 <option value="textarea">textarea</option>
                             </select>
-                        </div>            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="control-group">	
+                            <label class="control-label" for="field_div_class"><?php echo $this->lang->line('field_div_class'); ?></label>
+                            <input type="text" name="field_div_class[]" id="field_div_class" class="form-control" maxlength="255">
+                        </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_name"><?php echo $this->lang->line('field_name'); ?>*</label>
                             <input type="text" name="field_name[]" id="field_name" class="form-control" maxlength="255">

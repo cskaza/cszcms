@@ -68,6 +68,19 @@
             echo form_dropdown('lang_iso', $data, $this->Csz_admin_model->getDraftArray('lang_iso'), $att);
             ?>	
         </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="user_groups_idS"><?php echo $this->lang->line('pages_user_groups_id'); ?></label>
+            <?php
+                $att = 'data-placeholder="'.$this->lang->line('pages_user_groups_id').':" id="user_groups_idS" class="form-control select2" multiple="multiple"';
+                $data = array();
+                if (!empty($user_groups)) {
+                    foreach ($user_groups as $ug) {
+                        $data[$ug['user_groups_id']] = $ug['name'];
+                    }
+                }
+                echo form_dropdown('user_groups_idS[]', $data, '', $att);
+            ?>	
+        </div> <!-- /control-group -->
         <br>
         <div class="control-group">										
             <label class="form-control-static" for="active">

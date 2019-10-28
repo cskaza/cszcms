@@ -79,12 +79,13 @@ class Upgrade extends CI_Controller {
         $lastversion = $this->Csz_admin_model->chkVerUpdate($this->cur_version);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion($this->cur_version);
+            $url = '';
             $url1 = $this->config->item('csz_upgrade_server_1') . "upgrade-to-" . $nextversion . ".zip";
             $url2 = $this->config->item('csz_upgrade_server_2') . "upgrade-to-" . $nextversion . ".zip";
             if($this->Csz_model->is_url_exist($url1) !== FALSE){
-                $url = &$url1; /* Main Link */
+                $url = $url1; /* Main Link */
             }else if($this->Csz_model->is_url_exist($url1) === FALSE && $this->Csz_model->is_url_exist($url2) !== FALSE){
-                $url = &$url2; /* Backup Link */
+                $url = $url2; /* Backup Link */
             }
             $newfname = FCPATH . basename($url);
             if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
@@ -143,12 +144,13 @@ class Upgrade extends CI_Controller {
         $lastversion = $this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion(CI_VERSION, '', TRUE);
+            $url = '';
             $url1 = $this->config->item('ci_update_server_1') . "ci-" . $nextversion . ".zip";
             $url2 = $this->config->item('ci_update_server_2') . "ci-" . $nextversion . ".zip";
             if($this->Csz_model->is_url_exist($url1) !== FALSE){
-                $url = &$url1; /* Main Link */
+                $url = $url1; /* Main Link */
             }else if($this->Csz_model->is_url_exist($url1) === FALSE && $this->Csz_model->is_url_exist($url2) !== FALSE){
-                $url = &$url2; /* Backup Link */
+                $url = $url2; /* Backup Link */
             }
             $newfname = FCPATH . basename($url);
             if($this->Csz_model->downloadFile($url, $newfname) !== FALSE){
@@ -250,7 +252,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('save');
         $this->Csz_admin_model->showLoadingImg();
         $this->load->dbutil();
-        @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('optimize_success_alert').'</div>');
@@ -471,6 +472,7 @@ class Upgrade extends CI_Controller {
         $this->Csz_model->clear_all_cache();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
+        @array_map('unlink', glob(FCPATH . '*.zip'));
         @$this->db->empty_table('save_formdraft');
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearallcache_success_alert').'</div>');
         $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
@@ -482,8 +484,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('save');
         $this->Csz_admin_model->showLoadingImg();
         @$this->db->cache_delete_all();
-        @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
-        @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         @$this->db->empty_table('save_formdraft');
         @$this->db->flush_cache();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('clearalldbcache_success_alert').'</div>');
@@ -495,9 +495,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
         $this->Csz_admin_model->showLoadingImg();
-        @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
-        @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
-        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         $this->Csz_model->clear_all_session();
         $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/logout');
     }
@@ -508,8 +505,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_allowchk('delete');
         $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_error_log();
-        @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
-        @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade');
     }

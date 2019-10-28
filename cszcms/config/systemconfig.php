@@ -23,7 +23,7 @@ defined('BASEPATH') || exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.2.3'; /* For CMS Version */
+$config['csz_version'] = '1.2.4'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 
@@ -34,18 +34,18 @@ $config['cszcms_credit'] = 'Powered by <a href="https://www.cszcms.com" target="
 
 /* 
  * For CSZ CMS check lastest version xml url
- * Defualt url https://www.cszcms.com/downloads/lastest_version.xml
- * Backup url https://cszcms.sourceforge.io/xml/lastest_version.xml
+ * Defualt url https://cszcms.sourceforge.io/xml/lastest_version.xml
+ * Backup url https://www.cszcms.com/downloads/lastest_version.xml
  */
-$config['csz_chkverxmlurl_main'] = 'https://www.cszcms.com/downloads/lastest_version.xml';
-$config['csz_chkverxmlurl_backup'] = 'https://cszcms.sourceforge.io/xml/lastest_version.xml';
+$config['csz_chkverxmlurl_main'] = 'https://cszcms.sourceforge.io/xml/lastest_version.xml';
+$config['csz_chkverxmlurl_backup'] = 'https://www.cszcms.com/downloads/lastest_version.xml';
 
 /* 
  * For CSZ CMS upgrade server file path Ex. https://www.cszcms.com/downloads/upgrade/upgrade-to-1.1.4.zip
  * The upgrade file is "upgrade-to-1.1.4.zip" (Can't change the file upgrade name to other format. This format only)
  * Please set the server with path only https://www.cszcms.com/downloads/upgrade/
  */
-$config['csz_upgrade_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms/upgrade/';
+$config['csz_upgrade_server_1'] = 'https://sourceforge.net/projects/cszcms/files/upgrade/';
 $config['csz_upgrade_server_2'] = 'https://www.cszcms.com/downloads/upgrade/';
 
 /* 
@@ -57,26 +57,26 @@ $config['csz_backend_feed_backup_url'] = 'https://cszcms.sourceforge.io/xml/cszc
 
 /* 
  * For CSZ CMS plugin version checking xml url
- * Defualt url http://localhost/plugintest/plugin_list.xml
- * Backup url http://localhost/plugintest/plugin_list.xml
+ * Defualt url https://cszcms-plugin.sourceforge.io/plugin_list.xml
+ * Backup url https://www.cszcms.com/downloads/plugins/plugin_list.xml
  */
 $config['csz_pluginxmlurl_main'] = 'https://cszcms-plugin.sourceforge.io/plugin_list.xml';
 $config['csz_pluginxmlurl_backup'] = 'https://www.cszcms.com/downloads/plugins/plugin_list.xml';
 
 /* 
- * For CSZ CMS plugin install server file path Ex. http://localhost/plugintest/install/shop_install_1.0.6.zip
+ * For CSZ CMS plugin install server file path Ex. https://www.cszcms.com/downloads/plugins/install/shop_install_1.0.6.zip
  * The upgrade file is "shop_install_1.0.6.zip" (Can't change the file install name to other format. This format only)
- * Please set the server with path only http://localhost/plugintest/install/
+ * Please set the server with path only https://www.cszcms.com/downloads/plugins/install/
  */
-$config['csz_plugin_install_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/install/';
+$config['csz_plugin_install_server_1'] = 'https://sourceforge.net/projects/cszcms-plugin/files/install/';
 $config['csz_plugin_install_server_2'] = 'https://www.cszcms.com/downloads/plugins/install/';
 
 /* 
- * For CSZ CMS plugin upgrade server file path Ex. http://localhost/plugintest/upgrade/shop_upgrade_1.0.6.zip
+ * For CSZ CMS plugin upgrade server file path Ex. https://www.cszcms.com/downloads/plugins/upgrade/shop_upgrade_1.0.6.zip
  * The upgrade file is "shop_upgrade_1.0.6.zip" (Can't change the file upgrade name to other format. This format only)
- * Please set the server with path only http://localhost/plugintest/upgrade/
+ * Please set the server with path only https://www.cszcms.com/downloads/plugins/upgrade/
  */
-$config['csz_plugin_upgrade_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/upgrade/';
+$config['csz_plugin_upgrade_server_1'] = 'https://sourceforge.net/projects/cszcms-plugin/files/upgrade/';
 $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugins/upgrade/';
 
 /* 
@@ -84,5 +84,5 @@ $config['csz_plugin_upgrade_server_2'] = 'https://www.cszcms.com/downloads/plugi
  * The upgrade file is "ci-3.1.9.zip" (Can't change the file upgrade name to other format. This format only)
  * Please set the server with path only https://www.cszcms.com/downloads/ci_update/
  */
-$config['ci_update_server_1'] = 'https://excellmedia.dl.sourceforge.net/project/cszcms-plugin/ci_update/';
+$config['ci_update_server_1'] = 'https://sourceforge.net/projects/cszcms-plugin/files/ci_update/';
 $config['ci_update_server_2'] = 'https://www.cszcms.com/downloads/ci_update/';

@@ -29,8 +29,7 @@ class Member extends CI_Controller {
         $row = $this->Csz_model->load_config();
         if($row->maintenance_active){
             //Return to home page
-            redirect('./', 'refresh');
-            exit;
+            redirect($this->Csz_model->base_link(), 'refresh');
         }
         if ($row->themes_config) {
             $this->template->set_template($row->themes_config);
@@ -162,7 +161,6 @@ class Member extends CI_Controller {
         if($config->member_close_regist){
             $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Sorry!!! Member register is closed!</div>');
             redirect($this->Csz_model->base_link().'/member/login', 'refresh');
-            exit();
         }else{
             //Load the form helper
             $this->load->helper('form');
@@ -207,12 +205,10 @@ class Member extends CI_Controller {
                     $this->template->loadFrontViews('member/regist');
                 }else{
                     redirect($this->Csz_model->base_link(). '/member/confirm/' . $md5_hash, 'refresh');
-                    exit();
                 }
             }else{
                 $this->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Sorry!!! Member register is closed!</div>');
                 redirect('member/login', 'refresh');
-                exit();
             }
         }
     }

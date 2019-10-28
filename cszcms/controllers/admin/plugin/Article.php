@@ -157,6 +157,7 @@ class Article extends CI_Controller {
         $this->load->helper('form');
         $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+        $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
         //Load the view
         $this->template->loadSub('admin/plugin/article/article_add');
     }
@@ -230,6 +231,7 @@ class Article extends CI_Controller {
             $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
             $this->template->setSub('article', $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1));
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+            $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
             //Load the view
             $this->template->loadSub('admin/plugin/article/article_artedit');
         } else {

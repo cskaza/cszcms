@@ -76,6 +76,7 @@ class Gallery extends CI_Controller {
         //Load the form helper
         $this->load->helper('form');
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+        $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
         //Load the view
         $this->template->loadSub('admin/plugin/gallery/gallery_add');
     }
@@ -117,6 +118,7 @@ class Gallery extends CI_Controller {
             }
             $this->template->setSub('album', $album);
             $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+            $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
             $this->load->library('pagination');
             
             $search_arr = "gallery_db_id = '".$this->uri->segment(5)."'";

@@ -227,6 +227,7 @@ class Article extends CI_Controller {
         if($this->uri->segment(4) && $this->uri->segment(5)){
             $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
+                Member_helper::is_allow_groups($art_row->user_groups_idS);
                 if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
                     $this->Csz_model->setSiteLang($art_row->lang_iso);
                 }

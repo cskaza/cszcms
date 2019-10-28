@@ -154,5 +154,34 @@ class Groups extends CI_Controller {
         //Return to widget list
         redirect($this->csz_referrer->getIndex(), 'refresh');
     }
+    
+    public function asCopy() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('user groups');
+        admin_helper::is_allowchk('save');
+        if($this->uri->segment(4)){
+            $group = $this->Csz_model->getValue('*', 'user_groups', 'user_groups_id', $this->uri->segment(4), 1);
+            if($group !== FALSE){
+                $data = array(
+                    'name' => $this->Csz_model->findNameAsCopy('user_groups', 'user_groups_id', $group->name),
+                    'definition' => $group->definition,
+                );
+                $this->db->insert('user_groups', $data);
+                $lastid = $this->db->insert_id();
+                $perm_group = $this->Csz_model->getValueArray('user_perms_id', 'user_perm_to_group', 'user_groups_id', $this->uri->segment(4));
+                if($perm_group !== FALSE){
+                    foreach ($perm_group as $value) {
+                        $data = array(
+                            'user_perms_id' => $value['user_perms_id'],
+                            'user_groups_id' => $lastid,
+                        );
+                        $this->db->insert('user_perm_to_group', $data);
+                    }
+                }
+                $this->db->cache_delete_all();
+            }
+        }
+        redirect($this->csz_referrer->getIndex(), 'refresh');
+    }
 
 }

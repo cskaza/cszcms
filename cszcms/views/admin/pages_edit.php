@@ -94,6 +94,29 @@
                 echo form_dropdown('lang_iso', $data, $pages->lang_iso, $att);
             ?>	
         </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="user_groups_idS"><?php echo $this->lang->line('pages_user_groups_id'); ?></label>
+            <select data-placeholder="<?php echo $this->lang->line('pages_user_groups_id') ?>:" name="user_groups_idS[]" id="select_contactS" class="form-control select2" multiple="multiple" tabindex="4">
+            <?php
+                $user_groups_idSR = array();
+                if($pages->user_groups_idS && $pages->user_groups_idS){
+                    $user_groups_idSR = explode(',', $pages->user_groups_idS);
+                }
+                if (!empty($user_groups)) {
+                    foreach ($user_groups as $ug) {
+                        $selected = '';
+                        if (!empty($user_groups_idSR)) {
+                            foreach ($user_groups_idSR as $sgr_val) {
+                                if ($sgr_val == $ug['user_groups_id']) {
+                                    $selected = ' selected="selected"';
+                                }
+                            }
+                        } ?>
+                        <option value="<?php echo $ug['user_groups_id'] ?>"<?php echo $selected ?>><?php echo $ug['name'] ?></option>
+                <?php }
+                } ?>	
+                </select>
+        </div> <!-- /control-group -->
         <?php if($this->Csz_auth_model->is_group_allowed('pages cssjs additional', 'backend') !== FALSE){ ?>
             <div class="control-group">            
                 <label class="control-label" for="more_metatag"><?php echo $this->lang->line('settings_add_meta'); ?></label>

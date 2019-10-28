@@ -470,10 +470,11 @@ class Csz_admin_model extends CI_Model{
      * Function for update the user
      *
      * @param	string	$id    member id
+     * @param	bool	$backend   TRUE for login on backend
      * @return	TRUE or FALSE
      */
-    public function updateUser($id){
-        $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), "user_type != 'member'");
+    public function updateUser($id, $backend = TRUE){
+        $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), $backend);
         if($query['num_rows'] > 0){
             // update the user account
             if($this->input->post('active')){
@@ -747,13 +748,13 @@ class Csz_admin_model extends CI_Model{
      */
     public function coreCss($more_css = '', $more_include = TRUE){
         $core_css = '<link rel="canonical" href="' . $this->Csz_model->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
-        $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
+        $core_css.= '<link rel="dns-prefetch" href="//ajax.cloudflare.com">';
         $core_css.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
         $core_css.= link_tag(base_url('', '', TRUE).'assets/css/bootstrap.min.css');
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag(base_url('', '', TRUE).'assets/css/flag-icon.min.css');
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/select2/select2.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -788,7 +789,7 @@ class Csz_admin_model extends CI_Model{
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-ui.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.ui.touch-punch.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/tinymce/tinymce.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
         if (!empty($more_js)) {
             if($more_include !== FALSE){
@@ -1520,6 +1521,15 @@ class Csz_admin_model extends CI_Model{
         $content = str_replace('&gt;', '>', $content1);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
         $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
+        $user_groups_idS = $this->input->post('user_groups_idS');
+        $user_groups_id = '';
+        if (isset($user_groups_idS)) {
+            if (count($user_groups_idS) == 1) {
+                $user_groups_id = $user_groups_idS[0];
+            } else {
+                $user_groups_id = implode(",", $user_groups_idS);
+            }
+        }
         $data = array(
             'page_name' => $page_name_input,
             'page_url' => $page_url,
@@ -1529,6 +1539,7 @@ class Csz_admin_model extends CI_Model{
             'page_desc' => $this->input->post('page_desc', TRUE),
             'content' => $content,
             'active' => $active,
+            'user_groups_idS' => $user_groups_id,
         );
         if($this->Csz_auth_model->is_group_allowed('pages cssjs additional', 'backend') !== FALSE){
             $data['more_metatag'] = $this->input->post('more_metatag', FALSE);
@@ -1557,6 +1568,15 @@ class Csz_admin_model extends CI_Model{
         $content = str_replace('&gt;', '>', $content1);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
         $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
+        $user_groups_idS = $this->input->post('user_groups_idS');
+        $user_groups_id = '';
+        if (isset($user_groups_idS)) {
+            if (count($user_groups_idS) == 1) {
+                $user_groups_id = $user_groups_idS[0];
+            } else {
+                $user_groups_id = implode(",", $user_groups_idS);
+            }
+        }
         $this->db->set('page_name', $page_name_input, TRUE);
         $this->db->set('page_url', $page_url, TRUE);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE), TRUE);
@@ -1572,6 +1592,7 @@ class Csz_admin_model extends CI_Model{
         if($id != 1){
             $this->db->set('active', $active, FALSE);
         }
+        $this->db->set('user_groups_idS', $user_groups_id);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
@@ -1645,6 +1666,7 @@ class Csz_admin_model extends CI_Model{
         $field_label = $this->input->post('field_label', TRUE);
         $sel_option_val = $this->input->post('sel_option_val', TRUE);
         $field_required = $this->input->post('field_required', TRUE);
+        $field_div_class = $this->input->post('field_div_class', TRUE);
         $fields = array(
             'form_'.$form_name.'_id' => array(
                 'type' => 'INT',
@@ -1668,6 +1690,7 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label[$i],
                         'sel_option_val' => $sel_option_val[$i],
                         'field_required' => $field_required[$i],
+                        'field_div_class' => $field_div_class[$i],
                         'arrange' => $arrange,
                     );
                     $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
@@ -1749,6 +1772,7 @@ class Csz_admin_model extends CI_Model{
         $field_label1 = $this->input->post('field_label1', TRUE);
         $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
         $field_required1 = $this->input->post('field_required1', TRUE);
+        $field_div_class1 = $this->input->post('field_div_class1', TRUE);
         if(count($field_oldname) > 0){
             $arrange = 1;
             for($i = 0; $i < count($field_oldname); $i++){
@@ -1764,6 +1788,7 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label1[$i],
                         'sel_option_val' => $sel_option_val1[$i],
                         'field_required' => $field_required1[$i],
+                        'field_div_class' => $field_div_class1[$i],
                         'arrange' => $arrange,
                     );
                     $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
@@ -1806,6 +1831,7 @@ class Csz_admin_model extends CI_Model{
         $field_label = $this->input->post('field_label', TRUE);
         $sel_option_val = $this->input->post('sel_option_val', TRUE);
         $field_required = $this->input->post('field_required', TRUE);
+        $field_div_class = $this->input->post('field_div_class', TRUE);
         if(count($field_name) > 0){
             $last_arrange = $this->Csz_model->getLastID('form_field', 'arrange', "form_main_id = '".$id."'");
             for($i = 0; $i < count($field_name); $i++){
@@ -1822,6 +1848,7 @@ class Csz_admin_model extends CI_Model{
                         'field_label' => $field_label[$i],
                         'sel_option_val' => $sel_option_val[$i],
                         'field_required' => $field_required[$i],
+                        'field_div_class' => $field_div_class[$i],
                         'arrange' => $last_arrange,
                     );
                     $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
@@ -2520,10 +2547,11 @@ class Csz_admin_model extends CI_Model{
      *
      * @param	string	$cur_txt    current version
      * @param	string	$last_ver    latest version
+     * @param   string  $previous_ver   previous version
      * @return	string or false
      */
-    public function pluginNextVer($cur_txt, $last_ver){
-        return $this->Csz_model->findNextVersion($cur_txt, $last_ver);
+    public function pluginNextVer($cur_txt, $last_ver, $previous_ver = ''){
+        return $this->Csz_model->findNextVersion($cur_txt, $last_ver, $previous_ver);
     }
     
     private function cszCredit(){

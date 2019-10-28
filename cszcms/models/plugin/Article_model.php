@@ -42,6 +42,15 @@ class Article_model extends CI_Model {
             $file_name = $_FILES['file_upload']['name'];
             $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
         }
+        $user_groups_idS = $this->input->post('user_groups_idS');
+        $user_groups_id = '';
+        if (isset($user_groups_idS)) {
+            if (count($user_groups_idS) == 1) {
+                $user_groups_id = $user_groups_idS[0];
+            } else {
+                $user_groups_id = implode(",", $user_groups_idS);
+            }
+        }
         $data = array(
             'main_picture' => $upload_file,
             'title' => $this->input->post('title', TRUE),
@@ -49,6 +58,7 @@ class Article_model extends CI_Model {
             'short_desc' => $this->input->post('short_desc', TRUE),
             'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
             'cat_id' => $this->input->post('cat_id', TRUE),
+            'user_groups_idS' => $user_groups_id,
         );
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));
         $this->db->set('url_rewrite', $url_rewrite);
@@ -103,6 +113,15 @@ class Article_model extends CI_Model {
                     $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
                 }
             }
+            $user_groups_idS = $this->input->post('user_groups_idS');
+            $user_groups_id = '';
+            if (isset($user_groups_idS)) {
+                if (count($user_groups_idS) == 1) {
+                    $user_groups_id = $user_groups_idS[0];
+                } else {
+                    $user_groups_id = implode(",", $user_groups_idS);
+                }
+            }
             $data = array(
                 'main_picture' => $upload_file,
                 'title' => $this->input->post('title', TRUE),
@@ -110,6 +129,7 @@ class Article_model extends CI_Model {
                 'short_desc' => $this->input->post('short_desc', TRUE),
                 'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
+                'user_groups_idS' => $user_groups_id,
             );
             $url_rewrite = $this->Csz_model->rw_link($this->input->post('title', TRUE));           
             $this->db->set('url_rewrite', $url_rewrite);

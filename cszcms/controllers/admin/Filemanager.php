@@ -148,6 +148,46 @@ class Filemanager extends CI_Controller {
         }
     }
     
+    public function allowPhotoType(){
+        return array(
+            'image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap', 
+            'image/gif', 
+            'image/jpeg', 'image/pjpeg', 
+            'image/png',  'image/x-png', 
+            'image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon', 
+            'text/plain', 
+            'application/msword', 'application/vnd.ms-office', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 
+            'application/pdf', 'application/force-download', 'application/x-download', 'binary/octet-stream',
+            'application/powerpoint', 'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel', 'application/xls', 'application/x-xls', 'application/excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip',
+            'application/x-rar', 'application/rar', 'application/x-rar-compressed',
+        ); /* images,css,js,doc,xls,ppt,zip,rar */
+    }
+    
+    public function allowAssetsType(){
+        return array(
+            'image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap', 
+            'image/gif', 
+            'image/jpeg', 'image/pjpeg', 
+            'image/png',  'image/x-png', 
+            'image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon', 
+            'text/plain',  
+            'text/javascript', 'text/x-javascript', 
+            'text/css',
+        ); /* images,css,js */
+    }
+    
+    public function allowMainType(){
+        return array(
+            'application/x-httpd-php', 'application/php', 'application/x-php', 'text/php', 'text/x-php', 'application/x-httpd-php-source', 
+            'text/html', 
+        ); /* php,html,html */
+    }
+
     public function connector() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('file manager');
@@ -164,6 +204,9 @@ class Filemanager extends CI_Controller {
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowPhotoType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/trash/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -196,6 +239,9 @@ class Filemanager extends CI_Controller {
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowAssetsType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/admin$/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -228,6 +274,9 @@ class Filemanager extends CI_Controller {
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/admin$/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -260,6 +309,9 @@ class Filemanager extends CI_Controller {
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/index.html/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -285,6 +337,9 @@ class Filemanager extends CI_Controller {
                     'trashHash' => 't1_Lw', // elFinder's hash of trash folder
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/index.html/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -347,6 +402,9 @@ class Filemanager extends CI_Controller {
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
                     'disabled' => array('rm', 'mkdir', 'mkfile' , 'archive', 'extract', 'resize', 'chmod', 'upload'),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowPhotoType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/trash/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -379,6 +437,9 @@ class Filemanager extends CI_Controller {
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
                     'disabled' => array('rm', 'mkdir', 'mkfile' , 'archive', 'extract', 'resize', 'chmod', 'upload'),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowAssetsType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/admin$/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -411,6 +472,9 @@ class Filemanager extends CI_Controller {
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
                     'disabled' => array('rm', 'mkdir', 'mkfile' , 'archive', 'extract', 'resize', 'chmod', 'upload'),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/admin$/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -443,6 +507,9 @@ class Filemanager extends CI_Controller {
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
                     'disabled' => array('rm', 'mkdir', 'mkfile' , 'archive', 'extract', 'resize', 'chmod', 'upload'),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/index.html/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.
@@ -468,6 +535,9 @@ class Filemanager extends CI_Controller {
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
                     'disabled' => array('rm', 'mkdir', 'mkfile' , 'archive', 'extract', 'resize', 'chmod', 'upload'),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => $this->allowMainType(), // Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
                     'attributes' => array(
                         array(
                             'pattern' => '/index.html/', //You can also set permissions for file types by adding, for example, .jpg inside pattern.

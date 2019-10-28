@@ -18,8 +18,8 @@
                     <tr>
                         <th width="8%" class="text-center" style="vertical-align: middle;"><?php echo $this->lang->line('id_col_table'); ?></th>
                         <th width="30%" class="text-center" style="vertical-align: middle;"><?php echo $this->lang->line('user_group_name'); ?></th>
-                        <th width="42%" class="text-center" style="vertical-align: middle;"><?php echo $this->lang->line('user_group_definition'); ?></th>
-                        <th width="20%" style="vertical-align: middle;"></th>
+                        <th width="36%" class="text-center" style="vertical-align: middle;"><?php echo $this->lang->line('user_group_definition'); ?></th>
+                        <th width="26%" style="vertical-align: middle;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +34,12 @@
                             echo '<td class="text-center" style="vertical-align: middle;">' . $u['user_groups_id'] . '</td>';
                             echo '<td class="text-center" style="vertical-align: middle;">' . $u['name'] . '</td>';
                             echo '<td style="vertical-align: middle;">' . $u['definition'] . '</td>';
-                            echo '<td class="text-center" style="vertical-align: middle;"><a href="'.$this->Csz_model->base_link().'/admin/groups/edit/' . $u['user_groups_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/groups/delete/'.$u['user_groups_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            if($u['user_groups_id'] != 1){
+                                $ascopy = '<a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.$this->Csz_model->base_link().'/admin/groups/asCopy/' . $u['user_groups_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a> &nbsp;&nbsp; ';
+                            }else{
+                                $ascopy = '';
+                            }
+                            echo '<td class="text-center" style="vertical-align: middle;">'.$ascopy.'<a href="'.$this->Csz_model->base_link().'/admin/groups/edit/' . $u['user_groups_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/groups/delete/'.$u['user_groups_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                     }    ?>

@@ -203,7 +203,7 @@
         <div class="addfields">
             <div class="entry panel panel-default">
                 <div class="panel-body row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="control-group">
                             <label class="control-label" for="field_type"><?php echo $this->lang->line('field_type'); ?></label>
                             <select id="field_type" name="field_type[]" class="form-control">
@@ -222,10 +222,16 @@
                                 <option value="text">text</option>
                                 <option value="textarea">textarea</option>
                             </select>
-                        </div>            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="control-group">	
+                            <label class="control-label" for="field_div_class"><?php echo $this->lang->line('field_div_class'); ?></label>
+                            <input type="text" name="field_div_class[]" id="field_div_class" class="form-control" maxlength="255">
+                        </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_name"><?php echo $this->lang->line('field_name'); ?>*</label>
-                            <input type="text" name="field_name[]" id="field_name" class="form-control" maxlength="255">
+                            <input type="text" name="field_name[]" id="field_name" class="form-control" maxlength="255" required="required">
                         </div>
                         <div class="control-group">	
                             <label class="control-label" for="field_id"><?php echo $this->lang->line('field_id'); ?></label>

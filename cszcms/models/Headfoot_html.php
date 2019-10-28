@@ -483,8 +483,9 @@ class Headfoot_html extends CI_Model{
         $plugin_menu = '';
         if($plugin_arr !== FALSE){
             foreach($plugin_arr as $value){
+                $this->lang->load('plugin/'.$value['plugin_config_filename'], $this->Csz_admin_model->getLang());
                 $plugin_url[] = $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite');
-                $plugin_menu.= $this->admin_leftli($this->uri->segment(3), $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), 'admin/plugin/' . $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_name'), 'glyphicon glyphicon-gift');
+                $plugin_menu.= $this->admin_leftli($this->uri->segment(3), $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), 'admin/plugin/' . $this->Csz_model->getPluginConfig($value['plugin_config_filename'], 'plugin_urlrewrite'), $this->lang->line($value['plugin_config_filename'].'_header'), 'glyphicon glyphicon-gift');
             }
             (in_array($this->uri->segment(3), $plugin_url)) ? $plugin_display = "active " : $plugin_display = "";
             $html.= '<li class="'.$plugin_display.'treeview"><a href="#"><i class="glyphicon glyphicon-menu-right"></i> <span>'.$this->lang->line('pluginmgr_header').'</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';

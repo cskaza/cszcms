@@ -324,6 +324,7 @@ $lang['pages_desc']                     = "Pagina Omschrijving";
 $lang['pages_content']                  = "Pagina Inhoud";
 $lang['pages_custom_css']               = "Custom CSS";
 $lang['pages_custom_js']                    = "Custom JS";
+$lang['pages_user_groups_id']                    = "User groups can be access this page only";
 
 //Captcha
 $lang['captcha_text']               = "Veiligheidsvraag: vul de tekens van in de afbeelding in";
@@ -380,6 +381,7 @@ $lang['sel_option_val']                 = "Selecteer Waarde Optie";
 $lang['sel_option_val_info']            = "Voorbeeld: Als je wilt dat de waarde 'voorbeeldwaarde' is en label 'voorbeeldlabel' is kan je dit als volgt typen: waarde1=>label1, waard2=>label2. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
 $lang['field_require']                  = "Veld verplicht";
 $lang['field_addtxtinfo']               = '<span class="remark">Klik <i class="glyphicon glyphicon-plus"></i> om meer velden toe te voegen.</span>';
+$lang['field_div_class']                  = "Div Class";
 
 //Form Post Data
 $lang['formpost_notfound']                 = "Formulier post niet gevonden.";

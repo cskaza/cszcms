@@ -116,4 +116,23 @@ class Member_helper{
             }
         }
     }
+    
+    /**
+    * is_allow_groups
+    *
+    * Function for check user group allow to access on the section
+    *
+    * @param	string	$user_groups_idS    User groups id from DB Ex. (1,2,3,...)
+    */
+    static function is_allow_groups($user_groups_idS){
+        $CI =& get_instance();
+        if($user_groups_idS){
+            $user_groups_id = explode(',', $user_groups_idS);
+            $user_group = $CI->Csz_auth_model->get_groups_fromuser();
+            if(!$user_group->user_groups_id || in_array($user_group->user_groups_id, $user_groups_id) === FALSE){
+                $CI->session->set_flashdata('f_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$CI->Csz_model->getLabelLang('not_permission_txt').'</div>');
+                redirect($CI->Csz_model->base_link(), 'refresh');
+            }
+        }
+    }
 } 

@@ -1,5 +1,4 @@
 <?php
-
 //Backend System
 $lang['backend_system'] = "Systeme Centrale";
 
@@ -243,9 +242,7 @@ $lang['settings_fbappid_remark'] = "Vous pouvez obtenir un identifiant d�appli
 $lang['settings_google_config'] = "Parametres de l'API Google";
 $lang['settings_ga_client_id'] = "ID client Google API";
 $lang['settings_ga_client_id_remark'] = "Comment cr&eacute;er un projet et un identifiant client pour la console API Google? <a href='https://developers.google.com/identity/sign-in/web/devconsole-project' target='_blank'><b>Voir ici</b></a>";
-
 $lang['settings_ga_view_id'] = "ID de vue Google Analytics";
-
 $lang['settings_ga_view_id_remark'] = "Vous pouvez voir cet ID &agrave; <a href='https://ga-dev-tools.appspot.com/query-explorer/' target='_blank'><b> Cliquez ici </b></a>. Apres avoir acc&eacute;d&eacute; &agrave; Google Analytics et choisi votre analyse de site. S'il vous pla&icirc;t voir votre vue ID &agrave; 'ids' ";
 $lang['settings_gsearch_active'] = "Activer la recherche personnalis&eacute;e Google";
 $lang['settings_gsearch_cxid'] = "Votre identifiant de moteur de recherche (identifiant cx)";
@@ -328,6 +325,7 @@ $lang['pages_desc'] = "Description de la page";
 $lang['pages_content'] = "Contenu des pages";
 $lang['pages_custom_css'] = "CSS personnalis&eacute;";
 $lang['pages_custom_js'] = "JS personnalis&eacute;";
+$lang['pages_user_groups_id']                    = "User groups can be access this page only";
 
 //Captcha
 $lang['captcha_text'] = "V&eacute;rification de la s&eacute;curit&eacute; (Veuillez entrer le caractere affich&eacute; dans l'image)";
@@ -384,6 +382,7 @@ $lang['sel_option_val'] = "Choisir la valeur de l�option";
 $lang['sel_option_val_info'] = "Exemple, si vous voulez que la valeur de l'option soit 'valeur' ??et que le libell&eacute; soit 'Afficher', vous pouvez le formuler comme suit. Exemple: valeur1 => Show1, valeur2 => Show2. Si le type de champ est 'fichier 'vous pouvez mettre extension de fichier autoriser ici. Ex .txt, .docx ";
 $lang['field_require'] = "Requiert un champ";
 $lang['field_addtxtinfo'] = "<span class = 'remark'> Appuyez sur <i class = 'glyphicon glyphicon-plus'> </i> pour ajouter plus de champs. </span>";
+$lang['field_div_class'] = "Div Class";
 
 //Form Post Data
 $lang['formpost_notfound'] = "Message de formulaire introuvable.";

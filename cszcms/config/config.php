@@ -314,8 +314,15 @@ $config['cache_path'] = '';
 | Cache Include Query String
 |--------------------------------------------------------------------------
 |
-| Set this to TRUE if you want to use different cache files depending on the
-| URL query string.  Please be aware this might result in numerous cache files.
+| Whether to take the URL query string into consideration when generating
+| output cache files. Valid options are:
+|
+|	FALSE      = Disabled
+|	TRUE       = Enabled, take all query parameters into account.
+|	             Please be aware that this may result in numerous cache
+|	             files generated for the same page over and over again.
+|	array('q') = Enabled, but only take into account the specified list
+|	             of query parameters.
 |
 */
 $config['cache_query_string'] = FALSE;
@@ -353,7 +360,7 @@ $config['encryption_key'] = '';
 |
 | 'sess_save_path'
 |
-|	The location to save sessions to, driver dependant.
+|	The location to save sessions to, driver dependent.
 |
 |	For the 'files' driver, it's a path to a writable directory.
 |	WARNING: Only absolute paths are supported!
@@ -366,6 +373,9 @@ $config['encryption_key'] = '';
 | 'sess_match_ip'
 |
 |	Whether to match the user's IP address when reading the session data.
+|
+|	WARNING: If you're using the database driver, don't forget to update
+|	         your session table's PRIMARY KEY when changing this setting.
 |
 | 'sess_time_to_update'
 |
@@ -389,7 +399,7 @@ $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
-$config['sess_regenerate_destroy'] = TRUE;
+$config['sess_regenerate_destroy'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -418,13 +428,13 @@ $config['cookie_httponly'] 	= TRUE;
 |--------------------------------------------------------------------------
 |
 | Determines whether to standardize newline characters in input data,
-| meaning to replace \r\n, \r, \n occurences with the PHP_EOL value.
+| meaning to replace \r\n, \r, \n occurrences with the PHP_EOL value.
 |
-| This is particularly useful for portability between UNIX-based OSes,
-| (usually \n) and Windows (\r\n).
+| WARNING: This feature is DEPRECATED and currently available only
+|          for backwards compatibility purposes!
 |
 */
-$config['standardize_newlines'] = TRUE;
+$config['standardize_newlines'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------

@@ -74,6 +74,7 @@ class Pages extends CI_Controller {
         $this->template->set('extra_js', '<script type="text/javascript">'.$this->Csz_admin_model->getSaveDraftJS().'</script>');
         //Get lang from database
         $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+        $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
         
         //Load the form helper
         $this->load->helper('form');
@@ -117,6 +118,7 @@ class Pages extends CI_Controller {
             $pages = $this->Csz_model->getValue('*', 'pages', 'pages_id', $this->uri->segment(4), 1);
             if($pages !== FALSE){
                 $this->template->setSub('lang', $this->Csz_model->loadAllLang());
+                $this->template->setSub('user_groups', $this->Csz_auth_model->get_group_all());
                 $this->template->setSub('pages', $pages);
                 //Load the view
                 $this->template->loadSub('admin/pages_edit');

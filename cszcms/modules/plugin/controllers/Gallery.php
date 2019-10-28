@@ -94,6 +94,7 @@ class Gallery extends CI_Controller {
         if($this->uri->segment(4)){
             $album_row = $this->Csz_model->getValue('*', 'gallery_db', "active = '1' AND gallery_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($album_row !== FALSE){
+                Member_helper::is_allow_groups($album_row->user_groups_idS);
                 if($this->session->userdata('fronlang_iso') != $album_row->lang_iso){
                     $this->Csz_model->setSiteLang($album_row->lang_iso);
                 }

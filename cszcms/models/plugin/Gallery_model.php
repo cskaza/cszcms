@@ -33,6 +33,15 @@ class Gallery_model extends CI_Model {
         $arrange = $this->Csz_model->getLastID('gallery_db', 'arrange');
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('album_name', TRUE));
+        $user_groups_idS = $this->input->post('user_groups_idS');
+        $user_groups_id = '';
+        if (isset($user_groups_idS)) {
+            if (count($user_groups_idS) == 1) {
+                $user_groups_id = $user_groups_idS[0];
+            } else {
+                $user_groups_id = implode(",", $user_groups_idS);
+            }
+        }
         $this->db->set('album_name', $this->input->post('album_name', TRUE));
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('keyword', $this->input->post('keyword', TRUE));
@@ -40,6 +49,7 @@ class Gallery_model extends CI_Model {
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('active', $active);
         $this->db->set('arrange', ($arrange)+1);
+        $this->db->set('user_groups_idS', $user_groups_id);
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('gallery_db');
@@ -49,12 +59,22 @@ class Gallery_model extends CI_Model {
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $url_rewrite = $this->Csz_model->rw_link($this->input->post('album_name', TRUE));
+        $user_groups_idS = $this->input->post('user_groups_idS');
+        $user_groups_id = '';
+        if (isset($user_groups_idS)) {
+            if (count($user_groups_idS) == 1) {
+                $user_groups_id = $user_groups_idS[0];
+            } else {
+                $user_groups_id = implode(",", $user_groups_idS);
+            }
+        }
         $this->db->set('album_name', $this->input->post('album_name', TRUE));
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('keyword', $this->input->post('keyword', TRUE));
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('active', $active);
+        $this->db->set('user_groups_idS', $user_groups_id);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where("gallery_db_id", $id);
         $this->db->update('gallery_db');

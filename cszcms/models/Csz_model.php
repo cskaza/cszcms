@@ -707,9 +707,9 @@ class Csz_model extends CI_Model {
      */
     public function coreCss($more_css = '', $more_include = TRUE) {
         $core_css = '<link href="' . $this->base_link(TRUE, FALSE).'/'. 'corecss.css" rel="stylesheet" type="text/css" />' . "\n";
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
-        $core_css.= link_tag('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/css/jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/font-awesome/css/font-awesome.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/select2/select2.min.css');
         $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/timepicker/bootstrap-timepicker.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
@@ -741,8 +741,8 @@ class Csz_model extends CI_Model {
      */
     public function coreJs($more_js = '', $more_include = TRUE) {
         $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
-        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>';
-        $core_js.= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.lazy.min.js"></script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
         $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE, TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").timepicker({minuteStep:1,showMeridian:false,defaultTime:false,disableFocus:true});</script>';
@@ -1432,32 +1432,38 @@ class Csz_model extends CI_Model {
                         }else{
                             $accept = '';
                         }
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="controls">
                             <input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $maxlength . $accept . '/>
                         </div>';
+                        $html.= '</div>';
                     } else if ($field['field_type'] == 'datepicker') {
                         if ($field['field_class']) {
                             $class = $field['field_class'] . ' form-datepicker';
                         } else {
                             $class = 'form-datepicker';
                         }
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="input-group">
                             <input type="text" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $class . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>';
+                        $html.= '</div>';
                     } else if ($field['field_type'] == 'timepicker') {
                         if ($field['field_class']) {
                             $class = $field['field_class'] . ' timepicker';
                         } else {
                             $class = 'timepicker';
                         }
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="input-group bootstrap-timepicker timepicker">
                             <input type="text" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $class . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
                         </div>';
+                        $html.= '</div>';
                     } else if ($field['field_type'] == 'selectbox') {
                         $opt_html = '';
                         if ($field['sel_option_val']) {
@@ -1468,20 +1474,26 @@ class Csz_model extends CI_Model {
                             }
                         }
                         ($field['field_placeholder']) ? $placehol = '<option value="">' . $field['field_placeholder'] . '</option>' : $placehol = '';
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                                 <select id="' . $field['field_id'] . '" name="' . $field['field_name'] . '" class="' . $field['field_class'] . '"' . $f_req . '>
                                     ' . $placehol . '
                                     ' . $opt_html . '
                                 </select>';
+                        $html.= '</div>';
                     } else if ($field['field_type'] == 'textarea') {
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="controls">
                             <textarea name="' . $field['field_name'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . ' rows="4">' . $field['field_value'] . '</textarea>
                         </div>';
+                        $html.= '</div>';
                     } else if ($field['field_type'] == 'button' || $field['field_type'] == 'reset' || $field['field_type'] == 'submit') {
                         $html_btn.= '<input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/> ';
                     } else if ($field['field_type'] == 'label') {
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="' . $field['field_class'] . '" id="' . $field['field_id'] . '" name="' . $field['field_name'] . '">' . $field['field_label'] . $star_req . '</label><br>';
+                        $html.= '</div>';
                     }
                 }
             }
@@ -1963,10 +1975,11 @@ class Csz_model extends CI_Model {
      * Function for update the member
      *
      * @param	string	$id    member id
+     * @param	bool	$backend   TRUE for login on backend
      * @return	TRUE or FALSE
      */
-    public function updateMember($id) {
-        $query = $this->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE));
+    public function updateMember($id, $backend = FALSE) {
+        $query = $this->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), $backend);
         if ($query['num_rows'] > 0) {
             if($this->input->post('pm_sendmail')){
                 $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
@@ -2220,52 +2233,56 @@ class Csz_model extends CI_Model {
             @ini_set('max_execution_time', 600);
             @ini_set("pcre.recursion_limit", "16777");
         }
-        if (function_exists('curl_init')){
-            $ch = curl_init($url);
-            $newf = fopen($newfname, 'wb') or die("Can't create file");
-            curl_setopt($ch, CURLOPT_TIMEOUT, 300);
-            if(stripos($url, 'https://') !== FALSE){
-                curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            }
-            @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_FILE, $newf);
-            $result = curl_exec($ch);
-            fclose($newf);
-            if($result === false) {
-                log_message('error', 'Unable to perform the request : ' . curl_error($ch) . ' ['.$url.']');
-                return FALSE;
-            }
-        } else if(ini_get('allow_url_fopen')){
-            if (stripos($url, 'https://') !== FALSE) {
-                $default_opts = array(
-                    'ssl' => array(
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                    )
-                );
-                stream_context_set_default($default_opts);
-            }
-            $file = fopen($url, 'rb') or die("Can't open file");
-            if (!$file) {
-                fclose($file);
-                unset($url,$newfname,$newf,$file);
-                return FALSE;
-            } else {
+        if($url){
+            if (function_exists('curl_init')){
+                $ch = curl_init($url);
                 $newf = fopen($newfname, 'wb') or die("Can't create file");
-                if ($newf) {
-                    while (!feof($file)) {
-                        fwrite($newf, fread($file, 1024 * 1024 * 100), 1024 * 1024 * 100); /* 100MB */
-                    }
-                    fclose($newf);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+                if(stripos($url, 'https://') !== FALSE){
+                    curl_setopt($ch, CURLOPT_CAINFO, APPPATH . 'cacert.pem');
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 }
-                fclose($file);
+                @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_FILE, $newf);
+                $result = curl_exec($ch);
+                fclose($newf);
+                if($result === false) {
+                    log_message('error', 'Unable to perform the request : ' . curl_error($ch) . ' ['.$url.']');
+                    return FALSE;
+                }
+            } else if(ini_get('allow_url_fopen')){
+                if (stripos($url, 'https://') !== FALSE) {
+                    $default_opts = array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        )
+                    );
+                    stream_context_set_default($default_opts);
+                }
+                $file = fopen($url, 'rb') or die("Can't open file");
+                if (!$file) {
+                    fclose($file);
+                    unset($url,$newfname,$newf,$file);
+                    return FALSE;
+                } else {
+                    $newf = fopen($newfname, 'wb') or die("Can't create file");
+                    if ($newf) {
+                        while (!feof($file)) {
+                            fwrite($newf, fread($file, 1024 * 1024 * 100), 1024 * 1024 * 100); /* 100MB */
+                        }
+                        fclose($newf);
+                    }
+                    fclose($file);
+                }
+            } else {
+                log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
+                return FALSE;
             }
-        } else {
-            log_message('error', 'You have neither cUrl installed and not allow_url_fopen activated. Please setup one of those!');
-            $headers = FALSE;
-            unset($url);
+        }else{
+            log_message('error', 'Unable to perform the request : No url.');
+            return FALSE;
         }
     }
 
@@ -2676,7 +2693,7 @@ class Csz_model extends CI_Model {
         }else{
             return FALSE;
         }
-        unset($query);       
+        unset($query);
     }
     
     /**
@@ -2715,7 +2732,10 @@ class Csz_model extends CI_Model {
         return implode('.', $cur_r);
     }
     
-    private function chkNextVer($cur_ver, $last_ver, $previous_ver){
+    private function chkNextVer($cur_ver, $last_ver, $previous_ver = ''){
+        if($previous_ver == ''){
+            $previous_ver = $cur_ver;
+        }
         if ($cur_ver == $last_ver || $previous_ver == $last_ver) {
             return $last_ver;
         } else {
@@ -2738,9 +2758,10 @@ class Csz_model extends CI_Model {
      *
      * @param	string	$cur_txt    current version
      * @param	string	$last_ver    latest version
+     * @param   string  $previous_ver   previous version
      * @return	string or false
      */
-    public function findNextVersion($cur_txt, $last_ver, $previous_ver){
+    public function findNextVersion($cur_txt, $last_ver, $previous_ver = ''){
         $cur_xml = explode(' ', $cur_txt);
         if($cur_xml[0] && $last_ver){
             $cur_ver = str_replace(' ', '.', $cur_xml[0]);

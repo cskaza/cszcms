@@ -324,6 +324,7 @@ $lang['pages_desc']                    = "Description";
 $lang['pages_content']                    = "Contenuto";
 $lang['pages_custom_css']              = "CSS personalizzato";
 $lang['pages_custom_js']                    = "JS personalizzato";
+$lang['pages_user_groups_id']                    = "User groups can be access this page only";
 
 //Captcha
 $lang['captcha_text']             = "Security Check (Inserisci i caratteri che vedi nell'immagine)";
@@ -380,6 +381,7 @@ $lang['sel_option_val']                 = "Seleziona un valore";
 $lang['sel_option_val_info']            = "Esempio, se vuoi che il valore sia 'valore' e l'etichetta sia 'Vedi' scrivi valore=>Vedi,ecc. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
 $lang['field_require']                  = "Campo obbligatorio";
 $lang['field_addtxtinfo']               = '<span class="remark">Premi <i class="glyphicon glyphicon-plus"></i>per aggiunta campi.</span>';
+$lang['field_div_class']                  = "Div Class";
 
 //Form Post Data
 $lang['formpost_notfound']                 = "Form post non trovato.";

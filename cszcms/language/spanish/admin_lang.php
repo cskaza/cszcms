@@ -325,6 +325,7 @@ $lang['pages_desc']                    = "Descripción de Pagina";
 $lang['pages_content']                    = "Contenido de Pagina";
 $lang['pages_custom_css']                    = "CSS personalizado";
 $lang['pages_custom_js']                    = "JS personalizado";
+$lang['pages_user_groups_id']                    = "User groups can be access this page only";
 
 //Captcha
 $lang['captcha_text']             = "Verificación de Seguridad (Por favor ingrese el carácter mostrado en la imagen)";
@@ -381,6 +382,7 @@ $lang['sel_option_val']                 = "Seleccionar valor de la opción";
 $lang['sel_option_val_info']            = "Example, If you want option value is 'value' and label is 'Show' you can put like this. Ex. value1=>Show1, value2=>Show2. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
 $lang['field_require']                  = "Campos requeridos";
 $lang['field_addtxtinfo']               = '<span class="remark">Press <i class="glyphicon glyphicon-plus"></i> to add more fields.</span>';
+$lang['field_div_class']                  = "Div Class";
 
 //Form Post Data
 $lang['formpost_notfound']                 = "Form post not found.";
