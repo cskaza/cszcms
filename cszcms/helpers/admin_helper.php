@@ -46,7 +46,7 @@ class Admin_helper{
         }else if($email_session && $_SESSION['admin_logged_in'] && $_SESSION['session_id']){
             $chk = $CI->Csz_admin_model->sessionLoginChk();
             if($chk === FALSE){
-                redirect($CI->Csz_model->base_link().'/admin/logout', 'refresh');
+                $CI->Csz_model->logout($CI->Csz_model->base_link().'/admin/login');
             }
         }
     }

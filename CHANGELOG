@@ -1,4 +1,14 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.5 (2019-12-29)
+- Add cookie info notify on Site Setting.
+- Add upload function on TinyMCE (images, media, link).
+- Update elFinder to 2.1.51.
+- Update TinyMCE to 4.9.6.
+- Update AdminLTE to 2.4.18.
+- Fixed file manager upload vulnerability (Github Issue#21).
+- Fixed Time-based blind SQL injection Vulnerability (Github Issue#22).
+- Fixed a boolean-based blind SQL injection Vulnerability (Github Issue#23).
+
 CSZ-CMS V.1.2.4 (2019-10-27)
 - Add setting on content page for member login can see (Choose User Group).
 - Add setting on Article and Gallery plugin for member login can see (Choose User Group).

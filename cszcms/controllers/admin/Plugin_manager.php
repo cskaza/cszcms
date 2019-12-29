@@ -52,7 +52,7 @@ class Plugin_manager extends CI_Controller {
         //Get users from database
         $this->template->setSub('plugin_mgr', $this->Csz_model->getValueArray('*', 'plugin_manager', '', ''));
         $this->template->setSub('total_row', $total_row);
-        $xml_data = $this->Csz_admin_model->getPluginXML('', 'filename', $this->input->get('search', TRUE));
+        $xml_data = $this->Csz_admin_model->getPluginXML('', 'filename', $this->Csz_model->cleanOSCommand($this->input->get('search', TRUE)));
         // Pages variable
         $result_per_page = 20;
         if($xml_data !== FALSE){

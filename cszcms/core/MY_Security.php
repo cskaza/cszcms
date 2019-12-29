@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 class MY_Security extends CI_Security {
 
     protected $ip_address = FALSE;
@@ -38,13 +38,13 @@ class MY_Security extends CI_Security {
     public function csrf_show_error() {
         $ipaddress = $this->ip_address();
         $mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASS, DB_NAME);
-        $query = $mysqli->prepare("SELECT ip_address FROM login_logs WHERE ip_address = '" . $ipaddress . "' AND result = 'CSRF_INVALID' AND timestamp_create >= DATE_SUB('".$this->timeNow()."',INTERVAL 5 MINUTE)");
+        $query = $mysqli->prepare("SELECT ip_address FROM login_logs WHERE ip_address = '" . $mysqli->escape_string($ipaddress) . "' AND result = 'CSRF_INVALID' AND timestamp_create >= DATE_SUB('".$this->timeNow()."',INTERVAL 5 MINUTE)");
         $query->execute();
         $query->store_result();
         $count = $query->num_rows;
         if($count < 21){
             $sql = "INSERT INTO login_logs (email_login, note, result, user_agent, ip_address, timestamp_create)
-            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$this->xss_clean($mysqli->escape_string($_SERVER['HTTP_USER_AGENT']))."', '".$ipaddress."', '".$this->timeNow()."')";
+            VALUES ('', 'CSRF Protection Invalid', 'CSRF_INVALID', '".$mysqli->escape_string($_SERVER['HTTP_USER_AGENT'])."', '".$mysqli->escape_string($ipaddress)."', '".$this->timeNow()."')";
             $mysqli->query($sql);
         }
         $mysqli->close();
@@ -56,7 +56,6 @@ class MY_Security extends CI_Security {
                 echo '<script>window.setTimeout(function(){window.location = "' . $_SERVER["HTTP_REFERER"] . '?nocache=' . time().'"; },2000);</script>';
                 show_error('The action is not allowed by CSRF Protection. Please wait 2 seconds to redirect.', 403);
             }else{
-                
                 show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
             }
         }else{

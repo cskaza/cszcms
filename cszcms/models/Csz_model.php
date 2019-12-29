@@ -740,11 +740,15 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE) {
+        $site_config = $this->load_config();
         $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
         $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE, TRUE).'/'. 'assets/js/plugins/timepicker/bootstrap-timepicker.min.js"></script>';
+        if($site_config->cookieinfo_active == 1){
+            $core_js.= '<script type="text/javascript" id="cookieinfo" src="' . base_url('', '', TRUE) . 'assets/js/cookieinfo.min.js" data-bg="'.$site_config->cookieinfo_bg.'" data-fg="'.$site_config->cookieinfo_fg.'" data-link="'.$site_config->cookieinfo_link.'" data-message="'.$site_config->cookieinfo_msg.'" data-linkmsg="'.$site_config->cookieinfo_linkmsg.'" data-moreinfo="'.$site_config->cookieinfo_moreinfo.'" data-cookie="CookiePolicyAcceptance" data-text-align="'.$site_config->cookieinfo_txtalign.'" data-close-text="'.$site_config->cookieinfo_close.'"></script>';
+        }
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").timepicker({minuteStep:1,showMeridian:false,defaultTime:false,disableFocus:true});</script>';
         if ($this->getFBsdk() !== FALSE) { $core_js.= $this->getFBsdk(); }
         if (!empty($more_js)) {
@@ -3044,6 +3048,15 @@ class Csz_model extends CI_Model {
     */
    public function timeNow() {
        return date('Y-m-d H:i:s').'.000000';
+   }
+   
+    /**
+    * get current full url
+    *
+    * @return   string
+    */
+   public function getCurrentFullURL() {
+       return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
    }
    
 }

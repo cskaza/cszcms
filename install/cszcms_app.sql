@@ -215,12 +215,22 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `fb_messenger` int(11),
   `email_logs` int(11),
   `title_setting` int(11),
+  `cookieinfo_active` INT(11),
+  `cookieinfo_bg` VARCHAR(7),
+  `cookieinfo_fg` VARCHAR(7),
+  `cookieinfo_link` VARCHAR(7),
+  `cookieinfo_msg` VARCHAR(255),
+  `cookieinfo_linkmsg` VARCHAR(100),
+  `cookieinfo_moreinfo` VARCHAR(255),
+  `cookieinfo_txtalign` VARCHAR(30),
+  `cookieinfo_close` VARCHAR(100),
   `timestamp_update` datetime,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 INSERT INTO `settings` (`settings_id`, `site_name`, `site_logo`, `og_image`, `fbapp_id`, `site_footer`, `default_email`, `keywords`, `themes_config`, `admin_lang`, `additional_js`, `additional_metatag`, `googlecapt_active`, `googlecapt_sitekey`, `googlecapt_secretkey`, `pagecache_time`, `email_protocal`, `smtp_host`, `smtp_user`, `smtp_pass`, `smtp_port`, `sendmail_path`, `member_confirm_enable`, `member_close_regist`, `gmaps_key`, `gmaps_lat`, `gmaps_lng`, `ga_client_id`, `ga_view_id`, `gsearch_active`, `gsearch_cxid`, `maintenance_active`, `html_optimize_disable`, `email_logs`, `title_setting`, `timestamp_update`) VALUES
 (1, 'CSZ CMS Starter', '', '', '', '&copy; %Y% CSZ CMS Starter', '', 'CMS, Contact Management System, HTML, CSS, JS, JavaScript, framework, bootstrap, web development, thai, english', 'cszdefault', 'english', '', '', 0, '', '', 0, '', '', '', '', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 1, 1, 2, NOW());
+UPDATE `settings` SET `cookieinfo_active`=0,`cookieinfo_bg`='#645862',`cookieinfo_fg`='#FFFFFF',`cookieinfo_link`='#F1D600',`cookieinfo_msg`='This website uses cookies to improve your user experience. By continuing to browse our site you accepted and agreed on our ',`cookieinfo_linkmsg`='Privacy Policy and terms.',`cookieinfo_moreinfo`='https://www.cszcms.com/LICENSE.md',`cookieinfo_txtalign`='left',`cookieinfo_close`='Got it!',`timestamp_update`= NOW() WHERE `settings_id` = 1;
 
 DROP TABLE IF EXISTS `upload_file`;
 CREATE TABLE IF NOT EXISTS `upload_file` (

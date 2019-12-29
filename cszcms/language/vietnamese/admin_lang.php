@@ -261,6 +261,19 @@ $lang['settings_email_logs']		= "Cho phép nhật ký email";
 $lang['settings_titlesetting']		= "Cách hiển thị tên trang";
 $lang['settings_titlesetting_first']		= "Đầu tiên";
 $lang['settings_titlesetting_last']		= "Cuối cùng";
+$lang['settings_cookie_info_text']		= "Cookie Privacy Info";
+$lang['settings_cookie_info_active']		= "Cookie Privacy Info Active";
+$lang['settings_cookie_info_bg']		= "Cookie Info Background Color";
+$lang['settings_cookie_info_fg']		= "Cookie Info Foreground Color";
+$lang['settings_cookie_info_link']		= "Cookie Info link Color";
+$lang['settings_cookie_info_msg']		= "Cookie Info Message";
+$lang['settings_cookie_info_linkmsg']		= "Cookie Info Link Message";
+$lang['settings_cookie_info_linkurl']		= "Cookie Info Link URL";
+$lang['settings_cookie_info_txtalign']		= "Cookie Info Text Align";
+$lang['settings_cookie_info_txtalign_left']		= "Left";
+$lang['settings_cookie_info_txtalign_center']		= "Center";
+$lang['settings_cookie_info_txtalign_right']		= "Right";
+$lang['settings_cookie_info_closetxt']		= "Cookie Info Close Text";
 
 //Navigation Page
 $lang['navpage_header']         = "Menu chính";

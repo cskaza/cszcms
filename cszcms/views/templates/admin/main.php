@@ -248,10 +248,10 @@ $row = $this->Csz_admin_model->load_config();
                         <!-- /.tab-pane -->
                         <!-- Settings tab content -->
                         <div class="tab-pane" id="control-sidebar-home-tab">
-                            <h2 class="control-sidebar-heading">AdminLTE Template 2.4.3</h2>
+                            <h2 class="control-sidebar-heading">AdminLTE Template 2.4.18</h2>
                             <p>
                                 <b>MIT License</b><br>
-                                <em>Copyright &copy; 2014-2017 <a href="https://adminlte.io/" target="_blank" rel="nofollow external">Almsaeed Studio</a>. All rights reserved.</em><br>
+                                <em>Copyright &copy; 2014-2019 <a href="https://adminlte.io/" target="_blank" rel="nofollow external">Almsaeed Studio (Abdullah Almsaeed)</a>. All rights reserved.</em><br>
                                 <br><em>Modified by <a href="https://www.cskaza.com" target="_blank">CSKAZA</a>.</em>
                             </p>
                         </div>
@@ -260,9 +260,6 @@ $row = $this->Csz_admin_model->load_config();
                 </aside>
                 <!-- End Control Sidebar For Theme Settings -->
                 
-                <!-- Add the sidebar's background. This div must be placed
-                     immediately after the control sidebar -->
-                <div class="control-sidebar-bg"></div>
             </div>
             <!-- ./wrapper -->
         <?php }else{ ?>

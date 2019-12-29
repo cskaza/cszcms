@@ -784,6 +784,7 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE){
+        $site_config = $this->load_config();
         $core_js = '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-1.12.4.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-ui.min.js"></script>';
@@ -791,6 +792,9 @@ class Csz_admin_model extends CI_Model{
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/tinymce/tinymce.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
+        if($site_config->cookieinfo_active == 1){
+            $core_js.= '<script type="text/javascript" id="cookieinfo" src="' . base_url('', '', TRUE) . 'assets/js/cookieinfo.min.js" data-bg="'.$site_config->cookieinfo_bg.'" data-fg="'.$site_config->cookieinfo_fg.'" data-link="'.$site_config->cookieinfo_link.'" data-message="'.$site_config->cookieinfo_msg.'" data-linkmsg="'.$site_config->cookieinfo_linkmsg.'" data-moreinfo="'.$site_config->cookieinfo_moreinfo.'" data-cookie="CookiePolicyAcceptance" data-text-align="'.$site_config->cookieinfo_txtalign.'" data-close-text="'.$site_config->cookieinfo_close.'"></script>';
+        }
         if (!empty($more_js)) {
             if($more_include !== FALSE){
                 if (is_array($more_js)) {
@@ -925,6 +929,15 @@ class Csz_admin_model extends CI_Model{
             'fb_messenger' => $this->input->post('fb_messenger', TRUE),
             'email_logs' => $this->input->post('email_logs', TRUE),
             'title_setting' => $this->input->post('title_setting', TRUE),
+            'cookieinfo_active' => $this->input->post('cookieinfo_active', TRUE),
+            'cookieinfo_bg' => $this->input->post('cookieinfo_bg', TRUE),
+            'cookieinfo_fg' => $this->input->post('cookieinfo_fg', TRUE),
+            'cookieinfo_link' => $this->input->post('cookieinfo_link', TRUE),
+            'cookieinfo_msg' => $this->input->post('cookieinfo_msg', TRUE),
+            'cookieinfo_linkmsg' => $this->input->post('cookieinfo_linkmsg', TRUE),
+            'cookieinfo_moreinfo' => $this->input->post('cookieinfo_moreinfo', TRUE),
+            'cookieinfo_txtalign' => $this->input->post('cookieinfo_txtalign', TRUE),
+            'cookieinfo_close' => $this->input->post('cookieinfo_close', TRUE),
         );
         $upload_file = '';
         if($this->input->post('del_file')){
@@ -1606,11 +1619,13 @@ class Csz_admin_model extends CI_Model{
      *
      * @param	string	$year    year
      * @param	string	$fileupload    file name from file_upload function
+     * @param	string	$remark    remark from this file
      */
-    public function insertFileUpload($year, $fileupload){
+    public function insertFileUpload($year, $fileupload, $remark = ''){
         $data = array(
             'year' => $year,
             'file_upload' => $fileupload,
+            'remark' => $remark,
         );
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);

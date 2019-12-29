@@ -469,7 +469,6 @@ class Admin extends CI_Controller {
     public function tinyMCEfile() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         //Load the form helper
-        $this->db->cache_on();
         $this->load->helper('form');
         $this->load->library('pagination');
         $search_arr = '';
@@ -495,6 +494,29 @@ class Admin extends CI_Controller {
         $data['core_css'] = $this->Csz_admin_model->coreCss();
         $data['core_js'] = $this->Csz_admin_model->coreJs();
         $this->load->view('admin/tinymce_index', $data);
+    }
+    
+    public function tinyMCEhtmlUpload() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('save');
+        $year = date("Y");
+        $path = FCPATH . "photo/upload/";
+        if(!empty($_FILES)){
+            if($_FILES['files']['name']){
+                $file_id = time() . "_" . rand(1111, 9999);
+                $photo_name = $_FILES['files']['name'];
+                $photo = $_FILES['files']['tmp_name'];
+                $file_id1 = $this->Csz_admin_model->file_upload($photo, $photo_name, '', $path, $file_id, '', $year);
+                if ($file_id1) {
+                    $this->Csz_admin_model->insertFileUpload($year, $file_id1, $this->input->post('remark', TRUE));
+                    $this->db->cache_delete_all();
+                }
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+            }
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+        }
+        redirect($this->input->post('return_url', TRUE), 'refresh');
     }
     
     public function saveDraft() {

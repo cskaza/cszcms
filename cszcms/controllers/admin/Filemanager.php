@@ -123,7 +123,7 @@ class Filemanager extends CI_Controller {
                     'defaults' => array('read' => true, 'write' => true, 'hidden' => true, 'locked' => true),
                     'winHashFix' => DIRECTORY_SEPARATOR !== '/', // to make hash same to Linux one on windows too
                     'accessControl' => array($this, 'elfinderAccess'), // disable and hide dot starting files (OPTIONAL)
-                    'disabled' => array('rm', 'duplicate', 'paste', 'mkdir', 'archive', 'extract', 'resize', 'chmod'),
+                    'disabled' => array('rm', 'duplicate', 'paste', 'mkdir', 'mkfile', 'archive', 'extract', 'resize', 'chmod', 'upload'),
                     'attributes' => array(
                         array(
                             'pattern' => '/\.inc.php$/',

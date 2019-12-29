@@ -262,6 +262,19 @@ $lang['settings_email_logs']		= "เปิดการใช้งานบั�
 $lang['settings_titlesetting']		= "การตั้งค่าชื่อเว็บไซต์";
 $lang['settings_titlesetting_first']		= "ก่อน";
 $lang['settings_titlesetting_last']		= "หลัง";
+$lang['settings_cookie_info_text']		= "Cookie Privacy Info";
+$lang['settings_cookie_info_active']		= "เปิดใช้งาน Cookie Privacy Info";
+$lang['settings_cookie_info_bg']		= "สีพื้นหลัง Cookie Info";
+$lang['settings_cookie_info_fg']		= "สีตัวหนังสือด้านหน้า Cookie Info";
+$lang['settings_cookie_info_link']		= "สีลิงค์ข้อความ Cookie Info";
+$lang['settings_cookie_info_msg']		= "ข้อความ Cookie Info";
+$lang['settings_cookie_info_linkmsg']		= "ข้อความลิงค์ Cookie Info";
+$lang['settings_cookie_info_linkurl']		= "ลิงค์นโยบายความเป็นส่วนตัว Cookie Info";
+$lang['settings_cookie_info_txtalign']		= "ตำแหน่งตัวหนังสือ Cookie Info";
+$lang['settings_cookie_info_txtalign_left']		= "ชิดซ้าย";
+$lang['settings_cookie_info_txtalign_center']		= "กึ่งหลาง";
+$lang['settings_cookie_info_txtalign_right']		= "ชิดขวา";
+$lang['settings_cookie_info_closetxt']		= "ข้อความปุ่มปิด Cookie Info";
 
 //Navigation Page
 $lang['navpage_header']                 = "เมนูหลัก";

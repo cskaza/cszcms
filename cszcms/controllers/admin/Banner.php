@@ -48,7 +48,7 @@ class Banner extends CI_Controller {
         if($this->input->get('search') || $this->input->get('start_date') || $this->input->get('end_date')){
             $search_arr.= ' 1=1 ';
             if($this->input->get('search')){
-                $search_arr.= " AND (url LIKE '%".$this->input->get('search', TRUE)."%' OR name LIKE '%".$this->input->get('search', TRUE)."%')";
+                $search_arr.= " AND (link LIKE '%".$this->input->get('search', TRUE)."%' OR name LIKE '%".$this->input->get('search', TRUE)."%')";
             }
             if($this->input->get('start_date') && !$this->input->get('end_date')){
                 $search_arr.= " AND start_date >= '".$this->input->get('start_date',true)."'";
