@@ -67,7 +67,7 @@
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
                             <span><?php echo  $this->lang->line('uploadfile_add_file') ?></span>
-                            <input type="file" name="files[]" id="files" multiple required accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls">
+                            <input type="file" name="files[]" id="files" multiple required accept=".jpg, .jpeg, .png, .gif, .webp, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls">
                         </span>
                         <button type="submit" class="btn btn-primary">
                             <i class="glyphicon glyphicon-upload"></i>
@@ -120,7 +120,7 @@
                                 <td class="text-center" style="vertical-align:middle;">
                                     <?php 
                                     $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
-                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif'){ ?>
+                                    if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' || $ext == 'webp'){ ?>
                                     <img src="<?php echo base_url().'photo/upload/'.$file["file_upload"]?>" width="100">
                                     <?php }else{ ?>
                                         <i class="glyphicon glyphicon-file"></i> <?php echo strtoupper($ext)?>
@@ -198,6 +198,7 @@ fl.onchange = function(e){
             case 'jpeg':
             case 'png':
             case 'gif':
+            case 'webp':
             case 'pdf':
             case 'doc':
             case 'docx':

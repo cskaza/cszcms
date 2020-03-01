@@ -748,6 +748,7 @@ class Csz_admin_model extends CI_Model{
      */
     public function coreCss($more_css = '', $more_include = TRUE){
         $core_css = '<link rel="canonical" href="' . $this->Csz_model->base_link(). '/' . $this->uri->uri_string() . '" />' . "\n";
+        $core_css.= '<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">';
         $core_css.= '<link rel="dns-prefetch" href="//ajax.cloudflare.com">';
         $core_css.= '<link rel="dns-prefetch" href="//maps.googleapis.com">';
         $core_css.= link_tag(base_url('', '', TRUE).'assets/css/bootstrap.min.css');
@@ -755,6 +756,7 @@ class Csz_admin_model extends CI_Model{
         $core_css.= link_tag(base_url('', '', TRUE).'assets/font-awesome/css/font-awesome.min.css');
         $core_css.= link_tag(base_url('', '', TRUE).'assets/css/flag-icon.min.css');
         $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/select2/select2.min.css');
+        $core_css.= link_tag(base_url('', '', TRUE).'assets/js/plugins/datetimepicker/jquery.datetimepicker.min.css');
         if (!empty($more_css)) {
             if($more_include !== FALSE){
                 if (is_array($more_css)) {
@@ -791,7 +793,8 @@ class Csz_admin_model extends CI_Model{
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.ui.touch-punch.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/tinymce/tinymce.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
-        $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});</script>';
+        $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/datetimepicker/jquery.datetimepicker.full.min.js"></script>';
+        $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});$(".timepicker").datetimepicker({datepicker:false,step:1,format:"H:i"});$(".datetimepicker").datetimepicker({step:1,format:"Y-m-d H:i"});</script>';
         if($site_config->cookieinfo_active == 1){
             $core_js.= '<script type="text/javascript" id="cookieinfo" src="' . base_url('', '', TRUE) . 'assets/js/cookieinfo.min.js" data-bg="'.$site_config->cookieinfo_bg.'" data-fg="'.$site_config->cookieinfo_fg.'" data-link="'.$site_config->cookieinfo_link.'" data-message="'.$site_config->cookieinfo_msg.'" data-linkmsg="'.$site_config->cookieinfo_linkmsg.'" data-moreinfo="'.$site_config->cookieinfo_moreinfo.'" data-cookie="CookiePolicyAcceptance" data-text-align="'.$site_config->cookieinfo_txtalign.'" data-close-text="'.$site_config->cookieinfo_close.'"></script>';
         }
@@ -1014,7 +1017,7 @@ class Csz_admin_model extends CI_Model{
             $photo = $tmp_photo;
         } else {
             $ext = str_replace('.', '', strrchr($photo_name, "."));
-            if (strtoupper($ext) == "JPG" || strtoupper($ext) == "JPEG" || strtoupper($ext) == "PNG" || strtoupper($ext) == "GIF" || strtoupper($ext) == "BMP") {
+            if (strtoupper($ext) == "JPG" || strtoupper($ext) == "JPEG" || strtoupper($ext) == "PNG" || strtoupper($ext) == "GIF" || strtoupper($ext) == "BMP" || strtoupper($ext) == "WEBP") {
                 /*
 		 * Run the file through the XSS hacking filter
 		 * This helps prevent malicious code from being
@@ -1147,6 +1150,9 @@ class Csz_admin_model extends CI_Model{
                 break;
             case '.bmp':
                 imagewbmp($im, $fileName);
+                break;
+            case '.webp':
+                imagewebp($im, $fileName);
                 break;
             default:
                 return false;

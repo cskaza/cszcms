@@ -66,7 +66,7 @@ $row = $this->Csz_admin_model->load_config();
                                 <span class="btn btn-success fileinput-button">
                                     <i class="glyphicon glyphicon-plus"></i>
                                     <span><?php echo  $this->lang->line('uploadfile_add_file') ?></span>
-                                    <input type="file" name="files" id="files" required accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls">
+                                    <input type="file" name="files" id="files" required accept=".jpg, .jpeg, .png, .webp, .gif, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls">
                                 </span>
                                 <button type="submit" class="btn btn-primary" id="submit">
                                     <i class="glyphicon glyphicon-upload"></i>
@@ -109,7 +109,7 @@ $row = $this->Csz_admin_model->load_config();
                                             <td class="text-center" style="vertical-align:middle;">
                                                 <?php
                                                 $ext = strtolower(pathinfo($file["file_upload"], PATHINFO_EXTENSION));
-                                                if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif') {
+                                                if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' || $ext == 'webp') {
                                                     ?>
                                                     <img src="<?php echo base_url() . 'photo/upload/' . $file["file_upload"] ?>" width="60">
                                                 <?php } else { ?>
@@ -170,6 +170,7 @@ $row = $this->Csz_admin_model->load_config();
                           case 'jpeg':
                           case 'png':
                           case 'gif':
+                          case 'webp':
                           case 'pdf':
                           case 'doc':
                           case 'docx':

@@ -13,7 +13,6 @@ Server Recommend Requirements:
 - MySQL 5.0 or higher (Required for MySQLi Driver)
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled.
-- PHP GD library Enabled.
 - gZip Compression Enabled.
 
 Installation Instructions:

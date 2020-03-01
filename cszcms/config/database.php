@@ -70,16 +70,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
+defined('DB_DSN') || define('DB_DSN', '');
+defined('DB_DRIVER') || define('DB_DRIVER', 'mysqli');
 $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn'	=> DB_DSN,
 	'hostname' => DB_HOST,
 	'username' => DB_USERNAME,
 	'password' => DB_PASS,
 	'database' => DB_NAME,
-	'dbdriver' => 'mysqli',
+	'dbdriver' => DB_DRIVER,
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => FALSE,

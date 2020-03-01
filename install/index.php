@@ -37,6 +37,7 @@ require './include/Database.php';
 $cszmodel = new Cszmodel;
 $success = 0;
 $chk_pass = 0;
+$phpvsupport = '5.5.0'; /* For minimum PHP version is allow to install the CMS*/
 if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbname']) {
     if (function_exists('ini_set')) {
         @ini_set('max_execution_time', 600);
@@ -99,6 +100,10 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
         $config_txt .= "define('EMAIL_DOMAIN', '" . $email_domain . "'); \n\n";
         $config_txt .= "/* Time Zone */ \n";
         $config_txt .= "define('TIME_ZONE', '" . $_POST['timezone'] . "'); \n\n";
+        $config_txt .= "/* The full DSN string describe a connection to the database. For connect other DB without MySQLi */ \n";
+        $config_txt .= "define('DB_DSN', ''); \n\n";
+        $config_txt .= "/* The database driver. e.g.: mysqli, mssql, postgre, sqlite, sqlite3 */ \n";
+        $config_txt .= "define('DB_DRIVER', 'mysqli'); \n\n";
         /* write config.inc.php file */
         $fopen = fopen($config_file, 'wb') or die("can't open file");
         fwrite($fopen, $config_txt);
@@ -241,8 +246,8 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                     <div class="col-md-12">
                         <b><u>System Checking</u></b><br><br>
                         <b>
-                            PHP 5.5.0 or higher (<b>Your PHP: <u><?php echo phpversion(); ?></u></b>) [<?php
-                            if (version_compare(phpversion(), '5.5.0', '>=') !== FALSE) {
+                            PHP <?php echo $phpvsupport; ?> or higher (<b>Your PHP: <u><?php echo phpversion(); ?></u></b>) [<?php
+                            if (version_compare(phpversion(), $phpvsupport, '>=') !== FALSE) {
                                 echo '<span class="success">PASS</span>';
                                 $php = 1;
                             } else {
@@ -365,7 +370,7 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <br><span class="text-info">
                                             <a href="<?php echo $curdomain; ?>/install/assets/images/change-mysql-root-password-on-phpmyadmin.jpg" title="How to change password for root on phpmyadmin?" target="_blank"><b>How to change password for root on phpmyadmin?</b></a><br><br>
                                             <b>Your PHP Version: <u><?php echo phpversion(); ?></u></b><br>
-                                            <b>* Required for <u>MySQLi</u> (PHP 5.5.0 or higher, MySQL 5.0 or higher)</b><br>
+                                            <b>* Required for <u>MySQLi</u> (PHP <?php echo $phpvsupport; ?> or higher, MySQL 5.0 or higher)</b><br>
                                             <b>* Please create the database on your hosting control panel.</b><br><br>
                                             <b>When you have problem or question. Please contact us at</b><br>
                                             <a href="https://www.cszcms.com/about/contact-us" target="_blank" class="btn btn-info btn-sm" title="Contact us now!"><b>CONTACT NOW</b></a>

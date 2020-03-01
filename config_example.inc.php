@@ -22,3 +22,10 @@ define('EMAIL_DOMAIN', 'example.com');
 
 /* Time Zone see at http://php.net/manual/en/timezones.php */
 define('TIME_ZONE', 'Asia/Bangkok');
+
+/* If you want to ue other database without MySQLi. Please export the MySQL database and import to your other database */
+/* The full DSN string describe a connection to the database. For connect other DB without MySQLi */
+define('DB_DSN', '');
+
+/* The database driver. e.g.: mysqli, mssql, postgre, sqlite, sqlite3 */
+define('DB_DRIVER', 'mysqli');
