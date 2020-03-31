@@ -34,13 +34,24 @@ class Article_model extends CI_Model {
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
         $upload_file = '';
-        if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+        $file_upload_field1 = $_FILES['file_upload'];
+        if (!empty($file_upload_field1) && $file_upload_field1['type'] == 'image/png' || $file_upload_field1['type'] == 'image/jpg' || $file_upload_field1['type'] == 'image/jpeg' || $file_upload_field1['type'] == 'image/gif') {
             $paramiter = '_1';
             $photo_id = time();
             $uploaddir = 'photo/plugin/article/';
-            $file_f = $_FILES['file_upload']['tmp_name'];
-            $file_name = $_FILES['file_upload']['name'];
+            $file_f = $file_upload_field1['tmp_name'];
+            $file_name = $file_upload_field1['name'];
             $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
+        }
+        $upload_file2 = '';
+        $file_upload_field2 = $_FILES['file_upload2'];
+        if (!empty($file_upload_field2)) {
+            $paramiter = '_1';
+            $photo_id = time();
+            $uploaddir = 'photo/plugin/article/';
+            $file_f = $file_upload_field2['tmp_name'];
+            $file_name = $file_upload_field2['name'];
+            $upload_file2 = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
         }
         $user_groups_idS = $this->input->post('user_groups_idS');
         $user_groups_id = '';
@@ -53,6 +64,7 @@ class Article_model extends CI_Model {
         }
         $data = array(
             'main_picture' => $upload_file,
+            'file_upload' => $upload_file2,
             'title' => $this->input->post('title', TRUE),
             'keyword' => $this->input->post('keyword', TRUE),
             'short_desc' => $this->input->post('short_desc', TRUE),
@@ -104,13 +116,29 @@ class Article_model extends CI_Model {
                 @unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
             } else {
                 $upload_file = $this->input->post('mainPicture');
-                if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
+                $file_upload_field1 = $_FILES['file_upload'];
+                if (!empty($file_upload_field1) && $file_upload_field1['type'] == 'image/png' || $file_upload_field1['type'] == 'image/jpg' || $file_upload_field1['type'] == 'image/jpeg') {
                     $paramiter = '_1';
                     $photo_id = time();
                     $uploaddir = 'photo/plugin/article/';
-                    $file_f = $_FILES['file_upload']['tmp_name'];
-                    $file_name = $_FILES['file_upload']['name'];
+                    $file_f = $file_upload_field1['tmp_name'];
+                    $file_name = $file_upload_field1['name'];
                     $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
+                }
+            }
+            if ($this->input->post('del_file2')) {
+                $upload_file2 = '';
+                @unlink('photo/plugin/article/' . $this->input->post('del_file2', TRUE));
+            } else {
+                $upload_file2 = $this->input->post('mainFile');
+                $file_upload_field2 = $_FILES['file_upload2'];
+                if (!empty($file_upload_field2)) {
+                    $paramiter = '_1';
+                    $photo_id = time();
+                    $uploaddir = 'photo/plugin/article/';
+                    $file_f = $file_upload_field2['tmp_name'];
+                    $file_name = $file_upload_field2['name'];
+                    $upload_file2 = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
                 }
             }
             $user_groups_idS = $this->input->post('user_groups_idS');
@@ -124,6 +152,7 @@ class Article_model extends CI_Model {
             }
             $data = array(
                 'main_picture' => $upload_file,
+                'file_upload' => $upload_file2,
                 'title' => $this->input->post('title', TRUE),
                 'keyword' => $this->input->post('keyword', TRUE),
                 'short_desc' => $this->input->post('short_desc', TRUE),
@@ -306,12 +335,34 @@ class Article_model extends CI_Model {
         }else{
             return $id;
         }
-        
     }
     
     public function countArtInCat($cat_id){
         if($cat_id){
             $art_num = $this->Csz_model->countData('article_db', "is_category = '0' AND active = '1' AND cat_id = '" . $cat_id . "'");
+            if($art_num !== FALSE){
+                return $art_num;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
+    }
+    
+    public function downloadArticleLog($article_db_id, $file_upload){
+        $this->db->set('article_db_id', $article_db_id);
+        $this->db->set('file_upload', $file_upload);
+        $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
+        $this->db->set('user_agent', $this->input->user_agent(), TRUE);
+        $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->insert('article_db_downloadstat');
+    }
+    
+    public function countDownload($article_db_id) {
+        if($article_db_id){
+            $art_num = $this->Csz_model->countData('article_db_downloadstat', "article_db_id = '" . $article_db_id . "'");
             if($art_num !== FALSE){
                 return $art_num;
             }else{

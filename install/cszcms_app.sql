@@ -368,7 +368,9 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (74, 'not_permission_txt', 'For not have permission text', 'You might not have permission to access this section!', '2017-02-28 10:53:09'),
 (75, 'success_txt', 'For success text', 'Successfully!', '2017-03-02 10:53:09'),
 (76, 'error_txt', 'For error text', 'Data not found! / Error! Please try again.', '2017-03-02 10:53:09'),
-(77, 'plugin_member_menu', 'For plugin member menu text', 'Plugins Menu', '2017-03-02 10:53:09');
+(77, 'plugin_member_menu', 'For plugin member menu text', 'Plugins Menu', '2017-03-02 10:53:09'),
+(78, 'article_filedownload_text', 'For file download label', 'File Download', NOW()),
+(79, 'article_download_link', 'For download label', 'Download', NOW());
 
 DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (
@@ -392,6 +394,7 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `category_name` varchar(255),
   `main_cat_id` int(11),
   `main_picture` varchar(255),
+  `file_upload` varchar(255),
   `title` varchar(255),
   `keyword` varchar(255),
   `short_desc` varchar(255),
@@ -409,6 +412,19 @@ CREATE TABLE IF NOT EXISTS `article_db` (
   `timestamp_update` datetime,
   PRIMARY KEY (`article_db_id`),
   KEY `url_rewrite` (`url_rewrite`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `article_db_downloadstat`;
+CREATE TABLE IF NOT EXISTS `article_db_downloadstat` (
+  `article_db_downloadstat_id` int(11) AUTO_INCREMENT,
+  `article_db_id` int(11),
+  `file_upload` varchar(255),
+  `user_admin_id` int(11),
+  `user_agent` varchar(255),
+  `ip_address` varchar(100),
+  `timestamp_create` datetime,
+  PRIMARY KEY (`article_db_downloadstat_id`),
+  KEY `article_db_id` (`article_db_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `email_logs`;

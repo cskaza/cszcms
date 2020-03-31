@@ -53,7 +53,7 @@ $row = $this->Csz_admin_model->load_config();
                 <div class="row">
                     <div class="col-lg-12 col-md-12">  
                         <h4><?php echo  $this->lang->line('uploadfile_uploadtools') ?></h4>
-                        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/admin/tinyMCEhtmlUpload') ?>
+                        <form action="<?php echo $this->Csz_model->base_link(). '/admin/admin/tinyMCEhtmlUpload'; ?>" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                         <input type="hidden" name="return_url" value="<?php echo $this->Csz_model->getCurrentFullURL();?>">
                         <div class="row form-control-static">
                             <div class="col-lg-12 col-md-12">
@@ -79,7 +79,7 @@ $row = $this->Csz_admin_model->load_config();
                                 <pre id="filelist" style="display:none;"></pre>
                             </div>
                         </div>
-                        <?php echo form_close(); ?>       
+                        </form>      
                     </div>    
                 </div>
                 <br>

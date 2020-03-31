@@ -25,6 +25,7 @@ $plugin_config['plugin_description']   = 'gallery plugin'; /* For your plugin de
  */
 $plugin_config['plugin_member_menu'] = '';
 $plugin_config['plugin_menu_permission_name'] = '';
+$plugin_config['plugin_back_permission_name_backend'] = 'gallery';
 
 /* Database Config */
 $plugin_config['plugin_db_table']   = array(

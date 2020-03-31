@@ -818,6 +818,7 @@ class Csz_model extends CI_Model {
             array('name' => 'og:description', 'content' => $desc_txt, 'type' => 'property'),
             array('name' => 'og:url', 'content' => $this->base_link(). '/' . $this->uri->uri_string(), 'type' => 'property'),
             array('name' => 'og:image', 'content' => $og_image, 'type' => 'property'),
+            array('name' => 'og:image:alt', 'content' => $title, 'type' => 'property'),
             array('name' => 'og:locale', 'content' => $this->session->userdata('fronlang_iso') . '_' . strtoupper($this->getCountryCode($this->session->userdata('fronlang_iso'))), 'type' => 'property'),
             array('name' => 'twitter:card', 'content' => 'summary'),
             array('name' => 'twitter:title', 'content' => $title),

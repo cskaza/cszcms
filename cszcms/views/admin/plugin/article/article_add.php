@@ -103,7 +103,21 @@
             echo form_upload($data);
             ?>
             </div> <!-- /controls -->				
-        </div> <!-- /control-group --> 
+        </div> <!-- /control-group -->
+        <div class="control-group">		
+        <?php echo form_error('file_upload2', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
+            <label class="control-label" for="file_upload2"><?php echo $this->lang->line('uploadfile_header'); ?></label>
+            <div class="controls">
+            <?php
+            $data = array(
+                'name' => 'file_upload2',
+                'id' => 'file_upload2',
+                'class' => 'span5'
+            );
+            echo form_upload($data);
+            ?>
+            </div> <!-- /controls -->				
+        </div> <!-- /control-group -->
         <hr>
         <div class="control-group">	
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>

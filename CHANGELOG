@@ -1,4 +1,10 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.7 (2020-03-29)
+- Add file upload for download on Article plugin.
+- Fixed backend menu permission for plugin.
+- Fixed upload function on TinyMCE (images, media, link).
+- Fixed more important bug.
+
 CSZ-CMS V.1.2.6 (2020-02-29)
 - Add support the other database. You can config in config.inc.php file. See example on config_example.inc.php.
 - Update elFinder to 2.1.53.

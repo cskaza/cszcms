@@ -76,7 +76,7 @@ class Article extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('pagination');
         // Pages variable
-        $result_per_page = 20;
+        $result_per_page = 40;
         $total_row = $this->Csz_model->countData('article_db', $search_arr);
         $num_link = 10;
         $base_url = $this->Csz_model->base_link(). '/admin/plugin/article/article/';
@@ -362,6 +362,49 @@ class Article extends CI_Controller {
             }
         }
         redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+    }
+    
+    public function articleDownloadStat() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
+        if ($this->uri->segment(5)) {
+            $this->csz_referrer->setIndex('article_download'); /* Set index page when redirect after save */
+            $search_arr = "article_db_id = '".$this->uri->segment(5)."'";
+            $this->load->helper('form');
+            $this->load->library('pagination');
+            // Pages variable
+            $result_per_page = 20;
+            $total_row = $this->Csz_model->countData('article_db_downloadstat', $search_arr);
+            $num_link = 10;
+            $base_url = $this->Csz_model->base_link(). '/admin/plugin/article/articleDownloadStat/'.$this->uri->segment(5).'/';
+
+            // Pageination config
+            $this->Csz_admin_model->pageSetting($base_url, $total_row, $result_per_page, $num_link, 6);
+            ($this->uri->segment(6)) ? $pagination = $this->uri->segment(6) : $pagination = 0;
+
+            //Get users from database
+            $this->template->setSub('stat', $this->Csz_admin_model->getIndexData('article_db_downloadstat', $result_per_page, $pagination, 'timestamp_create', 'desc', $search_arr));
+            $this->template->setSub('total_row', $total_row);
+
+            //Load the view
+            $this->template->loadSub('admin/plugin/article/article_dlstat');
+        }
+    }
+    
+    public function delDowsloadStat() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('article');
+        admin_helper::is_allowchk('delete');
+        $delR = $this->input->post('delR');
+        if(isset($delR)){
+            foreach ($delR as $value) {
+                if ($value) {
+                    $this->Csz_admin_model->removeData('article_db_downloadstat', 'article_db_downloadstat_id', $value);
+                }
+            }
+        }
+        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        redirect($this->csz_referrer->getIndex('article_download'), 'refresh');
     }
 
 }

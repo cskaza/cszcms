@@ -9,6 +9,7 @@
         <meta property="og:description" content="<?php echo $article->short_desc ?>">
         <?php if ($article->main_picture) { ?>
             <meta property="og:image" content="<?php echo base_url('', '', TRUE) . 'photo/plugin/article/' . $article->main_picture ?>">
+            <meta property="og:image:alt" content="<?php echo $article->title ?>">
         <?php } ?>
         <meta property="fb:article_style" content="default">
     </head>

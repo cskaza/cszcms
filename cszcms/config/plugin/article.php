@@ -25,6 +25,7 @@ $plugin_config['plugin_description']   = 'aricle plugin for make blog'; /* For y
  */
 $plugin_config['plugin_member_menu'] = '';
 $plugin_config['plugin_menu_permission_name'] = '';
+$plugin_config['plugin_back_permission_name_backend'] = 'article';
 
 /* Database Config */
 $plugin_config['plugin_db_table']   = array(

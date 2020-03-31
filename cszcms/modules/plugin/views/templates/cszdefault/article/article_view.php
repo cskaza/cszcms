@@ -19,6 +19,10 @@
                         echo '<center><img data-src="'.base_url().'photo/plugin/article/'.$article->main_picture.'" class="lazy img-responsive img-thumbnail" alt="'.$article->title.'"></center><br>';
                     } ?>
                     <?php echo $this->Csz_model->getHtmlContent($article->content, $this->uri->segment(6)) ?>
+                    <?php if($article->file_upload){ ?>
+                    <hr>
+                    <h6><?php echo $this->Csz_model->getLabelLang('article_filedownload_text') ?>: <a href="<?php echo $this->Csz_model->base_link(). '/plugin/article/downloadFile/'.$article->article_db_id; ?>" title="<?php echo $this->Csz_model->getLabelLang('article_download_link') ?>"><?php echo $this->Csz_model->getLabelLang('article_download_link') ?></a> (<?php echo $this->Article_model->countDownload($article->article_db_id); ?> <?php echo $this->Csz_model->getLabelLang('article_download_link') ?>)</h6>
+                    <?php } ?>
                 </div>
             </div>
         </div>

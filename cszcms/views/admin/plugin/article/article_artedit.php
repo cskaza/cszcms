@@ -108,6 +108,27 @@
                     <input type="hidden" id="mainPicture" name="mainPicture" value="<?php echo $article->main_picture?>"/>
                 </div> <!-- /controls -->				
             </div> <!-- /control-group -->
+            <br>
+            <div class="control-group">		
+            <?php echo form_error('file_upload2', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
+                <label class="control-label" for="file_upload2"><?php echo $this->lang->line('uploadfile_header'); ?></label>
+                <div class="controls">
+                    <?php if ($article->file_upload != "" && $article->file_upload != NULL) { ?><label for="del_file2"><input type="checkbox" name="del_file2" id="del_file2" value="<?php echo $article->file_upload?>"> <span class="remark">Delete File</span></label><?php } ?>         
+                    <?php
+                        if ($article->file_upload != "" && $article->file_upload != NULL) {
+                             echo '<a href="'.base_url() . 'photo/plugin/article/' . $article->file_upload.'" title="'.$this->lang->line('uploadfile_download').'" target="_blank">'.$this->lang->line('uploadfile_download').'</a>';
+                        } ?>    
+                    <?php
+                    $data = array(
+                        'name' => 'file_upload2',
+                        'id' => 'file_upload2',
+                        'class' => 'span5'
+                    );
+                    echo form_upload($data);
+                    ?>
+                    <input type="hidden" id="mainFile" name="mainFile" value="<?php echo $article->file_upload?>"/>
+                </div> <!-- /controls -->				
+            </div> <!-- /control-group -->
             <hr>
         <div class="control-group">	
             <label class="control-label" for="lang_iso"><?php echo $this->lang->line('pages_lang'); ?>*</label>

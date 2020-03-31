@@ -310,6 +310,7 @@ class Article extends CI_Controller {
         if($this->uri->segment(4) && $this->uri->segment(5)){
             $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
+                Member_helper::is_allow_groups($art_row->user_groups_idS);
                 if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
                     $this->Csz_model->setSiteLang($art_row->lang_iso);
                 }
@@ -386,6 +387,7 @@ class Article extends CI_Controller {
         if($this->uri->segment(4)){
             $art_row = $this->Csz_model->getValue('*', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
             if($art_row !== FALSE){
+                Member_helper::is_allow_groups($art_row->user_groups_idS);
                 $data = array();
                 if($this->session->userdata('fronlang_iso') != $art_row->lang_iso){
                     $this->Csz_model->setSiteLang($art_row->lang_iso);
@@ -505,6 +507,27 @@ class Article extends CI_Controller {
         header('Content-type: text/xml');
         print $this->cache->get('article_getWidget_'.$this->uri->segment(4).'_'.$this->uri->segment(5));
         exit(1);
-    }   
+    }
+    
+    public function downloadFile(){
+        if($this->uri->segment(4)){
+            $file = $this->Csz_model->getValue('article_db_id,file_upload,user_groups_idS', 'article_db', "is_category = '0' AND active = '1' AND article_db_id = '".$this->uri->segment(4)."'", '', 1);
+            if($file !== FALSE){
+                Member_helper::is_allow_groups($file->user_groups_idS);
+                $path = FCPATH."/photo/plugin/article/".$file->file_upload;
+                $this->load->helper('file');
+                $data = read_file($path);
+                $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
+                $this->Article_model->downloadArticleLog($file->article_db_id, $file->file_upload);
+                $this->load->helper('download');
+                force_download($filename.'.'.$ext, $data);
+            }else{
+                redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
+            }
+        }else{
+            redirect($this->Csz_model->base_link().'/plugin/article', 'refresh');
+        }
+    }
 
 }
