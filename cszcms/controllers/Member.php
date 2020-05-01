@@ -440,7 +440,7 @@ class Member extends CI_Controller {
         Member_helper::is_allowchk('pm');
         if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
             //Get users from database   
-            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3));
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3), 'inbox');
             if($pm !== FALSE){
                 $this->template->setSub('pm', $pm);
                 //Load the view
@@ -458,7 +458,7 @@ class Member extends CI_Controller {
         Member_helper::is_allowchk('pm');
         if($this->uri->segment(3) && is_numeric($this->uri->segment(3))){
             //Get users from database   
-            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3));
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(3), 'send');
             if($pm !== FALSE){
                 $this->template->setSub('pm', $pm);
                 //Load the view

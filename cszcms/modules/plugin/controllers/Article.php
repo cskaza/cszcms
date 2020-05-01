@@ -421,8 +421,11 @@ class Article extends CI_Controller {
         // first load the library
         $this->load->library('feed');
         $row = $this->Csz_model->load_config();
-        if ($row->pagecache_time != 0) {
-            $this->db->cache_on();
+        $this->db->cache_on();
+        if ($row->pagecache_time == 0) {
+            $pagecache_time = 1;
+        }else{
+            $pagecache_time = $row->pagecache_time;
         }
         // create new instance
         $feed = new Feed();
@@ -445,7 +448,7 @@ class Article extends CI_Controller {
             }
         }
         // show your feed (options: 'atom' (recommended) or 'rss')
-        $feed->render('rss', $row->pagecache_time, 'article_RSS');
+        $feed->render('rss', $pagecache_time, 'article_RSS');
     }
     
     public function getWidget() {

@@ -252,21 +252,17 @@
                         <?php echo form_error('file_upload', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                         <label class="control-label" for="file_upload"><?php echo $this->lang->line('settings_logo'); ?></label>
                         <div class="controls">
-                            <div><img class="img-responsive img-thumbnail" src="<?php
-                                if($settings->site_logo != "" && $settings->site_logo != NULL){
-                                    echo base_url() . 'photo/logo/'.$settings->site_logo;
-                                }
-                                ?>" id="logo_preloaded" <?php
-                                      if($settings->site_logo == "" || $settings->site_logo == NULL){
-                                          echo "style='display:none;'";
-                                      }
-                                      ?>></div>
-                            <?php if($settings->site_logo != "" && $settings->site_logo != NULL){ ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo ?>"> <span class="remark">Delete File</span></label><?php } ?>                   
+                            <?php if($settings->site_logo != "" && $settings->site_logo != NULL){ ?>
+                            <div class="col-md-4">
+                                <img class="img-responsive img-thumbnail" src="<?php echo base_url() . 'photo/logo/'.$settings->site_logo;?>">
+                                <br><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo ?>"> <span class="remark">Delete File</span></label>
+                            </div>
+                            <?php } ?>                   
                             <?php
                             $data = array(
                                 'name' => 'file_upload',
                                 'id' => 'file_upload',
-                                'class' => 'span5'
+                                'class' => 'form-control'
                             );
                             echo form_upload($data);
                             ?>
@@ -279,21 +275,17 @@
                         <?php echo form_error('og_image', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                         <label class="control-label" for="og_image"><?php echo $this->lang->line('settings_og_image'); ?></label>
                         <div class="controls">
-                            <div><img class="img-responsive img-thumbnail" src="<?php
-                                if($settings->og_image != "" && $settings->og_image != NULL){
-                                    echo base_url().'photo/logo/'.$settings->og_image;
-                                }
-                                ?>" id="logo_preloaded" <?php
-                                      if($settings->og_image == "" || $settings->og_image == NULL){
-                                          echo "style='display:none;'";
-                                      }
-                                      ?>></div>
-                            <?php if($settings->og_image != "" && $settings->og_image != NULL){ ?><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image ?>"> <span class="remark">Delete File</span></label><?php } ?>                    
+                            <?php if($settings->og_image != "" && $settings->og_image != NULL){ ?>
+                            <div class="col-md-4">
+                                <img class="img-responsive img-thumbnail" src="<?php echo base_url().'photo/logo/'.$settings->og_image; ?>">
+                                <br><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image ?>"> <span class="remark">Delete File</span></label>
+                            </div>
+                            <?php } ?>                    
                             <?php
                             $data = array(
                                 'name' => 'og_image',
                                 'id' => 'og_image',
-                                'class' => 'span5'
+                                'class' => 'form-control'
                             );
                             echo form_upload($data);
                             ?>

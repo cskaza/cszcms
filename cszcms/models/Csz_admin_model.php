@@ -435,15 +435,15 @@ class Csz_admin_model extends CI_Model{
             $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
         }
         $data = array(
-            'name' => $this->input->post('name', TRUE),
+            'name' => $this->Csz_model->cleanOSCommand($this->input->post('name', TRUE)),
             'email' => $this->input->post('email', TRUE),
             'password' => $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)),
-            'first_name' => $this->input->post('first_name', TRUE),
-            'last_name' => $this->input->post('last_name', TRUE),
+            'first_name' => $this->Csz_model->cleanOSCommand($this->input->post('first_name', TRUE)),
+            'last_name' => $this->Csz_model->cleanOSCommand($this->input->post('last_name', TRUE)),
             'birthday' => $birthday,
             'gender' => $this->input->post('gender', TRUE),
-            'address' => $this->input->post('address', TRUE),
-            'phone' => $this->input->post('phone', TRUE),
+            'address' => $this->Csz_model->cleanOSCommand($this->input->post('address', TRUE)),
+            'phone' => $this->Csz_model->cleanOSCommand($this->input->post('phone', TRUE)),
             'picture' => $upload_file,
             'active' => $active,
             'md5_hash' => md5(time() + mt_rand(1, 99999999)),
@@ -511,7 +511,7 @@ class Csz_admin_model extends CI_Model{
                     $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
                 }
             }
-            $this->db->set('name', $this->input->post("name", TRUE), TRUE);
+            $this->db->set('name', $this->Csz_model->cleanOSCommand($this->input->post("name", TRUE)), TRUE);
             $this->db->set('email', $this->input->post('email', TRUE), TRUE);
             if($this->input->post('password') != ''){
                 $this->db->set('password', $this->Csz_model->pwdEncypt($this->input->post('password', TRUE)), TRUE);
@@ -524,12 +524,12 @@ class Csz_admin_model extends CI_Model{
                 $this->db->set('user_type', $this->input->post("user_type", TRUE), TRUE);
                 if($this->input->post('password') == ''){ $this->db->set('pass_change', $pass_change); }
             }
-            $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
-            $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
+            $this->db->set('first_name', $this->Csz_model->cleanOSCommand($this->input->post("first_name", TRUE)), TRUE);
+            $this->db->set('last_name', $this->Csz_model->cleanOSCommand($this->input->post("last_name", TRUE)), TRUE);
             $this->db->set('birthday', $birthday, TRUE);
             $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
-            $this->db->set('address', $this->input->post("address", TRUE), TRUE);
-            $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
+            $this->db->set('address', $this->Csz_model->cleanOSCommand($this->input->post("address", TRUE), TRUE));
+            $this->db->set('phone', $this->Csz_model->cleanOSCommand($this->input->post("phone", TRUE)), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
             $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
             $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
@@ -942,14 +942,14 @@ class Csz_admin_model extends CI_Model{
             'cookieinfo_txtalign' => $this->input->post('cookieinfo_txtalign', TRUE),
             'cookieinfo_close' => $this->input->post('cookieinfo_close', TRUE),
         );
+        $photo_id = time();
         $upload_file = '';
         if($this->input->post('del_file')){
             @unlink('photo/logo/'.$this->input->post('del_file', TRUE));
         }else if(isset($_FILES['file_upload'])){
             $upload_file = $this->input->post('siteLogo');
             if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg'){
-                $paramiter = '_1';
-                $photo_id = time();
+                $paramiter = '_logo';
                 $uploaddir = 'photo/logo/';
                 $file_f = $_FILES['file_upload']['tmp_name'];
                 $file_name = $_FILES['file_upload']['name'];
@@ -963,8 +963,7 @@ class Csz_admin_model extends CI_Model{
         }elseif(isset($_FILES['og_image'])){
             $upload_file1 = $this->input->post('ogImage');
             if(!empty($_FILES['og_image']) && $_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg'){
-                $paramiter = '_1';
-                $photo_id = time();
+                $paramiter = '_og';
                 $uploaddir = 'photo/logo/';
                 $file_f = $_FILES['og_image']['tmp_name'];
                 $file_name = $_FILES['og_image']['name'];
@@ -1294,6 +1293,8 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('new_windows')) ? $new_windows = $this->input->post('new_windows', TRUE) : $new_windows = 0;
         ($this->input->post('menuType')) ? $arrange = $this->getMenuArrange($this->input->post('dropMenu')) : $arrange = $this->getMenuArrange();
         $o_link_input = $this->input->post('url_link', TRUE);
+        $pageUrl = $this->input->post('pageUrl', TRUE);
+        $pluginmenu = $this->input->post('pluginmenu', TRUE);
         if(substr($o_link_input, 0, 1) === '#'){
             $other_link = substr($o_link_input, 1);
         }else{
@@ -1304,12 +1305,15 @@ class Csz_admin_model extends CI_Model{
         if(!$other_link){
             $protocal = '';
         }
+        if(!$pageUrl && !$pluginmenu && !$o_link_input){
+            $other_link = '#';
+        }
         $data = array(
             'menu_name' => $this->input->post('name', TRUE),
             'lang_iso' => $this->input->post('lang_iso', TRUE),
-            'pages_id' => $this->input->post('pageUrl', TRUE),
+            'pages_id' => $pageUrl,
             'other_link' => $protocal.$other_link,
-            'plugin_menu' => $this->input->post('pluginmenu', TRUE),
+            'plugin_menu' => $pluginmenu,
             'drop_menu' => $dropdown,
             'drop_page_menu_id' => $dropMenu,
             'position' => $this->input->post('position', TRUE),
@@ -1337,8 +1341,9 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('new_windows')) ? $new_windows = $this->input->post('new_windows', TRUE) : $new_windows = 0;
         $this->db->set('menu_name', $this->input->post("name", TRUE), TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
-        $this->db->set('pages_id', $this->input->post('pageUrl', TRUE), TRUE);
         $o_link_input = $this->input->post('url_link', TRUE);
+        $pageUrl = $this->input->post('pageUrl', TRUE);
+        $pluginmenu = $this->input->post('pluginmenu', TRUE);
         if(substr($o_link_input, 0, 1) === '#'){
             $other_link = substr($o_link_input, 1);
         }else{
@@ -1349,8 +1354,12 @@ class Csz_admin_model extends CI_Model{
         if(!$other_link){
             $protocal = '';
         }
+        if(!$pageUrl && !$pluginmenu && !$o_link_input){
+            $other_link = '#';
+        }
+        $this->db->set('pages_id', $pageUrl, TRUE);
         $this->db->set('other_link', $protocal.$other_link, TRUE);
-        $this->db->set('plugin_menu', $this->input->post('pluginmenu', TRUE), TRUE);
+        $this->db->set('plugin_menu', $pluginmenu, TRUE);
         $this->db->set('drop_menu', $dropdown, TRUE);
         $this->db->set('drop_page_menu_id', $dropMenu, TRUE);
         $this->db->set('position', $this->input->post('position', TRUE), TRUE);
@@ -1637,6 +1646,14 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('upload_file', $data);
     }
+    
+    private function cleanFormName($name){
+        if($name == 'field' || $name == 'main'){
+            $name = $name.time();
+        }
+        $str_arr = array(' ', '-');
+        return $this->Csz_model->cleanEmailFormat(str_replace($str_arr, '_', strtolower($name)));
+    }
 
     /**
      * insertForms
@@ -1650,14 +1667,8 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
-        if($this->input->post('save_to_db')){ 
-            $save_to_db = $this->input->post('save_to_db', TRUE);
-        }else{
-            $save_to_db = 0;
-            $sendmail = 1;
-        }
-        $str_arr = array(' ', '-');
-        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
+        ($this->input->post('save_to_db')) ? $save_to_db = $this->input->post('save_to_db', TRUE) : $save_to_db = 0;
+        $form_name = $this->cleanFormName($this->input->post('form_name', TRUE));
         $data = array(
             'form_name' => $form_name,
             'form_enctype' => $this->input->post('form_enctype', TRUE),
@@ -1672,6 +1683,8 @@ class Csz_admin_model extends CI_Model{
             'active' => $active,
             'captcha' => $captcha,
             'save_to_db' => $save_to_db,
+            'dont_repeat_field' => $this->input->post('dont_repeat_field', TRUE),
+            'repeat_txt' => $this->input->post('repeat_txt', TRUE),
         );
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
@@ -1744,6 +1757,7 @@ class Csz_admin_model extends CI_Model{
      * Function for update the form
      *
      * @param	string	$id    form id
+     * @return	bool
      */
     public function updateForms($id){
         $this->load->dbforge();
@@ -1751,136 +1765,152 @@ class Csz_admin_model extends CI_Model{
         ($this->input->post('sendmail')) ? $sendmail = $this->input->post('sendmail', TRUE) : $sendmail = 0;
         ($this->input->post('captcha')) ? $captcha = $this->input->post('captcha', TRUE) : $captcha = 0;
         ($this->input->post('send_to_visitor')) ? $send_to_visitor = $this->input->post('send_to_visitor', TRUE) : $send_to_visitor = 0;
-        if($this->input->post('save_to_db')){ 
-            $save_to_db = $this->input->post('save_to_db', TRUE);
+        ($this->input->post('save_to_db')) ? $save_to_db = $this->input->post('save_to_db', TRUE) : $save_to_db = 0;
+        $form_name_old = $this->input->post('form_name_old', TRUE);
+        $form_name = $this->cleanFormName($this->input->post('form_name', TRUE));
+        if($form_name == $form_name_old){
+            $rename_table_res = TRUE;
         }else{
-            $save_to_db = 0;
-            $sendmail = 1;
+            $rename_table_res = @$this->dbforge->rename_table('form_'.$form_name_old, 'form_'.$form_name);
+            $fields = array(
+                    'form_'.$form_name_old.'_id' => array(
+                        'name' => 'form_'.$form_name.'_id',
+                        'type' => 'INT',
+                        'constraint' => 11,
+                        'auto_increment' => TRUE
+                    ),
+            );
+            $this->dbforge->modify_column('form_'.$form_name, $fields);
         }
-        $str_arr = array(' ', '-');
-        $form_name = str_replace($str_arr, '_', strtolower($this->input->post('form_name', TRUE)));
-        $data = array(
-            'form_name' => $form_name,
-            'form_enctype' => $this->input->post('form_enctype', TRUE),
-            'form_method' => $this->input->post('form_method', TRUE),
-            'success_txt' => $this->input->post('success_txt', TRUE),
-            'captchaerror_txt' => $this->input->post('captchaerror_txt', TRUE),
-            'error_txt' => $this->input->post('error_txt', TRUE),
-            'sendmail' => $sendmail,
-            'email' => $this->input->post('email', TRUE),
-            'subject' => $this->input->post('subject', TRUE),
-            'send_to_visitor' => $send_to_visitor,
-            'email_field_id' => $this->input->post('email_field_id', TRUE),
-            'visitor_subject' => $this->input->post('visitor_subject', TRUE),
-            'visitor_body' => $this->input->post('visitor_body', TRUE),
-            'active' => $active,
-            'captcha' => $captcha,
-            'save_to_db' => $save_to_db,
-        );
-        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
-        $this->db->where('form_main_id', $id);
-        $this->db->update('form_main', $data);
-        /* Rename Field */
-        $form_field_id = $this->input->post('form_field_id', TRUE);
-        $field_name1 = $this->input->post('field_name1', TRUE);
-        $field_oldname = $this->input->post('field_oldname', TRUE);
-        $field_oldtype = $this->input->post('field_oldtype', TRUE);
-        $field_type1 = $this->input->post('field_type1', TRUE);
-        $field_id1 = $this->input->post('field_id1', TRUE);
-        $field_class1 = $this->input->post('field_class1', TRUE);
-        $field_placeholder1 = $this->input->post('field_placeholder1', TRUE);
-        $field_value1 = $this->input->post('field_value1', TRUE);
-        $field_label1 = $this->input->post('field_label1', TRUE);
-        $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
-        $field_required1 = $this->input->post('field_required1', TRUE);
-        $field_div_class1 = $this->input->post('field_div_class1', TRUE);
-        if(count($field_oldname) > 0){
-            $arrange = 1;
-            for($i = 0; $i < count($field_oldname); $i++){
-                if($field_oldname[$i] && $form_field_id[$i]){
-                    $data = array(
-                        'form_main_id' => $id,
-                        'field_type' => $field_type1[$i],
-                        'field_name' => $field_name1[$i],
-                        'field_id' => $field_id1[$i],
-                        'field_class' => $field_class1[$i],
-                        'field_placeholder' => $field_placeholder1[$i],
-                        'field_value' => $field_value1[$i],
-                        'field_label' => $field_label1[$i],
-                        'sel_option_val' => $sel_option_val1[$i],
-                        'field_required' => $field_required1[$i],
-                        'field_div_class' => $field_div_class1[$i],
-                        'arrange' => $arrange,
-                    );
-                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
-                    $this->db->where('form_field_id', $form_field_id[$i]);
-                    $this->db->update('form_field', $data);
-                    $arrange++;
-                    if($field_oldname[$i] != $field_name1[$i]){
-                        if($field_oldtype[$i] != 'button' && $field_oldtype[$i] != 'reset' && $field_oldtype[$i] != 'submit' && $field_oldtype[$i] != 'label' && $field_oldtype[$i] != 'file'){
-                            if($field_type1[$i] == 'button' || $field_type1[$i] == 'reset' || $field_type1[$i] == 'submit' || $field_type1[$i] == 'label'){
-                                $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);
-                            }else{
-                                $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
-                                $this->dbforge->modify_column('form_'.$form_name, $fields);
-                            }
-                        }else if($field_oldtype[$i] == 'file'){
-                            delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]), TRUE);
-                            delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
-                            rmdir(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
-                            $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
-                            $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);                           
-                            $this->dbforge->add_column('form_'.$form_name, $fields);
-                        }else{
-                            if($field_type1[$i] != 'button' && $field_type1[$i] != 'reset' && $field_type1[$i] != 'submit' && $field_type1[$i] != 'label'){
+        if($rename_table_res !== FALSE){
+            $data = array(
+                'form_name' => $form_name,
+                'form_enctype' => $this->input->post('form_enctype', TRUE),
+                'form_method' => $this->input->post('form_method', TRUE),
+                'success_txt' => $this->input->post('success_txt', TRUE),
+                'captchaerror_txt' => $this->input->post('captchaerror_txt', TRUE),
+                'error_txt' => $this->input->post('error_txt', TRUE),
+                'sendmail' => $sendmail,
+                'email' => $this->input->post('email', TRUE),
+                'subject' => $this->input->post('subject', TRUE),
+                'send_to_visitor' => $send_to_visitor,
+                'email_field_id' => $this->input->post('email_field_id', TRUE),
+                'visitor_subject' => $this->input->post('visitor_subject', TRUE),
+                'visitor_body' => $this->input->post('visitor_body', TRUE),
+                'active' => $active,
+                'captcha' => $captcha,
+                'save_to_db' => $save_to_db,
+                'dont_repeat_field' => $this->input->post('dont_repeat_field', TRUE),
+                'repeat_txt' => $this->input->post('repeat_txt', TRUE),
+            );
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+            $this->db->where('form_main_id', $id);
+            $this->db->update('form_main', $data);
+            /* Rename Field */
+            $form_field_id = $this->input->post('form_field_id', TRUE);
+            $field_name1 = $this->input->post('field_name1', TRUE);
+            $field_oldname = $this->input->post('field_oldname', TRUE);
+            $field_oldtype = $this->input->post('field_oldtype', TRUE);
+            $field_type1 = $this->input->post('field_type1', TRUE);
+            $field_id1 = $this->input->post('field_id1', TRUE);
+            $field_class1 = $this->input->post('field_class1', TRUE);
+            $field_placeholder1 = $this->input->post('field_placeholder1', TRUE);
+            $field_value1 = $this->input->post('field_value1', TRUE);
+            $field_label1 = $this->input->post('field_label1', TRUE);
+            $sel_option_val1 = $this->input->post('sel_option_val1', TRUE);
+            $field_required1 = $this->input->post('field_required1', TRUE);
+            $field_div_class1 = $this->input->post('field_div_class1', TRUE);
+            if(count($field_oldname) > 0){
+                $arrange = 1;
+                for($i = 0; $i < count($field_oldname); $i++){
+                    if($field_oldname[$i] && $form_field_id[$i]){
+                        $data = array(
+                            'form_main_id' => $id,
+                            'field_type' => $field_type1[$i],
+                            'field_name' => $field_name1[$i],
+                            'field_id' => $field_id1[$i],
+                            'field_class' => $field_class1[$i],
+                            'field_placeholder' => $field_placeholder1[$i],
+                            'field_value' => $field_value1[$i],
+                            'field_label' => $field_label1[$i],
+                            'sel_option_val' => $sel_option_val1[$i],
+                            'field_required' => $field_required1[$i],
+                            'field_div_class' => $field_div_class1[$i],
+                            'arrange' => $arrange,
+                        );
+                        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+                        $this->db->where('form_field_id', $form_field_id[$i]);
+                        $this->db->update('form_field', $data);
+                        $arrange++;
+                        if($field_oldname[$i] != $field_name1[$i]){
+                            if($field_oldtype[$i] != 'button' && $field_oldtype[$i] != 'reset' && $field_oldtype[$i] != 'submit' && $field_oldtype[$i] != 'label' && $field_oldtype[$i] != 'file'){
+                                if($field_type1[$i] == 'button' || $field_type1[$i] == 'reset' || $field_type1[$i] == 'submit' || $field_type1[$i] == 'label'){
+                                    $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);
+                                }else{
+                                    $fields = $this->renameFields($field_type1[$i], $field_oldname[$i], $field_name1[$i]);
+                                    $this->dbforge->modify_column('form_'.$form_name, $fields);
+                                }
+                            }else if($field_oldtype[$i] == 'file'){
+                                delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]), TRUE);
+                                delete_files(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
+                                rmdir(FCPATH . "/photo/forms/".$this->Csz_model->cleanEmailFormat($form_name).'/'.$this->Csz_model->cleanEmailFormat($field_oldname[$i]));
                                 $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
+                                $this->dbforge->drop_column('form_'.$form_name, $field_oldname[$i]);                           
                                 $this->dbforge->add_column('form_'.$form_name, $fields);
+                            }else{
+                                if($field_type1[$i] != 'button' && $field_type1[$i] != 'reset' && $field_type1[$i] != 'submit' && $field_type1[$i] != 'label'){
+                                    $fields = $this->preTypeFields($field_type1[$i], $field_name1[$i]);
+                                    $this->dbforge->add_column('form_'.$form_name, $fields);
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        /* Add New Field */
-        $field_name = $this->input->post('field_name', TRUE);
-        $field_type = $this->input->post('field_type', TRUE);
-        $field_id = $this->input->post('field_id', TRUE);
-        $field_class = $this->input->post('field_class', TRUE);
-        $field_placeholder = $this->input->post('field_placeholder', TRUE);
-        $field_value = $this->input->post('field_value', TRUE);
-        $field_label = $this->input->post('field_label', TRUE);
-        $sel_option_val = $this->input->post('sel_option_val', TRUE);
-        $field_required = $this->input->post('field_required', TRUE);
-        $field_div_class = $this->input->post('field_div_class', TRUE);
-        if(count($field_name) > 0){
-            $last_arrange = $this->Csz_model->getLastID('form_field', 'arrange', "form_main_id = '".$id."'");
-            for($i = 0; $i < count($field_name); $i++){
-                if($field_name[$i]){
-                    $last_arrange++;
-                    $data = array(
-                        'form_main_id' => $id,
-                        'field_type' => $field_type[$i],
-                        'field_name' => $field_name[$i],
-                        'field_id' => $field_id[$i],
-                        'field_class' => $field_class[$i],
-                        'field_placeholder' => $field_placeholder[$i],
-                        'field_value' => $field_value[$i],
-                        'field_label' => $field_label[$i],
-                        'sel_option_val' => $sel_option_val[$i],
-                        'field_required' => $field_required[$i],
-                        'field_div_class' => $field_div_class[$i],
-                        'arrange' => $last_arrange,
-                    );
-                    $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
-                    $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
-                    $this->db->insert('form_field', $data);
-                    $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
-                    $this->dbforge->add_column('form_'.$form_name, $fields);
+            /* Add New Field */
+            $field_name = $this->input->post('field_name', TRUE);
+            $field_type = $this->input->post('field_type', TRUE);
+            $field_id = $this->input->post('field_id', TRUE);
+            $field_class = $this->input->post('field_class', TRUE);
+            $field_placeholder = $this->input->post('field_placeholder', TRUE);
+            $field_value = $this->input->post('field_value', TRUE);
+            $field_label = $this->input->post('field_label', TRUE);
+            $sel_option_val = $this->input->post('sel_option_val', TRUE);
+            $field_required = $this->input->post('field_required', TRUE);
+            $field_div_class = $this->input->post('field_div_class', TRUE);
+            if(count($field_name) > 0){
+                $last_arrange = $this->Csz_model->getLastID('form_field', 'arrange', "form_main_id = '".$id."'");
+                for($i = 0; $i < count($field_name); $i++){
+                    if($field_name[$i]){
+                        $last_arrange++;
+                        $data = array(
+                            'form_main_id' => $id,
+                            'field_type' => $field_type[$i],
+                            'field_name' => $field_name[$i],
+                            'field_id' => $field_id[$i],
+                            'field_class' => $field_class[$i],
+                            'field_placeholder' => $field_placeholder[$i],
+                            'field_value' => $field_value[$i],
+                            'field_label' => $field_label[$i],
+                            'sel_option_val' => $sel_option_val[$i],
+                            'field_required' => $field_required[$i],
+                            'field_div_class' => $field_div_class[$i],
+                            'arrange' => $last_arrange,
+                        );
+                        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+                        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+                        $this->db->insert('form_field', $data);
+                        $fields = $this->preTypeFields($field_type[$i], $field_name[$i]);
+                        $this->dbforge->add_column('form_'.$form_name, $fields);
+                    }
                 }
             }
+            $this->Csz_model->clear_all_cache();
+            return TRUE;
+        }else{
+            return FALSE;
         }
-        $this->Csz_model->clear_all_cache();
     }
 
     /**
@@ -1898,9 +1928,9 @@ class Csz_admin_model extends CI_Model{
             case 'checkbox':
                 $fields = array(
                     $name => array(
-                        'type' => 'INT',
+                        'type' => 'VARCHAR',
                         'null' => TRUE,
-                        'constraint' => 11
+                        'constraint' => '255'
                     ),
                 );
                 break;
@@ -1912,10 +1942,10 @@ class Csz_admin_model extends CI_Model{
                     ),
                 );
                 break;
+            case 'number':
             case 'email':
             case 'file':
             case 'password':
-            case 'radio':
             case 'selectbox':
             case 'text':
             case 'timepicker':
@@ -1958,9 +1988,9 @@ class Csz_admin_model extends CI_Model{
                 $fields = array(
                     $oldname => array(
                         'name' => $newname,
-                        'type' => 'INT',
+                        'type' => 'VARCHAR',
                         'null' => TRUE,
-                        'constraint' => 11
+                        'constraint' => '255'
                     ),
                 );
                 break;
@@ -1973,10 +2003,10 @@ class Csz_admin_model extends CI_Model{
                     ),
                 );
                 break;
+            case 'number':
             case 'email':
             case 'file':
             case 'password':
-            case 'radio':
             case 'selectbox':
             case 'text':
             case 'timepicker':

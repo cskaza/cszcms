@@ -84,7 +84,7 @@ class Pm extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4) && is_numeric($this->uri->segment(4))){
             //Get users from database   
-            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(4));
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(4), 'inbox');
             if($pm !== FALSE){
                 $this->template->setSub('pm', $pm);
                 //Load the view
@@ -102,7 +102,7 @@ class Pm extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         if($this->uri->segment(4) && is_numeric($this->uri->segment(4))){
             //Get users from database   
-            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(4));
+            $pm = $this->Csz_auth_model->get_pm($this->uri->segment(4), 'send');
             if($pm !== FALSE){
                 $this->template->setSub('pm', $pm);
                 //Load the view

@@ -213,6 +213,7 @@ class Headfoot_html extends CI_Model{
                     }else{
                         $target = '';
                     }
+                    $page_link = '';
                     if($page_url_rs && (!$rs->other_link && !$rs->plugin_menu) || ($rs->other_link == NULL && $rs->plugin_menu == NULL)){
                         $page_link = $this->Csz_model->base_link().'/'.$page_url_rs;
                     }else if($rs->other_link && (!$page_url_rs && !$rs->plugin_menu) || ($page_url_rs == NULL && $rs->plugin_menu == NULL)){
@@ -224,6 +225,9 @@ class Headfoot_html extends CI_Model{
                     }else if((!$rs->other_link && !$page_url_rs) || ($rs->other_link == NULL && $page_url_rs == NULL) && $rs->plugin_menu){
                         $page_link = $this->Csz_model->base_link().'/'.'plugin/'.$rs->plugin_menu;
                     }else{
+                        $page_link = '#';
+                    }
+                    if(!$page_link){
                         $page_link = '#';
                     }
                     if($rs->drop_menu){
@@ -242,6 +246,7 @@ class Headfoot_html extends CI_Model{
                                 }else{
                                     $target_sub = '';
                                 }
+                                $page_link_sub = '';
                                 if($page_url_rs_sub && (!$rs_sub->other_link && !$rs_sub->plugin_menu) || ($rs_sub->other_link == NULL && $rs_sub->plugin_menu == NULL)){
                                     $page_link_sub = $this->Csz_model->base_link().'/'.$this->Csz_model->rw_link($rs->menu_name).'/'.$page_url_rs_sub;
                                 }else if($rs_sub->other_link && (!$page_url_rs_sub && !$rs_sub->plugin_menu) || ($page_url_rs_sub == NULL && $rs_sub->plugin_menu == NULL)){
@@ -255,6 +260,7 @@ class Headfoot_html extends CI_Model{
                                 }else{
                                     $page_link_sub = '#';
                                 }
+                                if(!$page_link_sub) $page_link_sub = '#';
                                 $menu_list1.= '<li><a href="'.$page_link_sub.'"'.$target_sub.' title="'.strip_tags($rs_sub->menu_name).'">'.$rs_sub->menu_name.'</a></li>';
                             }
                         }

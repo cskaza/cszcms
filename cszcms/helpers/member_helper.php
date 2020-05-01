@@ -45,7 +45,7 @@ class Member_helper{
             redirect($CI->Csz_model->base_link().'/member/login', 'refresh');
         }else if($email && $_SESSION['session_id']){
             $chk = $CI->Csz_admin_model->sessionLoginChk();
-            if($chk === FALSE){
+            if($chk === FALSE || $_SESSION['user_agent'] != $CI->input->user_agent()){
                 $CI->Csz_model->logout($CI->Csz_model->base_link().'/member/login');
             }
         }

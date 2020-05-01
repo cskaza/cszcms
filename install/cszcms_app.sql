@@ -95,14 +95,16 @@ CREATE TABLE IF NOT EXISTS `form_main` (
   `active` int(11),
   `captcha` int(11),
   `save_to_db` int(11),
+  `dont_repeat_field` varchar(255),
+  `repeat_txt` varchar(255),
   `timestamp_create` datetime,
   `timestamp_update` datetime,
   PRIMARY KEY (`form_main_id`),
   KEY `form_name` (`form_name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `save_to_db`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, 1, NOW(), NOW());
+INSERT INTO `form_main` (`form_main_id`, `form_name`, `form_enctype`, `form_method`, `success_txt`, `captchaerror_txt`, `error_txt`, `sendmail`, `email`, `subject`, `send_to_visitor`, `email_field_id`, `visitor_subject`, `visitor_body`, `active`, `captcha`, `save_to_db`, `dont_repeat_field`, `repeat_txt`, `timestamp_create`, `timestamp_update`) VALUES
+(1, 'contactus_en', '', 'post', 'Successfully!', 'The Security Check was not input correctly. Please try again.', 'Error! Please try again.', 1, '', 'Contact us from the CSZ-CMS website', 0, 0, '', '', 1, 1, 1, '', 'Your data is duplicated in the system.', NOW(), NOW());
 
 DROP TABLE IF EXISTS `lang_iso`;
 CREATE TABLE IF NOT EXISTS `lang_iso` (
@@ -370,7 +372,9 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (76, 'error_txt', 'For error text', 'Data not found! / Error! Please try again.', '2017-03-02 10:53:09'),
 (77, 'plugin_member_menu', 'For plugin member menu text', 'Plugins Menu', '2017-03-02 10:53:09'),
 (78, 'article_filedownload_text', 'For file download label', 'File Download', NOW()),
-(79, 'article_download_link', 'For download label', 'Download', NOW());
+(79, 'article_download_link', 'For download label', 'Download', NOW()),
+(80, 'form_doublesubmit_alert', 'For form double submit alert text', 'The form is being submitted, please wait a moment...', NOW()),
+(81, 'form_submiting_btn', 'For form button been submitting text', 'Processing, Please wait...', NOW());
 
 DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (

@@ -34,10 +34,10 @@ class Formsaction extends CI_Controller {
     public function index() {
         $form_id = $this->uri->segment(2);
         if ($form_id) {
+            $cur_page = $this->session->userdata('cszfrm_cururl');
             //Get form data
             $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
-            if ($frm_rs !== FALSE && $frm_rs->active) {
-                $cur_page = $this->session->userdata('cszfrm_cururl');
+            if ($frm_rs !== FALSE && $frm_rs->active && ($frm_rs->sendmail || $frm_rs->save_to_db)) {
                 $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id, '', array('arrange','form_field_id'), 'ASC');
                 if ($frm_rs->captcha) {
                     if ($this->Csz_model->chkCaptchaRes() == '') {
@@ -67,7 +67,7 @@ class Formsaction extends CI_Controller {
                     }else if($frm_rs->form_method == 'post' && $f_val->field_type == 'file'){
                         if ($f_val->field_required && !isset($_FILES[$f_val->field_name]) && (!$_FILES[$f_val->field_name]['tmp_name'] || !$_FILES[$f_val->field_name]['name'])) {
                             //Return to last page: Error
-                            $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . '</div>');
+                            $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . ' (FIELD_REQUIRED)</div>');
                             redirect($cur_page, 'refresh');
                         } 
                         if (isset($_FILES[$f_val->field_name]) && $_FILES[$f_val->field_name]['tmp_name'] && $_FILES[$f_val->field_name]['name']) {
@@ -75,10 +75,10 @@ class Formsaction extends CI_Controller {
                             $file_name = (Date("dmy_His") . '.' . $ext);
                             if ($f_val->sel_option_val != NULL && $f_val->sel_option_val) {
                                 $sel_opt = trim(str_replace('.', '', strtoupper($f_val->sel_option_val)));
-                                $ext_accept = explode(',', $sel_opt);
+                                $ext_accept = explode(',', str_replace(' ', '', $sel_opt));
                                 if (is_array($ext_accept) && !empty($ext_accept) && !in_array(strtoupper($ext), $ext_accept)) {
                                     //Return to last page: Error
-                                    $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . '</div>');
+                                    $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . ' (FILE_NOT_SUPPORT)</div>');
                                     redirect($cur_page, 'refresh');
                                 }
                                 unset($ext, $ext_accept, $sel_opt);
@@ -91,6 +91,11 @@ class Formsaction extends CI_Controller {
                             $data[$f_val->field_name] = $file_sql;
                         }
                     }
+                }
+                if($frm_rs->dont_repeat_field && $this->Csz_admin_model->countTable('form_' . $frm_rs->form_name, $frm_rs->dont_repeat_field." = '".$data[$frm_rs->dont_repeat_field]."'") > 0){
+                    //Return to last page: Captcha invalid
+                    $this->session->set_flashdata('formtag_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->repeat_txt . '</div>');
+                    redirect($cur_page, 'refresh');
                 }
                 if($frm_rs->save_to_db == 1){
                     $this->db->set('ip_address', $this->input->ip_address(), TRUE);
@@ -112,8 +117,9 @@ class Formsaction extends CI_Controller {
                 $this->session->set_flashdata('formtag_error_message','<div class="alert alert-success text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->success_txt . '</div>');
                 redirect($cur_page, 'refresh');
             } else {
-                //Return to home page
-                redirect(base_url(), 'refresh');
+                //Return to last page: Error, Form not active and (not save to DB or not send to email)
+                $this->session->set_flashdata('formtag_error_message', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->error_txt . ' (FORM_IS_DISABLED)</div>');
+                redirect($cur_page, 'refresh');
             }
         } else {
             //Return to home page

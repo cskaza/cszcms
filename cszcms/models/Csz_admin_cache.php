@@ -25,16 +25,18 @@ class Csz_admin_cache extends CI_Model{
 
     function __construct(){
         parent::__construct();
+        $this->load->model('Csz_model');
         if (CACHE_TYPE == 'file') {
             $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
         $this->db->cache_on();
-        if($this->load_config()->pagecache_time == 0){
+        $config = $this->Csz_model->load_config();
+        if($config->pagecache_time == 0){
             $this->setcahetime(1);
         }else{
-            $this->setcahetime($this->load_config()->pagecache_time);
+            $this->setcahetime($config->pagecache_time);
         }
     }
     
@@ -44,18 +46,9 @@ class Csz_admin_cache extends CI_Model{
      * @param   int $minute   the minute of cache time
      */
     private function setcahetime($minute = 0) {
-        if(is_numeric($minute)) $this->cachetime = $minute;
-    }
-
-    /**
-     * load_config
-     *
-     * Function for load settings from database
-     *
-     * @return	object or FALSE
-     */
-    public function load_config(){
-        return $this->Csz_model->load_config();
+        if(is_numeric($minute)){
+            $this->cachetime = $minute;
+        }
     }
     
     public function getMailLogsDashboard($limit = 10, $order_by = 'timestamp_create', $sort_by = 'desc'){

@@ -378,6 +378,8 @@ $lang['forms_visitor_subject']		= "Tiêu đề Email";
 $lang['forms_visitor_body']		= "Nội dung Email";
 $lang['forms_visitor_newtxt']		= "Gửi thư cho khách truy cập. Vui lòng chỉnh sửa mẫu này";
 $lang['forms_save_to_db']		= "Lưu vào Database";
+$lang['forms_dont_repeat_field']		= "Don't repeat on this field name";
+$lang['forms_repeat_txt']		= "Repeat Alert Text";
 
 //Field Text
 $lang['field_header']                   = "Chèn vào trường";
@@ -390,7 +392,7 @@ $lang['field_placeholder']		= "Field Placeholder";
 $lang['field_value']                    = "Giá trị trường";
 $lang['field_label']                    = "Nhãn trường";
 $lang['sel_option_val']                 = "Chọn giá trị tùy chọn";
-$lang['sel_option_val_info']            = "Ví dụ: Nếu bạn muốn giá trị tùy chọn là 'value' và nhãn là 'Show', bạn có thể đặt như thế này. Ví dụ: value1 => Show1, value2 => Show2. Nếu loại trường là 'tệp', bạn có thể đặt phần mở rộng tệp cho phép tại đây. Vd .txt, .docx";
+$lang['sel_option_val_info']            = "Ví dụ: Nếu bạn muốn giá trị tùy chọn là 'value' và nhãn là 'Show', bạn có thể đặt như thế này. Ví dụ: value1 => Show1, value2 => Show2. Nếu loại trường là 'tệp', bạn có thể đặt phần mở rộng tệp cho phép tại đây.  (Ex .txt, .docx). If field type is 'number' you can put max=>min";
 $lang['field_require']                  = "Trường bắt buộc";
 $lang['field_addtxtinfo']               = '<span class="remark">Nhấn <i class="glyphicon glyphicon-plus"></i> để thêm nhiều trường.</span>';
 $lang['field_div_class']                  = "Div Class";

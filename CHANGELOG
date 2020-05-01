@@ -1,4 +1,13 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.2.8 (2020-04-30)
+- Add data duplicated checking on field to you choose (Form Builder).
+- Fixed Form Builder for change form name but db table not rename.
+- Fixed Form Builder file upload problem for frontend.
+- Fixed Private Message bug.
+- Fixed more security bug.
+- Fixed more important bug.
+- Improve performance.
+
 CSZ-CMS V.1.2.7 (2020-03-29)
 - Add file upload for download on Article plugin.
 - Fixed backend menu permission for plugin.

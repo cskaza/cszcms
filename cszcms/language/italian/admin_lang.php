@@ -379,6 +379,8 @@ $lang['forms_visitor_subject']		= "Oggetto Email";
 $lang['forms_visitor_body']		= "Email testo";
 $lang['forms_visitor_newtxt']		= "testo inviato a utente";
 $lang['forms_save_to_db']		= "Save to DB Enable";
+$lang['forms_dont_repeat_field']		= "Don't repeat on this field name";
+$lang['forms_repeat_txt']		= "Repeat Alert Text";
 
 //Field Text
 $lang['field_header']                   = "Inserisci campo";
@@ -391,7 +393,7 @@ $lang['field_placeholder']		= "Placeholder campo";
 $lang['field_value']                    = "Valore campo";
 $lang['field_label']                    = "Etichetta";
 $lang['sel_option_val']                 = "Seleziona un valore";
-$lang['sel_option_val_info']            = "Esempio, se vuoi che il valore sia 'valore' e l'etichetta sia 'Vedi' scrivi valore=>Vedi,ecc. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
+$lang['sel_option_val_info']            = "Esempio, se vuoi che il valore sia 'valore' e l'etichetta sia 'Vedi' scrivi valore=>Vedi,ecc. If field type is 'file' you can put file extension allow at here. (Ex .txt, .docx). If field type is 'number' you can put max=>min";
 $lang['field_require']                  = "Campo obbligatorio";
 $lang['field_addtxtinfo']               = '<span class="remark">Premi <i class="glyphicon glyphicon-plus"></i>per aggiunta campi.</span>';
 $lang['field_div_class']                  = "Div Class";

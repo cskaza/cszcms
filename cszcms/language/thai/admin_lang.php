@@ -379,6 +379,8 @@ $lang['forms_visitor_subject']		= "หัวข้ออีเมล์";
 $lang['forms_visitor_body']		= "เนื้อหาอีเมล์";
 $lang['forms_visitor_newtxt']		= "ส่งอีเมล์ถึงผู้เยี่ยมชม. กรุณาแก้ไขแบบฟอร์มนี้";
 $lang['forms_save_to_db']		= "เปิดการใช้งาน บันทึกลง DB";
+$lang['forms_dont_repeat_field']		= "อย่าทำซ้ำในชื่อฟิลด์นี้";
+$lang['forms_repeat_txt']		= "ข้อความแจ้งเตือนการซ้ำ";
 
 //Field Text
 $lang['field_header']                   = "เพิ่มฟิล";
@@ -391,7 +393,7 @@ $lang['field_placeholder']		= "ฟิล Placeholder";
 $lang['field_value']                    = "ฟิล Value";
 $lang['field_label']                    = "ฟิล Label";
 $lang['sel_option_val']                 = "Value สำหรับ Select/Option";
-$lang['sel_option_val_info']            = "ตัวอย่าง, ถ้าคุณต้องการระบุค่าสำหรับตัวเลือก คือ 'value' และโชว์ตัวเลือก คือ 'Show' คุณสามารถระบุได้ดังตัวอย่างนี้ ตัวอย่าง value1=>Show1, value2=>Show2. ถ้าประเภทของฟิลคือ 'file' คุณสามารถใส่สกุลไฟล์ที่อนุญาตได้ที่นี่. ตัวอย่าง .txt, .docx";
+$lang['sel_option_val_info']            = "ตัวอย่าง, ถ้าคุณต้องการระบุค่าสำหรับตัวเลือก คือ 'value' และโชว์ตัวเลือก คือ 'Show' คุณสามารถระบุได้ดังตัวอย่างนี้ ตัวอย่าง value1=>Show1, value2=>Show2. ถ้าประเภทของฟิลคือ 'file' คุณสามารถใส่สกุลไฟล์ที่อนุญาตได้ที่นี่. (ตัวอย่าง .txt, .docx). ถ้าประเภทของฟิลคือ 'number' คุณสามารถใส่ max=>min";
 $lang['field_require']                  = "ฟิล Required";
 $lang['field_addtxtinfo']               = '<span class="remark">กด <i class="glyphicon glyphicon-plus"></i> เพื่อสร้างฟิลเพิ่มเติม.</span>';
 $lang['field_div_class']                  = "Div Class";

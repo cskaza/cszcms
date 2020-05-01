@@ -84,7 +84,7 @@ $db['default'] = array(
 	'dbdriver' => DB_DRIVER,
 	'dbprefix' => '',
 	'pconnect' => FALSE,
-	'db_debug' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => APPPATH.'/db_cache',
 	'char_set' => 'utf8',

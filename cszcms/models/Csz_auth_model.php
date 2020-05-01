@@ -402,7 +402,10 @@ class Csz_auth_model extends CI_Model {
      * 
      * @return array/bool Array with User ID's as key and TRUE or a specific error message OR FALSE if sender doesn't exist
      */
-    public function send_pm($receiver_ids, $title, $message, $sender_id = '', $re_message = '') {
+    public function send_pm($receiver_ids, $title_in, $message_in, $sender_id = '', $re_message_in = '') {
+        $title = $this->Csz_model->cleanOSCommand($title_in);
+        $message = $this->Csz_model->cleanOSCommand($message_in);
+        $re_message = $this->Csz_model->cleanOSCommand($re_message_in);
         if (!$sender_id) {
             $sender_id = $this->session->userdata('user_admin_id');
         }
@@ -446,11 +449,11 @@ class Csz_auth_model extends CI_Model {
      */
     public function list_pms($limit = 5, $offset = 0, $receiver_id = NULL, $sender_id = NULL, $unread = FALSE) {
         $search_sql = ' 1=1 ';
-        if (is_numeric($receiver_id)) {
+        if (is_numeric($receiver_id) && $receiver_id) {
             $search_sql.= " AND receiver_id = '$receiver_id' ";
             $search_sql.= " AND pm_deleted_receiver IS NULL ";
         }
-        if (is_numeric($sender_id)) {
+        if (is_numeric($sender_id) && $sender_id) {
             $search_sql.= " AND sender_id = '$sender_id' ";
             $search_sql.= " AND pm_deleted_sender IS NULL ";
         }
@@ -466,27 +469,31 @@ class Csz_auth_model extends CI_Model {
     }
 
     /**
-     * Get Private Message
+     * Get Private Message (Read)
      * Get private message by id
      * @param int $pm_id Private message id to be returned
+     * @param string $inbox_or_send Read message of inbox or send
      * @param int $user_id User ID of Sender or Receiver
      * @param bool $set_as_read Whether or not to mark message as read
      * @return object Private message
      */
-    public function get_pm($pm_id, $user_admin_id = NULL, $set_as_read = TRUE) {
+    public function get_pm($pm_id, $inbox_or_send = 'inbox', $user_admin_id = NULL, $set_as_read = TRUE) {
         if (!$user_admin_id) {
             $user_admin_id = $this->session->userdata('user_admin_id');
         }
         if (!is_numeric($user_admin_id) || !is_numeric($pm_id)) {
             return FALSE;
         }else{
-            $query = $this->db->where('id', $pm_id);
-            $query = $this->db->where('pm_deleted_sender', NULL);
-            $query = $this->db->where('pm_deleted_receiver', NULL);
-            $query = $this->db->group_start();
-            $query = $this->db->where('receiver_id', $user_admin_id);
-            $query = $this->db->or_where('sender_id', $user_admin_id);
-            $query = $this->db->group_end();
+            $this->db->where('id', $pm_id);
+            if($inbox_or_send == 'inbox'){
+                $this->db->where('pm_deleted_receiver', NULL);
+            }else{
+                $this->db->where('pm_deleted_sender', NULL);
+            }
+            $this->db->group_start();
+            $this->db->where('receiver_id', $user_admin_id);
+            $this->db->or_where('sender_id', $user_admin_id);
+            $this->db->group_end();
             $query = $this->db->get('user_pms');
             if ($query->num_rows() < 1) {
                 return FALSE;
@@ -513,11 +520,11 @@ class Csz_auth_model extends CI_Model {
         if (!is_numeric($user_admin_id) || !is_numeric($pm_id)) {
             return FALSE;
         }else{
-            $query = $this->db->where('id', $pm_id);
-            $query = $this->db->group_start();
-            $query = $this->db->where('receiver_id', $user_admin_id);
-            $query = $this->db->or_where('sender_id', $user_admin_id);
-            $query = $this->db->group_end();
+            $this->db->where('id', $pm_id);
+            $this->db->group_start();
+            $this->db->where('receiver_id', $user_admin_id);
+            $this->db->or_where('sender_id', $user_admin_id);
+            $this->db->group_end();
             $query = $this->db->get('user_pms');
             $result = $query->row();
             if ($user_admin_id == $result->sender_id) {
@@ -558,7 +565,6 @@ class Csz_auth_model extends CI_Model {
         $data = array(
             'receiver_id' => $receiver_id,
             'date_read' => NULL,
-            'pm_deleted_sender' => NULL,
             'pm_deleted_receiver' => NULL,
         );
         $count = $this->Csz_model->countData('user_pms', $data);

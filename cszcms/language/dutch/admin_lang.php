@@ -379,6 +379,8 @@ $lang['forms_visitor_subject']		= "Email Onderwerk";
 $lang['forms_visitor_body']		= "Email Inhoud";
 $lang['forms_visitor_newtxt']		= "Stuur verzender een kopie. Gelieve dit formulier aan te passen";
 $lang['forms_save_to_db']		= "Save to DB Enable";
+$lang['forms_dont_repeat_field']		= "Don't repeat on this field name";
+$lang['forms_repeat_txt']		= "Repeat Alert Text";
 
 //Field Text
 $lang['field_header']                   = "Veld Invoegen";
@@ -391,7 +393,7 @@ $lang['field_placeholder']		= "Veld Placeholder";
 $lang['field_value']                    = "Veld Waarde";
 $lang['field_label']                    = "VeldLabel";
 $lang['sel_option_val']                 = "Selecteer Waarde Optie";
-$lang['sel_option_val_info']            = "Voorbeeld: Als je wilt dat de waarde 'voorbeeldwaarde' is en label 'voorbeeldlabel' is kan je dit als volgt typen: waarde1=>label1, waard2=>label2. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
+$lang['sel_option_val_info']            = "Voorbeeld: Als je wilt dat de waarde 'voorbeeldwaarde' is en label 'voorbeeldlabel' is kan je dit als volgt typen: waarde1=>label1, waard2=>label2. If field type is 'file' you can put file extension allow at here. (Ex .txt, .docx). If field type is 'number' you can put max=>min";
 $lang['field_require']                  = "Veld verplicht";
 $lang['field_addtxtinfo']               = '<span class="remark">Klik <i class="glyphicon glyphicon-plus"></i> om meer velden toe te voegen.</span>';
 $lang['field_div_class']                  = "Div Class";

@@ -1372,6 +1372,44 @@ class Csz_model extends CI_Model {
         unset($output_array, $txt_nonhtml);
         return $content;
     }
+    
+    private function _fileTypeAllow($fileextention = '') {
+        if($fileextention){
+            $mimes = trim(str_replace('.', '', strtolower($fileextention)));
+            if(strpos($fileextention, ',') !== FALSE){
+                return explode(',', str_replace(' ', '', $mimes));
+            }else{
+                return array($mimes);
+            }
+        }else{
+            return array(
+                'jpg','jpeg','png','gif','pdf','doc','docx','odt','txt','odg','odp','ods',
+                'zip','rar','psv','xls','xlsx','ppt','pptx','webp',
+                'mp3','wav','mp4','wma','flv','avi','mov','m4v','wmv','m3u','pls'
+            );
+        }
+    }
+    
+    /**
+     * getMines
+     *
+     * Function for convert file extension to mimes
+     *
+     * @param	string	$fileextention    File extention Ex (.jpg,.bmp,.png)
+     * @return	string
+     */
+    public function getMines($fileextention = '') {
+        $mimes = get_mimes();
+        $return = '';
+        foreach ($this->_fileTypeAllow($fileextention) as $value) {
+            if(is_array($mimes[$value])){
+                $return.= implode(',', $mimes[$value]).',';
+            }else{
+                $return.= $mimes[$value].',';
+            }
+        }
+        return rtrim($return, ',');
+    }
 
     /**
      * addFrmToHtml
@@ -1390,6 +1428,7 @@ class Csz_model extends CI_Model {
         if ($form_data && $form_data !== FALSE) {
             $html_btn = '';
             $html = '';
+            $submit_btn_name = '';
             if($this->session->flashdata('formtag_error_message')){
                 $html = '<div class="text-center">'.$this->session->flashdata('formtag_error_message').'</div><br>';
             }
@@ -1399,7 +1438,7 @@ class Csz_model extends CI_Model {
                 $form_data->form_enctype = 'multipart/form-data';
             }
             unset($fiels_file_count);
-            $html.= '<form action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
+            $html.= '<form id="formbuiler'.$form_data->form_main_id.'" action="' . $action_url . '" name="' . $frm_name . '" method="' . $form_data->form_method . '" enctype="' . $form_data->form_enctype . '" accept-charset="utf-8">';
             if ($this->config->item('csrf_protection') === TRUE && strpos($action_url, $this->config->base_url()) !== FALSE && !stripos($form_data->form_method, 'get')) {
                 $html.= '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" id="'.$this->security->get_csrf_token_name().'" value="' . $this->security->get_csrf_hash() . '">';
             }
@@ -1425,19 +1464,36 @@ class Csz_model extends CI_Model {
                     } else {
                         $maxlength = '';
                     }
-                    if ($field['field_type'] == 'checkbox' || $field['field_type'] == 'email' || $field['field_type'] == 'file' || $field['field_type'] == 'password' || $field['field_type'] == 'radio' || $field['field_type'] == 'text') {
+                    if ($field['field_type'] == 'number' || $field['field_type'] == 'email' || $field['field_type'] == 'file' || $field['field_type'] == 'password' || $field['field_type'] == 'text') {
                         if ($field['field_type'] == 'file' && ($field['sel_option_val'] == NULL || empty($field['sel_option_val']))) {
-                            $accept = ' accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .odt, .txt, .odg, .odp, .ods, .zip, .rar, .psv, .xls, .xlsx, .ppt, .pptx, .mp3, .wav, .mp4, .wma, .flv, .avi, .mov, .m4v, .wmv, .m3u, .pls"';
+                            $accept = ' accept="'.$this->getMines().'"';
                         }else if ($field['field_type'] == 'file' && ($field['sel_option_val'] != NULL && $field['sel_option_val'])){
-                            $accept = ' accept="' . $field['sel_option_val'] . '"';
+                            $accept = ' accept="' . $this->getMines($field['sel_option_val']) . '"';
                         }else{
                             $accept = '';
+                        }
+                        if($field['field_type'] == 'number' && $field['sel_option_val']){
+                            if ($field['sel_option_val']) {
+                                $opt_arr = explode(",", str_replace(' ', '', $field['sel_option_val']));
+                                foreach ($opt_arr as $opt) {
+                                    list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                                    $num_att = ' max="'.$maxlengthnum.'" min="'.$minlengthnum.'"';
+                                }
+                            }
+                        }else if($field['field_type'] == 'number' && !$field['sel_option_val']){
+                            $num_att = ' max="9999999999999999999999999999999999999999"';
+                        }else{
+                            $num_att = '';
                         }
                         $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="controls">
-                            <input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $maxlength . $accept . '/>
+                            <input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $maxlength . $accept . $num_att . '/>
                         </div>';
+                        $html.= '</div>';
+                    } else if ($field['field_type'] == 'checkbox') {
+                        $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
+                        $html.= '<label for="' . $field['field_id'] . '"><input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/>   ' . $field['field_label'] . $star_req . '</label>';
                         $html.= '</div>';
                     } else if ($field['field_type'] == 'datepicker') {
                         if ($field['field_class']) {
@@ -1468,7 +1524,7 @@ class Csz_model extends CI_Model {
                     } else if ($field['field_type'] == 'selectbox') {
                         $opt_html = '';
                         if ($field['sel_option_val']) {
-                            $opt_arr = explode(",", $field['sel_option_val']);
+                            $opt_arr = explode(",", str_replace(' ', '', $field['sel_option_val']));
                             foreach ($opt_arr as $opt) {
                                 list($val, $show) = explode("=>", $opt);
                                 $opt_html.= '<option value="' . trim($val) . '">' . trim($show) . '</option>';
@@ -1491,6 +1547,9 @@ class Csz_model extends CI_Model {
                         $html.= '</div>';
                     } else if ($field['field_type'] == 'button' || $field['field_type'] == 'reset' || $field['field_type'] == 'submit') {
                         $html_btn.= '<input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/> ';
+                        if($field['field_type'] == 'submit'){
+                            $submit_btn_name = $field['field_name'];
+                        }
                     } else if ($field['field_type'] == 'label') {
                         $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="' . $field['field_class'] . '" id="' . $field['field_id'] . '" name="' . $field['field_name'] . '">' . $field['field_label'] . $star_req . '</label><br>';
@@ -1503,10 +1562,45 @@ class Csz_model extends CI_Model {
             }
             $html.= '<br><div class="form-actions">' . $html_btn . '</div>';
             $html.= '</form>';
+            $html.= $this->protectDoubleForm('formbuiler'.$form_data->form_main_id, $submit_btn_name);
             $new_content = str_replace('[?]{=forms:' . $frm_name . '}[?]', $html, $content);
             return $new_content;
         } else {
             return $content;
+        }
+    }
+    
+    /**
+     * protectDoubleForm
+     *
+     * Function for protect Double click on form submit
+     *
+     * @param	string	$form_id_txt    Name attribute of <form>
+     * @param	string	$submit_btn_name   Submit button name
+     * @return	string
+     */
+    public function protectDoubleForm($form_id_txt, $submit_btn_name) {
+        if($form_id_txt && $submit_btn_name){
+            return '<script type="text/javascript">
+                window.addEventListener("DOMContentLoaded", function(e) {
+                  var form_being_submitted = false;
+                  var checkForm = function(e) {
+                    var form = e.target;
+                    if(form_being_submitted) {
+                      alert("'.$this->getLabelLang('form_doublesubmit_alert').'");
+                      form.'.$submit_btn_name.'.disabled = true;
+                      e.preventDefault();
+                      return;
+                    }
+                    form.'.$submit_btn_name.'.value = "'.$this->getLabelLang('form_submiting_btn').'";
+                    form_being_submitted = true;
+                  };
+                  document.getElementById("'.$form_id_txt.'").addEventListener("submit", checkForm, false);
+                }, false);
+
+              </script>';
+        }else{
+            return '';
         }
     }
     
@@ -1810,6 +1904,7 @@ class Csz_model extends CI_Model {
                         $data['admin_type'] = $rows->user_type;
                         $data['pwd_change'] = $rows->pass_change;
                         $data['session_id'] = $session_id;
+                        $data['user_agent'] = $this->input->user_agent();
                         $this->session->set_userdata($data);
                         unset($data,$rows,$query);
                         return 'SUCCESS';
@@ -1842,6 +1937,10 @@ class Csz_model extends CI_Model {
             'admin_type',
             'session_id',
             'admin_logged_in',
+            'pwd_change',
+            'user_agent',
+            'cszblogin_cururl',
+            'cszflogin_cururl',
         );
         $this->session->unset_userdata($data);
         unset($data);
@@ -1949,7 +2048,7 @@ class Csz_model extends CI_Model {
         } else {
             $md5_hash = md5(time() + mt_rand(1, 99999999));
             $data = array(
-                'name' => $this->input->post('name', TRUE),
+                'name' => $this->cleanOSCommand($this->input->post('name', TRUE)),
                 'email' => $this->cleanEmailFormat($this->input->post('email', TRUE)),
                 'password' => $this->pwdEncypt($this->input->post('password', TRUE)),
                 'user_type' => 'member',
@@ -2007,7 +2106,7 @@ class Csz_model extends CI_Model {
                     $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
                 }
             }
-            $this->db->set('name', $this->input->post("name", TRUE), TRUE);
+            $this->db->set('name', $this->cleanOSCommand($this->input->post("name", TRUE)), TRUE);
             $this->db->set('email', $this->cleanEmailFormat($this->input->post('email', TRUE)), TRUE);
             if ($this->input->post('password') != '') {
                 $this->db->set('password', $this->pwdEncypt($this->input->post('password', TRUE)), TRUE);
@@ -2015,12 +2114,12 @@ class Csz_model extends CI_Model {
                 $this->db->set('md5_lasttime', $this->timeNow(), TRUE);
                 $this->db->set('pass_change', 1);
             }
-            $this->db->set('first_name', $this->input->post("first_name", TRUE), TRUE);
-            $this->db->set('last_name', $this->input->post("last_name", TRUE), TRUE);
+            $this->db->set('first_name', $this->cleanOSCommand($this->input->post("first_name", TRUE)), TRUE);
+            $this->db->set('last_name', $this->cleanOSCommand($this->input->post("last_name", TRUE)), TRUE);
             $this->db->set('birthday', $birthday, TRUE);
             $this->db->set('gender', $this->input->post("gender", TRUE), TRUE);
-            $this->db->set('address', $this->input->post("address", TRUE), TRUE);
-            $this->db->set('phone', $this->input->post("phone", TRUE), TRUE);
+            $this->db->set('address', $this->cleanOSCommand($this->input->post("address", TRUE)), TRUE);
+            $this->db->set('phone', $this->cleanOSCommand($this->input->post("phone", TRUE)), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
             $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
             $this->db->set('timestamp_update', $this->timeNow(), TRUE);
@@ -2451,7 +2550,7 @@ class Csz_model extends CI_Model {
         $search = array('&','/',';','\\','"',"'",'|',' ','{','}');
         $email = str_replace($search, '', trim($email));
         unset($search);
-        return $this->security->xss_clean($email);
+        return $this->security->xss_clean(strip_tags($email));
     }
     
     /**
@@ -2463,10 +2562,10 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanOSCommand($string){
-        $search = array('&','/',';','\\','"','|',"'",'{','}');
+        $search = array('&',';','\\','"','|','{','}');
         $string = str_replace($search, '', $string);
         unset($search);
-        return $this->security->xss_clean($string);
+        return $this->security->xss_clean(strip_tags($string));
     }
     
     /**

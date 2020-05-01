@@ -380,6 +380,8 @@ $lang['forms_visitor_subject'] = "Objet de l'e-mail";
 $lang['forms_visitor_body'] = "Corps de l'e-mail";
 $lang['forms_visitor_newtxt'] = "Envoyez un mail au visiteur. Veuillez &eacute;diter ce formulaire";
 $lang['forms_save_to_db'] = "Enregistrer dans la base de donn&eacute;es activ&eacute;e";
+$lang['forms_dont_repeat_field']		= "Don't repeat on this field name";
+$lang['forms_repeat_txt']		= "Repeat Alert Text";
 
 //Field Text
 $lang['field_header'] = "Insertion de champ";
@@ -392,7 +394,7 @@ $lang['field_placeholder'] = "Place Placeholder";
 $lang['field_value'] = "Valeur du champ";
 $lang['field_label'] = "&eacute;tiquette de champ";
 $lang['sel_option_val'] = "Choisir la valeur de l�option";
-$lang['sel_option_val_info'] = "Exemple, si vous voulez que la valeur de l'option soit 'valeur' ??et que le libell&eacute; soit 'Afficher', vous pouvez le formuler comme suit. Exemple: valeur1 => Show1, valeur2 => Show2. Si le type de champ est 'fichier 'vous pouvez mettre extension de fichier autoriser ici. Ex .txt, .docx ";
+$lang['sel_option_val_info'] = "Exemple, si vous voulez que la valeur de l'option soit 'valeur' ??et que le libell&eacute; soit 'Afficher', vous pouvez le formuler comme suit. Exemple: valeur1 => Show1, valeur2 => Show2. Si le type de champ est 'fichier 'vous pouvez mettre extension de fichier autoriser ici.  (Ex .txt, .docx). If field type is 'number' you can put max=>min";
 $lang['field_require'] = "Requiert un champ";
 $lang['field_addtxtinfo'] = "<span class = 'remark'> Appuyez sur <i class = 'glyphicon glyphicon-plus'> </i> pour ajouter plus de champs. </span>";
 $lang['field_div_class'] = "Div Class";

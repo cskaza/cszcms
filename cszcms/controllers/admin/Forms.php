@@ -131,11 +131,16 @@ class Forms extends CI_Controller {
         } else {
             //Validation passed
             //Update the user
-            $this->Csz_admin_model->updateForms($this->uri->segment(4));
-            $this->db->cache_delete_all();
-            //Return to user list
-            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            if($this->Csz_admin_model->updateForms($this->uri->segment(4)) !== FALSE){
+                $this->db->cache_delete_all();
+                //Return to user list
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }else{
+                //Return to user list
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
         }
     }
 

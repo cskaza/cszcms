@@ -237,7 +237,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = ((ENVIRONMENT == 'development') ? array(1,2) : 1);
 
 /*
 |--------------------------------------------------------------------------
@@ -395,7 +395,7 @@ $find_arr = @parse_url(BASE_URL);
 $domain = @$find_arr['host'];
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = md5(BASE_URL).'_cszsess';
-$config['sess_expiration'] = 28800;
+$config['sess_expiration'] = 0;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
@@ -552,6 +552,7 @@ $config['proxy_ips'] = PROXY_IP_CONFIG;
 |--------------------------------------------------------------------------
 */
 $config["useDatabaseConfig"] = true;
+$config['sess_expire_on_close'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------

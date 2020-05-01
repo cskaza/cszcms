@@ -66,7 +66,7 @@
                 'id' => 'success_txt',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('success_txt', '', FALSE)
+                'value' => set_value('success_txt', 'Successfully!', FALSE)
             );
             echo form_input($data);
             ?>				
@@ -80,7 +80,7 @@
                 'id' => 'captchaerror_txt',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('captchaerror_txt', '', FALSE)
+                'value' => set_value('captchaerror_txt', 'The Security Check was not input correctly. Please try again.', FALSE)
             );
             echo form_input($data);
             ?>				
@@ -94,7 +94,30 @@
                 'id' => 'error_txt',
                 'class' => 'form-control',
                 'maxlength' => '255',
-                'value' => set_value('error_txt', '', FALSE)
+                'value' => set_value('error_txt', 'Error! Please try again.', FALSE)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <label class="control-label" for="dont_repeat_field"><?php echo $this->lang->line('forms_dont_repeat_field'); ?></label>
+            <?php
+            $att = 'id="dont_repeat_field" class="form-control"';
+            $data = array();
+            $data[''] = $this->lang->line('option_choose');
+            echo form_dropdown('dont_repeat_field', $data, '', $att);
+            ?>	
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <?php echo form_error('repeat_txt', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
+            <label class="control-label" for="repeat_txt"><?php echo $this->lang->line('forms_repeat_txt'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'repeat_txt',
+                'id' => 'repeat_txt',
+                'class' => 'form-control',
+                'maxlength' => '255',
+                'value' => set_value('repeat_txt', 'Your data is duplicated in the system.', FALSE)
             );
             echo form_input($data);
             ?>				
@@ -211,11 +234,11 @@
                                 <option value="checkbox">checkbox</option>
                                 <option value="datepicker">datepicker</option>
                                 <option value="timepicker">timepicker</option>
+                                <option value="number">number</option>
                                 <option value="email">email</option>
                                 <option value="file">file</option>
                                 <option value="label">label</option>
                                 <option value="password">password</option>
-                                <option value="radio">radio</option>
                                 <option value="reset">reset</option>
                                 <option value="submit">submit</option>
                                 <option value="selectbox">selectbox</option>

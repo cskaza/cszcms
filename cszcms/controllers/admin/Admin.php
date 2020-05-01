@@ -45,24 +45,22 @@ class Admin extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::chk_reset_password();
-        $this->load->model('Csz_admin_cache');
-        $config = $this->Csz_admin_model->load_config();
-        $this->db->cache_on();
         if($this->config->item('runStartupEnable') !== false){
             $this->load->model('Csz_startup');
             $this->Csz_startup->chkStartRun(TRUE);
         }
         $this->csz_referrer->setIndex();
-        $this->template->setSub('email_logs', $this->Csz_admin_cache->getMailLogsDashboard());
-        $this->template->setSub('link_stats', $this->Csz_admin_cache->getLinkStatDashboard());
-        $this->template->setSub('total_emaillogs', $this->Csz_admin_cache->countMailLogsDashboard());
-        $this->template->setSub('total_linkstats', $this->Csz_admin_cache->countLinkStatDashboard());
-        $this->template->setSub('total_member', $this->Csz_admin_cache->countMemberDashboard());
+        $config = $this->Csz_model->load_config();
+        if(!$config->pagecache_time){
+            $pagecache_time = 1;
+        }else{
+            $pagecache_time = $config->pagecache_time;
+        }
         $this->load->library('RSSParser');
-        ($this->Csz_model->is_url_exist($this->config->item('csz_backend_feed_url')) !== FALSE) ? $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_url')) /* Main Link */ : $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_backup_url')); /* Backup Link *//* get feed from CSZ CMS Article */
-        $this->rssparser->set_cache_life($config->pagecache_time); /* Set cache life time in minutes */
+        $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_url')); /* Main Link */ 
+        /* get feed from CSZ CMS Article */
+        $this->rssparser->set_cache_life($pagecache_time); /* Set cache life time in minutes */
         $this->template->setSub('rss', $this->rssparser->runFeedBackend(7)); /* have function cache (backend_rssfeed_news) */
-        $this->template->setSub('config', $config);
         $this->template->loadSub('admin/home');
     }
     

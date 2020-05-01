@@ -379,6 +379,8 @@ $lang['forms_visitor_subject']		= "Email subject";
 $lang['forms_visitor_body']		= "Email body";
 $lang['forms_visitor_newtxt']		= "Sendmail to visitor. Please edit this form";
 $lang['forms_save_to_db']		= "Save to DB Enable";
+$lang['forms_dont_repeat_field']		= "Don't repeat on this field name";
+$lang['forms_repeat_txt']		= "Repeat Alert Text";
 
 //Field Text
 $lang['field_header']                   = "Field Insert";
@@ -391,7 +393,7 @@ $lang['field_placeholder']		= "Field Placeholder";
 $lang['field_value']                    = "Field Value";
 $lang['field_label']                    = "Field Label";
 $lang['sel_option_val']                 = "Select Option Value";
-$lang['sel_option_val_info']            = "Example, If you want option value is 'value' and label is 'Show' you can put like this. Ex. value1=>Show1, value2=>Show2. If field type is 'file' you can put file extension allow at here. Ex .txt, .docx";
+$lang['sel_option_val_info']            = "Example, If you want option value is 'value' and label is 'Show' you can put like this. Ex. value1=>Show1, value2=>Show2. If field type is 'file' you can put file extension allow at here. (Ex .txt, .docx). If field type is 'number' you can put max=>min";
 $lang['field_require']                  = "Field Require";
 $lang['field_addtxtinfo']               = '<span class="remark">Press <i class="glyphicon glyphicon-plus"></i> to add more fields.</span>';
 $lang['field_div_class']                  = "Div Class";

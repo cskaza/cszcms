@@ -17,6 +17,7 @@
         <div class="control-group">	
             <?php echo form_error('form_name', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
             <label class="control-label" for="form_name"><?php echo $this->lang->line('forms_name'); ?>*</label>
+            <input type="hidden" name="form_name_old" value="<?php echo $form_rs->form_name; ?>">
             <?php
             $data = array(
                 'name' => 'form_name',
@@ -99,7 +100,34 @@
             echo form_input($data);
             ?>				
         </div> <!-- /control-group -->
-        
+        <div class="control-group">	
+            <label class="control-label" for="dont_repeat_field"><?php echo $this->lang->line('forms_dont_repeat_field'); ?></label>
+            <?php
+            $att = 'id="dont_repeat_field" class="form-control"';
+            $data = array();
+            $data[''] = $this->lang->line('option_choose');
+            if(!empty($field_rs)){
+                foreach ($field_rs as $field_val1) {
+                    $data[$field_val1['field_name']] = $field_val1['field_name'];
+                }
+            }
+            echo form_dropdown('dont_repeat_field', $data, $form_rs->dont_repeat_field, $att);
+            ?>	
+        </div> <!-- /control-group -->
+        <div class="control-group">	
+            <?php echo form_error('repeat_txt', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
+            <label class="control-label" for="repeat_txt"><?php echo $this->lang->line('forms_repeat_txt'); ?></label>
+            <?php
+            $data = array(
+                'name' => 'repeat_txt',
+                'id' => 'repeat_txt',
+                'class' => 'form-control',
+                'maxlength' => '255',
+                'value' => set_value('repeat_txt', $form_rs->repeat_txt, FALSE)
+            );
+            echo form_input($data);
+            ?>				
+        </div> <!-- /control-group -->
         <br>
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -260,11 +288,11 @@
                                     $data['checkbox'] = 'checkbox';
                                     $data['datepicker'] = 'datepicker';
                                     $data['timepicker'] = 'timepicker';
+                                    $data['number'] = 'number';
                                     $data['email'] = 'email';
                                     $data['file'] = 'file';
                                     $data['label'] = 'label';
                                     $data['password'] = 'password';
-                                    $data['radio'] = 'radio';
                                     $data['reset'] = 'reset';
                                     $data['submit'] = 'submit';
                                     $data['selectbox'] = 'selectbox';
@@ -344,11 +372,11 @@
                                 <option value="checkbox">checkbox</option>
                                 <option value="datepicker">datepicker</option>
                                 <option value="timepicker">timepicker</option>
+                                <option value="number">number</option>
                                 <option value="email">email</option>
                                 <option value="file">file</option>
                                 <option value="label">label</option>
                                 <option value="password">password</option>
-                                <option value="radio">radio</option>
                                 <option value="reset">reset</option>
                                 <option value="submit">submit</option>
                                 <option value="selectbox">selectbox</option>
