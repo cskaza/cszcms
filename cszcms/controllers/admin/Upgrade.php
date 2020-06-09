@@ -67,7 +67,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
-        $this->Csz_admin_model->showLoadingImg();
         if(strpos($this->cur_version, 'Beta') !== FALSE || strpos($this->cur_version, 'beta') !== FALSE){
             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
             $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
@@ -140,7 +139,6 @@ class Upgrade extends CI_Controller {
             @ini_set('max_execution_time', 600);
             @ini_set('memory_limit','512M');
         }
-        $this->Csz_admin_model->showLoadingImg();
         $lastversion = $this->Csz_admin_model->chkVerUpdate(CI_VERSION, '', TRUE);
         if ($lastversion !== FALSE) {
             $nextversion = $this->Csz_admin_model->findNextVersion(CI_VERSION, '', TRUE);
@@ -200,7 +198,6 @@ class Upgrade extends CI_Controller {
             @ini_set('max_execution_time', 600);
             @ini_set('memory_limit','512M');
         }
-        $this->Csz_admin_model->showLoadingImg();
         /* upload zip file */
         $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
         if (isset($_FILES['file_upload']) && $_FILES['file_upload'] != null) {
@@ -250,7 +247,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
-        $this->Csz_admin_model->showLoadingImg();
         $this->load->dbutil();
         $result = $this->dbutil->optimize_database();
         if ($result !== FALSE){
@@ -468,7 +464,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
-        $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_cache();
         @array_map('unlink', glob(FCPATH . EMAIL_DOMAIN . '_*'));
         @array_map('unlink', glob(FCPATH . DB_NAME . '_*'));
@@ -482,7 +477,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('save');
-        $this->Csz_admin_model->showLoadingImg();
         @$this->db->cache_delete_all();
         @$this->db->empty_table('save_formdraft');
         @$this->db->flush_cache();
@@ -494,7 +488,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
-        $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_session();
         $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/logout');
     }
@@ -503,7 +496,6 @@ class Upgrade extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('maintenance');
         admin_helper::is_allowchk('delete');
-        $this->Csz_admin_model->showLoadingImg();
         $this->Csz_model->clear_all_error_log();
         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         $this->Csz_admin_model->jsredirect($this->Csz_model->base_link().'/admin/upgrade');

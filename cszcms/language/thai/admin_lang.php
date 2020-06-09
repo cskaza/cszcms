@@ -200,7 +200,7 @@ $lang['social_table_active']            = "เปิดใช้งาน";
 
 //Settings Page
 $lang['settings_header']		= "การตั้งค่าเว็บไซต์";
-$lang['settings_name']			= "ชื่อเว็บไซต์*";
+$lang['settings_name']			= "ชื่อเว็บไซต์";
 $lang['settings_email']			= "อีเมล์ค่าเริ่มต้น";
 $lang['settings_keyword']		= "คีย์เวิร์ดค่าเริ่มต้น";
 $lang['settings_footer']		= "ข้อความส่วนท้ายของเว็บไซต์";
@@ -272,7 +272,7 @@ $lang['settings_cookie_info_linkmsg']		= "ข้อความลิงค์ C
 $lang['settings_cookie_info_linkurl']		= "ลิงค์นโยบายความเป็นส่วนตัว Cookie Info";
 $lang['settings_cookie_info_txtalign']		= "ตำแหน่งตัวหนังสือ Cookie Info";
 $lang['settings_cookie_info_txtalign_left']		= "ชิดซ้าย";
-$lang['settings_cookie_info_txtalign_center']		= "กึ่งหลาง";
+$lang['settings_cookie_info_txtalign_center']		= "กึ่งกลาง";
 $lang['settings_cookie_info_txtalign_right']		= "ชิดขวา";
 $lang['settings_cookie_info_closetxt']		= "ข้อความปุ่มปิด Cookie Info";
 

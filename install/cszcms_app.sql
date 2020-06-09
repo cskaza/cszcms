@@ -374,7 +374,12 @@ INSERT INTO `general_label` (`general_label_id`, `name`, `remark`, `lang_en`, `t
 (78, 'article_filedownload_text', 'For file download label', 'File Download', NOW()),
 (79, 'article_download_link', 'For download label', 'Download', NOW()),
 (80, 'form_doublesubmit_alert', 'For form double submit alert text', 'The form is being submitted, please wait a moment...', NOW()),
-(81, 'form_submiting_btn', 'For form button been submitting text', 'Processing, Please wait...', NOW());
+(81, 'form_submiting_btn', 'For form button been submitting text', 'Processing, Please wait...', NOW()),
+(82, 'site_error_404_title', 'For page not found error 404 title', 'Error 404, The requested page not Found!', NOW()),
+(83, 'site_error_404_text', 'For page not found error 404 text', 'Sorry! The page is broken or the page has been moved. Please back to home page.', NOW()),
+(84, 'site_maintenance_title', 'For site maintenance title', 'Maintenance!', NOW()),
+(85, 'site_maintenance_subtitle', 'For site maintenance sub title', 'We are undergoing a bit of scheduled maintenance.', NOW()),
+(86, 'site_maintenance_text', 'For site maintenance body text', 'Sorry for the inconvenience and will be back online shortly. Please check back soon.', NOW());
 
 DROP TABLE IF EXISTS `plugin_manager`;
 CREATE TABLE IF NOT EXISTS `plugin_manager` (

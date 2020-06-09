@@ -200,8 +200,15 @@ class Forms extends CI_Controller {
             // Get form name
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
             if($frm_rs !== FALSE){
-                $result_per_page = 20;
-                $total_row = $this->Csz_admin_model->countTable('form_'.$frm_rs->form_name);
+                $search_arr = " 1 = 1 ";
+                if($this->input->get('search') && $this->input->get('field') && $this->input->get('field') != 'form_'.$frm_rs->form_name.'_id'){
+                    $search_arr.= " AND ".$this->input->get('field',true)." LIKE '%".$this->input->get('search',true)."%'";
+                }
+                if($this->input->get('search') && $this->input->get('field') == 'form_'.$frm_rs->form_name.'_id'){
+                    $search_arr.= " AND ".$this->input->get('field',true)." = '".$this->input->get('search',true)."'";
+                }
+                $result_per_page = 50;
+                $total_row = $this->Csz_admin_model->countTable('form_'.$frm_rs->form_name, $search_arr);
                 $num_link = 10;
                 $base_url = $this->Csz_model->base_link(). '/admin/forms/view/'.$this->uri->segment(4).'/';
                 // Pageination config
@@ -210,7 +217,7 @@ class Forms extends CI_Controller {
                 //Get users from database   
                 $this->template->setSub('form_name', $frm_rs->form_name);
                 $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), '', array('arrange','form_field_id'), 'ASC'));
-                $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination));
+                $this->template->setSub('post_rs', $this->Csz_admin_model->getIndexData('form_'.$frm_rs->form_name, $result_per_page, $pagination, 'form_'.$frm_rs->form_name.'_id', 'DESC', $search_arr));
                 $this->template->setSub('total_row',$total_row);
                 //Load the view
                 $this->template->loadSub('admin/forms_view');
@@ -229,10 +236,10 @@ class Forms extends CI_Controller {
         $delR = $this->input->post('delR');
         if($this->uri->segment(4) && isset($delR)) {
             $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
-            $fiels_name = $this->Csz_model->getValue('field_name', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'file'", '', 1);
+            $fiels_name = $this->Csz_model->getValue('field_name,field_type', 'form_field', "form_main_id = '".$this->uri->segment(4)."' AND field_type = 'file'", '', 1);
             foreach ($delR as $value) {
                 if ($value) {
-                    if($fiels_name !== FALSE && !empty($fiels_name) && $fiels_name->field_name){
+                    if($fiels_name !== FALSE && !empty($fiels_name) && $fiels_name->field_type == 'file' && $fiels_name->field_name){
                         $this->Csz_admin_model->removeDataAndFile('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $value, 'forms/'.$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($fiels_name->field_name), $fiels_name->field_name);
                     }else{
                         $this->Csz_admin_model->removeData('form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $value);
@@ -244,5 +251,100 @@ class Forms extends CI_Controller {
             $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
         }
         redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+    }
+    
+    public function dataSaveExcel() {
+        $this->template->set_template('admin', 'excel');
+        if($this->uri->segment(4)){
+            $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            if($frm_rs !== FALSE){
+                $search_arr = " 1 = 1 ";
+                if($this->input->get('search') && $this->input->get('field') && $this->input->get('field') != 'form_'.$frm_rs->form_name.'_id'){
+                    $search_arr.= " AND ".$this->input->get('field',true)." LIKE '%".$this->input->get('search',true)."%'";
+                }
+                if($this->input->get('search') && $this->input->get('field') == 'form_'.$frm_rs->form_name.'_id'){
+                    $search_arr.= " AND ".$this->input->get('field',true)." = '".$this->input->get('search',true)."'";
+                }
+                //Get users from database
+                $this->template->setSub('form_name', $frm_rs->form_name);
+                $this->template->setSub('filename', $frm_rs->form_name.time());
+                $this->template->setSub('field_rs', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), 0, array('arrange','form_field_id'), 'ASC'));
+                $this->template->setSub('post_rs', $this->Csz_model->getValueArray('*', 'form_'.$frm_rs->form_name, $search_arr, '', 0, 'timestamp_create', 'ASC'));
+                //Load the view
+                $this->template->loadSub('admin/forms_excel');
+            }else{
+                redirect($this->csz_referrer->getIndex(), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+    
+    public function dataAdd() {
+        if($this->uri->segment(4)){
+            $frm_rs = $this->Csz_model->getValue('form_name', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            if($frm_rs !== FALSE){
+                //Load the form helper
+                $this->load->helper('form');
+                $this->template->setSub('form_name', $frm_rs->form_name);
+                $this->template->setSub('field_data', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), '', array('arrange','form_field_id'), 'ASC'));
+                //Load the view
+                $this->template->loadSub('admin/forms_dataadd');
+            }else{
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+
+    public function dataInsert() {
+        admin_helper::is_allowchk('save');
+        if($this->uri->segment(4)){
+            $chk = $this->Csz_admin_model->insertDataForm($this->uri->segment(4));
+            if($chk !== FALSE){
+                $this->session->set_flashdata('error_message','<div class="alert alert-success hidden-print" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }else{
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger hidden-print" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+    
+    public function dataEdit() {
+        if($this->uri->segment(4) && $this->uri->segment(5)){
+            $frm_rs = $this->Csz_model->getValue('form_name,dont_repeat_field', 'form_main', 'form_main_id', $this->uri->segment(4), 1);
+            if($frm_rs !== FALSE){
+                //Load the form helper
+                $this->load->helper('form');
+                $this->template->setSub('form_name', $frm_rs->form_name);
+                $this->template->setSub('dont_repeat_field', $frm_rs->dont_repeat_field);
+                $this->template->setSub('post', $this->Csz_model->getValue('*', 'form_'.$frm_rs->form_name, 'form_'.$frm_rs->form_name.'_id', $this->uri->segment(5), 1));
+                $this->template->setSub('field_data', $this->Csz_model->getValueArray('*', 'form_field', 'form_main_id', $this->uri->segment(4), '', array('arrange','form_field_id'), 'ASC'));
+                //Load the view
+                $this->template->loadSub('admin/forms_dataedit');
+            }else{
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }
+        }else{
+            redirect($this->csz_referrer->getIndex(), 'refresh');
+        }
+    }
+
+    public function dataUpdate() {
+        admin_helper::is_allowchk('save');
+        if($this->uri->segment(4) && $this->uri->segment(5)){
+            $chk = $this->Csz_admin_model->updateDataForm($this->uri->segment(4), $this->uri->segment(5));
+            if($chk !== FALSE){
+                $this->session->set_flashdata('error_message','<div class="alert alert-success hidden-print" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }else{
+                $this->session->set_flashdata('error_message','<div class="alert alert-danger hidden-print" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex('admin_form_view'), 'refresh');
+            }
+        }
     }
 }

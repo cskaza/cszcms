@@ -50,6 +50,7 @@ class Formsaction extends CI_Controller {
                 $data = array();
                 $ext_accept = array();
                 $file_sql = '';
+                $field_filename = '';
                 foreach ($field_rs as $f_val) {
                     if ($f_val->field_required && !$this->input->post_get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
                         //Return to last page: Error
@@ -63,6 +64,16 @@ class Formsaction extends CI_Controller {
                             $data[$f_val->field_name] = $this->Csz_model->cleanOSCommand(strip_tags($this->input->post_get($f_val->field_name, TRUE)));
                         } else {
                             $data[$f_val->field_name] = $this->input->post_get($f_val->field_name, TRUE);
+                        }
+                        if($f_val->sel_option_val){
+                            $opt_arr = explode(",", str_replace(' ', '', $f_val->sel_option_val));
+                            foreach ($opt_arr as $opt) {
+                                list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                                if(is_numeric($maxlengthnum) && $maxlengthnum > 0){
+                                    $data[$f_val->field_name] = substr($data[$f_val->field_name], 0, $maxlengthnum);
+                                    break;
+                                }
+                            }
                         }
                     }else if($frm_rs->form_method == 'post' && $f_val->field_type == 'file'){
                         if ($f_val->field_required && !isset($_FILES[$f_val->field_name]) && (!$_FILES[$f_val->field_name]['tmp_name'] || !$_FILES[$f_val->field_name]['name'])) {
@@ -89,11 +100,15 @@ class Formsaction extends CI_Controller {
                             $file_f = $_FILES[$f_val->field_name]['tmp_name'];
                             $file_sql = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $path, $file_id, $paramiter);
                             $data[$f_val->field_name] = $file_sql;
+                            $field_filename = $f_val->field_name;
                         }
                     }
                 }
                 if($frm_rs->dont_repeat_field && $this->Csz_admin_model->countTable('form_' . $frm_rs->form_name, $frm_rs->dont_repeat_field." = '".$data[$frm_rs->dont_repeat_field]."'") > 0){
                     //Return to last page: Captcha invalid
+                    if($field_filename){
+                        @unlink(FCPATH . "/photo/" . str_replace(FCPATH . "/photo/", '', rtrim('forms/'.$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($field_filename), '/')) . '/' . $data[$field_filename]);
+                    }
                     $this->session->set_flashdata('formtag_error_message','<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $frm_rs->repeat_txt . '</div>');
                     redirect($cur_page, 'refresh');
                 }

@@ -786,7 +786,6 @@ class Csz_admin_model extends CI_Model{
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE){
-        $site_config = $this->load_config();
         $core_js = '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-1.12.4.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/bootstrap.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery-ui.min.js"></script>';
@@ -795,9 +794,6 @@ class Csz_admin_model extends CI_Model{
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/datetimepicker/jquery.datetimepicker.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".select2").select2()});$(".timepicker").datetimepicker({datepicker:false,step:1,format:"H:i"});$(".datetimepicker").datetimepicker({step:1,format:"Y-m-d H:i"});</script>';
-        if($site_config->cookieinfo_active == 1){
-            $core_js.= '<script type="text/javascript" id="cookieinfo" src="' . base_url('', '', TRUE) . 'assets/js/cookieinfo.min.js" data-bg="'.$site_config->cookieinfo_bg.'" data-fg="'.$site_config->cookieinfo_fg.'" data-link="'.$site_config->cookieinfo_link.'" data-message="'.$site_config->cookieinfo_msg.'" data-linkmsg="'.$site_config->cookieinfo_linkmsg.'" data-moreinfo="'.$site_config->cookieinfo_moreinfo.'" data-cookie="CookiePolicyAcceptance" data-text-align="'.$site_config->cookieinfo_txtalign.'" data-close-text="'.$site_config->cookieinfo_close.'"></script>';
-        }
         if (!empty($more_js)) {
             if($more_include !== FALSE){
                 if (is_array($more_js)) {
@@ -971,13 +967,18 @@ class Csz_admin_model extends CI_Model{
             }
         }
         $data['og_image'] = $upload_file1;
-        if($this->input->post('siteTitle') != "")
-            $data['site_name'] = $this->input->post('siteTitle', TRUE);
-        if($this->input->post('smtp_pass', TRUE))
+        $data['site_name'] = $this->input->post('siteTitle', TRUE);
+        if($this->input->post('smtp_pass', TRUE)){
             $this->db->set('smtp_pass', trim($this->input->post('smtp_pass', TRUE)));
-        $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
-        $this->db->where("settings_id", 1);
-        $this->db->update('settings', $data);
+        }
+        if($this->input->post('siteTitle', TRUE) && $this->input->post('siteFooter', TRUE)){
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+            $this->db->where("settings_id", 1);
+            $this->db->update('settings', $data);
+            return TRUE;
+        }else{
+            return FALSE;
+        }
         unset($data,$upload_file,$upload_file1,$additional_js);
     }
 
@@ -1625,6 +1626,38 @@ class Csz_admin_model extends CI_Model{
         $this->db->where('pages_id', $id);
         $this->db->update('pages');
         $this->Csz_model->clear_all_cache();
+    }
+    
+    /**
+     * updatePageView
+     *
+     * Function for update the page from page view
+     *
+     * @param	string	$id    page id
+     */
+    public function updatePageView($id){
+        $getcontent = $this->input->post('content', FALSE);
+        if($id && $getcontent){
+            $content1 = str_replace('&lt;', '<', $getcontent);
+            $content = str_replace('&gt;', '>', $content1);
+            $this->db->set('content', $this->carouselReplaceToTag($content));
+            $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
+            $this->db->where('pages_id', $id);
+            $this->db->update('pages');
+            $this->Csz_model->clear_all_cache();
+        }
+    }
+    
+    /**
+     * carouselReplaceToTag
+     *
+     * Function for find carousel html and replace back to tag
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
+    public function carouselReplaceToTag($content) { /* Find the carousel in content */
+        return preg_replace('/\<cszcarouseltag(\d)\>[\s\S\r\n]+\<\/cszcarouseltag\1\>/', '[?]{=carousel:\1}[?]', $content);
     }
 
     /**
@@ -2975,13 +3008,185 @@ class Csz_admin_model extends CI_Model{
         $this->Csz_model->clear_file_cache('pwidget_' . md5($id));
     }
     
-    public function showLoadingImg() {
-        echo '<center><div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px"><img src="'.base_url('', '', TRUE).'assets/images/loading.gif" class="img-responsive" width="32"/><br>Loading...</div></center>';
+    /**
+     * jsredirect
+     *
+     * Function for redirect with javascript
+     *
+     * @param	string	$uri    URL
+     * @param	int	$delay    delay before redirect
+     */
+    public function jsredirect($uri, $delay = 100){
+        redirect($uri, 'auto', NULL, TRUE, $delay);
     }
     
-    public function jsredirect($url, $delay = 500){
-        echo '<script>window.setTimeout(function(){window.location = "'.$url.'"; },'.$delay.');</script>';
-        exit(0);
+    /**
+     * insertDataForm
+     *
+     * Function for insert new submit data form on backend
+     *
+     * @param	int	$form_id    form id
+     */
+    public function insertDataForm($form_id) {
+        $return = TRUE;
+        $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
+        if ($frm_rs !== FALSE && $frm_rs->active) {
+            $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id, '', array('arrange', 'form_field_id'), 'ASC');
+            $data = array();
+            $ext_accept = array();
+            $file_sql = '';
+            $field_filename = '';
+            foreach ($field_rs as $f_val) {
+                if ($f_val->field_required && !$this->input->post_get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
+                    $return = FALSE;
+                    break;
+                }
+                if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
+                    if ($f_val->field_type == 'email') {
+                        $data[$f_val->field_name] = $this->Csz_model->cleanEmailFormat($this->input->post_get($f_val->field_name, TRUE));
+                    } else if ($f_val->field_type == 'textarea') {
+                        $data[$f_val->field_name] = $this->Csz_model->cleanOSCommand(strip_tags($this->input->post_get($f_val->field_name, TRUE)));
+                    } else {
+                        $data[$f_val->field_name] = $this->input->post_get($f_val->field_name, TRUE);
+                    }
+                    if ($f_val->sel_option_val) {
+                        $opt_arr = explode(",", str_replace(' ', '', $f_val->sel_option_val));
+                        foreach ($opt_arr as $opt) {
+                            list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                            if (is_numeric($maxlengthnum) && $maxlengthnum > 0) {
+                                $data[$f_val->field_name] = substr($data[$f_val->field_name], 0, $maxlengthnum);
+                                break;
+                            }
+                        }
+                    }
+                } else if ($frm_rs->form_method == 'post' && $f_val->field_type == 'file') {
+                    if ($f_val->field_required && !isset($_FILES[$f_val->field_name]) && (!$_FILES[$f_val->field_name]['tmp_name'] || !$_FILES[$f_val->field_name]['name'])) {
+                        $return = FALSE;
+                        break;
+                    }
+                    if (isset($_FILES[$f_val->field_name]) && $_FILES[$f_val->field_name]['tmp_name'] && $_FILES[$f_val->field_name]['name']) {
+                        $ext = str_replace('.', '', strrchr($_FILES[$f_val->field_name]['name'], "."));
+                        $file_name = (Date("dmy_His") . '.' . $ext);
+                        if ($f_val->sel_option_val != NULL && $f_val->sel_option_val) {
+                            $sel_opt = trim(str_replace('.', '', strtoupper($f_val->sel_option_val)));
+                            $ext_accept = explode(',', str_replace(' ', '', $sel_opt));
+                            if (is_array($ext_accept) && !empty($ext_accept) && !in_array(strtoupper($ext), $ext_accept)) {
+                                $return = FALSE;
+                                break;
+                            }
+                            unset($ext, $ext_accept, $sel_opt);
+                        }
+                        $path = FCPATH . "/photo/forms/" . $this->Csz_model->cleanEmailFormat($frm_rs->form_name) . "/" . $this->Csz_model->cleanEmailFormat($f_val->field_name) . "/";
+                        $paramiter = '_1';
+                        $file_id = time() . "_" . rand(1111, 9999);
+                        $file_f = $_FILES[$f_val->field_name]['tmp_name'];
+                        $file_sql = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $path, $file_id, $paramiter);
+                        $data[$f_val->field_name] = $file_sql;
+                        $field_filename = $f_val->field_name;
+                    }
+                }
+            }
+            if ($frm_rs->dont_repeat_field && $this->Csz_admin_model->countTable('form_' . $frm_rs->form_name, $frm_rs->dont_repeat_field . " = '" . $data[$frm_rs->dont_repeat_field] . "'") > 0) {
+                $return = FALSE;
+                if($field_filename){
+                    @unlink(FCPATH . "/photo/" . str_replace(FCPATH . "/photo/", '', rtrim('forms/'.$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($field_filename), '/')) . '/' . $data[$field_filename]);
+                }
+                unset($data);
+            }
+            if ($return !== FALSE) {
+                $this->db->set('ip_address', $this->input->ip_address(), TRUE);
+                $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+                $this->db->insert('form_' . $frm_rs->form_name, $data);
+            }
+        } else {
+            $return = FALSE;
+        }
+        return $return;
     }
-    
+
+    /**
+     * updateDataForm
+     *
+     * Function for update submit data form on backend
+     *
+     * @param	int	$form_id    form id
+     * @param	int	$data_id    submit data form id
+     */
+    public function updateDataForm($form_id, $data_id) {
+        $return = TRUE;
+        $frm_rs = $this->Csz_model->getValue('*', 'form_main', 'form_main_id', $form_id, 1);
+        if ($frm_rs !== FALSE && $frm_rs->active) {
+            $field_rs = $this->Csz_model->getValue('*', 'form_field', 'form_main_id', $form_id, '', array('arrange', 'form_field_id'), 'ASC');
+            $data = array();
+            $ext_accept = array();
+            $file_sql = '';
+            $field_filename = '';
+            foreach ($field_rs as $f_val) {
+                if ($f_val->field_required && !$this->input->post_get($f_val->field_name, TRUE) && $f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
+                    $return = FALSE;
+                    break;
+                }
+                if ($f_val->field_type != 'button' && $f_val->field_type != 'reset' && $f_val->field_type != 'submit' && $f_val->field_type != 'label' && $f_val->field_type != 'file') {
+                    if ($f_val->field_type == 'email') {
+                        $data[$f_val->field_name] = $this->Csz_model->cleanEmailFormat($this->input->post_get($f_val->field_name, TRUE));
+                    } else if ($f_val->field_type == 'textarea') {
+                        $data[$f_val->field_name] = $this->Csz_model->cleanOSCommand(strip_tags($this->input->post_get($f_val->field_name, TRUE)));
+                    } else {
+                        $data[$f_val->field_name] = $this->input->post_get($f_val->field_name, TRUE);
+                    }
+                    if ($f_val->sel_option_val) {
+                        $opt_arr = explode(",", str_replace(' ', '', $f_val->sel_option_val));
+                        foreach ($opt_arr as $opt) {
+                            list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                            if (is_numeric($maxlengthnum) && $maxlengthnum > 0) {
+                                $data[$f_val->field_name] = substr($data[$f_val->field_name], 0, $maxlengthnum);
+                                break;
+                            }
+                        }
+                    }
+                } else if ($frm_rs->form_method == 'post' && $f_val->field_type == 'file') {
+                    if (isset($_FILES[$f_val->field_name]) && $_FILES[$f_val->field_name]['tmp_name'] && $_FILES[$f_val->field_name]['name']) {
+                        $ext = str_replace('.', '', strrchr($_FILES[$f_val->field_name]['name'], "."));
+                        $file_name = (Date("dmy_His") . '.' . $ext);
+                        if ($f_val->sel_option_val != NULL && $f_val->sel_option_val) {
+                            $sel_opt = trim(str_replace('.', '', strtoupper($f_val->sel_option_val)));
+                            $ext_accept = explode(',', str_replace(' ', '', $sel_opt));
+                            if (is_array($ext_accept) && !empty($ext_accept) && !in_array(strtoupper($ext), $ext_accept)) {
+                                $return = FALSE;
+                                break;
+                            }
+                            unset($ext, $ext_accept, $sel_opt);
+                        }
+                        $path = FCPATH . "/photo/forms/" . $this->Csz_model->cleanEmailFormat($frm_rs->form_name) . "/" . $this->Csz_model->cleanEmailFormat($f_val->field_name) . "/";
+                        $paramiter = '_1';
+                        $file_id = time() . "_" . rand(1111, 9999);
+                        $file_f = $_FILES[$f_val->field_name]['tmp_name'];
+                        $file_sql = $this->Csz_admin_model->file_upload($file_f, $file_name, '', $path, $file_id, $paramiter);
+                        $data[$f_val->field_name] = $file_sql;
+                        $field_filename = $f_val->field_name;
+                    }
+                    $delfile = $this->input->post($f_val->field_name.'_delfile', TRUE);
+                    if($delfile && (!$frm_rs->dont_repeat_field || $this->Csz_admin_model->countTable('form_' . $frm_rs->form_name, $frm_rs->dont_repeat_field . " = '" . $data[$frm_rs->dont_repeat_field] . "' AND ".$frm_rs->dont_repeat_field . " != '".$this->input->post($frm_rs->dont_repeat_field.'_old', TRUE)."'") == 0)){
+                        @unlink($delfile);
+                        $data[$f_val->field_name] = '';
+                        $field_filename = '';
+                    }
+                }
+            }
+            if ($frm_rs->dont_repeat_field && $this->Csz_admin_model->countTable('form_' . $frm_rs->form_name, $frm_rs->dont_repeat_field . " = '" . $data[$frm_rs->dont_repeat_field] . "' AND ".$frm_rs->dont_repeat_field . " != '".$this->input->post($frm_rs->dont_repeat_field.'_old', TRUE)."'") > 0) {
+                $return = FALSE;
+                if($field_filename){
+                    @unlink(FCPATH . "/photo/" . str_replace(FCPATH . "/photo/", '', rtrim('forms/'.$this->Csz_model->cleanEmailFormat($frm_rs->form_name).'/'.$this->Csz_model->cleanEmailFormat($field_filename), '/')) . '/' . $data[$field_filename]);
+                }
+                unset($data);
+            }
+            if ($return !== FALSE) {
+                $this->db->where('form_' . $frm_rs->form_name . '_id', $data_id);
+                $this->db->update('form_' . $frm_rs->form_name, $data);
+            }
+        }else{
+            $return = FALSE;
+        }
+        return $return;
+    }
 }

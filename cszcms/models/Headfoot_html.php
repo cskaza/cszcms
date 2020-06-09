@@ -66,7 +66,8 @@ class Headfoot_html extends CI_Model{
      * @param	string	$more_drop_class     for more class on dropdown menu.
      * @return  string
      */
-    public function topmenu($cur_page, $active_type = 'id', $active_tag = 'a', $more_id_class = '', $more_drop_class = ''){
+    public function topmenu($cur_page1, $active_type = 'id', $active_tag = 'a', $more_id_class = '', $more_drop_class = ''){
+        $cur_page = strtolower($cur_page1);
         $config = $this->Csz_model->load_config();
         $menu_list = '';
         $cur_page_lang = $this->Csz_model->getValue('lang_iso', 'pages', 'page_url', $cur_page, 1);
@@ -76,7 +77,7 @@ class Headfoot_html extends CI_Model{
             $cur_page_lang_iso = $cur_page_lang->lang_iso;
             $this->Csz_model->setSiteLang($cur_page_lang_iso);
         }
-        if(!$this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page))){
+        if(!$this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->rw_link($cur_page))){
             $get_mainmenu = $this->Csz_model->main_menu('', $cur_page_lang_iso);
             if($get_mainmenu === FALSE){
                 $get_mainmenu = $this->Csz_model->main_menu('', $this->Csz_model->getDefualtLang());
@@ -176,10 +177,10 @@ class Headfoot_html extends CI_Model{
             }else{
                 $cache_time = $config->pagecache_time;
             }
-            $this->cache->save('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page), $menu_list, ($cache_time * 60));
+            $this->cache->save('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->rw_link($cur_page), $menu_list, ($cache_time * 60));
             unset($menu_list,$cache_time,$config,$drop_menu,$get_mainmenu,$cur_page_lang,$page_url_rs,$active,$otherlink_host,$own_host,$otherlink_array,$target_sub,$target,$page_link_sub,$page_url_rs_sub);
         }
-        return $this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->encodeURL($cur_page));
+        return $this->cache->get('topmenu_'.$cur_page_lang_iso.'_'.$this->Csz_model->rw_link($cur_page));
     }
     
     /**
@@ -634,5 +635,102 @@ class Headfoot_html extends CI_Model{
         unset($unread,$unreadhtml,$plugin_arr,$plugin_member_menu,$perms,$perm_chk,$plugin_menu,$value);
         return $html;
     }
+    
+    /**
+     * getHtmlContent
+     *
+     * Function for convert HTML for form linkstats and widget
+     *
+     * @param	string	$ori_content    Original content
+     * @return	string
+     */
+    public function getAdminContent($ori_content) { /* Calculate the HTML code */
+        return $this->carouselInHtml($ori_content);
+    }
+    
+    /**
+     * carouselInHtml
+     *
+     * Function for find carousel tag
+     *
+     * @param	string	$content    Original content
+     * @return	string
+     */
+    public function carouselInHtml($content) { /* Find the carousel in content */
+        $output_array = array();
+        $txt_nonhtml = strip_tags($content);
+        preg_match_all("/\[\?\]\{=carousel\:(.*?)\}\[\?\]/", $txt_nonhtml, $output_array);
+        if(!empty($output_array[0])){
+            for ($i = 0; $i < count($output_array[0]); $i++) {
+                if (!empty($output_array[0][$i]) && strpos($output_array[0][$i], '[?]{=carousel:') !== false && !empty($output_array[1][$i])) {
+                    $content = $this->addCarouselToHTML($content, $output_array[1][$i]);
+                }
+            }
+        }
+        unset($output_array, $txt_nonhtml);
+        return $content;
+    }
 
+    /**
+     * addCarouselToHTML
+     *
+     * Function for add carousel into html
+     *
+     * @param	string	$content    Original content
+     * @param	string	$id   carousel id
+     * @return	string
+     */
+    public function addCarouselToHTML($content, $id) {
+        $getCarousel = $this->Csz_model->getValue('*', 'carousel_widget', "active = '1' AND carousel_widget_id = '" . $id . "'", '', 1);
+        $html = '[?]{=carousel:' . $id . '}[?]';
+        if ($getCarousel !== FALSE) {
+            if ($getCarousel->custom_temp_active && $getCarousel->custom_template) {
+                $html = $getCarousel->custom_template;
+            } else {
+                $getPhoto = $this->Csz_model->getValueArray('*', 'carousel_picture', "carousel_widget_id = '" . $getCarousel->carousel_widget_id . "'", '', '', 'arrange', 'ASC');
+                $html = '';
+                if ($getPhoto !== FALSE) {
+                    $i = 0;
+                    $li_html = '';
+                    $item_html = '';
+                    $photo_path = base_url() . 'photo/carousel/';
+                    foreach ($getPhoto as $value) {
+                        $active = '';
+                        $class_active = '';
+                        if ($i == 0) {
+                            $active = ' active';
+                            $class_active = ' class="active"';
+                        }
+                        if ($value['caption'] && $value['caption'] != NULL) {
+                            $caption = '<div class="carousel-caption">' . $value['caption'] . '</div>';
+                            $alt_img = ' alt="' . $value['caption'] . '"';
+                        } else {
+                            $caption = '';
+                            $alt_img = ' alt="' . $getCarousel->name . '"';
+                        }
+                        if ($value['carousel_type'] == 'multiimages' && $value['file_upload'] && $value['file_upload'] != NULL) {
+                            $item_add = '<img src="' . $photo_path . $value['file_upload'] . '" class="img-responsive" width="100%"' . $alt_img . '>';
+                        } else if ($value['carousel_type'] == 'multiimages' && $value['photo_url'] && $value['photo_url'] != NULL) {
+                            $item_add = '<img src="' . $value['photo_url'] . '" class="img-responsive" width="100%"' . $alt_img . '>';
+                        } else if ($value['carousel_type'] == 'youtubevideos' && $value['youtube_url']) {
+                            $youtube_script_replace = array("http://", "https://", "www.youtube.com/watch?v=", "m.youtube.com/watch?v=", "youtu.be/", "www.youtube.com/embed/", "m.youtube.com/embed/");
+                            $youtube_value = str_replace($youtube_script_replace, '', $value['youtube_url']);
+                            $item_add = '<div class="embed-responsive embed-responsive-16by9" style="background-color: #000;"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' . $youtube_value . '" allowfullscreen="allowfullscreen" width="100%"></iframe></div>';
+                        }
+                        $li_html .= '<li data-target="#myCarousel-' . $getCarousel->carousel_widget_id . '" data-slide-to="' . $i . '"' . $class_active . '></li>';
+                        $item_html .= '<div class="item' . $active . '"><div class="fill">' . $item_add . '</div>' . $caption . '</div>';
+                        $i++;
+                    }
+                    $html = '<cszcarouseltag' . $getCarousel->carousel_widget_id . '><div id="myCarousel-' . $getCarousel->carousel_widget_id . '" class="carousel slide">';
+                    $html .= '<ol class="carousel-indicators">';
+                    $html .= $li_html;
+                    $html .= '</ol><div class="carousel-inner">';
+                    $html .= $item_html;
+                    $html .= '</div><a class="left carousel-control" href="#myCarousel-' . $getCarousel->carousel_widget_id . '" data-slide="prev"><span class="icon-prev"></span></a><a class="right carousel-control" href="#myCarousel-' . $getCarousel->carousel_widget_id . '" data-slide="next"><span class="icon-next"></span></a>';
+                    $html .= '</div></cszcarouseltag' . $getCarousel->carousel_widget_id . '>';
+                }
+            }
+        }
+        return str_replace('[?]{=carousel:' . $id . '}[?]', $html, $content);
+    }
 }

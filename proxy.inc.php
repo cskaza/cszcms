@@ -44,6 +44,8 @@ $proxy_ip_arr = array(
     '2c0f:f248::/32',
     '2a06:98c0::/29',
     /* (End Cloudflare) */
+    /* Azure */
+    '10.0.0.0/24',
     /* Please add new after this. Example: '10.0.1.200', */
     #'127.0.0.1',
     #'127.1.0.0/24',

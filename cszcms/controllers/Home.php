@@ -74,21 +74,30 @@ class Home extends CI_Controller {
         $page_rs = $this->page_rs;
         $this->template->set('additional_js', $row->additional_js);
         $this->template->set('additional_metatag', $row->additional_metatag);
-        if ($page_rs !== FALSE) {
-            Member_helper::is_allow_groups($page_rs->user_groups_idS);
-            $this->template->set('core_css', $this->Csz_model->coreCss($page_rs->custom_css, FALSE));
-            $this->template->set('core_js', $this->Csz_model->coreJs($page_rs->custom_js, FALSE));
-            $title = $this->Csz_model->pagesTitle($page_rs->page_title);
-            $this->template->set('title', $title);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc, $page_rs->page_keywords, $title, '', $page_rs->more_metatag));
-            $this->template->set('cur_page', $page_rs->page_url);
-        } else {
+        if ($row->maintenance_active) {
             $this->template->set('core_css', $this->Csz_model->coreCss());
             $this->template->set('core_js', $this->Csz_model->coreJs());
-            $title = $this->Csz_model->pagesTitle('404 Page not Found');
+            $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('site_maintenance_title'));
             $this->template->set('title', $title);
-            $this->template->set('meta_tags', $this->Csz_model->coreMetatags('404 Page not Found',$row->keywords,$title));
-            $this->template->set('cur_page', $pageURL);
+            $this->template->set('meta_tags', $this->Csz_model->coreMetatags($this->Csz_model->getLabelLang('site_maintenance_subtitle'), $row->keywords, $title));
+            $this->template->set('cur_page', $pageURL);  
+        } else {
+            if ($page_rs !== FALSE) {
+                Member_helper::is_allow_groups($page_rs->user_groups_idS);
+                $this->template->set('core_css', $this->Csz_model->coreCss($page_rs->custom_css, FALSE));
+                $this->template->set('core_js', $this->Csz_model->coreJs($page_rs->custom_js, FALSE));
+                $title = $this->Csz_model->pagesTitle($page_rs->page_title);
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($page_rs->page_desc, $page_rs->page_keywords, $title, '', $page_rs->more_metatag));
+                $this->template->set('cur_page', $page_rs->page_url);
+            } else {
+                $this->template->set('core_css', $this->Csz_model->coreCss());
+                $this->template->set('core_js', $this->Csz_model->coreJs());
+                $title = $this->Csz_model->pagesTitle($this->Csz_model->getLabelLang('site_error_404_title'));
+                $this->template->set('title', $title);
+                $this->template->set('meta_tags', $this->Csz_model->coreMetatags($this->Csz_model->getLabelLang('site_error_404_title'),$row->keywords,$title));           
+                $this->template->set('cur_page', $pageURL);     
+            }
         }
     }
 
@@ -122,9 +131,12 @@ class Home extends CI_Controller {
             $this->template->loadFrontViews('static/maintenance');
         }else{
             set_status_header(404);
-            $html = '<h1>Sorry, Page not Found!</h1>
-                            <p>Sorry! Page not Found. (' . current_url() . ') <br>Please back to home page.<p>
-                                <a class="btn btn-primary btn-lg" href="' . $this->csz_referrer->getReferrer() . '" role="button">back to home &raquo;</a>';
+            $html= '<center>
+                        <h1 style="font-size:120px;color:red;">404</h1>
+                        <h2>' . $this->Csz_model->getLabelLang('site_error_404_title') . '</h2><br>
+                        <p>' . $this->Csz_model->getLabelLang('site_error_404_text') . '</p><br>
+                        <a class="btn btn-primary btn-lg" href="' . base_url() . '" role="button">' . $this->Csz_model->getLabelLang('btn_back') . ' &raquo;</a>
+                    </center><script>setTimeout(function(){window.location.href="' . base_url() . '";},15000);</script>';
             $this->template->setSub('content', $html);
             //Load the view
             $this->template->loadFrontViews('static/error404');

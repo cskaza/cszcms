@@ -257,7 +257,6 @@ class Admin extends CI_Controller {
             $email = $this->Csz_model->cleanEmailFormat($this->input->post('email', TRUE));
             $result = $this->Csz_model->login($email, $this->input->post('password', TRUE), TRUE); /* TRUE for backend login */
             if ($result == 'SUCCESS') {
-                $this->Csz_admin_model->showLoadingImg();
                 $this->Csz_model->saveLogs($email, 'Backend Login Successful!', $result);
                 if($this->session->userdata('cszblogin_cururl')){
                     $this->Csz_admin_model->jsredirect($this->session->userdata('cszblogin_cururl'));
@@ -345,11 +344,14 @@ class Admin extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('site settings');
         admin_helper::is_allowchk('save');
-        $this->Csz_admin_model->showLoadingImg();
-        $this->Csz_admin_model->updateSettings();
-        $this->db->cache_delete_all();
-        $this->Csz_model->clear_all_cache();
-        $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        $res = $this->Csz_admin_model->updateSettings();
+        if($res !== FALSE){
+            $this->db->cache_delete_all();
+            $this->Csz_model->clear_all_cache();
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+        }else{
+            $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
+        }
         $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
     }
     

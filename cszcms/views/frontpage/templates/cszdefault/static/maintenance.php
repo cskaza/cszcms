@@ -1,8 +1,13 @@
 <?php $config = $this->Csz_model->load_config(); ?>
 <div class="jumbotron">
     <div class="container">
-        <h1><i class="glyphicon glyphicon-exclamation-sign"></i> Site Maintenance.<br>We&rsquo;ll be back soon!</h1>
-        <br><p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment.<br>If you need to you can always <a href="mailto:<?php echo $config->default_email ?>">contact us</a>, otherwise we&rsquo;ll be back online shortly!</p>
-        <br><p>&mdash; <?php echo $config->site_name ?></p>
+        <center>
+            <i style="font-size:150px;color:red;" class="fa fa-wrench" aria-hidden="true"></i><br><br>
+            <h1><?php echo $this->Csz_model->getLabelLang('site_maintenance_title'); ?></h1>
+            <h2><?php echo $this->Csz_model->getLabelLang('site_maintenance_subtitle'); ?></h2>
+            <br><p><?php echo $this->Csz_model->getLabelLang('site_maintenance_text'); ?></p>
+            <br><p><b>&mdash; <?php echo $config->site_name ?> &mdash;</b></p>
+            <small><em>[<?php echo $config->timestamp_update ?>]</em></small>
+        </center>
     </div>
 </div>

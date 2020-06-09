@@ -60,13 +60,7 @@
                 <b>Memcached Support:</b> <?php if(extension_loaded('memcached') || extension_loaded('memcache')){ echo $this->lang->line('option_yes'); }else{ echo $this->lang->line('option_no'); } ?><br>
                 <b>Redis Support:</b> <?php if(extension_loaded('redis')){ echo $this->lang->line('option_yes'); }else{ echo $this->lang->line('option_no'); } ?><br>
                 <b><?php echo $this->lang->line('serverstatus_php_disabled') ?>:</b> <?php echo $this->Csz_admin_model->getDisabledFunctions() ?><br>
-                <b>PHPINFO:</b> <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#myModal"><?php echo $this->lang->line('dashboard_viewdetail') ?></a>
-                <!-- Modal HTML -->
-                <div id="myModal" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content"><iframe src="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/phpinfo' ?>" width="100%" height="500"></iframe></div>
-                    </div>
-                </div>
+                <b>PHPINFO:</b> <a class="btn btn-sm btn-info" href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/phpinfo' ?>" target="_blank"><?php echo $this->lang->line('dashboard_viewdetail') ?></a>
             </div>
         </div>
     </div>

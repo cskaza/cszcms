@@ -29,8 +29,9 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th width="8%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
-                        <th width="24%" class="text-center"><?php echo $this->lang->line('pages_name'); ?></th>
+                        <th width="6%" class="text-center"><?php echo $this->lang->line('id_col_table'); ?></th>
+                        <th width="5%" class="text-center"><?php echo $this->lang->line('btn_view'); ?></th>
+                        <th width="21%" class="text-center"><?php echo $this->lang->line('pages_name'); ?></th>
                         <th width="34%" class="text-center"><?php echo $this->lang->line('pages_title'); ?></th>
                         <th width="8%" class="text-center"><?php echo $this->lang->line('pages_lang'); ?></th>
                         <th width="26%"></th>
@@ -39,7 +40,7 @@
                 <tbody>
                     <?php if ($pages === FALSE) { ?>
                         <tr>
-                            <td colspan="5" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
+                            <td colspan="6" class="text-center"><span class="h6 error"><?php echo  $this->lang->line('data_notfound') ?></span></td>
                         </tr>                           
                     <?php } else { ?>
                         <?php
@@ -47,7 +48,7 @@
                             if(!$u['active']){
                                 $inactive = ' style="vertical-align: middle;color:red;text-decoration:line-through;"';
                             }else{
-                                $inactive = '';
+                                $inactive = ' style="vertical-align: middle;"';
                             }
                             if($u['pages_id'] == 1){
                                 $default_txt = ' <i class="glyphicon glyphicon-lock"></i>';
@@ -56,10 +57,11 @@
                             }
                             echo '<tr>';
                             echo '<td'.$inactive.' class="text-center">' . $u['pages_id'] . '</td>';
-                            echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'</td>';
+                            echo '<td class="text-center"'.$inactive.'><a href="'.$this->Csz_model->base_link().'/admin/pages/viewPageAdmin/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button" title="'.$this->lang->line('btn_view').'"><i class="fa fa-eye"></i><i class="glyphicon glyphicon-pencil"></i></a></td>';
+                            echo '<td'.$inactive.'>' . $u['page_name'] . ''.$default_txt.'<br><em>('.$u['page_url'].')</em></td>';
                             echo '<td'.$inactive.'>' . $u['page_title'] . '</td>';
                             echo '<td class="text-center"'.$inactive.'><i class="flag-icon flag-icon-'.$this->Csz_model->getCountryCode($u['lang_iso']).'"></i></td>';
-                            echo '<td class="text-center"><a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.$this->Csz_model->base_link().'/admin/pages/asCopy/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-duplicate"></i>  '.$this->lang->line('btn_ascopy').'</a> &nbsp;&nbsp; <a href="'.$this->Csz_model->base_link().'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i>  '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
+                            echo '<td class="text-center" style="vertical-align: middle;"><a onclick="return confirm(\''.$this->lang->line('delete_message').'\')"  href="'.$this->Csz_model->base_link().'/admin/pages/asCopy/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button" title="'.$this->lang->line('btn_ascopy').'"><i class="glyphicon glyphicon-duplicate"></i> <i class="glyphicon glyphicon-plus"></i></a> &nbsp;&nbsp; <a href="'.$this->Csz_model->base_link().'/admin/pages/edit/' . $u['pages_id'] . '" class="btn btn-default btn-sm" role="button"><i class="glyphicon glyphicon-pencil"></i> '.$this->lang->line('btn_edit').'</a> &nbsp;&nbsp; <a role="button" class="btn btn-danger btn-sm" role="button" onclick="return confirm(\''.$this->lang->line('pages_delete_message').'\')" href="'.$this->Csz_model->base_link().'/admin/pages/delete/'.$u['pages_id'].'"><i class="glyphicon glyphicon-remove"></i> '.$this->lang->line('btn_delete').'</a></td>';
                             echo '</tr>';
                         }
                         

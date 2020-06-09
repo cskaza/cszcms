@@ -20,7 +20,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
-                    <div class="h2 sub-header"><?php echo $this->lang->line('settings_header') ?></div>
+                    <div class="h2 sub-header"><?php echo $this->lang->line('settings_header') ?>*</div>
                     <div class="control-group">
                         <?php echo form_error('siteTitle', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                         <label class="control-label" for="siteTitle"><?php echo $this->lang->line('settings_name'); ?></label>
@@ -29,6 +29,8 @@
                             $data = array(
                                 'name' => 'siteTitle',
                                 'id' => 'siteTitle',
+                                'required' => 'required',
+                                'autofocus' => 'true',
                                 'class' => 'form-control',
                                 'maxlength' => '255',
                                 'value' => set_value('siteTitle', $settings->site_name, FALSE)
@@ -51,12 +53,14 @@
                         </div> <!-- /controls -->				
                     </div> <!-- /control-group -->
                     <div class="control-group">	
-                        <label class="control-label" for="siteFooter"><?php echo $this->lang->line('settings_footer'); ?></label>
+                        <label class="control-label" for="siteFooter"><?php echo $this->lang->line('settings_footer'); ?>*</label>
                         <div class="controls">
                             <?php
                             $data = array(
                                 'name' => 'siteFooter',
                                 'id' => 'siteFooter',
+                                'required' => 'required',
+                                'autofocus' => 'true',
                                 'class' => 'form-control',
                                 'value' => set_value('siteFooter', $settings->site_footer, FALSE)
                             );

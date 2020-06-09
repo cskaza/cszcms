@@ -395,7 +395,7 @@ $find_arr = @parse_url(BASE_URL);
 $domain = @$find_arr['host'];
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = md5(BASE_URL).'_cszsess';
-$config['sess_expiration'] = 0;
+$config['sess_expiration'] = 43200; /* 12 Hrs. */
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
@@ -477,6 +477,8 @@ $config['csrf_exclude_uris'] = array(
     'admin/filemanager/[A-z0-9]+',
     'admin/filemanager',
     'admin/admin/tinyMCEhtmlUpload',
+    'admin/pages/viewPageAdmin/[A-z0-9]+',
+    'admin/pages/viewPageSaved/[A-z0-9]+',
 );
 
 /*

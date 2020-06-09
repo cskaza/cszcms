@@ -200,7 +200,7 @@ $lang['social_table_active']            = "Active";
 
 //Settings Page
 $lang['settings_header']		= "Site Settings";
-$lang['settings_name']			= "Site Name*";
+$lang['settings_name']			= "Site Name";
 $lang['settings_email']			= "Default Email";
 $lang['settings_keyword']		= "Default Keyword";
 $lang['settings_footer']		= "Site Footer Message";

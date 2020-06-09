@@ -27,6 +27,7 @@ class Csz_model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->db->reconnect();
         if (CACHE_TYPE == 'file') {
             $this->load->driver('cache', array('adapter' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         } else {
@@ -154,6 +155,7 @@ class Csz_model extends CI_Model {
                 $pageURL = $this->getDefualtPage($this->getDefualtLang());
             }
         }
+        $pageURL = str_replace(array('%20',' '), '-', $pageURL);
         return str_replace(array('.php','.html'), '', strtolower($pageURL));
     }
 
@@ -606,7 +608,8 @@ class Csz_model extends CI_Model {
      * @param	string	$pageurl    page url_rewrite
      * @return	Object or FALSE id not found
      */
-    public function load_page($pageurl) {
+    public function load_page($pageurl1) {
+        $pageurl = strtolower($pageurl1);
         if (!$this->cache->get('file_'.$this->encodeURL($pageurl))) {
             $this->db->where("page_url", $pageurl);
             $this->db->where("active", "1");
@@ -740,12 +743,16 @@ class Csz_model extends CI_Model {
      * @return	String
      */
     public function coreJs($more_js = '', $more_include = TRUE) {
+        $site_config = $this->load_config();
         $core_js = '<script type="text/javascript" src="' . $this->base_link(TRUE, FALSE).'/'. 'corejs.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/jquery.lazy.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="' . base_url('', '', TRUE) . 'assets/js/plugins/select2/select2.full.min.js"></script>';
         $core_js.= '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
         $core_js.= '<script type="text/javascript" src="' . $this->base_link(TRUE, TRUE).'/'. 'assets/js/plugins/datetimepicker/jquery.datetimepicker.full.min.js"></script>';
         $core_js.= '<script type="text/javascript">$(function(){$(".lazy").lazy();$(".select2").select2()});$("#sel-chkbox-all").change(function(){$(".selall-chkbox").prop("checked",$(this).prop("checked"))});$(".timepicker").datetimepicker({datepicker:false,step:1,format:"H:i"});</script>';
+        if($site_config->cookieinfo_active == 1){
+            $core_js.= '<script type="text/javascript" id="cookieinfo" src="' . base_url('', '', TRUE) . 'assets/js/cookieinfo.min.js" data-bg="'.$site_config->cookieinfo_bg.'" data-fg="'.$site_config->cookieinfo_fg.'" data-link="'.$site_config->cookieinfo_link.'" data-message="'.$site_config->cookieinfo_msg.'" data-linkmsg="'.$site_config->cookieinfo_linkmsg.'" data-moreinfo="'.$site_config->cookieinfo_moreinfo.'" data-cookie="CookiePolicyAcceptance" data-text-align="'.$site_config->cookieinfo_txtalign.'" data-close-text="'.$site_config->cookieinfo_close.'"></script>';
+        }
         if ($this->getFBsdk() !== FALSE) { $core_js.= $this->getFBsdk(); }
         if (!empty($more_js)) {
             if($more_include !== FALSE){
@@ -1460,7 +1467,25 @@ class Csz_model extends CI_Model {
                         $star_req = '';
                     }
                     if ($field['field_type'] == 'email' || $field['field_type'] == 'password' || $field['field_type'] == 'text') {
-                        $maxlength = ' maxlength="255"';
+                        $length_att = '';
+                        $maxlength = '';
+                        if($field['sel_option_val']){
+                            if ($field['sel_option_val']) {
+                                $opt_arr = explode(",", str_replace(' ', '', $field['sel_option_val']));
+                                foreach ($opt_arr as $opt) {
+                                    list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                                    if(is_numeric($maxlengthnum) && $maxlengthnum > 0){
+                                        $maxlength.= ' maxlength="'.$maxlengthnum.'"';
+                                    }
+                                    if(is_numeric($minlengthnum) && $minlengthnum > 0){
+                                        $maxlength.= ' minlength="'.$minlengthnum.'"';
+                                    }
+                                    break;
+                                }
+                            }
+                        }else{
+                            $maxlength = ' maxlength="255"';
+                        }
                     } else {
                         $maxlength = '';
                     }
@@ -1477,7 +1502,10 @@ class Csz_model extends CI_Model {
                                 $opt_arr = explode(",", str_replace(' ', '', $field['sel_option_val']));
                                 foreach ($opt_arr as $opt) {
                                     list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
-                                    $num_att = ' max="'.$maxlengthnum.'" min="'.$minlengthnum.'"';
+                                    if(is_numeric($maxlengthnum) && is_numeric($minlengthnum) && $maxlengthnum > 0 && $minlengthnum > 0){
+                                        $num_att = ' max="'.$maxlengthnum.'" min="'.$minlengthnum.'"';
+                                    }
+                                    break;
                                 }
                             }
                         }else if($field['field_type'] == 'number' && !$field['sel_option_val']){
@@ -1539,10 +1567,26 @@ class Csz_model extends CI_Model {
                                 </select>';
                         $html.= '</div>';
                     } else if ($field['field_type'] == 'textarea') {
+                        $length_att = '';
+                        if($field['sel_option_val']){
+                            if ($field['sel_option_val']) {
+                                $opt_arr = explode(",", str_replace(' ', '', $field['sel_option_val']));
+                                foreach ($opt_arr as $opt) {
+                                    list($maxlengthnum, $minlengthnum) = explode("=>", $opt);
+                                    if(is_numeric($maxlengthnum) && $maxlengthnum > 0){
+                                        $length_att.= ' maxlength="'.$maxlengthnum.'"';
+                                    }
+                                    if(is_numeric($minlengthnum) && $minlengthnum > 0){
+                                        $length_att.= ' minlength="'.$minlengthnum.'"';
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                         $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
                         $html.= '<label class="control-label" for="' . $field['field_id'] . '">' . $field['field_label'] . $star_req . '</label>
                         <div class="controls">
-                            <textarea name="' . $field['field_name'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . ' rows="4">' . $field['field_value'] . '</textarea>
+                            <textarea name="' . $field['field_name'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . $length_att . ' rows="4">' . $field['field_value'] . '</textarea>
                         </div>';
                         $html.= '</div>';
                     } else if ($field['field_type'] == 'button' || $field['field_type'] == 'reset' || $field['field_type'] == 'submit') {

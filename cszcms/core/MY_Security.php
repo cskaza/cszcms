@@ -48,19 +48,22 @@ class MY_Security extends CI_Security {
             $mysqli->query($sql);
         }
         $mysqli->close();
+        $base_urlconfig = config_item('base_url');
         if (!empty($_SERVER["HTTP_REFERER"])) {
             $referer_host = @parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-            $own_host = parse_url(config_item('base_url'), PHP_URL_HOST);
+            $own_host = parse_url($base_urlconfig, PHP_URL_HOST);
             $this->clearCSRFcookie();
             if (($referer_host && $referer_host === $own_host)) {
                 echo '<script>window.setTimeout(function(){window.location = "' . $_SERVER["HTTP_REFERER"] . '?nocache=' . time().'"; },2000);</script>';
-                show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache. Please wait 2 seconds to redirect.', 403);
+                show_error('The action is not allowed by CSRF Protection. Please clear your browser cache. Redirecting..., Please wait.', 403);
             }else{
-                show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
+                echo '<script>window.setTimeout(function(){window.location = "' . $base_urlconfig . '?nocache=' . time().'"; },2000);</script>';
+                show_error('The action is not allowed by CSRF Protection. Please clear your browser cache. Redirecting..., Please wait.', 403);               
             }
         }else{
             $this->clearCSRFcookie();
-            show_error('The action is not allowed by CSRF Protection. Please clear your browser cookie and cache.', 403);
+            echo '<script>window.setTimeout(function(){window.location = "' . $base_urlconfig . '?nocache=' . time().'"; },2000);</script>';
+            show_error('The action is not allowed by CSRF Protection. Please clear your browser cache. Redirecting..., Please wait.', 403);
         }
     }
 
