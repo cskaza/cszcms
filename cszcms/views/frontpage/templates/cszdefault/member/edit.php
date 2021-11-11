@@ -202,7 +202,6 @@
                                     echo "style='display:none;'";
                                 }
                                 ?> width="50%"></div>
-                                <?php if ($users->picture != "") { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $users->picture?>"> <span class="remark">Delete File</span></label><?php } ?>                              
                                 <?php
                                 $data = array(
                                     'name' => 'file_upload',

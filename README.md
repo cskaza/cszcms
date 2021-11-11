@@ -2,7 +2,7 @@
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
 CSZ CMS is an open source web application that allows to manage all content and settings on the websites. CSZ CMS was built on the basis of Codeigniter and design the structure of Bootstrap, this should make your website fully responsive with ease.
-CSZ CMS is based on the server side script language PHP and uses a MySQL or MariaDB database for data storage. CSZ CMS is open-source Content Management System. And all is free under the The MIT License (MIT) and Astian Develop Public License (ADPL).
+CSZ CMS is based on the server side script language PHP and uses a MySQL or MariaDB database for data storage. CSZ CMS is open-source Content Management System. And all is free under the The MIT License (MIT).
 
 See more at https://www.cszcms.com
 
@@ -10,9 +10,10 @@ Server Recommend Requirements:
 - Best on browsers FireFox, Chrome, Safari, IE9.
 - Recommend for Apache server.
 - PHP 5.5.0 or higher (For security. we don't support PHP Version < 5.5.0)
-- MySQL 5.0 or higher (Required for MySQLi Driver)
+- MySQL 5.0 or MariaDB 10.2.41 or higher (Required for MySQLi Driver)
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled.
+- PHP GD library Enabled.
 - gZip Compression Enabled.
 
 Installation Instructions:

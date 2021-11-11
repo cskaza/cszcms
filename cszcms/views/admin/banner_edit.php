@@ -164,7 +164,6 @@
                         echo "style='display:none;'";
                     }
                     ?> width="<?php echo ($banner->width) ? $banner->width : '50%'; ?>"></div>
-                    <?php if ($banner->img_path != "" && $banner->img_path != NULL) { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $banner->img_path?>"> <span class="remark">Delete File</span></label><?php } ?>
                     <?php
                     $data = array(
                         'name' => 'file_upload',

@@ -96,7 +96,6 @@
                         echo "style='display:none;'";
                     }
                     ?>></div>
-                    <?php if ($article->main_picture != "" && $article->main_picture != NULL) { ?><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $article->main_picture?>"> <span class="remark">Delete File</span></label><?php } ?>                    
                     <?php
                     $data = array(
                         'name' => 'file_upload',
@@ -113,7 +112,6 @@
             <?php echo form_error('file_upload2', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>									
                 <label class="control-label" for="file_upload2"><?php echo $this->lang->line('uploadfile_header'); ?></label>
                 <div class="controls">
-                    <?php if ($article->file_upload != "" && $article->file_upload != NULL) { ?><label for="del_file2"><input type="checkbox" name="del_file2" id="del_file2" value="<?php echo $article->file_upload?>"> <span class="remark">Delete File</span></label><?php } ?>         
                     <?php
                         if ($article->file_upload != "" && $article->file_upload != NULL) {
                              echo '<a href="'.base_url() . 'photo/plugin/article/' . $article->file_upload.'" title="'.$this->lang->line('uploadfile_download').'" target="_blank">'.$this->lang->line('uploadfile_download').'</a>';

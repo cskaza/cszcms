@@ -259,7 +259,6 @@
                             <?php if($settings->site_logo != "" && $settings->site_logo != NULL){ ?>
                             <div class="col-md-4">
                                 <img class="img-responsive img-thumbnail" src="<?php echo base_url() . 'photo/logo/'.$settings->site_logo;?>">
-                                <br><label for="del_file"><input type="checkbox" name="del_file" id="del_file" value="<?php echo $settings->site_logo ?>"> <span class="remark">Delete File</span></label>
                             </div>
                             <?php } ?>                   
                             <?php
@@ -282,7 +281,6 @@
                             <?php if($settings->og_image != "" && $settings->og_image != NULL){ ?>
                             <div class="col-md-4">
                                 <img class="img-responsive img-thumbnail" src="<?php echo base_url().'photo/logo/'.$settings->og_image; ?>">
-                                <br><label for="del_og_image"><input type="checkbox" name="del_og_image" id="del_og_image" value="<?php echo $settings->og_image ?>"> <span class="remark">Delete File</span></label>
                             </div>
                             <?php } ?>                    
                             <?php
