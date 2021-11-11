@@ -28,7 +28,7 @@
                     }
                     ?>
                     </div>
-                    <?php echo form_open($this->Csz_model->base_link(). '/member/login/check') ?>
+                    <?php echo form_open($this->Csz_model->base_link(). '/member/login/check', array('id'=>'theForm')) ?>
                     <div class="form-group has-feedback">
                         <label for="email" class="control-label"><?php echo $this->Csz_model->getLabelLang('login_email') ?>*</label>
                         <?php
@@ -64,7 +64,7 @@
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
                     <br>
-                    <div class="text-center"><?php echo $this->Csz_model->showCaptcha(); ?></div>
+                    <div class="text-center"><?php echo $this->Csz_model->showCaptcha('theForm', 'login_submit'); ?></div>
                     <br>
                     <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit"><?php echo $this->Csz_model->getLabelLang('login_signin'); ?></button>
                     <?php echo form_close() ?>

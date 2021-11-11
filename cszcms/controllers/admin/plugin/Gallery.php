@@ -47,7 +47,7 @@ class Gallery extends CI_Controller {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('gallery');
         $this->db->cache_on();
-        $this->csz_referrer->setIndex('gallery'); /* Set index page when redirect after save */
+        $this->csz_referrer->setIndex(); /* Set index page when redirect after save */
         $search_arr = "1";
         if ($this->input->get('search')) {
             $search_arr.= " AND album_name LIKE '%" . $this->input->get('search', TRUE) . "%' OR short_desc LIKE '%" . $this->input->get('search', TRUE) . "%'";          
@@ -100,7 +100,8 @@ class Gallery extends CI_Controller {
             $this->Csz_model->clear_file_cache('gallery_RSS');
             $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
             $this->db->cache_delete_all();
-            redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -113,7 +114,7 @@ class Gallery extends CI_Controller {
         if ($this->uri->segment(5)) {
             $album = $this->Csz_model->getValue('*', 'gallery_db', 'gallery_db_id', $this->uri->segment(5), 1);
             if($album === FALSE){
-                redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
                 exit();
             }
             $this->template->setSub('album', $album);
@@ -129,7 +130,7 @@ class Gallery extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/plugin/gallery/gallery_edit');
         } else {
-            redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -153,10 +154,11 @@ class Gallery extends CI_Controller {
                 $this->Csz_model->clear_file_cache('gallery_RSS');
                 $this->Csz_model->clear_file_cache('gallery_getWidget_*', TRUE);
                 $this->db->cache_delete_all();
-                redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+                $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
             }
         } else {
-            redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -280,7 +282,7 @@ class Gallery extends CI_Controller {
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function delete() {
@@ -307,7 +309,7 @@ class Gallery extends CI_Controller {
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function configSave() {
@@ -318,7 +320,7 @@ class Gallery extends CI_Controller {
         $this->Csz_model->clear_file_cache('gallery_config');
         $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function asCopy() {
@@ -356,7 +358,7 @@ class Gallery extends CI_Controller {
                 $this->db->cache_delete_all();
             }
         }
-        redirect($this->csz_referrer->getIndex('gallery'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
 }

@@ -11,7 +11,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('linkstats_count').' ('.$this->lang->line('uploadfile_download').')' . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_art').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('linkstats_count').' ('.$this->lang->line('uploadfile_download').')' . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex().'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
         <?php echo form_open($this->Csz_model->base_link(). '/admin/plugin/article/delDowsloadStat'); ?>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">

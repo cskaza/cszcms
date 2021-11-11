@@ -18,6 +18,7 @@
             <label class="control-label" for="url"><?php echo $this->lang->line('linkstats_url'); ?>*</label>
             <?php
             $data = array(
+                'type' => 'url',
                 'name' => 'url',
                 'id' => 'url',
                 'required' => 'required',

@@ -44,6 +44,7 @@ class Csz_startup extends CI_Model {
             $this->load->driver('cache', array('adapter' => CACHE_TYPE, 'backup' => 'file', 'key_prefix' => EMAIL_DOMAIN . '_'));
         }
         $this->load->database();
+        $this->db->reconnect();
         $this->db->cache_on();
         $this->func_arr = $this->session->userdata('set_startup_url');
         $this->run_func_arr = $this->session->userdata('run_startup_url');

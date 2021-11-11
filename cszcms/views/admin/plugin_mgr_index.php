@@ -11,6 +11,50 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title"><b><?php echo  $this->lang->line('pluginmgr_install') ?></b></h2>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/uploadinstall'); ?>
+            <div class="box-body">
+                <?php
+                $data = array(
+                    'name' => 'file_upload',
+                    'id' => 'file_upload',
+                    'required' => 'required',
+                    'autofocus' => 'true',
+                    'class' => 'form-control-static',
+                    'accept' => '.zip'
+                );
+                echo form_upload($data);
+                ?>
+                <blockquote class="remark">
+                    <em><?php echo $this->lang->line('pluginmgr_zip_remark') ?></em>
+                </blockquote>
+            </div>
+            <div class="box-footer">
+                <?php
+                $data = array(
+                    'name' => 'submit',
+                    'id' => 'submit',
+                    'class' => 'btn btn-primary form-inline',
+                    'value' => $this->lang->line('btn_install'),
+                    'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
+                );
+                echo form_submit($data);
+                ?>
+            </div>
+            <?php echo form_close(); ?>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
         <div class="h2 sub-header"><?php echo  $this->lang->line('pluginmgr_header') ?></div>
         <div class="box box-body table-responsive no-padding">
             <table class="table table-bordered table-hover table-striped">

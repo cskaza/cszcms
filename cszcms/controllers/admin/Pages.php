@@ -231,7 +231,7 @@ class Pages extends CI_Controller {
         admin_helper::is_allowchk('pages content');
         admin_helper::is_allowchk('save');
         if($this->uri->segment(4)){
-            if($this->input->post('content', FALSE)){
+            if($this->input->post('content', TRUE)){
                 $this->Csz_admin_model->updatePageView($this->uri->segment(4));
                 //Return to last session
                 $this->db->cache_delete_all();

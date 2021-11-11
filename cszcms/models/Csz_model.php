@@ -155,8 +155,8 @@ class Csz_model extends CI_Model {
                 $pageURL = $this->getDefualtPage($this->getDefualtLang());
             }
         }
-        $pageURL = str_replace(array('%20',' '), '-', $pageURL);
-        return str_replace(array('.php','.html'), '', strtolower($pageURL));
+        $pageURL1 = str_replace(array('%20',' '), '-', $pageURL);
+        return str_replace(array('.php','.html'), '', strtolower($pageURL1));
     }
 
     /**
@@ -202,11 +202,16 @@ class Csz_model extends CI_Model {
         if ($groupby) {
             $this->db->group_by($groupby);
         }
+        if($sort != 'ASC' && $sort != 'DESC'){
+            $sort = "ASC";
+        }
         if(is_array($orderby)){
             foreach ($orderby as $value) {
+                $value = str_replace(array('(',')',' '), '', $value);
                 $this->db->order_by($value, $sort);
             }
         }else{
+            $orderby = str_replace(array('(',')',' '), '', $orderby);
             if ($orderby && $sort) {
                 $this->db->order_by($orderby, $sort);
             }elseif($orderby){
@@ -277,11 +282,16 @@ class Csz_model extends CI_Model {
         if ($groupby) {
             $this->db->group_by($groupby);
         }
+        if($sort != 'ASC' && $sort != 'DESC'){
+            $sort = "ASC";
+        }
         if(is_array($orderby)){
             foreach ($orderby as $value) {
+                $value = str_replace(array('(',')',' '), '', $value);
                 $this->db->order_by($value, $sort);
             }
         }else{
+            $orderby = str_replace(array('(',')',' '), '', $orderby);
             if ($orderby && $sort) {
                 $this->db->order_by($orderby, $sort);
             }elseif($orderby){
@@ -605,25 +615,21 @@ class Csz_model extends CI_Model {
      *
      * Function for load page data from page url_rewrite
      *
-     * @param	string	$pageurl    page url_rewrite
+     * @param	string	$pageurl1    page url_rewrite
      * @return	Object or FALSE id not found
      */
     public function load_page($pageurl1) {
         $pageurl = strtolower($pageurl1);
-        if (!$this->cache->get('file_'.$this->encodeURL($pageurl))) {
-            $this->db->where("page_url", $pageurl);
-            $this->db->where("active", "1");
-            $this->db->limit(1, 0);
-            $query = $this->db->get('pages');
-            if (!empty($query) && $query->num_rows() > 0) {
-                $row = $query->row();
-            } else {
-                $row = FALSE;
-            }
-            $this->cache->save('file_'.$this->encodeURL($pageurl), $row, ($this->load_config()->pagecache_time * 60));
-            unset($query, $row);
+        $this->db->where("page_url", $pageurl);
+        $this->db->where("active", "1");
+        $this->db->limit(1, 0);
+        $query = $this->db->get('pages');
+        if (!empty($query) && $query->num_rows() > 0) {
+            $row = $query->row();
+        } else {
+            $row = FALSE;
         }
-        return $this->cache->get('file_'.$this->encodeURL($pageurl));
+        return $row;
     }
 
     /**
@@ -1436,6 +1442,7 @@ class Csz_model extends CI_Model {
             $html_btn = '';
             $html = '';
             $submit_btn_name = '';
+            $submit_btn_id = '';
             if($this->session->flashdata('formtag_error_message')){
                 $html = '<div class="text-center">'.$this->session->flashdata('formtag_error_message').'</div><br>';
             }
@@ -1593,6 +1600,7 @@ class Csz_model extends CI_Model {
                         $html_btn.= '<input type="' . $field['field_type'] . '" name="' . $field['field_name'] . '" value="' . $field['field_value'] . '" id="' . $field['field_id'] . '" class="' . $field['field_class'] . '" placeholder="' . $field['field_placeholder'] . '"' . $f_req . '/> ';
                         if($field['field_type'] == 'submit'){
                             $submit_btn_name = $field['field_name'];
+                            $submit_btn_id = $field['field_id'];
                         }
                     } else if ($field['field_type'] == 'label') {
                         $html.= '<div'.(($field['field_div_class'])?' class="'.$field['field_div_class'].'"':'').'>';
@@ -1602,7 +1610,7 @@ class Csz_model extends CI_Model {
                 }
             }
             if ($form_data->captcha) {
-                $html.= '<br>'.$this->showCaptcha();
+                $html.= '<br>'.$this->showCaptcha('formbuiler'.$form_data->form_main_id, $submit_btn_id, true);
             }
             $html.= '<br><div class="form-actions">' . $html_btn . '</div>';
             $html.= '</form>';
@@ -1821,10 +1829,12 @@ class Csz_model extends CI_Model {
      * showCaptcha
      *
      * Function for show the reCaptcha
-     *
+     * 
+     * @param	string	$form_id    Form id Or null if use reCaptcha v2
+     * @param	string	$submit_btn_id    submit button id Or null if use reCaptcha v2
      * @return	string
      */
-    public function showCaptcha() {
+    public function showCaptcha($form_id = '', $submit_btn_id = '', $doubleclickcheck = false) {
         $config = $this->load_config();
         $html = '';
         $hl = '';
@@ -1839,7 +1849,20 @@ class Csz_model extends CI_Model {
                 }
             }
             $html = '<script type="text/javascript" src="https://www.google.com/recaptcha/api.js'.$hl.'"></script>'."\n";
-            $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+            if($config->googlecapt_version == 'v2_invisible' && $form_id && $submit_btn_id){
+                if($doubleclickcheck !== false){
+                     $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+              }else{
+                    $html.= '<script>
+                                function submitForm() {
+                                    document.getElementById("'.$form_id.'").submit();
+                                }
+                                </script>
+                                <div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '" data-bind="'.$submit_btn_id.'" data-callback="submitForm"></div>';
+                }
+            }else{
+                $html.= '<div class="g-recaptcha" data-sitekey="' . $config->googlecapt_sitekey . '"></div>';
+            }
             return $html;
         }
     }
@@ -2112,6 +2135,28 @@ class Csz_model extends CI_Model {
             return $md5_hash;
         }
     }
+    
+    /**
+     * removefileFromID
+     *
+     * Function for remove file upload from database
+     *
+     * @param	string	$table    database table
+     * @param	string	$file_field    file upload field
+     * @param	string	$field_id_name    field name for id
+     * @param	string	$id    rows id
+     * @param	string	$path    file upload path
+     * @return	NULL or FALSE
+     */
+    public function removefileFromID($table, $file_field, $field_id_name, $id, $path){
+        $rows = $this->Csz_model->getValue($file_field, $table, $field_id_name, $id, 1);
+        if($rows !== FALSE && $rows->$file_field){
+            @unlink($path . $rows->$file_field);
+            return '';
+        }else{
+            return FALSE;
+        }
+    }
 
     /**
      * updateMember
@@ -2126,7 +2171,7 @@ class Csz_model extends CI_Model {
         $query = $this->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), $backend);
         if ($query['num_rows'] > 0) {
             if($this->input->post('pm_sendmail')){
-                $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
+                $pm_sendmail = 1;
             }else{
                 $pm_sendmail = 0;
             }
@@ -2136,19 +2181,15 @@ class Csz_model extends CI_Model {
             } else {
                 $birthday = '';
             }
-            if ($this->input->post('del_file')) {
-                $upload_file = '';
-                @unlink('photo/profile/' . $this->input->post('del_file', TRUE));
-            } else {
-                $upload_file = $this->input->post('picture');
-                if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
-                    $paramiter = '_1';
-                    $photo_id = time();
-                    $uploaddir = 'photo/profile/';
-                    $file_f = $_FILES['file_upload']['tmp_name'];
-                    $file_name = $_FILES['file_upload']['name'];
-                    $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
-                }
+            $upload_file = $this->input->post('picture');
+            if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                $uploaddir = 'photo/profile/';
+                $this->removefileFromID('user_admin', 'picture', 'user_admin_id', $id, $uploaddir);
+                $paramiter = '_1';
+                $photo_id = time();
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
             }
             $this->db->set('name', $this->cleanOSCommand($this->input->post("name", TRUE)), TRUE);
             $this->db->set('email', $this->cleanEmailFormat($this->input->post('email', TRUE)), TRUE);
@@ -2165,7 +2206,7 @@ class Csz_model extends CI_Model {
             $this->db->set('address', $this->cleanOSCommand($this->input->post("address", TRUE)), TRUE);
             $this->db->set('phone', $this->cleanOSCommand($this->input->post("phone", TRUE)), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
-            $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
+            $this->db->set('pm_sendmail', $pm_sendmail, TRUE);
             $this->db->set('timestamp_update', $this->timeNow(), TRUE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
@@ -2591,7 +2632,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanEmailFormat($email){
-        $search = array('&','/',';','\\','"',"'",'|',' ','{','}');
+        $search = array('&','/',';','\\','"',"'",'|',' ','{','}','<','>');
         $email = str_replace($search, '', trim($email));
         unset($search);
         return $this->security->xss_clean(strip_tags($email));
@@ -2606,7 +2647,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanOSCommand($string){
-        $search = array('&',';','\\','"','|','{','}');
+        $search = array('&',';','\\','"','|','{','}','<','>');
         $string = str_replace($search, '', $string);
         unset($search);
         return $this->security->xss_clean(strip_tags($string));

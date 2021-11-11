@@ -483,7 +483,7 @@ class Csz_admin_model extends CI_Model{
                 $active = 0;
             }
             if($this->input->post('pm_sendmail')){
-                $pm_sendmail = $this->input->post('pm_sendmail', TRUE);
+                $pm_sendmail = 1;
             }else{
                 $pm_sendmail = 0;
             }
@@ -497,19 +497,15 @@ class Csz_admin_model extends CI_Model{
             }else{
                 $birthday = '';
             }
-            if($this->input->post('del_file')){
-                $upload_file = '';
-                @unlink('photo/profile/'.$this->input->post('del_file', TRUE));
-            }else{
-                $upload_file = $this->input->post('picture');
-                if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
-                    $paramiter = '_1';
-                    $photo_id = time();
-                    $uploaddir = 'photo/profile/';
-                    $file_f = $_FILES['file_upload']['tmp_name'];
-                    $file_name = $_FILES['file_upload']['name'];
-                    $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
-                }
+            $upload_file = $this->input->post('picture');
+            if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+                $uploaddir = 'photo/profile/';
+                $this->Csz_model->removefileFromID('user_admin', 'picture', 'user_admin_id', $id, $uploaddir);
+                $paramiter = '_1';
+                $photo_id = time();
+                $file_f = $_FILES['file_upload']['tmp_name'];
+                $file_name = $_FILES['file_upload']['name'];
+                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
             }
             $this->db->set('name', $this->Csz_model->cleanOSCommand($this->input->post("name", TRUE)), TRUE);
             $this->db->set('email', $this->input->post('email', TRUE), TRUE);
@@ -531,7 +527,7 @@ class Csz_admin_model extends CI_Model{
             $this->db->set('address', $this->Csz_model->cleanOSCommand($this->input->post("address", TRUE), TRUE));
             $this->db->set('phone', $this->Csz_model->cleanOSCommand($this->input->post("phone", TRUE)), TRUE);
             $this->db->set('picture', $upload_file, TRUE);
-            $this->db->set('pm_sendmail', $pm_sendmail, FALSE);
+            $this->db->set('pm_sendmail', $pm_sendmail, TRUE);
             $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('user_admin_id', $id);
             $this->db->update('user_admin');
@@ -901,6 +897,7 @@ class Csz_admin_model extends CI_Model{
             'additional_js' => $additional_js,
             'additional_metatag' => $this->input->post('additional_metatag'),
             'googlecapt_active' => $this->input->post('googlecapt_active', TRUE),
+            'googlecapt_version' => $this->input->post('googlecapt_version', TRUE),
             'googlecapt_sitekey' => trim($this->input->post('googlecapt_sitekey', TRUE)),
             'googlecapt_secretkey' => trim($this->input->post('googlecapt_secretkey', TRUE)),
             'pagecache_time' => $this->input->post('pagecache_time', TRUE),
@@ -939,32 +936,24 @@ class Csz_admin_model extends CI_Model{
             'cookieinfo_close' => $this->input->post('cookieinfo_close', TRUE),
         );
         $photo_id = time();
-        $upload_file = '';
-        if($this->input->post('del_file')){
-            @unlink('photo/logo/'.$this->input->post('del_file', TRUE));
-        }else if(isset($_FILES['file_upload'])){
-            $upload_file = $this->input->post('siteLogo');
-            if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg'){
-                $paramiter = '_logo';
-                $uploaddir = 'photo/logo/';
-                $file_f = $_FILES['file_upload']['tmp_name'];
-                $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
-            }
+        $upload_file = $this->input->post('siteLogo');
+        if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg') {
+            $uploaddir = 'photo/logo/';
+            $this->Csz_model->removefileFromID('settings', 'site_logo', 'settings_id', 1, $uploaddir);
+            $paramiter = '_logo';
+            $file_f = $_FILES['file_upload']['tmp_name'];
+            $file_name = $_FILES['file_upload']['name'];
+            $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
         }
         $data['site_logo'] = $upload_file;
-        $upload_file1 = '';
-        if($this->input->post('del_og_image')){
-            @unlink('photo/logo/'.$this->input->post('del_og_image', TRUE));
-        }elseif(isset($_FILES['og_image'])){
-            $upload_file1 = $this->input->post('ogImage');
-            if(!empty($_FILES['og_image']) && $_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg'){
-                $paramiter = '_og';
-                $uploaddir = 'photo/logo/';
-                $file_f = $_FILES['og_image']['tmp_name'];
-                $file_name = $_FILES['og_image']['name'];
-                $upload_file1 = $this->file_upload($file_f, $file_name, $this->input->post('ogImage', TRUE), $uploaddir, $photo_id, $paramiter);
-            }
+        $upload_file1 = $this->input->post('ogImage');
+        if (!empty($_FILES['og_image']) && $_FILES['og_image']['type'] == 'image/png' || $_FILES['og_image']['type'] == 'image/jpg' || $_FILES['og_image']['type'] == 'image/jpeg') {
+            $uploaddir = 'photo/logo/';
+            $this->Csz_model->removefileFromID('settings', 'og_image', 'settings_id', 1, $uploaddir);
+            $paramiter = '_og';
+            $file_f = $_FILES['og_image']['tmp_name'];
+            $file_name = $_FILES['og_image']['name'];
+            $upload_file1 = $this->file_upload($file_f, $file_name, $this->input->post('ogImage', TRUE), $uploaddir, $photo_id, $paramiter);
         }
         $data['og_image'] = $upload_file1;
         $data['site_name'] = $this->input->post('siteTitle', TRUE);
@@ -1409,10 +1398,12 @@ class Csz_admin_model extends CI_Model{
     public function insertLang(){
         $arrange = $this->Csz_model->getLastID('lang_iso', 'arrange');
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('lang_name', TRUE));
+        $name2 = str_replace(array('<','>','"',"'"), '', $this->input->post('country', TRUE));
         $data = array(
-            'lang_name' => $this->input->post('lang_name', TRUE),
+            'lang_name' => $name1,
             'lang_iso' => $this->input->post('lang_iso', TRUE),
-            'country' => $this->input->post('country', TRUE),
+            'country' => $name2,
             'country_iso' => $this->input->post('country_iso', TRUE),
             'active' => $active,
         );
@@ -1466,11 +1457,12 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('lang_iso', $old_lang->lang_iso);
         $this->db->update('pages');
-
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('lang_name', TRUE));
+        $name2 = str_replace(array('<','>','"',"'"), '', $this->input->post('country', TRUE));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-        $this->db->set('lang_name', $this->input->post("lang_name", TRUE), TRUE);
+        $this->db->set('lang_name', $name1, TRUE);
         $this->db->set('lang_iso', $this->input->post("lang_iso", TRUE), TRUE);
-        $this->db->set('country', $this->input->post('country', TRUE), TRUE);
+        $this->db->set('country', $name2, TRUE);
         $this->db->set('country_iso', $this->input->post('country_iso', TRUE), TRUE);
         if($id != 1){
             $this->db->set('active', $active, FALSE);
@@ -1509,7 +1501,8 @@ class Csz_admin_model extends CI_Model{
     public function updateLabel($id){
         $lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', "lang_iso != ''", '');
         foreach($lang as $value){
-            $this->db->set('lang_'.$value['lang_iso'], $this->input->post("lang_".$value['lang_iso'], TRUE), TRUE);
+            $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post("lang_".$value['lang_iso'], TRUE));
+            $this->db->set('lang_'.$value['lang_iso'], $name1, TRUE);
         }
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->where('general_label_id', $id);
@@ -1524,6 +1517,7 @@ class Csz_admin_model extends CI_Model{
      * @return	string
      */
     public function chkPageName($page_name_input){
+        $page_name_input = str_replace(array('<','>','"',"'"), '', $page_name_input);
         if($page_name_input == 'assets' || $page_name_input == 'cszcms' ||
                 $page_name_input == 'install' || $page_name_input == 'photo' ||
                 $page_name_input == 'system' || $page_name_input == 'templates' || 
@@ -1545,9 +1539,11 @@ class Csz_admin_model extends CI_Model{
         $page_name_input = str_replace('&amp;', '&', $this->chkPageName($this->input->post('page_name', TRUE)));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->chkPageName($this->Csz_model->rw_link($page_name_input));
-        $content2 = $this->input->post('content', FALSE);
+        $content2 = $this->input->post('content', TRUE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
+        $content = str_replace('<script', '&lt;script', $content);
+        $content = str_replace('</script>', '&lt;/script&gt;', $content);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
         $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
         $user_groups_idS = $this->input->post('user_groups_idS');
@@ -1592,9 +1588,11 @@ class Csz_admin_model extends CI_Model{
         $page_name_input = str_replace('&amp;', '&', $this->chkPageName($this->input->post('page_name', TRUE)));
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $page_url = $this->chkPageName($this->Csz_model->rw_link($page_name_input));
-        $content2 = $this->input->post('content', FALSE);
+        $content2 = $this->input->post('content', TRUE);
         $content1 = str_replace('&lt;', '<', $content2);
         $content = str_replace('&gt;', '>', $content1);
+        $content = str_replace('<script', '&lt;script', $content);
+        $content = str_replace('</script>', '&lt;/script&gt;', $content);
         $custom_css = str_replace(array('<style type="text/css">',"<style type='text/css'>",'<style>','</style>'), '', $this->input->post('custom_css', FALSE));
         $custom_js = str_replace(array('<script type="text/javascript">',"<script type='text/javascript'>",'<script>','</script>'), '', $this->input->post('custom_js', FALSE));
         $user_groups_idS = $this->input->post('user_groups_idS');
@@ -1640,6 +1638,8 @@ class Csz_admin_model extends CI_Model{
         if($id && $getcontent){
             $content1 = str_replace('&lt;', '<', $getcontent);
             $content = str_replace('&gt;', '>', $content1);
+            $content = str_replace('<script', '&lt;script', $content);
+            $content = str_replace('</script>', '&lt;/script&gt;', $content);
             $this->db->set('content', $this->carouselReplaceToTag($content));
             $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where('pages_id', $id);
@@ -1723,7 +1723,6 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('form_main', $data);
         $form_main_id = $this->db->insert_id();
-
         $field_name = $this->input->post('field_name', TRUE);
         $field_type = $this->input->post('field_type', TRUE);
         $field_id = $this->input->post('field_id', TRUE);
@@ -1900,7 +1899,6 @@ class Csz_admin_model extends CI_Model{
                     }
                 }
             }
-
             /* Add New Field */
             $field_name = $this->input->post('field_name', TRUE);
             $field_type = $this->input->post('field_type', TRUE);
@@ -2132,8 +2130,9 @@ class Csz_admin_model extends CI_Model{
     public function insertWidget(){
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        $name = $this->cleanFormName($this->input->post('widget_name', TRUE));
         $data = array(
-            'widget_name' => $this->input->post('widget_name', TRUE),
+            'widget_name' => $name,
             'xml_url' => preg_replace('/\s+/', '', $this->input->post('xml_url', TRUE)),
             'limit_view' => $this->input->post('limit_view', TRUE),
             'active' => $active,
@@ -2157,7 +2156,8 @@ class Csz_admin_model extends CI_Model{
     public function updateWidget($id){
         // Update the lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
-        $this->db->set('widget_name', $this->input->post("widget_name", TRUE));
+        $name = $this->cleanFormName($this->input->post('widget_name', TRUE));
+        $this->db->set('widget_name', $name);
         $this->db->set('xml_url', $this->input->post("xml_url", TRUE));
         $this->db->set('limit_view', $this->input->post('limit_view', TRUE));
         $this->db->set('active', $active);
@@ -2178,7 +2178,8 @@ class Csz_admin_model extends CI_Model{
      */
     public function insertLinks(){
         // Create the new links
-        $this->db->set('url', $this->input->post('url', TRUE));
+        $url = str_replace(array('<','>','"',"'"), '', $this->input->post('url', TRUE));
+        $this->db->set('url', $url);
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('link_stat_mgt');
     }
@@ -2252,8 +2253,9 @@ class Csz_admin_model extends CI_Model{
             $file_name = $_FILES['file_upload']['name'];
             $upload_file = $this->file_upload($file_f, $file_name, '', $uploaddir, $photo_id, $paramiter);
         }
+        $name = $this->cleanFormName($this->input->post('name', TRUE));
         $data = array(
-            'name' => $this->input->post('name', TRUE),
+            'name' => $name,
             'img_path' => $upload_file,
             'width' => $this->input->post('width', TRUE),
             'height' => $this->input->post('height', TRUE),
@@ -2279,22 +2281,19 @@ class Csz_admin_model extends CI_Model{
     public function updateBanner($id){
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         ($this->input->post('nofollow')) ? $nofollow = $this->input->post('nofollow', TRUE) : $nofollow = 0;
-        if($this->input->post('del_file')){
-            $upload_file = '';
-            @unlink('photo/banner/'.$this->input->post('del_file', TRUE));
-        }else{
-            $upload_file = $this->input->post('picture');
-            if(!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif'){
-                $paramiter = '_1';
-                $photo_id = time();
-                $uploaddir = 'photo/banner/';
-                $file_f = $_FILES['file_upload']['tmp_name'];
-                $file_name = $_FILES['file_upload']['name'];
-                $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
-            }
+        $upload_file = $this->input->post('picture');
+        if (!empty($_FILES['file_upload']) && $_FILES['file_upload']['type'] == 'image/png' || $_FILES['file_upload']['type'] == 'image/jpg' || $_FILES['file_upload']['type'] == 'image/jpeg' || $_FILES['file_upload']['type'] == 'image/gif') {
+            $uploaddir = 'photo/banner/';
+            $this->Csz_model->removefileFromID('banner_mgt', 'img_path', 'banner_mgt_id', $id, $uploaddir);
+            $paramiter = '_1';
+            $photo_id = time();
+            $file_f = $_FILES['file_upload']['tmp_name'];
+            $file_name = $_FILES['file_upload']['name'];
+            $upload_file = $this->file_upload($file_f, $file_name, $this->input->post('picture', TRUE), $uploaddir, $photo_id, $paramiter);
         }
+        $name = $this->cleanFormName($this->input->post('name', TRUE));
         $data = array(
-            'name' => $this->input->post('name', TRUE),
+            'name' => $name,
             'img_path' => $upload_file,
             'width' => $this->input->post('width', TRUE),
             'height' => $this->input->post('height', TRUE),
@@ -2689,11 +2688,16 @@ class Csz_admin_model extends CI_Model{
         if ($groupby){
             $this->db->group_by($groupby);
         }
+        if($sort != 'ASC' && $sort != 'DESC'){
+            $sort = "ASC";
+        }
         if(is_array($orderby)){
             foreach ($orderby as $value) {
+                $value = str_replace(array('(',')',' '), '', $value);
                 $this->db->order_by($value, $sort);
             }
         }else{
+            $orderby = str_replace(array('(',')',' '), '', $orderby);
             if ($orderby && $sort) {
                 $this->db->order_by($orderby, $sort);
             }elseif($orderby){
@@ -2874,9 +2878,10 @@ class Csz_admin_model extends CI_Model{
      * Function for insert the new carousel
      */
     public function insertCarousel(){
-        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;       
+        ($this->input->post('active')) ? $active = 1 : $active = 0;
+        $name = $this->cleanFormName($this->input->post('name', TRUE));
         $data = array(
-            'name' => $this->input->post('name', TRUE),
+            'name' => $name,
             'active' => $active,
         );
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
@@ -2892,10 +2897,11 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$id    banner id
      */
     public function updateCarousel($id){
-        ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+        ($this->input->post('active')) ? $active = 1 : $active = 0;
         ($this->input->post('custom_temp_active')) ? $custom_temp_active = $this->input->post('custom_temp_active', TRUE) : $custom_temp_active = 0;
+        $name = $this->cleanFormName($this->input->post('name', TRUE));
         $data = array(
-            'name' => $this->input->post('name', TRUE),            
+            'name' => $name,            
             'active' => $active,
             'custom_temp_active' => $custom_temp_active,
             'custom_template' => $this->input->post('custom_template', FALSE),

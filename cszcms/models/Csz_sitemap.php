@@ -34,6 +34,7 @@ class Csz_sitemap extends CI_Model {
             @ini_set('memory_limit','512M');
         }
         $this->load->database();
+        $this->db->reconnect();
         $this->load->helper('file');
         $this->lang = $this->Csz_model->getValueArray('lang_iso', 'lang_iso', 'active', 1, 0, 'lang_iso_id', 'ASC');
         $this->menu_other = $this->Csz_model->getValueArray('*', 'page_menu', "active = '1' AND drop_menu != '1'", '', 0, 'menu_name', 'ASC');

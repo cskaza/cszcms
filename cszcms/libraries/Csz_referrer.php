@@ -49,11 +49,6 @@ class Csz_referrer {
      */
     public function setIndex($index = '') {
         $CI =& get_instance();
-        if(!$index){
-            $key = 'referred_index';
-        }else{
-            $key = 'referred_'.$index;
-        }
         $paramiter_url = basename(str_replace('index.php', '', $_SERVER['REQUEST_URI']));
         $base_url = $this->baseurl.'/';
         if($paramiter_url && strpos($paramiter_url, '?') !== false){ /* Find ? in string */
@@ -61,8 +56,17 @@ class Csz_referrer {
         }else{
             $param = '';
         }
-        $_SESSION[$key] = $base_url.$CI->uri->uri_string().$param;
-        unset($index,$key,$paramiter_url,$param);
+        if(!$index){
+            $key = 'referred_index';
+        }else{
+            $key = 'referred_'.$index;
+        }
+        $cur_url = $base_url.$CI->uri->uri_string().$param;
+        if($_SESSION[$key] != $cur_url){
+            unset($_SESSION[$key]);
+            $_SESSION[$key] = $base_url.$CI->uri->uri_string().$param;
+        }
+        unset($index,$key,$paramiter_url,$param,$cur_url);
     }
     
     /**

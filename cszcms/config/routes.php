@@ -172,9 +172,14 @@ $route['admin/genlabel/updated/:any'] = "admin/General_label/updated";
 $route['admin/genlabel/synclang'] = "admin/General_label/syncLang";
 $route['admin/genlabel/:num'] = "admin/General_label";
 $route['admin/plugin/setstatus/:any'] = "admin/Plugin_manager/setstatus";
+$route['admin/plugin/setstatus'] = "admin/Plugin_manager/setstatus";
 $route['admin/plugin/install/:any'] = "admin/Plugin_manager/install";
+$route['admin/plugin/install'] = "admin/Plugin_manager/install";
 $route['admin/plugin/upgrade/:any'] = "admin/Plugin_manager/upgrade";
+$route['admin/plugin/upgrade'] = "admin/Plugin_manager/upgrade";
 $route['admin/plugin/uninstall/:any'] = "admin/Plugin_manager/uninstall";
+$route['admin/plugin/uninstall'] = "admin/Plugin_manager/uninstall";
+$route['admin/plugin/uploadinstall'] = "admin/Plugin_manager/uploadinstall";
 $route['admin/plugin/([a-zA-Z]+)/add'] = "admin/plugin/$1/add";
 $route['admin/plugin/([a-zA-Z]+)/addsave'] = "admin/plugin/$1/addSave";
 $route['admin/plugin/([a-zA-Z]+)/edit/:any'] = "admin/plugin/$1/edit";
@@ -348,8 +353,8 @@ $route['lang/:any'] = "home/setLang";
 
 $route['search'] = 'search';
 
-$route['corecss.css'] = "home/getCoreCSS";
-$route['corejs.js'] = "home/getCoreJS";
+/*$route['corecss.css'] = "home/getCoreCSS";
+$route['corejs.js'] = "home/getCoreJS";*/
 
 $route['^(?!admin|member|formsaction|link|banner|plugin|search).*'] = 'home';
 $route['default_controller'] = 'home';

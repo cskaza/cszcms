@@ -79,6 +79,8 @@
         $data = array(
             'name' => 'file_upload',
             'id' => 'file_upload',
+            'required' => 'required',
+            'autofocus' => 'true',
             'class' => 'form-control-static',
             'accept' => '.zip'
         );

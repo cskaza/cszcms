@@ -26,6 +26,7 @@ class Gallery_model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->db->reconnect();
     }
     
     public function insert() {
@@ -42,7 +43,8 @@ class Gallery_model extends CI_Model {
                 $user_groups_id = implode(",", $user_groups_idS);
             }
         }
-        $this->db->set('album_name', $this->input->post('album_name', TRUE));
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('album_name', TRUE));
+        $this->db->set('album_name', $name1);
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('keyword', $this->input->post('keyword', TRUE));
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));
@@ -68,7 +70,8 @@ class Gallery_model extends CI_Model {
                 $user_groups_id = implode(",", $user_groups_idS);
             }
         }
-        $this->db->set('album_name', $this->input->post('album_name', TRUE));
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('album_name', TRUE));
+        $this->db->set('album_name', $name1);
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('keyword', $this->input->post('keyword', TRUE));
         $this->db->set('short_desc', $this->input->post('short_desc', TRUE));

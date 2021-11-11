@@ -14,7 +14,7 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="h2 sub-header"><?php echo $this->lang->line('category_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex('article_cat').'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
+        <div class="h2 sub-header"><?php echo $this->lang->line('category_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex().'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
         <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/article/editCatSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
                 <label class="control-label" for="category_name"><?php echo $this->lang->line('category_name'); ?>*</label>
@@ -91,7 +91,7 @@
             );
             echo form_submit($data);
             ?> 
-            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex('article_cat'); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
+            <a class="btn btn-lg" href="<?php echo $this->csz_referrer->getIndex(); ?>"><?php echo $this->lang->line('btn_cancel'); ?></a>
         </div> <!-- /form-actions -->
         <?php echo form_close(); ?>
         <!-- /widget-content --> 

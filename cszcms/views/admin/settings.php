@@ -485,6 +485,16 @@
                             echo form_checkbox($data);
                             ?> <?php echo $this->lang->line('settings_googlecapt_active'); ?></label>	
                     </div> <!-- /control-group -->
+                    <div class="control-group">										
+                        <label class="control-label" for="googlecapt_version"><?php echo $this->lang->line('settings_googlecapt_active'); ?> (Version)</label>
+                        <?php
+                        $att = 'id="googlecapt_version" class="form-control"';
+                        $data = array();
+                        $data['v2'] = 'v2 Checkbox';
+                        $data['v2_invisible'] = 'v2 Invisible';
+                        echo form_dropdown('googlecapt_version', $data, $settings->googlecapt_version, $att);
+                        ?>		
+                    </div> <!-- /control-group -->
                     <div class="control-group">	
                         <label class="control-label" for="googlecapt_sitekey"><?php echo $this->lang->line('settings_googlecapt_sitekey'); ?></label>
                         <div class="controls">

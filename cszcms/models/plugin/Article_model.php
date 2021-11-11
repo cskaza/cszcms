@@ -27,6 +27,7 @@ class Article_model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->db->reconnect();
     }
 
     public function insert() {
@@ -62,12 +63,15 @@ class Article_model extends CI_Model {
                 $user_groups_id = implode(",", $user_groups_idS);
             }
         }
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('title', TRUE));
+        $name2 = str_replace(array('<','>','"',"'"), '', $this->input->post('keyword', TRUE));
+        $name3 = str_replace(array('<','>','"',"'"), '', $this->input->post('short_desc', TRUE));
         $data = array(
             'main_picture' => $upload_file,
             'file_upload' => $upload_file2,
-            'title' => $this->input->post('title', TRUE),
-            'keyword' => $this->input->post('keyword', TRUE),
-            'short_desc' => $this->input->post('short_desc', TRUE),
+            'title' => $name1,
+            'keyword' => $name2,
+            'short_desc' => $name3,
             'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
             'cat_id' => $this->input->post('cat_id', TRUE),
             'user_groups_idS' => $user_groups_id,
@@ -90,11 +94,12 @@ class Article_model extends CI_Model {
         // Create the new lang
         ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
         $arrange = $this->Csz_model->getLastID('article_db', 'arrange', "is_category = '1'");
+        $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('category_name', TRUE));
         $data = array(
-            'category_name' => $this->input->post('category_name', TRUE),
+            'category_name' => $name1,
             'main_cat_id' => $this->input->post('main_cat_id', TRUE),
         );
-        $url_rewrite = $this->Csz_model->rw_link($this->input->post('category_name', TRUE));
+        $url_rewrite = $this->Csz_model->rw_link($name1);
         $this->db->set('url_rewrite', $url_rewrite);
         $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
         $this->db->set('is_category', 1);
@@ -111,35 +116,27 @@ class Article_model extends CI_Model {
         if(!$row->is_category){
             ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
             ($this->input->post('fb_comment_active')) ? $fb_comment_active = $this->input->post('fb_comment_active', TRUE) : $fb_comment_active = 0;
-            if ($this->input->post('del_file')) {
-                $upload_file = '';
-                @unlink('photo/plugin/article/' . $this->input->post('del_file', TRUE));
-            } else {
-                $upload_file = $this->input->post('mainPicture');
-                $file_upload_field1 = $_FILES['file_upload'];
-                if (!empty($file_upload_field1) && $file_upload_field1['type'] == 'image/png' || $file_upload_field1['type'] == 'image/jpg' || $file_upload_field1['type'] == 'image/jpeg') {
-                    $paramiter = '_1';
-                    $photo_id = time();
-                    $uploaddir = 'photo/plugin/article/';
-                    $file_f = $file_upload_field1['tmp_name'];
-                    $file_name = $file_upload_field1['name'];
-                    $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
-                }
+            $upload_file = $this->input->post('mainPicture');
+            $file_upload_field1 = $_FILES['file_upload'];
+            if (!empty($file_upload_field1) && $file_upload_field1['type'] == 'image/png' || $file_upload_field1['type'] == 'image/jpg' || $file_upload_field1['type'] == 'image/jpeg') {
+                $uploaddir = 'photo/plugin/article/';
+                $this->Csz_model->removefileFromID('article_db', 'main_picture', 'article_db_id', $id, $uploaddir);
+                $paramiter = '_1';
+                $photo_id = time();
+                $file_f = $file_upload_field1['tmp_name'];
+                $file_name = $file_upload_field1['name'];
+                $upload_file = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
             }
-            if ($this->input->post('del_file2')) {
-                $upload_file2 = '';
-                @unlink('photo/plugin/article/' . $this->input->post('del_file2', TRUE));
-            } else {
-                $upload_file2 = $this->input->post('mainFile');
-                $file_upload_field2 = $_FILES['file_upload2'];
-                if (!empty($file_upload_field2)) {
-                    $paramiter = '_1';
-                    $photo_id = time();
-                    $uploaddir = 'photo/plugin/article/';
-                    $file_f = $file_upload_field2['tmp_name'];
-                    $file_name = $file_upload_field2['name'];
-                    $upload_file2 = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
-                }
+            $upload_file2 = $this->input->post('mainFile');
+            $file_upload_field2 = $_FILES['file_upload2'];
+            if (!empty($file_upload_field2)) {
+                $uploaddir = 'photo/plugin/article/';
+                $this->Csz_model->removefileFromID('article_db', 'file_upload', 'article_db_id', $id, $uploaddir);
+                $paramiter = '_1';
+                $photo_id = time();
+                $file_f = $file_upload_field2['tmp_name'];
+                $file_name = $file_upload_field2['name'];
+                $upload_file2 = $this->Csz_admin_model->file_upload($file_f, $file_name, $this->input->post('siteLogo', TRUE), $uploaddir, $photo_id, $paramiter);
             }
             $user_groups_idS = $this->input->post('user_groups_idS');
             $user_groups_id = '';
@@ -150,12 +147,15 @@ class Article_model extends CI_Model {
                     $user_groups_id = implode(",", $user_groups_idS);
                 }
             }
+            $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('title', TRUE));
+            $name2 = str_replace(array('<','>','"',"'"), '', $this->input->post('keyword', TRUE));
+            $name3 = str_replace(array('<','>','"',"'"), '', $this->input->post('short_desc', TRUE));
             $data = array(
                 'main_picture' => $upload_file,
                 'file_upload' => $upload_file2,
-                'title' => $this->input->post('title', TRUE),
-                'keyword' => $this->input->post('keyword', TRUE),
-                'short_desc' => $this->input->post('short_desc', TRUE),
+                'title' => $name1 ,
+                'keyword' => $name2,
+                'short_desc' => $name3,
                 'content' => str_replace(' class="container"', '', $this->input->post('content', FALSE)),
                 'cat_id' => $this->input->post('cat_id', TRUE),
                 'user_groups_idS' => $user_groups_id,
@@ -178,11 +178,12 @@ class Article_model extends CI_Model {
         $row = $this->Csz_model->getValue('is_category', 'article_db', 'article_db_id', $id, 1);
         if($row->is_category){
             ($this->input->post('active')) ? $active = $this->input->post('active', TRUE) : $active = 0;
+            $name1 = str_replace(array('<','>','"',"'"), '', $this->input->post('category_name', TRUE));
             $data = array(
-                'category_name' => $this->input->post('category_name', TRUE),
+                'category_name' => $name1,
                 'main_cat_id' => $this->input->post('main_cat_id', TRUE),
             );
-            $url_rewrite = $this->Csz_model->rw_link($this->input->post('category_name', TRUE));
+            $url_rewrite = $this->Csz_model->rw_link($name1);
             $this->db->set('url_rewrite', $url_rewrite);
             $this->db->set('lang_iso', $this->input->post('lang_iso', TRUE));
             $this->db->set('active', $active);

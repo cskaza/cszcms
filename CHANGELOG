@@ -1,4 +1,15 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.3.0 (2021-11-xx)
+- Add plugin install upload tool on Plugin Manager.
+- Fixed flash session alert bug on PHP 8.0.
+- Fixed some content page not found.
+- Fixed some Cloudflare ips changed.
+- Fixed high-risk time-based blind SQL injection vulnerability in the member function module.
+- Fixed Multiple Arbitrary delete file vulnerability.
+- Fixed Stored XSS Vulnerability (CVE-2021-3224).
+- Fixed Multiple Stored XSS Cross-Site Scripting (CVE-2021-26776).
+- Support PHP 8.0.
+
 CSZ-CMS V.1.2.9 (2020-05-31)
 - Add form builder function for add new data submit or edit data submit. 
 - Add general label for 404 page not found and site maintenance.

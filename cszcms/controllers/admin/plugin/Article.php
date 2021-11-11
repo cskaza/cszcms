@@ -45,7 +45,7 @@ class Article extends CI_Controller {
     public function index() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('article');
-        $this->csz_referrer->setIndex('article'); /* Set index page when redirect after save */
+        $this->csz_referrer->setIndex(); /* Set index page when redirect after save */
         $this->db->cache_on();
         //Get users from database
         $this->template->setSub('total_cat', $this->Csz_model->countData('article_db', "active = '1' AND is_category = '1'"));
@@ -58,7 +58,7 @@ class Article extends CI_Controller {
     public function article() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('article');
-        $this->csz_referrer->setIndex('article_art'); /* Set index page when redirect after save */
+        $this->csz_referrer->setIndex(); /* Set index page when redirect after save */
         $this->db->cache_on();
         $search_arr = ' 1=1 ';
         if ($this->input->get('search') || $this->input->get('category') || $this->input->get('lang')) {
@@ -98,7 +98,7 @@ class Article extends CI_Controller {
     public function category() {
         admin_helper::is_logged_in($this->session->userdata('admin_email'));
         admin_helper::is_allowchk('article');
-        $this->csz_referrer->setIndex('article_cat'); /* Set index page when redirect after save */
+        $this->csz_referrer->setIndex(); /* Set index page when redirect after save */
         $this->db->cache_on();
         $search_arr = "is_category = '1'";
         if ($this->input->get('search') || $this->input->get('main_cat_id') || $this->input->get('lang')) {
@@ -146,7 +146,7 @@ class Article extends CI_Controller {
         }
         $this->db->cache_delete_all();
         $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-        redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
 
     public function artadd() {
@@ -193,7 +193,8 @@ class Article extends CI_Controller {
             $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
             $this->Csz_model->clear_file_cache('article_RSS');
             $this->db->cache_delete_all();
-            redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -213,7 +214,8 @@ class Article extends CI_Controller {
             //Add the user
             $this->Article_model->insertCat();
             $this->db->cache_delete_all();
-            redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+            $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('success_message_alert').'</div>');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -225,7 +227,7 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             $article = $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1);
             if($article === FALSE){
-                redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
                 exit();
             }
             $this->template->setSub('category', $this->Csz_model->getValueArray('*', 'article_db', "is_category", '1', 0, 'arrange', 'asc'));
@@ -235,7 +237,7 @@ class Article extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/plugin/article/article_artedit');
         } else {
-            redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -260,10 +262,10 @@ class Article extends CI_Controller {
                     $this->Csz_model->clear_file_cache('article_RSS');
                     $this->Csz_model->clear_file_cache('article_getWidget_*', TRUE);
                     $this->db->cache_delete_all();
-                    redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+                    redirect($this->csz_referrer->getIndex(), 'refresh');
                 }
         } else {
-            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -275,7 +277,7 @@ class Article extends CI_Controller {
         if ($this->uri->segment(5)) {
             $article = $this->Csz_model->getValue('*', 'article_db', 'article_db_id', $this->uri->segment(5), 1);
             if($article === FALSE){
-                redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
                 exit();
             }
             $this->template->setSub('main_category', $this->Csz_model->getValueArray('*', 'article_db', "is_category = '1' AND main_cat_id = ''", '', 0, 'arrange', 'asc'));
@@ -284,7 +286,7 @@ class Article extends CI_Controller {
             //Load the view
             $this->template->loadSub('admin/plugin/article/article_catedit');
         } else {
-            redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
     
@@ -302,10 +304,10 @@ class Article extends CI_Controller {
             } else {
                 $this->Article_model->catupdate($this->uri->segment(5));
                 $this->db->cache_delete_all();
-                redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+                redirect($this->csz_referrer->getIndex(), 'refresh');
             }
         } else {
-            redirect($this->csz_referrer->getIndex('article'), 'refresh');
+            redirect($this->csz_referrer->getIndex(), 'refresh');
         }
     }
 
@@ -321,7 +323,7 @@ class Article extends CI_Controller {
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function catdel() {
@@ -334,7 +336,7 @@ class Article extends CI_Controller {
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
         }
-        redirect($this->csz_referrer->getIndex('article_cat'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function asCopy() {
@@ -361,7 +363,7 @@ class Article extends CI_Controller {
                 $this->db->cache_delete_all();
             }
         }
-        redirect($this->csz_referrer->getIndex('article_art'), 'refresh');
+        redirect($this->csz_referrer->getIndex(), 'refresh');
     }
     
     public function articleDownloadStat() {

@@ -91,9 +91,9 @@ class Plugin_manager extends CI_Controller {
             }
             $this->db->cache_delete_all();
             $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         } else {
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
     }
     
@@ -131,20 +131,20 @@ class Plugin_manager extends CI_Controller {
                             @unlink($newfname);
                         }
                         $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                     }
                 }
                 $this->Csz_model->clear_all_cache();
                 $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }else{
                 $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }
         } else {
             $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
     }
     
@@ -192,7 +192,7 @@ class Plugin_manager extends CI_Controller {
                                 @unlink($newfname);
                             }
                             $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                            redirect($this->csz_referrer->getIndex(), 'refresh');
+                            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                         }
                     }
                     if($this->Csz_admin_model->chkPluginUpdate($this->Csz_model->getPluginConfig($this->uri->segment(4), 'plugin_version'), $last_ver) !== FALSE){
@@ -202,19 +202,19 @@ class Plugin_manager extends CI_Controller {
                         $this->db->cache_delete_all();
                         // When Success 
                         $this->session->set_flashdata('error_message','<div class="alert alert-success" role="alert">'.$this->lang->line('upgrade_success_alert').'</div>');
-                        redirect($this->csz_referrer->getIndex(), 'refresh');
+                        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                     }
                 }else{
                     $this->session->set_flashdata('error_message','<div class="alert alert-danger" role="alert">'.$this->lang->line('error_message_alert').'</div>');
-                    redirect($this->csz_referrer->getIndex(), 'refresh');
+                    $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
                 }
             }else{
                 $this->session->set_flashdata('error_message','<div class="alert alert-info" role="alert">'.$this->lang->line('pluginmgr_latest_already').'</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }
         } else {
             $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
     }
     
@@ -226,15 +226,70 @@ class Plugin_manager extends CI_Controller {
             if($this->Csz_admin_model->pluginUninstall($this->uri->segment(4)) !== FALSE){
                 $this->db->cache_delete_all();
                 $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }else{
                 $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-                redirect($this->csz_referrer->getIndex(), 'refresh');
+                $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
             }
         } else {
             $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
-            redirect($this->csz_referrer->getIndex(), 'refresh');
+            $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
         }
+    }
+    
+    public function uploadinstall() {
+        admin_helper::is_logged_in($this->session->userdata('admin_email'));
+        admin_helper::is_allowchk('plugin manager');
+        admin_helper::is_allowchk('maintenance');
+        admin_helper::is_allowchk('save');
+        if (function_exists('ini_set')) {
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit','512M');
+        }
+        /* upload zip file */
+        $zip_ext = array('application/x-zip', 'application/zip', 'application/x-zip-compressed', 'application/s-compressed', 'multipart/x-zip');
+        if (isset($_FILES['file_upload']) && $_FILES['file_upload'] != null) {
+            if (in_array($_FILES['file_upload']['type'], $zip_ext)) {
+                $config['upload_path'] = FCPATH;
+                $config['max_size'] = '0';
+                $config['allowed_types'] = 'zip';
+                $file_name = 'manualzip_'.time().'.zip';
+                $config['file_name'] = $file_name;
+                $this->load->library('upload', $config);
+                @$this->upload->do_upload('file_upload');
+                $newfname = FCPATH . $file_name;
+                if (file_exists($newfname)) {
+                    $this->Csz_model->clear_all_cache();
+                    $this->db->cache_delete_all();
+                    @$this->unzip->extract($newfname, FCPATH);
+                    if (file_exists(FCPATH . 'upgrade_sql/upgrade.sql')) { /* for sql upgrade  */
+                        @$this->Csz_admin_model->execSqlFile(FCPATH . 'upgrade_sql/upgrade.sql');
+                        @$this->Csz_model->rmdir_recursive(FCPATH . 'upgrade_sql');
+                    }
+                    if (file_exists(FCPATH . 'plugin_sql/install.sql')) { /* for sql plugin install or upgrade  */
+                        @$this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/install.sql');
+                        if (file_exists(FCPATH . 'plugin_sql/upgrade.sql')) { /* for sql upgrade  */
+                            @$this->Csz_admin_model->execSqlFile(FCPATH . 'plugin_sql/upgrade.sql');
+                        }
+                        @$this->Csz_model->rmdir_recursive(FCPATH . 'plugin_sql');
+                    }
+                    if (is_writable($newfname)) {
+                        @unlink($newfname);
+                    }
+                    $this->Csz_model->clear_all_cache();
+                    $this->db->cache_delete_all();
+                    $this->session->set_flashdata('error_message', '<div class="alert alert-success" role="alert">' . $this->lang->line('success_message_alert') . '</div>');
+                } else {
+                    $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
+                }
+            } else {
+                $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('pluginmgr_zip_remark') . '</div>');
+            }
+        } else {
+            $this->session->set_flashdata('error_message', '<div class="alert alert-danger" role="alert">' . $this->lang->line('error_message_alert') . '</div>');
+        }
+        // When Success 
+        $this->Csz_admin_model->jsredirect($this->csz_referrer->getIndex());
     }
 
 }
