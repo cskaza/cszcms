@@ -1,3 +1,5 @@
+#### Move to GitLab https://gitlab.com/cszcms/cszcms
+
 #### CSZ CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
