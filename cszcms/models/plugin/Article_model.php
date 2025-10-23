@@ -129,7 +129,7 @@ class Article_model extends CI_Model {
             }
             $upload_file2 = $this->input->post('mainFile');
             $file_upload_field2 = $_FILES['file_upload2'];
-            if (!empty($file_upload_field2)) {
+            if (!empty($file_upload_field2) && $file_upload_field2['name']) {
                 $uploaddir = 'photo/plugin/article/';
                 $this->Csz_model->removefileFromID('article_db', 'file_upload', 'article_db_id', $id, $uploaddir);
                 $paramiter = '_1';

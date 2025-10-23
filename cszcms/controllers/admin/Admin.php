@@ -50,17 +50,6 @@ class Admin extends CI_Controller {
             $this->Csz_startup->chkStartRun(TRUE);
         }
         $this->csz_referrer->setIndex();
-        $config = $this->Csz_model->load_config();
-        if(!$config->pagecache_time){
-            $pagecache_time = 1;
-        }else{
-            $pagecache_time = $config->pagecache_time;
-        }
-        $this->load->library('RSSParser');
-        $this->rssparser->set_feed_url($this->config->item('csz_backend_feed_url')); /* Main Link */ 
-        /* get feed from CSZ CMS Article */
-        $this->rssparser->set_cache_life($pagecache_time); /* Set cache life time in minutes */
-        $this->template->setSub('rss', $this->rssparser->runFeedBackend(7)); /* have function cache (backend_rssfeed_news) */
         $this->template->loadSub('admin/home');
     }
     

@@ -776,9 +776,9 @@ CREATE TABLE IF NOT EXISTS `carousel_picture` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `carousel_picture` (`carousel_picture_id`, `carousel_widget_id`, `file_upload`, `photo_url`, `caption`, `arrange`, `carousel_type`, `youtube_url`, `timestamp_create`, `timestamp_update`) VALUES
-(1, 1, NULL, 'https://via.placeholder.com/1900x540.png?text=Slide%20One', 'Caption One', 1, 'multiimages', NULL, NOW(), NOW()),
-(2, 1, NULL, 'https://via.placeholder.com/1900x540.png?text=Slide%20Two', 'Caption Two', 2, 'multiimages', NULL, NOW(), NOW()),
-(3, 1, NULL, 'https://via.placeholder.com/1900x540.png?text=Slide%20Three', 'Caption Three', 3, 'multiimages', NULL, NOW(), NOW());
+(1, 1, NULL, 'https://placehold.co/1900x540?text=Slide%20One', 'Caption One', 1, 'multiimages', NULL, NOW(), NOW()),
+(2, 1, NULL, 'https://placehold.co/1900x540?text=Slide%20Two', 'Caption Two', 2, 'multiimages', NULL, NOW(), NOW()),
+(3, 1, NULL, 'https://placehold.co/1900x540?text=Slide%20Three', 'Caption Three', 3, 'multiimages', NULL, NOW(), NOW());
 
 DROP TABLE IF EXISTS `plugin_widget`;
 CREATE TABLE IF NOT EXISTS `plugin_widget` (

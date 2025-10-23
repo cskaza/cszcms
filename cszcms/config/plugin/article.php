@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $plugin_config['plugin_name']  = 'Article';
 $plugin_config['plugin_urlrewrite']  = 'article'; /* Please don't have any blank space */
 $plugin_config['plugin_author']  = 'CSZCMS'; /* For your name */
-$plugin_config['plugin_version']   = '1.0.6';
+$plugin_config['plugin_version']   = '1.0.7';
 $plugin_config['plugin_description']   = 'aricle plugin for make blog'; /* For your plugin description */
 
 /* for menu inside member zone. If not have please blank. 

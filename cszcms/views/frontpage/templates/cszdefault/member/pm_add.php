@@ -35,7 +35,6 @@
                         <?php } ?>
                         <br>
                     <?php }else{ ?>
-                        <?php echo form_open($this->Csz_model->base_link(). '/member/insertpm'); ?>
                         <div class="control-group">	
                             <?php echo form_error('to', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                             <label class="control-label" for="to"><?php echo $this->Csz_model->getLabelLang('pm_to_txt'); ?>*</label>

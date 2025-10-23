@@ -16,6 +16,8 @@ class MY_Input extends CI_Input {
         }else{
             $string = str_replace($search, '', $data);
         }
+        $search = array('&',';','\\','"','|','{','}','(',')',"'");
+        $string = str_replace($search, '', $string); 
         return str_replace("'", "\'", $string);
     }
     

@@ -75,13 +75,19 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         $this->options['alias'] = '';              // alias to replace root dir name
         $this->options['dirMode'] = 0755;            // new dirs mode
         $this->options['fileMode'] = 0644;            // new files mode
-        $this->options['quarantine'] = '.quarantine'; // quarantine folder name - required to check archive (must be hidden)
         $this->options['rootCssClass'] = 'elfinder-navbar-root-local';
         $this->options['followSymLinks'] = true;
         $this->options['detectDirIcon'] = '';         // file name that is detected as a folder icon e.g. '.diricon.png'
         $this->options['keepTimestamp'] = array('copy', 'move'); // keep timestamp at inner filesystem allowed 'copy', 'move' and 'upload'
         $this->options['substituteImg'] = true;       // support substitute image with dim command
         $this->options['statCorrector'] = null;       // callable to correct stat data `function(&$stat, $path, $statOwner, $volumeDriveInstance){}`
+        if (DIRECTORY_SEPARATOR === '/') {
+            // Linux
+            $this->options['acceptedName'] = '/^[^\.\/\x00][^\/\x00]*$/';
+        } else {
+            // Windows
+            $this->options['acceptedName'] = '/^[^\.\/\x00\\\:*?"<>|][^\/\x00\\\:*?"<>|]*$/';
+        }
     }
 
     /*********************************************************************/
@@ -172,14 +178,20 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
             }
         }
         // check quarantine path
+        $_quarantine = '';
         if (!empty($this->options['quarantine'])) {
             if (strpos($this->options['quarantine'], DIRECTORY_SEPARATOR) === false) {
-                $hiddens['quarantine'] = $this->options['quarantine'];
-                $this->options['quarantine'] = $this->_abspath($this->options['quarantine']);
+                //$hiddens['quarantine'] = $this->options['quarantine'];
+                //$this->options['quarantine'] = $this->_abspath($this->options['quarantine']);
+                $_quarantine = $this->_abspath($this->options['quarantine']);
+                $this->options['quarantine'] = '';
             } else {
                 $this->options['quarantine'] = $this->_normpath($this->options['quarantine']);
             }
+        } else {
+            $_quarantine = $this->_abspath('.quarantine');
         }
+        is_dir($_quarantine) && self::localRmdirRecursive($_quarantine);
 
         parent::configure();
 
@@ -223,6 +235,8 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
                     unset($hiddens['quarantine']);
                 }
             }
+        } else if ($_path = elFinder::getCommonTempPath()) {
+            $this->quarantine = $_path;
         }
 
         if (!$this->quarantine) {
@@ -251,6 +265,14 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         }
 
         $this->statOwner = (!empty($this->options['statOwner']));
+
+        // enable WinRemoveTailDots plugin on Windows server
+        if (DIRECTORY_SEPARATOR !== '/') {
+            if (!isset($this->options['plugin'])) {
+                $this->options['plugin'] = array();
+            }
+            $this->options['plugin']['WinRemoveTailDots'] = array('enable' => true);
+        }
     }
 
     /**
@@ -346,7 +368,20 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
      **/
     protected function _joinPath($dir, $name)
     {
-        return rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
+        $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+        $path = realpath($dir . DIRECTORY_SEPARATOR . $name);
+        // realpath() returns FALSE if the file does not exist
+        if ($path === false || strpos($path, $this->root) !== 0) {
+            if (DIRECTORY_SEPARATOR !== '/') {
+                $name = str_replace('/', DIRECTORY_SEPARATOR, $name);
+            }
+            // Directory traversal measures
+            if (strpos($name, '..' . DIRECTORY_SEPARATOR) !== false) {
+                $name = basename($name);
+            }
+            $path = $dir . DIRECTORY_SEPARATOR . $name;
+        }
+        return $path; 
     }
 
     /**
@@ -450,6 +485,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         if ($path === DIRECTORY_SEPARATOR) {
             return $this->root;
         } else {
+            $path = $this->_normpath($path);
             if (strpos($path, $this->systemRoot) === 0) {
                 return $path;
             } else if (DIRECTORY_SEPARATOR !== '/' && preg_match('/^[a-zA-Z]:' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', $path)) {
@@ -705,7 +741,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
     protected function _dimensions($path, $mime)
     {
         clearstatcache();
-        return strpos($mime, 'image') === 0 && is_readable($path) && ($s = getimagesize($path)) !== false
+        return strpos($mime, 'image') === 0 && is_readable($path) && filesize($path) && ($s = getimagesize($path)) !== false
             ? $s[0] . 'x' . $s[1]
             : false;
     }
@@ -1144,7 +1180,11 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
             }
 
             // extract in quarantine
-            $this->unpackArchive($path, $arc, $archive ? true : $dir);
+            try {
+                $this->unpackArchive($path, $arc, $archive ? true : $dir);
+            } catch(Exception $e) {
+                return $this->setError($e->getMessage());
+            }
 
             // get files list
             try {
@@ -1415,5 +1455,23 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         return ($this->stripos($name, $this->doSearchCurrentQuery['q']) === false) ? false : true;
     }
 
+    /**
+     * Creates a symbolic link
+     *
+     * @param      string   $target  The target
+     * @param      string   $link    The link
+     *
+     * @return     boolean  ( result of symlink() )
+     */
+    protected function localFileSystemSymlink($target, $link)
+    {
+        $res = false;
+        $errlev = error_reporting();
+        error_reporting($errlev ^ E_WARNING);
+        if ($res = symlink(realpath($target), $link)) {
+            $res = is_readable($link);
+        }
+        error_reporting($errlev);
+        return $res;
+    }
 } // END class 
-

@@ -366,6 +366,9 @@ class Csz_admin_model extends CI_Model{
      * @return	object or FALSE
      */
     public function getUser($id, $type = ''){
+        if(is_numeric($id) === FALSE){
+            return FALSE;
+        }
         // Get the user details
         $sql_where = "user_admin_id = '".$id."'";
         if($type){
@@ -388,6 +391,9 @@ class Csz_admin_model extends CI_Model{
      * @return	string
      */
     public function getUserEmail($id){
+        if(is_numeric($id) === FALSE){
+            return FALSE;
+        }
         // Get the user email address
         if (!$this->cache->get('getUserEmail_'.$id)) {
             $rows = $this->Csz_model->getValue('email', 'user_admin', "user_admin_id", $id, 1);
@@ -474,6 +480,9 @@ class Csz_admin_model extends CI_Model{
      * @return	TRUE or FALSE
      */
     public function updateUser($id, $backend = TRUE){
+        if(is_numeric($id) === FALSE){
+            return FALSE;
+        }
         $query = $this->Csz_model->chkPassword($this->session->userdata('admin_email'), $this->input->post('cur_password', TRUE), $backend);
         if($query['num_rows'] > 0){
             // update the user account
@@ -561,6 +570,9 @@ class Csz_admin_model extends CI_Model{
      * @param	string	$id    member id
      */
     public function removeUser($id){
+        if(is_numeric($id) === FALSE){
+            return FALSE;
+        }
         // Delete a user account
         if($id != 1){
             $this->removeData('user_admin', array('user_admin_id' => $id));

@@ -2647,7 +2647,7 @@ class Csz_model extends CI_Model {
      * @return	string
      */
     public function cleanOSCommand($string){
-        $search = array('&',';','\\','"','|','{','}','<','>');
+        $search = array('&',';','\\','"','|','{','}','(',')',"'");
         $string = str_replace($search, '', $string);
         unset($search);
         return $this->security->xss_clean(strip_tags($string));
