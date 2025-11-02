@@ -1586,6 +1586,7 @@ class Csz_admin_model extends CI_Model{
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('pages', $data);
+        $this->removeAllFormDraftAdminID();
     }
 
     /**
@@ -2374,6 +2375,10 @@ class Csz_admin_model extends CI_Model{
         $this->db->cache_delete_all();
         $this->Csz_model->clear_file_cache('config');
         $this->Csz_model->clear_file_cache('topmenu_*', TRUE);
+    }
+    
+    public function removeAllFormDraftAdminID() {
+        $this->removeData('save_formdraft', 'user_admin_id', $this->session->userdata('user_admin_id'));
     }
     
     /**

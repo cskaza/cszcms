@@ -23,7 +23,7 @@ defined('BASEPATH') || exit('No direct script access allowed');
 /* 
  * For CSZ CMS version config
  */
-$config['csz_version'] = '1.3.1'; /* For CMS Version */
+$config['csz_version'] = '1.3.2'; /* For CMS Version */
 $config['csz_release'] = 'release'; /* For release or beta */
 
 /* 

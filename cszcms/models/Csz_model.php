@@ -776,7 +776,6 @@ class Csz_model extends CI_Model {
                 $core_js.= '<script type="text/javascript">'.str_replace('<script ', '</script><script ', $more_js).'</script>';
             }
         }
-        if ($this->getFBChat() !== FALSE) { $core_js.= $this->getFBChat(); }
         return $core_js;
     }
 
@@ -2537,22 +2536,12 @@ class Csz_model extends CI_Model {
     /**
      * getFBChat
      *
-     * Function for get facebook messager chat
+     * Function for get facebook messager chat (not use now, FB is removed already)
      *
      * @return	string or FALSE if not have facebook_page_id or fb_messenger setting not active
      */
     public function getFBChat() {
-        $html = '';
-        $config = $this->load_config();
-        if ($config->facebook_page_id && $config->fb_messenger) {
-            $html.= '<div class="fb-customerchat"
-                page_id="'.$config->facebook_page_id.'"
-                minimized="true">
-               </div>';
-            return $html;
-        } else {
-            return FALSE;
-        }
+        return "";
     }
 
     /**

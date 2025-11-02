@@ -85,9 +85,10 @@ class Article_model extends CI_Model {
         $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
         $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
         $this->db->set('user_admin_id', $this->session->userdata('user_admin_id'));
-        $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
+        $this->db->set('timestamp_create', $this->input->post('timestamp_create', TRUE)." ".date("H:i:s").'.000000', TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('article_db', $data);
+        $this->Csz_admin_model->removeAllFormDraftAdminID();
     }
 
     public function insertCat() {
@@ -167,6 +168,7 @@ class Article_model extends CI_Model {
             $this->db->set('fb_comment_active', $fb_comment_active);
             $this->db->set('fb_comment_limit', $this->input->post('fb_comment_limit', TRUE));
             $this->db->set('fb_comment_sort', $this->input->post('fb_comment_sort', TRUE));
+            $this->db->set('timestamp_create', $this->input->post('timestamp_create', TRUE)." 00:00:00".'.000000', TRUE);
             $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
             $this->db->where("article_db_id", $id);
             $this->db->update('article_db', $data);
@@ -335,6 +337,15 @@ class Article_model extends CI_Model {
             return $cat->category_name;
         }else{
             return $id;
+        }
+    }
+    
+    public function getCatUrlFromID($id){
+        $cat = $this->Csz_model->getValue('url_rewrite', 'article_db', "article_db_id", $id, 1);
+        if(!empty($cat) && $cat->url_rewrite){
+            return $this->Csz_model->base_link(). '/plugin/article/category/' . $cat->url_rewrite;
+        }else{
+            return $this->Csz_model->base_link(). '/plugin/article/category/';
         }
     }
     

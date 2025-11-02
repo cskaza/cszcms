@@ -51,7 +51,7 @@ class Filemanager extends CI_Controller {
         }else{
             $connect_url = $this->Csz_model->base_link() . "/admin/filemanager/connectorNodel/";
         }
-        $this->template->setJS("<script data-main=\"".base_url('', '', TRUE)."assets/js/plugins/elfinder/elfinder_main.js\" src=\"//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js\"></script>
+        $this->template->setJS("<script data-main=\"".base_url('', '', TRUE)."assets/js/plugins/elfinder/elfinder_main.js\" src=\"//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js\"></script>
             <script>
             define('elFinderConfig', {
                 defaultOpts : {

@@ -1,5 +1,3 @@
-#### Move to GitLab https://gitlab.com/cszcms/cszcms
-
 #### CSZ CMS
 
 Content Management System (CMS) with Codeigniter and Bootstrap.
@@ -11,7 +9,7 @@ See more at https://www.cszcms.com
 Server Recommend Requirements:
 - Best on browsers FireFox, Chrome, Safari, IE9.
 - Recommend for Apache server.
-- PHP 5.6.0 or higher (For security. we don't support PHP Version < 5.6.0)
+- PHP 7.1.0 or higher.
 - MySQL 5.0 or MariaDB 10.2.41 or higher (Required for MySQLi Driver)
 - Apache MOD_REWRITE Enabled.
 - PHP cURL Enabled (Important).

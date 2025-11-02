@@ -37,7 +37,7 @@ require './include/Database.php';
 $cszmodel = new Cszmodel;
 $success = 0;
 $chk_pass = 0;
-$phpvsupport = '5.5.0'; /* For minimum PHP version is allow to install the CMS*/
+$phpvsupport = '7.1.0'; /* For minimum PHP version is allow to install the CMS*/
 if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost'] && $_POST['dbuser'] && $_POST['dbname']) {
     if (function_exists('ini_set')) {
         @ini_set('max_execution_time', 600);
@@ -421,17 +421,15 @@ if (!empty($_POST) && $_POST['submitbtn'] && $_POST['baseurl'] && $_POST['dbhost
                                         <h3 class="panel-title"><b>Backend Login Setup</b></h3>
                                     </div>
                                     <div class="panel-body">
-                                        <label for="email">Email Address: </label>
-                                        <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login">
-                                        <label for="password">Password: </label>
+                                        <label for="email">Email Address*: </label>
+                                        <input id="email" name="email" type="email" class="form-control" placeholder="Email Address for Backend Login" required="required">
+                                        <label for="password">Password*: </label>
                                         <div class="input-group">
-                                            <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login">
+                                            <input id="password" name="password" type="password" class="form-control" placeholder="Password for Backend Login" required="required">
                                             <span class="input-group-addon">
                                                 <input type="checkbox" id="enable-show" placeholder="Show/Hidden"> <span class="glyphicon glyphicon-eye-open"></span>
                                             </span>
                                         </div><!-- /input-group -->
-                                        
-                                        <span class="text-info"><em>Please <b>blank</b> email or password field or both. If you want default backend login account<br>Email: <b>demo@cszcms.com</b> | Password: <b>123456</b></em></span>
                                     </div>
                                 </div>
                             </div>

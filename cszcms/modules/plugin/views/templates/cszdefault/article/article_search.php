@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col-lg-9 col-md-9">
                                     <h3><a href="<?php echo $this->Csz_model->base_link().'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'] ?>" title="<?php echo $a['title'] ?>"><?php echo $a['title'] ?></a></h3>
-                                    <p><small><b><?php echo $this->Csz_model->getLabelLang('article_postdate') ?>: <?php echo $a['timestamp_create'] ?></b></small></p>
+                                    <p><small><b><?php echo $this->Csz_model->getLabelLang('article_postdate') ?>: <?php echo $a['timestamp_create'] ?> | <?php echo $this->Csz_model->getLabelLang('article_category_menu') ?>: <a href="<?php echo $this->Article_model->getCatUrlFromID($a['cat_id']) ?>" title="<?php echo $this->Article_model->getCatNameFromID($a['cat_id']) ?>"><?php echo $this->Article_model->getCatNameFromID($a['cat_id']) ?></a></b></small></p>
                                     <p><?php echo $a['short_desc'] ?></p>
                                     <p><a class="btn btn-primary" href="<?php echo $this->Csz_model->base_link().'/plugin/article/view/'.$a['article_db_id'].'/'.$a['url_rewrite'] ?>" title="<?php echo $a['title'] ?>"><?php echo $this->Csz_model->getLabelLang('article_readmore_text') ?></a></p>
                                 </div>

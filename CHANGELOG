@@ -1,4 +1,14 @@
 #### RELEASE NOTES
+CSZ-CMS V.1.3.2 (2025-11-xx)
+- It can add the Article date when create new one.
+- Update elFinder to 2.1.66.
+- Remove default email and pass on installation page.
+- Remove manual upgrade function on backend for security below.
+- Security issue: https://github.com/fax77829yz/CSZ_CMS-exploit (The SQL commands are not sanitized through the upload function, allowing attackers to execute arbitrary code by uploading a crafted ZIP file containing malicious SQL commands)
+- Security issue: https://github.com/capture0x/CSZ_CMS (CSZ CMS Version 1.3.0 Remote Command Execution)
+- Support PHP 8.3.
+- Fixed more important bug.
+
 CSZ-CMS V.1.3.1 (2025-10-xx)
 - Fixed 'Multiple' Blind SQLi (https://www.exploit-db.com/exploits/50899).
 - Update elFinder to 2.1.61.

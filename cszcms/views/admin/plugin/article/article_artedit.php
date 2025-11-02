@@ -17,6 +17,23 @@
         <div class="h2 sub-header"><?php echo $this->lang->line('article_edit_header') . ' <a class="btn btn-default btn-sm" href="'.$this->csz_referrer->getIndex().'"><span class="glyphicon glyphicon-arrow-left"></span> '.$this->lang->line('btn_back').'</a>'; ?></div>
         <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/plugin/article/editArtSave/'.$this->uri->segment(5)); ?>
             <div class="control-group">	
+                <?php echo form_error('timestamp_create', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
+                <label class="control-label" for="timestamp_create"><?php echo $this->lang->line('article_datetime'); ?>*</label>
+                <?php 
+                $timestamp_create = date('Y-m-d', strtotime($article->timestamp_create));
+                $data = array(
+                    'name' => 'timestamp_create',
+                    'id' => 'timestamp_create',
+                    'required' => 'required',
+                    'autofocus' => 'true',
+                    'class' => 'form-control form-datepicker',
+                    'maxlength' => '255',
+                    'value' => set_value('timestamp_create', $timestamp_create, FALSE)
+                );
+                echo form_input($data);
+                ?>		
+            </div> <!-- /control-group -->
+            <div class="control-group">	
                 <?php echo form_error('title', '<div class="alert alert-danger text-center" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>', '</div>'); ?>
                 <label class="control-label" for="title"><?php echo $this->lang->line('article_title'); ?>*</label>
                 <?php

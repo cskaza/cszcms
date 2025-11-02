@@ -71,40 +71,6 @@
     <div class="col-lg-6 col-md-6">
         <ol class="breadcrumb">
             <li class="active">
-                <i><span class="glyphicon glyphicon-gift"></span></i> <?php echo $this->lang->line('manual_upgrade') ?>
-            </li>
-        </ol>
-        <?php echo form_open_multipart($this->Csz_model->base_link(). '/admin/upgrade/install'); ?>
-        <?php
-        $data = array(
-            'name' => 'file_upload',
-            'id' => 'file_upload',
-            'required' => 'required',
-            'autofocus' => 'true',
-            'class' => 'form-control-static',
-            'accept' => '.zip'
-        );
-        echo form_upload($data);
-        ?>
-        <blockquote class="remark">
-            <em><?php echo $this->lang->line('pluginmgr_zip_remark') ?></em>
-        </blockquote>
-        <?php
-        $data = array(
-            'name' => 'submit',
-            'id' => 'submit',
-            'class' => 'btn btn-primary form-inline',
-            'value' => $this->lang->line('btn_install'),
-            'onclick' => "return confirm('" . $this->lang->line('delete_message') . "');",
-        );
-        echo form_submit($data);
-        ?>
-        <?php echo form_close(); ?>
-        <br><br>
-    </div>
-    <div class="col-lg-6 col-md-6">
-        <ol class="breadcrumb">
-            <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('maintenance_header') ?>
             </li>
         </ol>
@@ -116,6 +82,9 @@
         <a href="<?php echo $this->Csz_model->base_link(). '/admin/upgrade/clearAllSession' ?>" class="btn btn-danger" onclick="return confirm('<?php echo $this->lang->line('clear_sess_message') ?>');"><?php echo $this->lang->line('btn_clear_sess') ?></a>
         <br><br>
         <?php } ?>
+        <br><br>
+    </div>
+    <div class="col-lg-6 col-md-6">
         <ol class="breadcrumb">
             <li class="active">
                 <i><span class="glyphicon glyphicon-object-align-top"></span></i> <?php echo $this->lang->line('logs_download_header') ?>

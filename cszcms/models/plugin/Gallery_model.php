@@ -55,6 +55,7 @@ class Gallery_model extends CI_Model {
         $this->db->set('timestamp_create', $this->Csz_model->timeNow(), TRUE);
         $this->db->set('timestamp_update', $this->Csz_model->timeNow(), TRUE);
         $this->db->insert('gallery_db');
+        $this->Csz_admin_model->removeAllFormDraftAdminID();
     }
     
     public function update($id) {
